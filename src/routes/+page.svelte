@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     export let data;
 

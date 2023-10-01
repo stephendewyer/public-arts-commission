@@ -7,6 +7,19 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+
+	interface AccordionTab {
+        label: string;
+        expandable: boolean;
+        content:  Content[] | null;
+    }
+
+	interface Voter {
+		ID: number;
+		username: string;
+		email: string;
+		password: string;
+	}
 }
 
 export {};

@@ -1,17 +1,27 @@
 <script>
 	import MainHeader from '$lib/components/MainHeader.svelte';
 	import MainFooter from '$lib/components/MainFooter.svelte';
+	import SideDrawer from '$lib/components/navigation/sideDrawer/SideDrawer.svelte';
+	import Backdrop from '$lib/components/navigation/sideDrawer/Backdrop.svelte';
 	import './styles.css';
+
+	let open = false;
+
+	let footerElHeight = 0;
 </script>
 
 <div class="app">
-	<MainHeader />
+	<MainHeader bind:sideDrawer={open}/>
 
 	<main>
 		<slot />
 	</main>
 
-	<MainFooter />
+	<MainFooter bind:footerHeight={footerElHeight}/>
+	{#if (open)}
+		<Backdrop bind:open />
+	{/if}
+	<SideDrawer bind:open />
 </div>
 
 <style>

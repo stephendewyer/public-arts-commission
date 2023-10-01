@@ -1,10 +1,12 @@
 <script>
 	import { page } from '$app/stores';
+	import Hamburger from '$lib/components/navigation/Hamburger.svelte';
+
+	export let sideDrawer = false;
 </script>
 
 <header>
 	<nav>
-
 		<ul id="nav_left">
 			<li 
 				class="nav_tab"
@@ -24,6 +26,14 @@
 			>
 				<a href="/actions">actions</a>
 			</li>
+			<li 
+				class="nav_tab"
+				aria-current={$page.url.pathname === '/priorities' ? 'page' : undefined}
+			>
+				<a href="/priorities">priorities</a>
+			</li>
+		</ul>
+		<ul id="nav_left_mobile">
 		</ul>
 		<ul id="nav_center">
 			<li 
@@ -81,9 +91,9 @@
 		<ul id="nav_right">
 			<li 
 				class="nav_tab"
-				aria-current={$page.url.pathname === '/story' ? 'page' : undefined}
+				aria-current={$page.url.pathname === ('/story' || '/team') ? 'page' : undefined}
 			>
-				<a href="/story">story</a>
+				<a href="/#">about</a>
 			</li>
 			<li 
 				class="nav_tab"
@@ -97,6 +107,17 @@
 			>
 				<a href="/contact">contact</a>
 			</li>
+			<li 
+				class="nav_tab"
+				aria-current={$page.url.pathname === ('/login-admin' || '/login-voter' || '/login-campaign') ? 'page' : undefined}
+			>
+				<a href="/#">login</a>
+			</li>
+		</ul>
+		<ul id="nav_right_mobile">
+			<li>
+				<Hamburger bind:open={sideDrawer}/>			
+			</li>
 		</ul>
 	</nav>
 </header>
@@ -109,7 +130,7 @@
 
 	nav {
 		width: 100%;
-		max-width: 100rem;
+		max-width: 120rem;
 		margin: 0 auto;
 		display: flex;
 	}
@@ -158,15 +179,15 @@
 	}
 
 	#nav_left {
-		width: 40%;
+		width: 44%;
 	}
 
 	#nav_center {
-		width: 20%;
+		width: 12%;
 	}
 
 	#nav_right {
-		width: 40%;
+		width: 44%;
 	}
 
 	a:hover {
@@ -186,11 +207,60 @@
 		fill: #E3CDB2;
 	}
 
-	
+	#nav_right_mobile {
+		display: none;
+	}
 
-	@media (max-width: 1200px) {
+	#nav_left_mobile {
+		display: none;
+	}
+
+	@media (max-width: 1920px) {
+		nav a {
+			font-size: 1.25rem;
+		}
+	}
+
+	@media (max-width: 1550px) {
 		nav a {
 			font-size: 1rem;
+		}
+	}
+
+	@media (max-width: 1300px) {
+		nav a {
+			font-size: 0.8rem;
+		}
+	}
+
+	@media (max-width: 1140px) {
+
+		nav {
+			justify-content: space-between;
+		}
+
+		#nav_center {
+			width: 20%;
+			min-width: 8rem;
+		}
+
+		#nav_left_mobile {
+			display: flex;
+			width: 40%;
+		}
+
+		#nav_left {
+			display: none;
+		}
+
+		#nav_right {
+			display: none;
+		}
+		#nav_right_mobile {
+			display: flex;
+			justify-content: flex-end;
+			width: 40%;
+
 		}
 	}
 </style>
