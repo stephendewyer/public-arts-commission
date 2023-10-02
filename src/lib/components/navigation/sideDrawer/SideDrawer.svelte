@@ -47,7 +47,7 @@
                     slug: "/team"
                 }
             ],
-            slug: "#0"
+            slug: "#"
         },
         {
             label: "donate",
@@ -84,7 +84,7 @@
                     slug: "/login-administrator"
                 }
             ],
-            slug: "#0"
+            slug: "#"
         }
     ]
 </script>
@@ -131,55 +131,11 @@
         transition: transform 0.3s ease-in-out;
     }
 
-    ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	li {
-		position: relative;
-	}
-
     nav {
         width: 100%;
         padding: 4rem 2rem;
 	}
-
-    .mobile_nav_tab {
-        color: #D8EAC5;
-        transition: all 0.2s;
-        border-color: #D8EAC5;
-        border-width: 2px;
-        border-style: solid;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-		font-size: 1.25rem;
-    }
-
-    .mobile_nav_tab:hover {
-        color: #E3CDB2;
-		transition: all 0.2s;
-        border-color: #E3CDB2;
-    }
-
-    .mobile_nav_tab_active {
-        transition: all 0.2s;
-        border-color: #D8EAC5;
-        border-width: 2px;
-        border-style: solid;
-        background-color: #4C4239;
-        text-decoration: none;
-		padding: 0.5rem 1rem;
-		font-size: 1.25rem;
-		color: #D8EAC5;
-    }
-
-    .mobile_nav_tab_active:hover {
-        color: #E3CDB2;
-        border-color: #E3CDB2;
-    }
-
+    
     @media (min-width: 1140px) {
 
       .side_drawer_closed {
