@@ -1,17 +1,37 @@
 <script lang="ts">
-    // import { page } from '$app/stores';
+    import MobileNavAccordionItem from './MobileNavAccordionItem.svelte';
 
-    export let mobileNavTabsData;
+    export let openState: boolean;
 
-    console.log(mobileNavTabsData);
+    export let mobileNavTabsData: AccordionTab[];
 
-    $: activeTab = false;
+    let activeTab: number = -1;
+    let setActiveIndex: number = -1;
+    let setIsActive: boolean = false;
+
+    $: setIsActive;
+
+    $: activeTab = setActiveIndex;
+
+    $: console.log(`tab is activated ${setIsActive}`)
+    $: console.log(`activated tab is ${activeTab}`);
+    $: console.log(`activated tab index is ${setActiveIndex}`);
 
 </script>
 
 <nav>
     {#each mobileNavTabsData as mobileNavTab, index}
-        <li>{mobileNavTab.label}</li>
+
+        <ul>
+            <MobileNavAccordionItem 
+                item={mobileNavTab}
+                bind:open={openState}
+                bind:setActive={setIsActive}
+                bind:setActiveIndex={setActiveIndex}
+                activeTab={activeTab}
+                index={index}
+            />
+        </ul>
     {/each}
 </nav>
 
@@ -19,7 +39,12 @@
 
     nav {
         width: 100%;
-        padding: 4rem 2rem;
+	}
+
+    ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
 	}
 
 </style>

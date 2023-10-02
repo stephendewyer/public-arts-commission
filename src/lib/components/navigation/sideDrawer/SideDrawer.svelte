@@ -9,22 +9,26 @@
         {
             label: "products",
             expandable: false,
-            content: null
+            content: null,
+            slug: "/products"
         },
         {
             label: "endorsements",
             expandable: false,
-            content: null
+            content: null,
+            slug: "/endorsements"
         }, 
         {
             label: "actions",
             expandable: false,
-            content: null
+            content: null,
+            slug: "/actions"
         },
         {
             label: "priorities",
             expandable: false,
-            content: null
+            content: null,
+            slug: "/priorities"
         },
         {
             label: "about",
@@ -33,24 +37,29 @@
                 {
                     label: "story",
                     expandable: false,
-                    content: null
+                    content: null,
+                    slug: "/story"
                 },
                 {
                     label: "team",
                     expandable: false,
-                    content: null
+                    content: null,
+                    slug: "/team"
                 }
-            ]
+            ],
+            slug: "#0"
         },
         {
             label: "donate",
             expandable: false,
-            content: null
+            content: null,
+            slug: "/donate"
         },
         {
             label: "contact",
             expandable: false,
-            content: null
+            content: null,
+            slug: "/contact"
         },
         {
             label: "login",
@@ -59,19 +68,23 @@
                 {
                     label: "voter",
                     expandable: false,
-                    content: null
+                    content: null,
+                    slug: "/login-voter"
                 },
                 {
                     label: "campaign",
                     expandable: false,
-                    content: null
+                    content: null,
+                    slug: "/login-campaign"
                 },
                 {
                     label: "administrator",
                     expandable: false,
-                    content: null
+                    content: null,
+                    slug: "/login-administrator"
                 }
-            ]
+            ],
+            slug: "#0"
         }
     ]
 </script>
@@ -81,101 +94,10 @@
     aria-hidden="{ (open) ? 'false' : 'true'}"
 >
     <nav>
-        <Accordion mobileNavTabsData={mobileNavTabs}/>
-        <ul>
-            <a 
-                href="/products" 
-                on:click={() => open = !open} 
-                aria-label="link to products page"
-            >
-                <li
-                    class="{$page.url.pathname === '/products' ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    products
-                </li>
-            </a>
-            <a 
-                    href="/endorsements" 
-                    on:click={() => open = !open}
-                    aria-label="link to endorsements page"
-                >
-                <li
-                    class="{$page.url.pathname === '/endorsements' ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    
-                        endorsements
-                    
-                </li>
-            </a>
-            <a 
-                href="/actions" 
-                on:click={() => open = !open} 
-                aria-label="link to actions page"
-            >
-                <li
-                    class="{$page.url.pathname === '/actions' ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    actions
-                </li>
-            </a>
-            <a 
-                href="/priorities" 
-                on:click={() => open = !open} 
-                aria-label="link to priorities page"
-            >
-                <li
-                    class="{$page.url.pathname === '/priorities' ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    priorities
-                </li>
-            </a>
-            <a 
-                href="/#" 
-                on:click={() => open = !open} 
-                aria-label="about nav tab"
-            >
-                <li
-                    class="{$page.url.pathname === ('/story' || '/team') ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    about
-                </li>
-            </a>
-            <a 
-                href="/donate" 
-                on:click={() => open = !open} 
-                aria-label="link to donate page"
-            >
-                <li
-                    class="{$page.url.pathname === '/donate' ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    
-                        donate
-                    
-                </li>
-            </a>
-            <a 
-                href="/contact" 
-                on:click={() => open = !open} 
-                aria-label="link to contact page"
-            >
-                <li
-                    class="{$page.url.pathname === '/contact' ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    contact
-                </li>
-            </a>
-            <a 
-                href="/#" 
-                on:click={() => open = !open} 
-                aria-label="login nav tab"
-            >
-                <li
-                    class="{$page.url.pathname === ('/login-administrator' || '/login-voter' || '/login-campaign') ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
-                >
-                    login
-                </li>
-            </a>
-        </ul>
+        <Accordion 
+            mobileNavTabsData={mobileNavTabs}
+            bind:openState={open}
+        />
     </nav>
     
 </aside>

@@ -11,7 +11,8 @@ declare global {
 	interface AccordionTab {
         label: string;
         expandable: boolean;
-        content:  Content[] | null;
+		slug: string;
+        content: AccordionTab[] | null;
     }
 
 	interface Voter {

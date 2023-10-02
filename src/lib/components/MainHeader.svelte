@@ -111,7 +111,7 @@
 				class="nav_tab"
 				aria-current={$page.url.pathname === ('/login-admin' || '/login-voter' || '/login-campaign') ? 'page' : undefined}
 			>
-				<a href="/#">login</a>
+				<a href="#0">login</a>
 			</li>
 		</ul>
 		<ul id="nav_right_mobile">
