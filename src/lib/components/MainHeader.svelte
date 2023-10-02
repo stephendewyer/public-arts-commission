@@ -111,7 +111,8 @@
 				class="nav_tab"
 				aria-current={$page.url.pathname === ('/login-admin' || '/login-voter' || '/login-campaign') ? 'page' : undefined}
 			>
-				<a href="#0">login</a>
+				<!-- svelte-ignore a11y-invalid-attribute -->
+				<a href="#">login</a>
 			</li>
 		</ul>
 		<ul id="nav_right_mobile">
