@@ -119,7 +119,7 @@
 		<ul id="nav_right">
 			<li 
 				class="nav_tab"
-				aria-current={$page.url.pathname === ('/story' || '/team') ? 'page' : undefined}
+				aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
 				on:mouseleave={() => collapseAboutTabHandler()}
 				on:mouseout={() => collapseAboutTabHandler()}
 				on:blur={() => collapseAboutTabHandler()}
@@ -194,7 +194,7 @@
 			</li>
 			<li 
 				class="nav_tab"
-				aria-current={$page.url.pathname === ('/login-admin' || '/login-voter' || '/login-campaign') ? 'page' : undefined}
+				aria-current={$page.url.pathname === '/login-administrator' || $page.url.pathname === '/login-voter' || $page.url.pathname === '/login-campaign' ? 'page' : undefined}
 				on:mouseleave={() => collapseLoginTabHandler()}
 				on:mouseout={() => collapseLoginTabHandler()}
 				on:blur={() => collapseLoginTabHandler()}
