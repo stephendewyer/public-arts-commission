@@ -19,27 +19,20 @@
 
 </script>
 
-<nav>
+<ul>
     {#each mobileNavTabsData as mobileNavTab, index}
-
-        <ul>
-            <MobileNavAccordionItem 
-                item={mobileNavTab}
-                bind:open={openState}
-                bind:setActive={setIsActive}
-                bind:setActiveIndex={setActiveIndex}
-                activeTab={activeTab}
-                index={index}
-            />
-        </ul>
+        <MobileNavAccordionItem 
+            item={mobileNavTab}
+            bind:open={openState}
+            bind:setActive={setIsActive}
+            bind:setActiveIndex={setActiveIndex}
+            activeTab={activeTab}
+            index={index}
+        />
     {/each}
-</nav>
+</ul>
 
 <style>
-
-    nav {
-        width: 100%;
-	}
 
     ul {
 		list-style: none;
