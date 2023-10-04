@@ -19,6 +19,7 @@
             <nav class="footer_nav">
                 <div class="logo_container_footer">
                     <a 
+                        aria-current={$page.url.pathname === '/' ? 'page' : undefined}
                         class="logo"
                         href="/"
                         aria-label="link to index page"
@@ -70,40 +71,74 @@
                 <div class="footer_nav_tabs">
                     <ul class="footer_nav_tabs_row">
                         <li class="footer_nav_column">
-                            <a href="/products" aria-label="link to products page" class="footer_nav_tab">
+                            <a 
+                                href="/products" 
+                                aria-label="link to products page" 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/products' ? 'page' : undefined}
+                            >
                                 products
                             </a>
                         </li>
                         <li class="footer_nav_column">
-                            <a href="/endorsements" aria-label="link to endorsements page" class="footer_nav_tab">
+                            <a 
+                                href="/endorsements" 
+                                aria-label="link to endorsements page" 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/endorsements' ? 'page' : undefined}
+                            >
                                 endorsements
                             </a>
                         </li>
                         <li class="footer_nav_column">
-                            <a href="/actions" aria-label="link to actions page" class="footer_nav_tab">
+                            <a 
+                                href="/actions" 
+                                aria-label="link to actions page" 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/actions' ? 'page' : undefined}
+                            >
                                 actions
                             </a>
                         </li>
                         <li class="footer_nav_column">
-                            <a href="/priorities" aria-label="link to priorities page" class="footer_nav_tab">
+                            <a 
+                                href="/priorities" 
+                                aria-label="link to priorities page" 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/priorities' ? 'page' : undefined}
+                            >
                                 priorities
                             </a>
                         </li>
                     </ul>
                     <ul class="footer_nav_tabs_row">
                         <li class="footer_nav_column">
-                            <div class="footer_nav_tab">
+                            <div 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
+                            >
                                 <div style="text-decoration: underline;">
                                     about
                                 </div>
                                 <ul class="footer_nav_tabs_panel">
                                     <li>
-                                        <a href="/story" aria-label="link to story page" class="footer_nav_tab_secondary">
+                                        <a 
+                                            href="/story" 
+                                            aria-label="link to story page" 
+                                            class="footer_nav_tab_secondary"
+                                            aria-current={$page.url.pathname === '/story' ? 'page' : undefined}
+
+                                        >
                                             story
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/team" aria-label="link to team page" class="footer_nav_tab_secondary">
+                                        <a 
+                                            href="/team" 
+                                            aria-label="link to team page" 
+                                            class="footer_nav_tab_secondary"
+                                            aria-current={$page.url.pathname === '/team' ? 'page' : undefined}
+                                        >
                                             team
                                         </a>
                                     </li>
@@ -111,33 +146,65 @@
                             </div>
                         </li>
                         <li class="footer_nav_column">
-                            <a href="/donate" aria-label="link to donate page" class="footer_nav_tab">
+                            <a 
+                                href="/donate" 
+                                aria-label="link to donate page" 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/donate' ? 'page' : undefined}
+                            >
                                 donate
                             </a>
                         </li>
                         <li class="footer_nav_column">
-                            <a href="/contact" aria-label="link to contact page" class="footer_nav_tab">
+                            <a 
+                                href="/contact" 
+                                aria-label="link to contact page" 
+                                class="footer_nav_tab"
+                                aria-current={$page.url.pathname === '/contact' ? 'page' : undefined}
+                            >
                                 contact
                             </a>
                         </li>
                         <li class="footer_nav_column">
-                            <div  class="footer_nav_tab">
+                            <div 
+                                class="footer_nav_tab"
+                                aria-current={ 
+                                    $page.url.pathname === '/login-voter' || 
+                                    $page.url.pathname === '/login-campaign' || 
+                                    $page.url.pathname === '/login-administrator' 
+                                ? 'page' : undefined }
+                            >
                                 <div style="text-decoration: underline;">
                                     login
                                 </div>
                                 <ul class="footer_nav_tabs_panel">
                                     <li>
-                                        <a href="/login-voter" aria-label="link to voter login page" class="footer_nav_tab_secondary">
+                                        <a 
+                                            href="/login-voter" 
+                                            aria-label="link to voter login page" 
+                                            class="footer_nav_tab_secondary"
+                                            aria-current={$page.url.pathname === '/login-voter' ? 'page' : undefined}
+                                        >
                                             voter
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/login-campaign" aria-label="link to campaign login page" class="footer_nav_tab_secondary">
+                                        <a 
+                                            href="/login-campaign" 
+                                            aria-label="link to campaign login page" 
+                                            class="footer_nav_tab_secondary"
+                                            aria-current={$page.url.pathname === '/login-campaign' ? 'page' : undefined}
+                                        >
                                             campaign
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="/login-administrator" aria-label="link to administrator login page" class="footer_nav_tab_secondary">
+                                        <a 
+                                            href="/login-administrator" 
+                                            aria-label="link to administrator login page" 
+                                            class="footer_nav_tab_secondary"
+                                            aria-current={$page.url.pathname === '/login-administrator' ? 'page' : undefined}
+                                        >
                                             administrator
                                         </a>
                                     </li>
@@ -218,21 +285,20 @@
         transition: fill 0.2s linear;
     }
 
+    .logo[aria-current='page'] {
+        fill: #C4BDC0;
+    }
+
     .logo:hover {
         fill: #DEF2F4;
     }
 
     .footer_nav_tabs {
         padding: 0 2rem;
-        width: auto;
-        gap: 1rem;
+        width: 50%;
         margin: 0 auto;
-    }
-
-    .footer_nav_column {
-        width: 25%;
-        min-width: 6rem;
-        margin: 0 1rem;
+        display: flex;
+        flex-direction: column;
     }
 
     .footer_nav_tabs_row {
@@ -240,9 +306,15 @@
         flex-direction: row;
         list-style: none;
         padding: 0;
-        margin: 0 0 1rem 0;
+        margin: 0 auto 1rem auto;
         justify-content: space-around;
     }
+
+    .footer_nav_column {
+        width: 100%;
+        min-width: 8rem;
+        margin: 0;
+    }    
 
     .footer_nav_tab {
         color: #E3CDB2;
@@ -252,6 +324,10 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .footer_nav_tab[aria-current='page'] {
+        color: #C4BDC0;
     }
 
     .footer_nav_tab:hover {
@@ -268,12 +344,17 @@
         color: #DEF2F4;
     }
 
+    .footer_nav_tab_secondary[aria-current='page'] {
+        color: #C4BDC0;
+    }
+
     .footer_nav_tabs_panel {
         display: flex;
         flex-direction: column;
         list-style: none;
         width: 100%;
-        padding: 0;
+        padding: 0.5rem 0 0 0;
+        gap: 0.5rem;
     }
 
     .footer_info {
@@ -281,5 +362,62 @@
         width: 30%;
         margin: 0 0 auto 0;
     }
-    
+
+    @media (max-width: 1140px) {
+
+        .logo_container_footer {
+            width: 6rem;
+        }
+
+        .footer_content_container {
+            width: 100%;
+            max-width: 120rem;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .footer_nav {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            align-items: center;
+        }
+
+        .footer_nav_tabs {
+            flex-direction: row;
+            padding:0;
+            justify-content: center;
+            width: 100%;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .footer_nav_tabs_row {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 0.5rem;
+            list-style: none;
+            padding: 1rem 0;
+            margin: 0;
+            width: 50%;
+        }
+
+        .footer_nav_column {
+            width: auto;
+            margin: 0 auto;
+        }
+
+        .footer_info {
+            width: 100%;
+            padding: 0 0 1rem 0;
+            font-size: 0.8rem;
+        }
+
+    }
+
 </style>
