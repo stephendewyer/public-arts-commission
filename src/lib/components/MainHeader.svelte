@@ -135,8 +135,7 @@
 					aria-controls="tab_panel_about"
 					tabindex="0"
 				>
-					<!-- svelte-ignore a11y-invalid-attribute -->
-					<a href="#">about</a>
+					<div class="tabPanel_header_text">about</div>
 					<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
 						<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
 							<defs>
@@ -210,8 +209,25 @@
 					aria-controls="tab_panel_login"
 					tabindex="-1"
 				>
-					<!-- svelte-ignore a11y-invalid-attribute -->
-					<a href="#">login</a>
+					<div 
+						class="tabPanel_header_text"
+					>
+						<div class="nav_icon">
+							<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 494.31 414.36">
+								<defs>
+									<style>
+									.cls-3 {
+										fill: inherit;
+										stroke-width: 0px;
+									}
+									</style>
+								</defs>
+								<path class="cls-3" d="m287.12,0C193.83,0,114.74,61.98,88.88,146.93h42.48c24.22-62.41,84.91-106.76,155.77-106.76,92.09,0,167.01,74.93,167.01,167.01s-74.93,167.01-167.01,167.01c-70.85,0-131.54-44.35-155.77-106.76h-42.48c25.86,84.95,104.95,146.93,198.24,146.93,114.24,0,207.18-92.95,207.18-207.18S401.36,0,287.12,0Z"/>
+								<polygon class="cls-3" points="0 227.27 0 187.1 272.22 187.1 291.59 206.47 291.59 207.9 272.22 227.27 0 227.27"/>
+							</svg>
+						</div>
+						login
+					</div>
 					<div class={ loginTabPanelIsActive ? "arrow_active" : "arrow" }>
 						<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
 							<defs>
@@ -313,13 +329,32 @@
 
 	nav a {
 		height: 100%;
-		align-items: center;
 		padding: 0 0.5rem;
 		font-weight: 800;
 		font-size: 1.25rem;
 		letter-spacing: 0.1em;
 		text-decoration: none;
-		transition: color 0.2s linear;
+	}
+
+	.tabPanel_header_text {
+		height: 100%;
+		padding: 0 0.5rem;
+		font-weight: 800;
+		font-size: 1.25rem;
+		letter-spacing: 0.1em;
+		text-decoration: none;
+		color: #4C4239;
+		fill: #4C4239;
+		transition: color 0.2s linear, fill 0.2s linear;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	.tabPanel_header_text:hover {
+		color: #CB6D44;
+		fill: #CB6D44;
 	}
 
 	#nav_left {
@@ -332,10 +367,6 @@
 
 	#nav_right {
 		width: 44%;
-	}
-
-	a:hover {
-		color: var(--color-theme-1);
 	}
 
 	.menu_tab_header {
@@ -360,6 +391,10 @@
 
 	.nav_tab {
 		width: 100%;
+	}
+
+	.nav_icon {
+		width: 1.25rem;
 	}
 
 	.panel_container {
@@ -401,18 +436,29 @@
 	}
 
 	@media (max-width: 1920px) {
-		nav a {
-			font-size: 1.25rem;
+
+		.nav_icon {
+			width: 1rem;
 		}
 	}
 
 	@media (max-width: 1550px) {
+
+		.tabPanel_header_text {
+			font-size: 1rem;
+		}
+
 		nav a {
 			font-size: 1rem;
 		}
 	}
 
 	@media (max-width: 1300px) {
+
+		.tabPanel_header_text {
+			font-size: 0.8rem;
+		}
+
 		nav a {
 			font-size: 0.8rem;
 		}
@@ -441,6 +487,7 @@
 		#nav_right {
 			display: none;
 		}
+
 		#nav_right_mobile {
 			display: flex;
 			justify-content: flex-end;

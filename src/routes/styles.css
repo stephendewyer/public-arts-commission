@@ -28,6 +28,13 @@ body {
 a {
 	text-decoration: none;
 	color: #4C4239;
+	fill: #4C4239;
+	transition: color 0.2s linear, fill 0.2s linear;
+}
+
+a:hover {
+	color: #CB6D44;
+	fill: #CB6D44;
 }
 
 h1, h2, h3, h4 {
@@ -51,6 +58,10 @@ img {
 
 svg {
 	width: 100%;
+}
+
+p {
+	margin: 0;
 }
 
 @media (max-width: 720px) {

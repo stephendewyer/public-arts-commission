@@ -52,13 +52,35 @@
     {#if item.content !== null}
         <a 
             on:click={() => handle01Click(item)}
+            id="tabpanel_header_{item.label}"
             href={item.slug}
-            aria-label="link to {item.label} page"
+            role="tab"
+            aria-selected={activeTab === index ? true : false}
+            aria-controls="{item.label}_tabpanel"
+            tabindex={-index}
         >
             <li 
                 class="{$page.url.pathname === item.slug ? 'mobile_nav_tab_active' : 'mobile_nav_tab'}"
             >
-                {item.label}
+                <div class="mobile_nav_tab_icon_and_label">
+                    {#if item.label === "login"}
+                        <div class="nav_icon">
+                            <svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 494.31 414.36">
+                                <defs>
+                                    <style>
+                                    .cls-3 {
+                                        fill: inherit;
+                                        stroke-width: 0px;
+                                    }
+                                    </style>
+                                </defs>
+                                <path class="cls-3" d="m287.12,0C193.83,0,114.74,61.98,88.88,146.93h42.48c24.22-62.41,84.91-106.76,155.77-106.76,92.09,0,167.01,74.93,167.01,167.01s-74.93,167.01-167.01,167.01c-70.85,0-131.54-44.35-155.77-106.76h-42.48c25.86,84.95,104.95,146.93,198.24,146.93,114.24,0,207.18-92.95,207.18-207.18S401.36,0,287.12,0Z"/>
+                                <polygon class="cls-3" points="0 227.27 0 187.1 272.22 187.1 291.59 206.47 291.59 207.9 272.22 227.27 0 227.27"/>
+                            </svg>
+                        </div>
+                    {/if}
+                    {item.label}
+                </div>
                 <div class={ activeTab === index ? "arrow_active" : "arrow" }>
                     <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
                         <defs>
@@ -72,17 +94,21 @@
                         <polygon class="cls-3" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
                     </svg>
                 </div>
-                
             </li>
         </a>
-        <ul
+        <div
             class="expandable_container"
             style={ activeTab === index ? `height: ${height}px` : 'height: 0px;' }
+            id="{item.label}_tabpanel"
+            role="tabpanel"
+            tabindex={-index}
+            aria-labelledby="tab_header_login"
         >
-            <div
+            <ul
                 bind:clientHeight={height}
                 class="expandable"
                 style={ activeTab === index ? "opacity: 100%;" : "opacity: 0;" }
+
             >
                 {#each item.content as mobileNavTabSecondary}
                     <a 
@@ -99,8 +125,8 @@
                         </li>
                     </a>
                 {/each}
-            </div>
-        </ul>
+            </ul>
+        </div>
     {:else if item.content === null}
         <a 
             href={item.slug}
@@ -225,6 +251,16 @@
     .mobile_nav_tab_secondary_active:hover {
         color: #E3CDB2;
         border-color: #E3CDB2;
+    }
+
+    .mobile_nav_tab_icon_and_label {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .nav_icon {
+        width: 0.8rem;
     }
     
 </style>

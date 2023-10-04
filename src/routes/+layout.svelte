@@ -13,7 +13,7 @@
 <div class="app">
 	<MainHeader bind:sideDrawer={open}/>
 
-	<main>
+	<main style="padding-bottom: {footerElHeight}px">
 		<slot />
 	</main>
 
