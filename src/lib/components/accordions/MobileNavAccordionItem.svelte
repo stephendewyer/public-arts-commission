@@ -52,8 +52,8 @@
     {#if item.content !== null}
         <a 
             on:click={() => handle01Click(item)}
-            id="tabpanel_header_{item.label}"
             href={item.slug}
+            id="tabpanel_header_{item.label}"
             role="tab"
             aria-selected={activeTab === index ? true : false}
             aria-controls="{item.label}_tabpanel"
@@ -102,7 +102,7 @@
             id="{item.label}_tabpanel"
             role="tabpanel"
             tabindex={-index}
-            aria-labelledby="tab_header_login"
+            aria-labelledby="tabpanel_header_{item.label}"
         >
             <ul
                 bind:clientHeight={height}

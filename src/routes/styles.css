@@ -41,17 +41,6 @@ h1, h2, h3, h4 {
 	font-family: "Lato";
 }
 
-input {
-	background-color: #EFF9F2;
-	border-radius: 3rem;
-}
-
-input:focus {
-	border-width: 3px;
-	border-color: #1C2226;
-	border-style: solid;
-}
-
 img {
 	width: 100%;
 }
@@ -64,6 +53,19 @@ p {
 	margin: 0;
 }
 
-@media (max-width: 720px) {
+h1 {
+	font-size: 2rem;
+	line-height: 1.5;
+}
 
+@media (max-width: 1440px) {
+	h1 {
+		font-size: 1.5rem;
+	}
+}
+
+@media (max-width: 720px) {
+	h1 {
+		font-size: 1.25rem;
+	}
 }

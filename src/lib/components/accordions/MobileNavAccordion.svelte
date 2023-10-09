@@ -1,4 +1,5 @@
 <script lang="ts">
+    
     import MobileNavAccordionItem from './MobileNavAccordionItem.svelte';
 
     export let openState: boolean;
