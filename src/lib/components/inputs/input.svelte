@@ -5,7 +5,9 @@
   export let inputType: string;
 
 </script>
-<label for={inputID}></label>
+<div class="input_label">
+    <label for={inputID} ><slot /></label>
+</div>
 <input 
     placeholder={placeholder}
     id={inputID}
@@ -14,6 +16,15 @@
 />
 
 <style>
+
+    label {
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .input_label {
+        padding: 0 0 0.5rem 0;
+    }
     
     input {
         background-color: #EFF9F2;
@@ -47,13 +58,28 @@
     @media (max-width: 1440px) {
         input {
             font-size: 1.25rem;
-            
+        }
+
+        label {
+            font-size: 1.25rem;
+        }
+
+        .input_label {
+            padding: 0 0 0.4rem 0;
         }
     }
 
     @media (max-width: 720px) {
         input {
             font-size: 1rem;
+        }
+
+        label {
+            font-size: 1rem;
+        }
+
+        .input_label {
+            padding: 0 0 0.3rem 0;
         }
     }
 

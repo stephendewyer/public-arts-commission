@@ -21,6 +21,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"mysql2": "^3.6.1"
+		"@types/uuid": "^9.0.5",
+		"mysql2": "^3.6.1",
+		"uuid": "^9.0.1"
 	}
 }

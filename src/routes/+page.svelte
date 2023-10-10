@@ -3,16 +3,39 @@
 	import LoginBackground from '$lib/images/11_December_2012_take_Lansing,_Michigan.jpg';
   	import Checkbox from '$lib/components/inputs/checkbox.svelte';
 	import Input from '$lib/components/inputs/input.svelte';
-	import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
+	import ActionButton from '$lib/components/buttons/ActionButton.svelte';
+	import LoginCampaign from '$lib/components/logins/LoginCampaign.svelte';
+	import LoginVoter from '$lib/components/logins/LoginVoter.svelte';
+	import TabPanel from '$lib/components/tabPanel/Tabs.svelte';
 
+	import { v4 as uuidv4 } from 'uuid';
 
     export let data;
+
+	$: activeLoginTab = "voter";
 
 	// console.log(data);
 
 	const searchSubmitHandler = () => {
 		console.log('search submit clicked!S')
 	}
+
+	interface tabPanels {
+        id: string;
+        label: string;
+    }
+
+	const loginTabPanels: tabPanels[] = [
+		{
+			id: uuidv4(),
+			label: "voter"
+		},
+		{
+			id: uuidv4(),
+			label: "campaign"
+		}
+	]
+
 </script>
 
 <svelte:head>
@@ -54,10 +77,11 @@
 					inputType="text"
 				/>
 			</div>
+			
 		</div>
-		<SubmitButton>
+		<ActionButton>
 			search endorsements
-		</SubmitButton>
+		</ActionButton>
 	</form>
 	<div 
 		class="login_container"
@@ -67,20 +91,16 @@
 			<h2>
 				I'm a ...
 			</h2>
-			<h3>
-				voter
-			</h3>
-			<h4>
-				organize with your community
-			</h4>
-			<div class="login_email_input">
-				<Input 
-					placeholder="myEmail@myDomain.com"
-					inputID="voter_email"
-					inputName="voter_email"
-					inputType="email"
-				>email</Input>
-			</div>
+			{#each loginTabPanels as loginTabPanel, i}
+				<button on:click={() => activeLoginTab = loginTabPanel.label} >
+					{loginTabPanel.label}
+				</button>
+			{/each}
+			{#if activeLoginTab === "voter"}
+				<LoginVoter />
+			{:else if activeLoginTab === "campaign"}
+				<LoginCampaign />
+			{/if}
 		</div>
 	</div>
 </section>
@@ -131,6 +151,16 @@
 	.login_container {
 		width: 100%;
 		background-size: cover;
+		display: flex;
+		justify-content: center;
+		padding: 2rem 1rem;
+	}
+
+	.login_section {
+		background-color: rgba(239,249,242,0.7);
+		max-width: 40rem;
+		width: 100%;
+		padding: 1rem;
 	}
 
 	@media (max-width: 1140px) {
@@ -139,6 +169,7 @@
 			flex-direction: column;
 			gap: 1rem;
 			width: 100%;
+			
 		}
 
 		.use_current_location_checkbox {
