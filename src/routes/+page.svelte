@@ -6,13 +6,12 @@
 	import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 	import LoginCampaign from '$lib/components/logins/LoginCampaign.svelte';
 	import LoginVoter from '$lib/components/logins/LoginVoter.svelte';
-	import TabPanel from '$lib/components/tabPanel/Tabs.svelte';
-
 	import { v4 as uuidv4 } from 'uuid';
+	import type { SvelteComponent } from 'svelte';
 
     export let data;
 
-	$: activeLoginTab = "voter";
+	$: activeLoginTab = 0;
 
 	// console.log(data);
 
@@ -20,19 +19,27 @@
 		console.log('search submit clicked!S')
 	}
 
+	// const LoginCampaignTSX = svelte2tsx(`<LoginVoter />`)
+
 	interface tabPanels {
         id: string;
+		index: number;
         label: string;
+		panel: typeof SvelteComponent<any>;
     }
 
 	const loginTabPanels: tabPanels[] = [
 		{
 			id: uuidv4(),
-			label: "voter"
+			index: 0,
+			label: "voter",
+			panel: LoginVoter
 		},
 		{
 			id: uuidv4(),
-			label: "campaign"
+			index: 1,
+			label: "campaign",
+			panel: LoginCampaign
 		}
 	]
 
@@ -91,16 +98,17 @@
 			<h2>
 				I'm a ...
 			</h2>
-			{#each loginTabPanels as loginTabPanel, i}
-				<button on:click={() => activeLoginTab = loginTabPanel.label} >
-					{loginTabPanel.label}
+			{#each loginTabPanels as loginTab, i}
+				<button on:click={() => activeLoginTab = loginTab.index} >
+					{loginTab.label}
 				</button>
 			{/each}
-			{#if activeLoginTab === "voter"}
-				<LoginVoter />
-			{:else if activeLoginTab === "campaign"}
-				<LoginCampaign />
-			{/if}
+			{#each loginTabPanels as loginPanel, i}
+				{#if activeLoginTab === loginPanel.index}
+					<svelte:component this={loginPanel.panel} />
+				{/if}
+			{/each}
+			
 		</div>
 	</div>
 </section>

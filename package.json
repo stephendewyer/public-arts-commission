@@ -23,6 +23,7 @@
 	"dependencies": {
 		"@types/uuid": "^9.0.5",
 		"mysql2": "^3.6.1",
+		"svelte2tsx": "^0.6.23",
 		"uuid": "^9.0.1"
 	}
 }
