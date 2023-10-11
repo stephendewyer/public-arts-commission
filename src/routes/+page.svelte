@@ -2,7 +2,7 @@
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 	import LoginBackground from '$lib/images/11_December_2012_take_Lansing,_Michigan.jpg';
   	import Checkbox from '$lib/components/inputs/checkbox.svelte';
-	import Input from '$lib/components/inputs/input.svelte';
+	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
 	import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 	import LoginCampaign from '$lib/components/logins/LoginCampaign.svelte';
 	import LoginVoter from '$lib/components/logins/LoginVoter.svelte';
@@ -78,11 +78,11 @@
 				</Checkbox>
 			</div>
 			<div class="search_endorsements_by_address_input">
-				<Input 
+				<SearchInput 
 					placeholder="1000 MyStreet, MyCity, MyState  10000"
 					inputID="address"
 					inputName="address"
-					inputType="text"
+					inputType="search"
 					inputLabel={false}
 				/>
 			</div>
