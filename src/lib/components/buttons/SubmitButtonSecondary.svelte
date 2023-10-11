@@ -4,31 +4,17 @@
 
 <button class="submit_button" type="submit">
     <slot />
-    <div class="arrow">
-        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
-            <defs>
-              <style>
-                .cls-6 {
-                  fill: inherit;
-                  stroke-width: 0px;
-                }
-              </style>
-            </defs>
-            <polygon class="cls-6" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
-          </svg>
-    </div>
 </button>
 
 <style>
 
     .submit_button {
-        margin: 1rem;
+        margin: 1rem 1rem 0 1rem;
 		color: #3A2B35;
 		fill: #3A2B35;
 		background-color: #E3CDB2;
         border: none;
 		padding: 0.5rem 1rem;
-		gap: 0.25rem;
 		font-size: 1.5rem;
 		font-weight: 600;
 		display: flex;
@@ -43,30 +29,17 @@
         color: #D8EAC5;
 		fill: #D8EAC5;
 		background-color: #3A2B35;
-		gap: 0.75rem;
-	}
-
-	.arrow {
-		width: 0.6rem;
 	}
 
     @media (max-width: 1140px) {
         .submit_button {
             font-size: 1.25rem;
         }
-
-        .arrow {
-            width: 0.5rem;
-        }
 	}
 
 	@media (max-width: 720px) {
         .submit_button {
             font-size: 1rem;
-        }
-
-        .arrow {
-            width: 0.4rem;
         }
 	}
 </style>

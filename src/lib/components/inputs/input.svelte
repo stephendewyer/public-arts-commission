@@ -3,11 +3,14 @@
   export let inputID: string;
   export let inputName: string;
   export let inputType: string;
+  export let inputLabel: boolean;
 
 </script>
-<div class="input_label">
-    <label for={inputID} ><slot /></label>
-</div>
+{#if inputLabel !== false}
+    <div class="input_label">
+        <label for={inputID} ><slot /></label>
+    </div>
+{/if}
 <input 
     placeholder={placeholder}
     id={inputID}
@@ -18,8 +21,9 @@
 <style>
 
     label {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 600;
+        color: #1C2226;
     }
 
     .input_label {
@@ -30,7 +34,7 @@
         background-color: #EFF9F2;
         border-radius: 3rem;
         color: #484B47;
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         padding: 0.5rem 1rem;
         border-width: 2px;
         border-color: #EFF9F2;
@@ -57,11 +61,11 @@
 
     @media (max-width: 1440px) {
         input {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
 
         label {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
         }
 
         .input_label {

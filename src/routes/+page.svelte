@@ -6,27 +6,28 @@
 	import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 	import LoginCampaign from '$lib/components/logins/LoginCampaign.svelte';
 	import LoginVoter from '$lib/components/logins/LoginVoter.svelte';
+	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
+	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
-	import type { SvelteComponent } from 'svelte';
 
     export let data;
 
 	$: activeLoginTab = 0;
 
+	let campaignLoginClicked: string = "";
+	let voterLoginClicked: string = "";
+
+	$: campaignLoginClicked;
+	$: voterLoginClicked;
+
+	$: if (campaignLoginClicked !== "") { console.log(campaignLoginClicked) };
+	$: if (voterLoginClicked !== "") { console.log(voterLoginClicked) };
+
 	// console.log(data);
 
 	const searchSubmitHandler = () => {
-		console.log('search submit clicked!S')
+		console.log('search submit clicked!')
 	}
-
-	// const LoginCampaignTSX = svelte2tsx(`<LoginVoter />`)
-
-	interface tabPanels {
-        id: string;
-		index: number;
-        label: string;
-		panel: typeof SvelteComponent<any>;
-    }
 
 	const loginTabPanels: tabPanels[] = [
 		{
@@ -82,6 +83,7 @@
 					inputID="address"
 					inputName="address"
 					inputType="text"
+					inputLabel={false}
 				/>
 			</div>
 			
@@ -98,18 +100,22 @@
 			<h2>
 				I'm a ...
 			</h2>
-			{#each loginTabPanels as loginTab, i}
-				<button on:click={() => activeLoginTab = loginTab.index} >
-					{loginTab.label}
-				</button>
-			{/each}
-			{#each loginTabPanels as loginPanel, i}
-				{#if activeLoginTab === loginPanel.index}
-					<svelte:component this={loginPanel.panel} />
-				{/if}
-			{/each}
-			
+			<Tabs 
+				tabPanels={loginTabPanels} 
+				bind:activeTab={activeLoginTab}
+			/>
+			<Panel 
+				tabPanels={loginTabPanels} 
+				bind:activeTab={activeLoginTab}
+				bind:campaignLoginClicked
+				bind:voterLoginClicked
+			/>			
 		</div>
+	</div>
+	<div class="forthcoming actions">
+		<h2>
+			forthcoming actions
+		</h2>
 	</div>
 </section>
 
@@ -161,7 +167,10 @@
 		background-size: cover;
 		display: flex;
 		justify-content: center;
+		align-items: center;
 		padding: 2rem 1rem;
+		background-repeat: no-repeat;
+		background-position: center;
 	}
 
 	.login_section {
@@ -169,6 +178,9 @@
 		max-width: 40rem;
 		width: 100%;
 		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	@media (max-width: 1140px) {

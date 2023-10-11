@@ -3,8 +3,10 @@
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
 
+    export let campaignLoginClicked: string | undefined = "";
+
     const campaignLoginHandler = () => {
-		console.log('voter login submitted!')
+        campaignLoginClicked = "campaign login clicked!";
 	}
 
 </script>
@@ -13,14 +15,19 @@
     <h4>
         apply for an endorsement
     </h4>
-    <form on:submit|preventDefault={campaignLoginHandler}> 
+    <form 
+        on:submit|preventDefault={campaignLoginHandler} 
+        class="login_form"
+    > 
         <div class="login_input">
             <Input 
                 placeholder="campaignEmail@campaignDomain.com"
                 inputID="campaign_email"
                 inputName="campaign_email"
                 inputType="email"
-            >email</Input>
+            >
+                email
+            </Input>
         </div>
         <div class="login_input">
             <Input 
@@ -28,9 +35,11 @@
                 inputID="campaign_password"
                 inputName="campaign_password"
                 inputType="text"
-            >password</Input>
+            >
+                password
+            </Input>
         </div>
-        <SubmitButton>
+        <SubmitButton on:click={() => campaignLoginHandler()}>
             log in
         </SubmitButton>
         <h4>
@@ -43,7 +52,25 @@
 </div>
 
 <style>
+
+    #campaign {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .login_form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 28rem;
+    }
+
     .login_input {
 		padding: 0.5rem 0;
+        width: 100%;
 	}
+
 </style>

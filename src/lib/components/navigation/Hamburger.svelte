@@ -1,5 +1,5 @@
 <script>
-	export let open = false
+	export let open = false;
 </script>
 
 <button 

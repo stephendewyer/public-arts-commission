@@ -22,11 +22,11 @@
 <style>
 
     .submit_button {
-        margin: 1rem 1rem 0 1rem;
+        margin: 1rem;
 		color: #4C4239;
 		fill: #4C4239;
-		background-color: #D8EAC5;
-		border: solid 3px #4C4239;
+		background-color: transparent;
+		border: none;
 		padding: 0.5rem 1rem;
 		gap: 0.25rem;
 		font-size: 1.5rem;
@@ -36,12 +36,13 @@
 		align-items: center;
 		border-radius: 3rem;
 		cursor: pointer;
-		transition: gap 0.2s ease-out, background-color 0.2s linear;
+		transition: gap 0.2s ease-out, fill 0.2s linear, color 0.2s linear;
 	}
 
 	.submit_button:hover {
-		background-color: #E3CDB2;
 		gap: 0.75rem;
+        color: #3A2B35;
+		fill: #3A2B35;
 	}
 
 

@@ -1,5 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
+import type { SvelteComponent } from 'svelte';
+
 declare global {
 	namespace App {
 		// interface Error {}
@@ -21,6 +23,13 @@ declare global {
 		email: string;
 		password: string;
 	}
+
+	interface tabPanels {
+        id: string;
+		index: number;
+        label: string;
+		panel: typeof SvelteComponent<any>;
+    }
 	
 }
 
