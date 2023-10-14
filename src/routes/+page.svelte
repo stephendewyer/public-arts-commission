@@ -82,11 +82,14 @@
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
-	$: if (useCurrentLocationChecked) { 
-		findUserLocation() 
-	} else{
-		searchValue = ""
-	};
+	$: if (useCurrentLocationChecked) { findUserLocation() } 
+
+	const searchInputValueChangeHandler = () => {
+		if (useCurrentLocationChecked && (reversedGeolocation !== searchValue)) {
+			useCurrentLocationChecked = false;
+			return useCurrentLocationChecked;
+		}
+	}
 
 	// console.log(data);
 
@@ -156,6 +159,7 @@
 					inputName="address"
 					inputLabel={false}
 					bind:searchInputValue={searchValue}
+					searchInputValueChange={() => searchInputValueChangeHandler()}
 				/>
 			</div>
 			

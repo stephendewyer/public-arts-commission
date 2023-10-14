@@ -3,8 +3,8 @@
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let searchInputValue: string;
-  
+    export let searchInputValue: string;  
+    export let searchInputValueChange: any;
   </script>
   {#if inputLabel !== false}
       <div class="input_label">
@@ -17,6 +17,7 @@
       name={inputName}
       type="search"
       bind:value={searchInputValue}
+      on:input={searchInputValueChange}
   />
   
   <style>
@@ -66,6 +67,7 @@
 
       input[type="search"]::-webkit-search-cancel-button {
         -webkit-appearance: none;
+        cursor: pointer;
         display: inline-block;
         width: 12px;
         height: 12px;
