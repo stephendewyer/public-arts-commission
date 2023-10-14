@@ -30,18 +30,21 @@
 	$: if (voterLoginClicked !== "") { console.log(voterLoginClicked) };
 
 	// once user clicks "use my current location" checkbox, 
+
+	let searchValue: string;
     
 	// define the latitude and longitude variables
-	let latitude: string = "";
-	let longitude: string = "";	
+	let latitude: number | null = null;
+	let longitude: number | null = null;	
 
 	// set the latitude and longitude with user's position.coords
 
-	let reversedGeolocation: any;
+	let reversedGeolocation: ReverseGeoLocation;
 
 	// use the user's geolocation to get the user's address
 
-	async function reverseGeocode(latitude: string, longitude: string): Promise<string> {
+	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string> {
+
 		const response = await fetch("/api/reverseGeocode", {
 			method: 'POST',
 			body: JSON.stringify({
@@ -52,13 +55,20 @@
 				'Content-Type': 'application/json',
 			}
 		});
+
 		reversedGeolocation = await response.json();
+
+		console.log(reversedGeolocation);
+
 		// show the user's address as the value in the searchEndorsements searchInput
+
 		searchValue = reversedGeolocation.addresses[0].address.freeformAddress;
-		return reversedGeolocation;
+
+		return searchValue;
+
 	}
 
-	const success = (position: any) => {
+	const success = (position: GeoLocationPosition) => {
 
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
@@ -76,6 +86,7 @@
 	// get user's location using JavaScript geolocation
 
 	const findUserLocation = () => {
+
 		navigator.geolocation.getCurrentPosition(success, error)
 
 	}
@@ -85,15 +96,17 @@
 	$: if (useCurrentLocationChecked) { findUserLocation() } 
 
 	const searchInputValueChangeHandler = () => {
-		if (useCurrentLocationChecked && (reversedGeolocation !== searchValue)) {
+
+		if (useCurrentLocationChecked && (reversedGeolocation.addresses[0].address.freeformAddress !== searchValue)) {
+
 			useCurrentLocationChecked = false;
+
 			return useCurrentLocationChecked;
+
 		}
 	}
 
 	// console.log(data);
-
-	let searchValue: string;
 
 	const searchSubmitHandler = () => {
 		console.log('search submit clicked!');

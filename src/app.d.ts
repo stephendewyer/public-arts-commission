@@ -30,6 +30,67 @@ declare global {
         label: string;
 		panel: typeof SvelteComponent<any>;
     }
+
+	interface GeolocationCoordinates {
+		accuracy: number;
+		altitude: number;
+		altitudeAccuracy: number;
+		heading: number | string;
+		latitude: string | number;
+		longitude: string | number;
+		speed: number | string;
+	}
+
+	interface GeoLocationPosition {
+		coords: GeolocationCoordinates;
+		timestamp: number;
+	}
+
+	interface summaryReverseGeoLocation {
+		queryTime: number;
+		numResults: number;
+	}
+
+	interface boundingBoxReverseGeoLocation {
+		northEast: string;
+		southWest: string;
+		entity: string;
+	}
+
+	interface addressReverseGeoLocation {
+		buildingNumber: string;
+		streetNumber: string;
+		routeNumbers: [];
+		street: string;
+		streetName: string;
+		streetNameAndNumber: string;
+		countryCode: string;
+		countrySubdivision: string;
+		countrySecondarySubdivision: string;
+		municipality: string;
+		postalCode: string;
+		municipalitySubdivision: string;
+		country: string;
+		countryCodeISO3: string;
+		freeformAddress: string;
+		boundingBox: boundingBoxReverseGeoLocation;
+		extendedPostalCode: string;
+		countrySubdivisionName: string;
+		countrySubdivisionCode: string;
+		localName: string;
+	}
+
+	interface addressesReverseGeoLocation {
+		address: addressReverseGeoLocation;
+		position: string;
+		id: string;
+	}
+
+	interface ReverseGeoLocation {
+		addresses: addressesReverseGeoLocation[];
+		summary: summaryReverseGeoLocation;
+	}
+
 	
 }
 
