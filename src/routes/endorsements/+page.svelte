@@ -14,19 +14,21 @@
 
     // get string from url of whether get current location checkbox checked and address
 
-    let searchQueries: string[] = $page.url.search.split("?");
+    let searchQueries: string[];
 
-    console.log(searchQueries);
 
-    if (searchQueries[1] === "current_address_checked=true") {
-        useCurrentLocationChecked = true;
-    } else if (searchQueries[1] !== "current_address_checked=true") {
-        searchValue = searchQueries[2].replace(/_/g, ' ');
-        if (searchValue !== "") {
-            disableButton = false;
-        }
-    }    
-
+    if ($page.url.search !== "") {
+        searchQueries = $page.url.search.split("?");
+        console.log(searchQueries);
+        if (searchQueries[1] === "current_address_checked=true") {
+            useCurrentLocationChecked = true;
+        } else if (searchQueries[1] !== "current_address_checked=true") {
+            searchValue = searchQueries[2].replace(/_/g, ' ');
+            if (searchValue !== "") {
+                disableButton = false;
+            }
+        }    
+    }
     // once user clicks "use my current location" checkbox, 
 
 	// define the latitude and longitude variables
@@ -171,6 +173,7 @@
 		flex-direction: row;
 		width: 100%;
         justify-content: center;
+        padding: 2rem 0;
 	}
 
 	.use_current_location_checkbox {

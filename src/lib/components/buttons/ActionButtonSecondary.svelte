@@ -22,14 +22,15 @@
 <style>
 
     .submit_button {
-        margin: 1rem;
+        margin: 1rem 0 2rem 0;
 		color: #4C4239;
 		fill: #4C4239;
 		background-color: transparent;
+        text-align: left;
 		border: none;
-		padding: 0.5rem 1rem;
+		padding: 0.5rem 0;
 		gap: 0.25rem;
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		font-weight: 600;
 		display: flex;
 		flex-direction: row;
@@ -52,7 +53,7 @@
 
     @media (max-width: 1140px) {
         .submit_button {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
         }
 
         .arrow {

@@ -125,10 +125,10 @@
 
 </script>
 
-<div id="campaign">
-    <h3>
-        apply for an endorsement
-    </h3>
+<div id="administrator">
+    <h1>
+        administrator login
+    </h1>
     <form 
         on:submit|preventDefault={campaignLoginHandler} 
         class="login_form"
@@ -176,31 +176,22 @@
             log in
         </SubmitButton>
         <div class="login_helpers_container">
-            <div class="login_helpers_column">
-                <h4 class="login_helper_prompt">
-                    don't have an account?
-                </h4>
+            <h4>
+                forgot your password?
+            </h4>
+            <a href="/reset-password">
                 <ActionButtonSecondary>
-                    create a free account
+                    reset password
                 </ActionButtonSecondary>
-            </div>
-            <div class="login_helpers_column">
-                <h4 class="login_helper_prompt">
-                    forgot your password?
-                </h4>
-                <a href="/reset-password">
-                    <ActionButtonSecondary>
-                        reset password
-                    </ActionButtonSecondary>
-                </a>
-            </div>
+            </a>
         </div>
+        
     </form>
 </div>
 
 <style>
 
-    #campaign {
+    #administrator {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -223,41 +214,10 @@
 
     .login_helpers_container {
         display: flex;
-        flex-direction: row;
-        align-items: flex-start;
         width: 100%;
         padding: 2rem 0 0 0;
-    }
-
-    .login_helpers_column {
-        width: 50%;
-        display: flex;
         flex-direction: column;
-        justify-content: flex-start;
         align-items: center;
-    }
-
-    .login_helper_prompt {
-        text-align: center;
-        width: 100%;
-        padding: 0 0.5rem;
-    }
-
-    @media (max-width: 1140px) {
-        
-        .login_helpers_container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .login_helpers_column {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-        }
     }
 
 </style>
