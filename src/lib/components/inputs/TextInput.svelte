@@ -2,8 +2,8 @@
   export let placeholder: string;
   export let inputID: string;
   export let inputName: string;
-  export let inputType: string;
   export let inputLabel: boolean;
+  export let textInputValue: string;
 
 </script>
 {#if inputLabel !== false}
@@ -15,7 +15,8 @@
     placeholder={placeholder}
     id={inputID}
     name={inputName}
-    type={inputType}
+    type="text"
+    bind:value={textInputValue}
 />
 
 <style>

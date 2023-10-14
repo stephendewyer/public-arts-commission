@@ -1,9 +1,13 @@
 <script lang="ts">
-    import Input from '$lib/components/inputs/input.svelte';
+    import EmailInput from '$lib/components/inputs/EmailInput.svelte';
+    import TextInput from '$lib/components/inputs/TextInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
 
     export let voterLoginClicked: string | undefined = "";
+
+    let textInputValue: string;
+    let emailInputValue: string;
 
     const voterLoginHandler = () => {
 		
@@ -21,20 +25,26 @@
         class="login_form"
     > 
         <div class="login_input">
-            <Input 
+            <EmailInput 
                 placeholder="myEmail@myDomain.com"
                 inputID="voter_email"
                 inputName="voter_email"
-                inputType="email"
-            >email</Input>
+                inputLabel={true}
+                bind:emailInputValue={emailInputValue}
+            >
+                email
+            </EmailInput>
         </div>
         <div class="login_input">
-            <Input 
+            <TextInput 
                 placeholder="myPassword"
                 inputID="voter_password"
                 inputName="voter_password"
-                inputType="text"
-            >password</Input>
+                inputLabel={true}
+                bind:textInputValue={textInputValue}
+            >
+                password
+            </TextInput>
         </div>
         <SubmitButton on:click={() => voterLoginHandler()}>
             log in

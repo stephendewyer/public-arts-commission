@@ -18,8 +18,3 @@
         />
     {/if}
 {/each}
-
-<style>
-    
-    
-</style>

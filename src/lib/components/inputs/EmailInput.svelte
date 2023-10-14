@@ -3,7 +3,7 @@
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let searchInputValue: string;
+    export let emailInputValue: string;
   
   </script>
   {#if inputLabel !== false}
@@ -15,8 +15,8 @@
       placeholder={placeholder}
       id={inputID}
       name={inputName}
-      type="search"
-      bind:value={searchInputValue}
+      type="text"
+      bind:value={emailInputValue}
   />
   
   <style>
@@ -32,21 +32,17 @@
       }
       
       input {
-        background-color: #EFF9F2;
-        border-radius: 3rem;
-        color: #484B47;
-        font-size: 1.4rem;
-        padding: 0.5rem 1rem 0.5rem 3rem;
-        border-width: 2px;
-        border-color: #EFF9F2;
-        border-style: solid;
-        transition: border-color 0.2s linear;
-        outline: none;
-        width: 100%;
-        background-image: url('$lib/images/icons/magnifying_glass.svg');
-        background-size: 1.8rem;
-        background-repeat: no-repeat;
-        background-position: 10px center;          
+          background-color: #EFF9F2;
+          border-radius: 3rem;
+          color: #484B47;
+          font-size: 1.4rem;
+          padding: 0.5rem 1rem;
+          border-width: 2px;
+          border-color: #EFF9F2;
+          border-style: solid;
+          transition: border-color 0.2s linear;
+          outline: none;
+          width: 100%;
       }
   
       input:hover {
@@ -63,25 +59,11 @@
           color: #484B47;
           opacity: 50%; /* Firefox */
       }
-
-      input[type="search"]::-webkit-search-cancel-button {
-        -webkit-appearance: none;
-        display: inline-block;
-        width: 12px;
-        height: 12px;
-        margin-left: 10px;
-        background:
-            linear-gradient(45deg, rgba(0,0,0,0) 0%,rgba(0,0,0,0) 43%,#000 45%,#000 55%,rgba(0,0,0,0) 57%,rgba(0,0,0,0) 100%),
-            linear-gradient(135deg, transparent 0%,transparent 43%,#000 45%,#000 55%,transparent 57%,transparent 100%);
-        }
   
       @media (max-width: 1440px) {
-
-        input {
-            font-size: 1.2rem;
-            padding: 0.5rem 1rem 0.5rem 2.5rem;
-            background-size: 1.5rem;       
-        }
+          input {
+              font-size: 1.2rem;
+          }
   
           label {
               font-size: 1.2rem;

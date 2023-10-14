@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 	import LoginBackground from '$lib/images/11_December_2012_take_Lansing,_Michigan.jpg';
-  	import Checkbox from '$lib/components/inputs/checkbox.svelte';
+  	import Checkbox from '$lib/components/inputs/Checkbox.svelte';
 	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
 	import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 	import LoginCampaign from '$lib/components/logins/LoginCampaign.svelte';
@@ -12,21 +12,89 @@
 
     export let data;
 
+	let activeLoginTab: number;
+
 	$: activeLoginTab = 0;
 
 	let campaignLoginClicked: string = "";
 	let voterLoginClicked: string = "";
 
+	let useCurrentLocationChecked: boolean;
+
 	$: campaignLoginClicked;
 	$: voterLoginClicked;
+
+	$: useCurrentLocationChecked;
 
 	$: if (campaignLoginClicked !== "") { console.log(campaignLoginClicked) };
 	$: if (voterLoginClicked !== "") { console.log(voterLoginClicked) };
 
+	// once user clicks "use my current location" checkbox, 
+    
+	// define the latitude and longitude variables
+	let latitude: string = "";
+	let longitude: string = "";	
+
+	// set the latitude and longitude with user's position.coords
+
+	let reversedGeolocation: any;
+
+	// use the user's geolocation to get the user's address
+
+	async function reverseGeocode(latitude: string, longitude: string): Promise<string> {
+		const response = await fetch("/api/reverseGeocode", {
+			method: 'POST',
+			body: JSON.stringify({
+				latitude,
+				longitude
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		reversedGeolocation = await response.json();
+		// show the user's address as the value in the searchEndorsements searchInput
+		searchValue = reversedGeolocation.addresses[0].address.freeformAddress;
+		return reversedGeolocation;
+	}
+
+	const success = (position: any) => {
+
+		latitude = position.coords.latitude;
+		longitude = position.coords.longitude;
+
+		reverseGeocode(latitude, longitude);
+
+	}
+
+	// log an error if getCurrentPosition fails
+
+	const error = (error: any) => {
+		console.log("Unable to retrieve your location!" + error);
+	}
+
+	// get user's location using JavaScript geolocation
+
+	const findUserLocation = () => {
+		navigator.geolocation.getCurrentPosition(success, error)
+
+	}
+
+	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
+
+	$: if (useCurrentLocationChecked) { 
+		findUserLocation() 
+	} else{
+		searchValue = ""
+	};
+
 	// console.log(data);
 
+	let searchValue: string;
+
 	const searchSubmitHandler = () => {
-		console.log('search submit clicked!')
+		console.log('search submit clicked!');
+		console.log(`search value is ${searchValue}`);
 	}
 
 	const loginTabPanels: tabPanels[] = [
@@ -43,6 +111,8 @@
 			panel: LoginCampaign
 		}
 	]
+
+	
 
 </script>
 
@@ -73,7 +143,9 @@
 		</h2>
 		<div class="search_endorsement_fields">
 			<div class="use_current_location_checkbox">
-				<Checkbox>
+				<Checkbox 
+					bind:checked={useCurrentLocationChecked}
+				>
 					use my current location
 				</Checkbox>
 			</div>
@@ -82,8 +154,8 @@
 					placeholder="1000 MyStreet, MyCity, MyState  10000"
 					inputID="address"
 					inputName="address"
-					inputType="search"
 					inputLabel={false}
+					bind:searchInputValue={searchValue}
 				/>
 			</div>
 			

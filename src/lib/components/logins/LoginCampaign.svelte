@@ -1,7 +1,11 @@
 <script lang="ts">
-    import Input from '$lib/components/inputs/input.svelte';
+    import EmailInput from '$lib/components/inputs/EmailInput.svelte';
+    import TextInput from '$lib/components/inputs/TextInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
+
+    let emailInputValue: string;
+    let textInputValue: string;
 
     export let campaignLoginClicked: string | undefined = "";
 
@@ -20,24 +24,26 @@
         class="login_form"
     > 
         <div class="login_input">
-            <Input 
+            <EmailInput 
                 placeholder="campaignEmail@campaignDomain.com"
                 inputID="campaign_email"
                 inputName="campaign_email"
-                inputType="email"
+                bind:emailInputValue={emailInputValue}
+                inputLabel={true}
             >
                 email
-            </Input>
+            </EmailInput>
         </div>
         <div class="login_input">
-            <Input 
+            <TextInput 
                 placeholder="campaignPassword"
                 inputID="campaign_password"
                 inputName="campaign_password"
-                inputType="text"
+                bind:textInputValue={textInputValue}
+                inputLabel={true}
             >
                 password
-            </Input>
+            </TextInput>
         </div>
         <SubmitButton on:click={() => campaignLoginHandler()}>
             log in
