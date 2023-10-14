@@ -8,7 +8,9 @@
   </script>
   {#if inputLabel !== false}
       <div class="input_label">
-          <label for={inputID} ><slot /></label>
+          <label for={inputID} >
+            <slot />
+        </label>
       </div>
   {/if}
   <input 

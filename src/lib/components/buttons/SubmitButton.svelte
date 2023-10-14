@@ -1,8 +1,12 @@
-<script>
-
+<script lang="ts">
+    export let disable: boolean;
 </script>
 
-<button class="submit_button" type="submit">
+<button 
+    class={ disable ? "submit_button_disabled" : "submit_button" }
+    type="submit"
+    disabled={disable}
+>
     <slot />
     <div class="arrow">
         <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
@@ -20,6 +24,10 @@
 </button>
 
 <style>
+
+    .submit_button_disabled {
+        display: none;
+    }
 
     .submit_button {
         margin: 1rem;

@@ -4,11 +4,16 @@
   export let inputName: string;
   export let inputLabel: boolean;
   export let textInputValue: string;
+  export let textInputValueChanged: any;
+  export let textInputFocusChanged: any;
+  export let textInputBlurChanged: any;
 
 </script>
 {#if inputLabel !== false}
     <div class="input_label">
-        <label for={inputID} ><slot /></label>
+        <label for={inputID} >
+            <slot />
+        </label>
     </div>
 {/if}
 <input 
@@ -17,6 +22,9 @@
     name={inputName}
     type="text"
     bind:value={textInputValue}
+    on:input={textInputValueChanged}
+    on:focus={textInputFocusChanged}
+    on:blur={textInputBlurChanged}
 />
 
 <style>
