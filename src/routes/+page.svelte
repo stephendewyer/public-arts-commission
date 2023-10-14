@@ -15,16 +15,18 @@
 
 	let activeLoginTab: number;
 
-	$: activeLoginTab = 0;
-
 	let campaignLoginClicked: string = "";
 	let voterLoginClicked: string = "";
 
 	let useCurrentLocationChecked: boolean;
 
+	let disableButton: boolean = true;
+
+	$: activeLoginTab = 0;
+
 	$: campaignLoginClicked;
 	$: voterLoginClicked;
-
+	
 	$: useCurrentLocationChecked;
 
 	$: if (campaignLoginClicked !== "") { console.log(campaignLoginClicked) };
@@ -92,8 +94,6 @@
 
 	}
 
-	let disableButton: boolean = true;
-
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
 	$: if (useCurrentLocationChecked) { findUserLocation() } 
@@ -118,11 +118,9 @@
 	// console.log(data);
 
 	const searchSubmitHandler = () => {
-		console.log('search submit clicked!');
-		console.log(`search value is ${searchValue}`);
 
-		const addressSlug = "";
-		goto('/contact')
+		const addressSlug = searchValue.replace(/ /g,"_");
+		goto(`/endorsements?current_address_checked=${useCurrentLocationChecked}?${addressSlug}`);
 	}
 
 	const loginTabPanels: tabPanels[] = [

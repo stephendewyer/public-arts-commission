@@ -3,6 +3,7 @@
     import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
+    import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 
     export let campaignLoginClicked: string | undefined = "";
 
@@ -134,6 +135,7 @@
     > 
         <div class="login_input">
             <EmailInput 
+                isValid={emailIsValid}
                 placeholder="campaignEmail@campaignDomain.com"
                 inputID="campaign_email"
                 inputName="campaign_email"
@@ -146,24 +148,25 @@
                 email
             </EmailInput>
             {#if (!emailIsValid)}
-                <div>{emailInputErrorMessage}</div>
+                <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
             {/if}
         </div>
         <div class="login_input">
             <PasswordInput 
+                isValid={passwordIsValid}
                 placeholder="campaignPassword"
                 inputID="campaign_password"
                 inputName="campaign_password"
-                bind:textInputValue={passwordInputValue}
+                bind:passwordInputValue={passwordInputValue}
                 inputLabel={true}
-                textInputValueChanged={() => loginPasswordValueChangedHandler()}
-                textInputFocusChanged={() => loginPasswordFocusChangedHandler()}
-                textInputBlurChanged={() => loginPasswordBlurChangedHandler()}
+                passwordInputValueChanged={() => loginPasswordValueChangedHandler()}
+                passwordInputFocusChanged={() => loginPasswordFocusChangedHandler()}
+                passwordInputBlurChanged={() => loginPasswordBlurChangedHandler()}
             >
                 password
             </PasswordInput>
             {#if (!passwordIsValid)}
-                <div>{passwordInputErrorMessage}</div>
+                <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
             {/if}
         </div>
         <SubmitButton 

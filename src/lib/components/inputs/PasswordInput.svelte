@@ -3,10 +3,11 @@
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let textInputValue: string;
-    export let textInputValueChanged: any;
-    export let textInputFocusChanged: any;
-    export let textInputBlurChanged: any;
+    export let passwordInputValue: string;
+    export let passwordInputValueChanged: any;
+    export let passwordInputFocusChanged: any;
+    export let passwordInputBlurChanged: any;
+    export let isValid: boolean;
   
   </script>
   {#if inputLabel !== false}
@@ -17,15 +18,16 @@
       </div>
   {/if}
   <input 
+      style={isValid ? "border-color: #EFF9F2" : "border-color: #9F1D20"}
       placeholder={placeholder}
       id={inputID}
       name={inputName}
       type="password"
       autocomplete="off"
-      bind:value={textInputValue}
-      on:input={textInputValueChanged}
-      on:focus={textInputFocusChanged}
-      on:blur={textInputBlurChanged}
+      bind:value={passwordInputValue}
+      on:input={passwordInputValueChanged}
+      on:focus={passwordInputFocusChanged}
+      on:blur={passwordInputBlurChanged}
   />
   
   <style>

@@ -1,46 +1,45 @@
 <script lang="ts">
-  export let placeholder: string;
-  export let inputID: string;
-  export let inputName: string;
-  export let inputLabel: boolean;
-  export let textInputValue: string;
-  export let textInputValueChanged: any;
-  export let textInputFocusChanged: any;
-  export let textInputBlurChanged: any;
-    export let isValid: boolean;
+
 </script>
-{#if inputLabel !== false}
-    <div class="input_label">
-        <label for={inputID} >
-            <slot />
-        </label>
-    </div>
-{/if}
-<input 
-    style={isValid ? "border-color: #EFF9F2" : "border-color: #9F1D20"}
-    placeholder={placeholder}
-    id={inputID}
-    name={inputName}
-    type="text"
-    bind:value={textInputValue}
-    on:input={textInputValueChanged}
-    on:focus={textInputFocusChanged}
-    on:blur={textInputBlurChanged}
-/>
+
+<div class="selection_container">
+    <label for="election_years">
+        <slot />
+    </label>
+    <select 
+        id="election_years" 
+        name="years"
+        placeholder="2024"
+    >
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        <option value="2022">2022</option>
+        <option value="2021">2021</option>
+        <option value="2020">2020</option>
+        <option value="2019">2019</option>
+        <option value="2018">2018</option>
+        <option value="2017">2017</option>
+    </select>
+</div>
 
 <style>
+
+    .selection_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 1rem 1rem 1rem;
+    }
 
     label {
         font-size: 1.4rem;
         font-weight: 600;
         color: #1C2226;
-    }
-
-    .input_label {
         padding: 0 0 0.5rem 0;
     }
     
-    input {
+    select {
+        cursor: pointer;
         background-color: #EFF9F2;
         border-radius: 3rem;
         color: #484B47;
@@ -52,14 +51,15 @@
         transition: border-color 0.2s linear;
         outline: none;
         width: 100%;
+        max-width: 10rem;
     }
 
-    input:hover {
+    select:hover {
         border-color: #CB6D44;
         transition: border-color 0.2s linear;
     }
 
-    input:focus {
+    select:focus {
         border-color: #1C2226;
         transition: border-color 0.2s linear;
     }
@@ -70,29 +70,23 @@
     }
 
     @media (max-width: 1440px) {
-        input {
+        select {
             font-size: 1.2rem;
         }
 
         label {
             font-size: 1.2rem;
-        }
-
-        .input_label {
             padding: 0 0 0.4rem 0;
         }
     }
 
     @media (max-width: 720px) {
-        input {
+        select {
             font-size: 1rem;
         }
 
         label {
             font-size: 1rem;
-        }
-
-        .input_label {
             padding: 0 0 0.3rem 0;
         }
     }

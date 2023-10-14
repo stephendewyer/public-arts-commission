@@ -7,6 +7,7 @@
     export let emailInputValueChanged: any;
     export let emailInputFocusChanged: any;
     export let emailInputBlurChanged: any;
+    export let isValid: boolean;
   
   </script>
   {#if inputLabel !== false}
@@ -15,14 +16,15 @@
       </div>
   {/if}
   <input 
-      placeholder={placeholder}
-      id={inputID}
-      name={inputName}
-      type="text"
-      bind:value={emailInputValue}
-      on:input={emailInputValueChanged}
-      on:focus={emailInputFocusChanged}
-      on:blur={emailInputBlurChanged}
+    style={isValid ? "border-color: #EFF9F2" : "border-color: #9F1D20"}
+    placeholder={placeholder}
+    id={inputID}
+    name={inputName}
+    type="text"
+    bind:value={emailInputValue}
+    on:input={emailInputValueChanged}
+    on:focus={emailInputFocusChanged}
+    on:blur={emailInputBlurChanged}
   />
   
   <style>
