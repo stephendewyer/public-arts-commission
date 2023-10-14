@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 	import LoginBackground from '$lib/images/11_December_2012_take_Lansing,_Michigan.jpg';
-  	import Checkbox from '$lib/components/inputs/Checkbox.svelte';
+  	import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
 	import SearchInput from '$lib/components/inputs/SearchInput.svelte';
 	import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 	import LoginCampaign from '$lib/components/logins/LoginCampaign.svelte';
