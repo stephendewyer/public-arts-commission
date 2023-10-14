@@ -72,4 +72,24 @@
 		overflow: visible;
 	}
 
+    @media (max-width: 1440px) {
+        .active_tab {
+            font-size: 1.35rem;
+        }
+
+        .tab {
+            font-size: 1.35rem;
+        }
+      }
+  
+      @media (max-width: 720px) {
+        .active_tab {
+            font-size: 1.2rem;
+        }
+
+        .tab {
+            font-size: 1.2rem;
+        }
+      }
+
 </style>

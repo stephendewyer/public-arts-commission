@@ -9,6 +9,7 @@
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
+	import { goto } from '$app/navigation'
 
     export let data;
 
@@ -58,8 +59,6 @@
 
 		reversedGeolocation = await response.json();
 
-		console.log(reversedGeolocation);
-
 		// show the user's address as the value in the searchEndorsements searchInput
 
 		searchValue = reversedGeolocation.addresses[0].address.freeformAddress;
@@ -69,6 +68,8 @@
 	}
 
 	const success = (position: GeoLocationPosition) => {
+
+		disableButton = false;
 
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
@@ -91,11 +92,19 @@
 
 	}
 
+	let disableButton: boolean = true;
+
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
 	$: if (useCurrentLocationChecked) { findUserLocation() } 
 
 	const searchInputValueChangeHandler = () => {
+
+		if (searchValue !== "" ) {
+			disableButton = false;
+		} else if (searchValue == "") {
+			disableButton = true;
+		}
 
 		if (useCurrentLocationChecked && (reversedGeolocation.addresses[0].address.freeformAddress !== searchValue)) {
 
@@ -111,6 +120,9 @@
 	const searchSubmitHandler = () => {
 		console.log('search submit clicked!');
 		console.log(`search value is ${searchValue}`);
+
+		const addressSlug = "";
+		goto('/contact')
 	}
 
 	const loginTabPanels: tabPanels[] = [
@@ -127,8 +139,6 @@
 			panel: LoginCampaign
 		}
 	]
-
-	
 
 </script>
 
@@ -177,7 +187,9 @@
 			</div>
 			
 		</div>
-		<ActionButton>
+		<ActionButton
+			bind:disable={disableButton}
+		>
 			search endorsements
 		</ActionButton>
 	</form>
