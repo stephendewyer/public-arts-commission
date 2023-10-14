@@ -1,5 +1,4 @@
 <script>
-	// @ts-ignore
 	import MainHeader from '$lib/components/MainHeader.svelte';
 	import MainFooter from '$lib/components/MainFooter.svelte';
 	import SideDrawer from '$lib/components/navigation/sideDrawer/SideDrawer.svelte';
