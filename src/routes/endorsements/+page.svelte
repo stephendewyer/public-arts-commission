@@ -136,24 +136,28 @@
 			id: uuidv4(),
 			index: 0,
 			label: "federal",
+			hasCapitol: true,
 			panel: FederalEndorsementsPanel
 		},
 		{
 			id: uuidv4(),
 			index: 1,
 			label: "state",
+			hasCapitol: true,
 			panel: StateEndorsementsPanel
 		},
 		{
 			id: uuidv4(),
 			index: 2,
 			label: "county",
+			hasCapitol: true,
 			panel: CountyEndorsementsPanel
 		},
 		{
 			id: uuidv4(),
 			index: 3,
 			label: "city",
+			hasCapitol: true,
 			panel: CityEndorsementsPanel
 		}
 	]
@@ -244,9 +248,11 @@
 	}
 
     @media (max-width: 1140px) {
+
 		.search_endorsement_fields {
 			display: flex;
 			flex-direction: column;
+			align-items: center;
 			gap: 1rem;
 			width: 100%;
 			

@@ -3,9 +3,6 @@
 
 </script>
 <div>
-    <p>
-        city endorsements
-    </p>
     <EndorsementCategories />
 </div>
 

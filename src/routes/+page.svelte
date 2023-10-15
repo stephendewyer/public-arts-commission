@@ -119,12 +119,14 @@
 			id: uuidv4(),
 			index: 0,
 			label: "voter",
+			hasCapitol: false,
 			panel: LoginVoter
 		},
 		{
 			id: uuidv4(),
 			index: 1,
 			label: "campaign",
+			hasCapitol: false,
 			panel: LoginCampaign
 		}
 	]
@@ -276,9 +278,9 @@
 		.search_endorsement_fields {
 			display: flex;
 			flex-direction: column;
+			align-items: center;
 			gap: 1rem;
 			width: 100%;
-			
 		}
 
 		.use_current_location_checkbox {

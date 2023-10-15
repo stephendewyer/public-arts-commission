@@ -28,7 +28,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 2rem 1rem 1rem 1rem;
+        padding: 1rem;
     }
 
     label {

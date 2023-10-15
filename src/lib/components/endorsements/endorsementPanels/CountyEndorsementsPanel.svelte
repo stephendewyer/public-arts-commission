@@ -3,9 +3,6 @@
 
 </script>
 <div>
-    <p>
-        county endorsements
-    </p>
     <EndorsementCategories />
 </div>
 

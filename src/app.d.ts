@@ -28,6 +28,7 @@ declare global {
         id: string;
 		index: number;
         label: string;
+		hasCapitol: boolean;
 		panel: typeof SvelteComponent<any>;
     }
 
