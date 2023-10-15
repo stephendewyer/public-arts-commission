@@ -3,6 +3,7 @@
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     import YearSelection from '$lib/components/selections/YearSelection.svelte';
+    import { onMount } from 'svelte';
 
     import { page } from '$app/stores';
 
@@ -16,19 +17,23 @@
 
     let searchQueries: string[];
 
+    // use onMount to get data from params after page is prerendered
 
-    if ($page.url.search !== "") {
-        searchQueries = $page.url.search.split("?");
-        console.log(searchQueries);
-        if (searchQueries[1] === "current_address_checked=true") {
-            useCurrentLocationChecked = true;
-        } else if (searchQueries[1] !== "current_address_checked=true") {
-            searchValue = searchQueries[2].replace(/_/g, ' ');
-            if (searchValue !== "") {
-                disableButton = false;
-            }
-        }    
-    }
+    onMount(() => {
+        if ($page.url.search !== "") {
+            searchQueries = $page.url.search.split("?");
+            console.log(searchQueries);
+            if (searchQueries[1] === "current_address_checked=true") {
+                useCurrentLocationChecked = true;
+            } else if (searchQueries[1] !== "current_address_checked=true") {
+                searchValue = searchQueries[2].replace(/_/g, ' ');
+                if (searchValue !== "") {
+                    disableButton = false;
+                }
+            }    
+        }
+    })
+    
     // once user clicks "use my current location" checkbox, 
 
 	// define the latitude and longitude variables
