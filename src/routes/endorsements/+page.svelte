@@ -94,8 +94,6 @@
 
 	}
 
-	
-
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
 	$: if (useCurrentLocationChecked) { findUserLocation() } 
@@ -190,6 +188,42 @@
 	.search_endorsements_by_address_input {
 		width: 40rem;
 		display: inline;
+	}
+
+    @media (max-width: 1140px) {
+		.search_endorsement_fields {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			width: 100%;
+			
+		}
+
+		.use_current_location_checkbox {
+			width:20rem;
+			display: block;
+			margin: 0;
+		}
+
+		.search_endorsements_by_address_input {
+			width: 40rem;
+			display: block;
+		}
+	}
+
+	@media (max-width: 720px) {
+
+		.search_endorsements_by_address_form {
+			width: 100%;
+		}
+
+		.search_endorsement_fields {
+			flex-direction: column;
+		}
+
+		.search_endorsements_by_address_input {
+			width: 100%;
+		}
 	}
 
 </style>
