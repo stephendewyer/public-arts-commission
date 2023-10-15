@@ -19,9 +19,9 @@
 
     let disableButton: boolean = true;
 
-	let activeTab: number;
+	let activeEndorsementsTab: number;
 
-	$: activeLoginTab = 0;
+	$: activeEndorsementsTab = 0;
 
     // get string from url of whether get current location checkbox checked and address
 
@@ -162,7 +162,6 @@
 		}
 	]
 
-
 </script>
     
     <form 
@@ -204,13 +203,13 @@
 	<div class="endorsements_tabs_container">
 		<Tabs
 			tabPanels={endorsementTabPanels} 
-			bind:activeTab={activeLoginTab}
+			bind:activeTab={activeEndorsementsTab}
 		/>
 	</div>
 	
 	<TabPanel
 		tabPanels={endorsementTabPanels} 
-		bind:activeTab={activeLoginTab}
+		bind:activeTab={activeEndorsementsTab}
 	/>
 
 <style>

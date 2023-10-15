@@ -40,6 +40,7 @@
 </ul>
 
 <style>
+
     .tabs_container {
         display: flex;
         list-style: none;
@@ -65,6 +66,10 @@
     .tab:hover {
         color: #28387C;
         opacity: 100%;
+    }
+
+    .tab:hover > .capitolIcon {
+        fill: #28387C;
     }
 
     .active_tab {
@@ -100,10 +105,6 @@
         max-width: 4rem;
         fill: #4C4239;
         transition: fill 0.2s linear;
-    }
-
-    .capitolIcon:hover {
-        fill: #28387C;
     }
 
     .capitolIcon_active {
