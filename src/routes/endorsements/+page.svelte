@@ -163,14 +163,15 @@
 	]
 
 </script>
-    
+
+<section>    
     <form 
 		on:submit|preventDefault={searchSubmitHandler}
 		class="search_endorsements_by_address_form"
 	>
-		<h2>
+		<h1>
 		    search endorsements by address
-		</h2>
+		</h1>
 		<div class="search_endorsement_fields">
 			<div class="use_current_location_checkbox">
 				<Checkbox 
@@ -211,6 +212,7 @@
 		tabPanels={endorsementTabPanels} 
 		bind:activeTab={activeEndorsementsTab}
 	/>
+</section>
 
 <style>
 

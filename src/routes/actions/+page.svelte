@@ -23,7 +23,7 @@
 
 </script>
 
-<div class="actions">
+<section class="actions">
     <form 
         class="actions_search_form"
         on:submit|preventDefault={searchSubmitHandler}
@@ -62,7 +62,7 @@
             </h3>
         </li>
     </ul>
-</div>
+</section>
 
 <style>
 
