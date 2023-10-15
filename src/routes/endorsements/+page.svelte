@@ -4,14 +4,24 @@
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     import YearSelection from '$lib/components/selections/YearSelection.svelte';
     import { onMount } from 'svelte';
-
-    import { page } from '$app/stores';
+	import { page } from '$app/stores';
+	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
+	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
+    import { v4 as uuidv4 } from 'uuid';
+	import CityEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/CityEndorsementsPanel.svelte';
+	import CountyEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/CountyEndorsementsPanel.svelte';
+	import StateEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/StateEndorsementsPanel.svelte';
+	import FederalEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/FederalEndorsementsPanel.svelte';
 
     let searchValue: string;
 
     let useCurrentLocationChecked: boolean;
 
     let disableButton: boolean = true;
+
+	let activeTab: number;
+
+	$: activeLoginTab = 0;
 
     // get string from url of whether get current location checkbox checked and address
 
@@ -121,6 +131,33 @@
 
 	}
 
+	const endorsementTabPanels: tabPanels[] = [
+		{
+			id: uuidv4(),
+			index: 0,
+			label: "federal",
+			panel: FederalEndorsementsPanel
+		},
+		{
+			id: uuidv4(),
+			index: 1,
+			label: "state",
+			panel: StateEndorsementsPanel
+		},
+		{
+			id: uuidv4(),
+			index: 2,
+			label: "county",
+			panel: CountyEndorsementsPanel
+		},
+		{
+			id: uuidv4(),
+			index: 3,
+			label: "city",
+			panel: CityEndorsementsPanel
+		}
+	]
+
 
 </script>
     
@@ -160,6 +197,17 @@
 			search endorsements
 		</ActionButton>
 	</form>
+	<div class="endorsements_tabs_container">
+		<Tabs
+			tabPanels={endorsementTabPanels} 
+			bind:activeTab={activeLoginTab}
+		/>
+	</div>
+	
+	<TabPanel
+		tabPanels={endorsementTabPanels} 
+		bind:activeTab={activeLoginTab}
+	/>
 
 <style>
 
@@ -188,6 +236,11 @@
 	.search_endorsements_by_address_input {
 		width: 40rem;
 		display: inline;
+	}
+
+	.endorsements_tabs_container {
+		display: flex;
+		justify-content: center;
 	}
 
     @media (max-width: 1140px) {

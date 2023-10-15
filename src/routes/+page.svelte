@@ -15,22 +15,13 @@
 
 	let activeLoginTab: number;
 
-	let campaignLoginClicked: string = "";
-	let voterLoginClicked: string = "";
-
 	let useCurrentLocationChecked: boolean;
 
 	let disableButton: boolean = true;
 
 	$: activeLoginTab = 0;
 
-	$: campaignLoginClicked;
-	$: voterLoginClicked;
-	
 	$: useCurrentLocationChecked;
-
-	$: if (campaignLoginClicked !== "") { console.log(campaignLoginClicked) };
-	$: if (voterLoginClicked !== "") { console.log(voterLoginClicked) };
 
 	// once user clicks "use my current location" checkbox, 
 
@@ -206,8 +197,6 @@
 			<Panel 
 				tabPanels={loginTabPanels} 
 				bind:activeTab={activeLoginTab}
-				bind:campaignLoginClicked
-				bind:voterLoginClicked
 			/>			
 		</div>
 	</div>

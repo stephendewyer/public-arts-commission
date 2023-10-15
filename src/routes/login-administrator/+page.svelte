@@ -24,7 +24,6 @@
 		padding: 2rem 1rem;
 		background-repeat: no-repeat;
 		background-position: center;
-        gap: 0.25rem;
 	}
 
 	.login_section {
