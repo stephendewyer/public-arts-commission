@@ -87,15 +87,15 @@ h4 {
 	}
 
 	h2 {
-		font-size: 1.5rem;
-	}
-	
-	h3 {
 		font-size: 1.4rem;
 	}
 	
+	h3 {
+		font-size: 1.2rem;
+	}
+	
 	h4 {
-		font-size: 1.3rem;
+		font-size: 1rem;
 	}
 }
 
@@ -105,14 +105,14 @@ h4 {
 	}
 
 	h2 {
-		font-size: 1.3rem;
-	}
-	
-	h3 {
 		font-size: 1.2rem;
 	}
 	
+	h3 {
+		font-size: 1rem;
+	}
+	
 	h4 {
-		font-size: 1.1rem;
+		font-size: 1rem;
 	}
 }

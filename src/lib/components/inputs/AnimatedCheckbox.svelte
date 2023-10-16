@@ -91,6 +91,7 @@
 
     .checkbox_container {
       font-size: 1.25rem;
+      justify-content: center;
     }
   
   }

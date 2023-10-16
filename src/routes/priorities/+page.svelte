@@ -13,7 +13,7 @@
             >
                 <PriorityAccordion>
                     <span slot="head">
-                            Excellent public art for everyone, by everyone and available to everyone
+                        Excellent public art for everyone, by everyone and available to everyone
                     </span>
                     <div slot="details">
                         <p>
@@ -415,7 +415,10 @@
         line-height: 1.35;
         color: #1C2226;
         font-weight: 600;
+    }
 
+    li {
+        margin: 1rem 0;
     }
 
 
