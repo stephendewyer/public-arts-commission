@@ -137,6 +137,10 @@
             width: 1.25rem;
             min-width: 1.25rem;
         }
+
+        .heading {
+            font-size: 1.25rem;
+        }
     }
   
     @media (max-width: 720px) {
@@ -152,6 +156,10 @@
         .arrow_active {
             width: 1rem;
             min-width: 1rem;
+        }
+
+        .heading {
+            font-size: 1rem;
         }
     }
 
