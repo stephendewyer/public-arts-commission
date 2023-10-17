@@ -10,9 +10,14 @@
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation'
+	import {onMount} from 'svelte';
 
     export let data;
 
+	onMount(() => {
+		const element = document.getElementById("forthcoming_actions");
+		element?.scrollIntoView({behavior: "smooth"})
+	})
 	let activeLoginTab: number;
 
 	let useCurrentLocationChecked: boolean;
@@ -202,7 +207,10 @@
 			/>			
 		</div>
 	</div>
-	<div class="forthcoming actions">
+	<div 
+		id="forthcoming_actions"
+		class="forthcoming actions"
+	>
 		<h2>
 			forthcoming actions
 		</h2>
