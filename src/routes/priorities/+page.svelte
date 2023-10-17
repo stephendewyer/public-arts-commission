@@ -1,11 +1,24 @@
 <script lang="ts">
-
     import PriorityAccordion from '$lib/components/accordions/PriorityAccordion.svelte';
+    import { onMount } from 'svelte';
+
+    let PrioritiesNavTabs: HTMLElement;
+
     let governmentTabLink: HTMLElement;
     let climateTabLink: HTMLElement;
     let economyTabLink: HTMLElement;
     let educationTabLink: HTMLElement;
     let healthTabLink: HTMLElement;
+
+    let intersecting: string = "governmentPriorities";
+
+    $: intersecting;
+
+    let governmentPrioritiesElement: HTMLElement;
+    let climatePrioritiesElement: HTMLElement;
+    let economyPrioritiesElement: HTMLElement;
+    let educationPrioritiesElement: HTMLElement;
+    let healthPrioritiesElement: HTMLElement;
 
     const scrollToElement = ( tabLink: HTMLElement ) => {
         let linkedElementId: string | null;
@@ -13,21 +26,40 @@
         let linkedElement: HTMLElement | null;
         if (linkedElementId !== null) {
             linkedElement = document.getElementById(linkedElementId);
+            // set the intersecting element to the linkedElementId
+            intersecting = linkedElementId;
             linkedElement?.scrollIntoView({
                 behavior: 'smooth'
             });
         } else {
             return
         }
-    }    
+    }
+
+    let y: number;
+
+    let NavTabsSticky: boolean = false;
+
+    let currentStickyPosition: number;
+
+    onMount(() => {
+        currentStickyPosition = PrioritiesNavTabs?.getBoundingClientRect().top + window.scrollY;
+    })
+
+    $: if (y > currentStickyPosition) {
+        NavTabsSticky = true;
+    } else {
+        NavTabsSticky = false;
+    }
 
 </script>
-
+<svelte:window bind:scrollY={y} />
 <section>
     <h1 class="priorities_heading">our priorities guide all our operations</h1>
     <div class="priorities_container">
         <ul
-            class="priorities_tabs"
+            class={ NavTabsSticky ? "priorities_tabs_sticky" : "priorities_tabs" }
+            bind:this={PrioritiesNavTabs}
         >
             <a
                 tabindex={1}
@@ -39,7 +71,7 @@
             >
                 <li
                     id="government_priorities"
-                    class="priorities_category_tab"
+                    class={ intersecting === "governmentPriorities" ? "priorities_category_tab_active" : "priorities_category_tab"}
                 >
                     <h2>
                         government
@@ -56,7 +88,7 @@
             >
                 <li
                     id="climate_priorities"
-                    class="priorities_category_tab"
+                    class={ intersecting === "climatePriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         climate
@@ -73,14 +105,13 @@
             >
                 <li
                     id="economic_priorities"
-                    class="priorities_category_tab"
+                    class={ intersecting === "economicPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         economy
                     </h2>
                 </li>
             </a>
-            
             <a
                 tabindex={4}
                 role="tab"
@@ -91,7 +122,7 @@
             >
                 <li
                     id="education_priorities"
-                    class="priorities_category_tab"
+                    class={ intersecting === "educationPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         education
@@ -108,7 +139,7 @@
             >
                 <li
                     id="health_priorities"
-                    class="priorities_category_tab"
+                    class={ intersecting === "healthPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         health
@@ -119,8 +150,8 @@
         <div 
             id="governmentPriorities"
             class="priorities_for_government_container"
+            bind:this={governmentPrioritiesElement}
         >
-            
             <ol class="category_priorities">
                 <li 
                     class="priority_heading"
@@ -280,11 +311,27 @@
                         </div>
                     </PriorityAccordion>
                 </li>
+                <li class="priority_heading">
+                    <h2>
+                        Expand the Supreme Court of the United States
+                    </h2>
+                </li>
+                <li class="priority_heading">
+                    <h2>
+                        Create term limits for justices on the Supreme Court of the United States
+                    </h2>
+                </li>
+                <li class="priority_heading">
+                    <h2>
+                        Establish a code of ethics for justices on the Supreme Court of the United States
+                    </h2>
+                </li>
             </ol>
         </div>
         <div 
             id="climatePriorities"
             class="priorities_for_climate_container"
+            bind:this={climatePrioritiesElement}
         >
             <ol class="category_priorities">
                 <li class="priority_heading">
@@ -309,10 +356,11 @@
                 </li>
             </ol>
             
-        </div>
+        </div> 
         <div 
             id="economicPriorities"
             class="priorities_for_economy_container"
+            bind:this={economyPrioritiesElement}
         >
             <ol class="category_priorities">
                 <li class="priority_heading">
@@ -353,7 +401,6 @@
                             </ol>
                         </div>
                     </PriorityAccordion>
-                    
                 </li>
                 <li class="priority_heading">
                     <PriorityAccordion>
@@ -451,10 +498,11 @@
                     </PriorityAccordion>
                 </li>
             </ol>
-        </div>        
+        </div>
         <div 
             id="educationPriorities"
             class="priorities_for_education_container"
+            bind:this={educationPrioritiesElement}
         >
             <ol class="category_priorities">
                 <li class="priority_heading">
@@ -478,22 +526,52 @@
         <div 
             id="healthPriorities"
             class="priorities_for_health_container"
+            bind:this={healthPrioritiesElement}
         >
             <ol class="category_priorities">
                 <li class="priority_heading">
-                    Medicare for all
+                    <h2>
+                        Medicare for all
+                    </h2>
+                    
                 </li>
             </ol>
         </div>
     </div>
-    
-
 </section>
 
 <style>
 
+    .priorities_container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
     .priorities_tabs {
+        position: absolute;
+        top: "initial";
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        z-index: 4;
+        box-shadow:
+            0 1px 1px hsl(0deg 0% 0% / 0.075),
+            0 2px 2px hsl(0deg 0% 0% / 0.075),
+            0 4px 4px hsl(0deg 0% 0% / 0.075),
+            0 8px 8px hsl(0deg 0% 0% / 0.075),
+            0 16px 16px hsl(0deg 0% 0% / 0.075)
+        ;
+    }
+
+    .priorities_tabs_sticky {
         position: fixed;
+        top: 0;
+        display: flex;
+        flex-direction: column;
         list-style: none;
         padding: 0;
         margin: 0;
@@ -508,13 +586,39 @@
     }
 
     .priorities_category_tab  {
+        position: relative;
         margin: 0;
         padding: 1rem 2rem;
+    }
+
+    .priorities_category_tab_active {
+        position: relative;
+        margin: 0;
+        padding: 1rem 2rem;
+    }
+
+    .priorities_category_tab_active > h2 {
+        margin: 0;
+
     }
 
     .priorities_category_tab > h2 {
         margin: 0;
     }
+
+    .priorities_category_tab_active::before {
+		--size: 6px;
+		content: '';
+		width: 0;
+		position: absolute;
+		top: 0;
+		right: 0;
+        left: 0;
+        bottom: 0;
+		border: var(--size) solid transparent;
+		border-left: 6px solid #4C4239;
+		overflow: visible;
+	}
 
     #government_priorities {
         background-color: #F4F5FB;
@@ -548,6 +652,7 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        width: 100%;
     }
 
     .priorities_for_climate_container {
@@ -555,6 +660,7 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        width: 100%;
     }
 
     .priorities_for_economy_container {
@@ -562,6 +668,7 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        width: 100%;
     }
 
     .priorities_for_education_container {
@@ -569,6 +676,7 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        width: 100%;
     }
 
     .priorities_for_health_container {
@@ -576,6 +684,7 @@
         display: flex;
         flex-direction: row;
         justify-content: center;
+        width: 100%;
     }
 
     .category_priorities {
@@ -596,17 +705,135 @@
 
 
     @media (max-width: 1440px) {
+        .priorities_container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
 
-        .priority_heading {
-            font-size: 1.5rem;
+        .priorities_tabs {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            z-index: 4;
+            box-shadow: none;
+        }
+
+        .priorities_tabs_sticky {
+            position: fixed;
+            display: flex;
+            list-style: none;
+            width: auto;
+            flex-direction: row;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            z-index: 4;
+            box-shadow:
+                0 1px 1px hsl(0deg 0% 0% / 0.075),
+                0 2px 2px hsl(0deg 0% 0% / 0.075),
+                0 4px 4px hsl(0deg 0% 0% / 0.075),
+                0 8px 8px hsl(0deg 0% 0% / 0.075),
+                0 16px 16px hsl(0deg 0% 0% / 0.075)
+            ;
+        }
+
+        .priorities_category_tab_active::before {
+            --size: 6px;
+            content: '';
+            width: auto;
+            position: absolute;
+            height: 0;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            border: var(--size) solid transparent;
+            border-top: 6px solid #4C4239;
+            overflow: visible;
+        }
+
+        .priorities_category_tab  {
+            position: relative;
+            margin: 0;
+            padding: 1rem 2rem;
+        }
+
+        .priorities_category_tab_active {
+            position: relative;
+            margin: 0;
+            padding: 1rem 2rem;
+        }
+
+        .priorities_category_tab_active > h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .priorities_category_tab > h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .category_priorities {
+            font-size: 1rem;
+        }
+
+        .priority_heading > h2{
+            font-size: 1rem;
         }
 
     }
 
     @media (max-width: 720px) {
 
+        .priorities_tabs {
+            position: relative;
+            display: flex;
+            width: 100%;
+            flex-direction: row;
+            justify-content: center;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            z-index: 4;
+            box-shadow: none;
+        }
+
+        .priorities_category_tab  {
+            position: relative;
+            margin: 0;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .priorities_category_tab_active {
+            position: relative;
+            margin: 0;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .priorities_category_tab_active > h2 {
+            margin: 0;
+            font-size: 0.75rem;
+        }
+
+        .priorities_category_tab > h2 {
+            margin: 0;
+            font-size: 0.75rem;
+        }
+
         .priority_heading {
-            font-size: 1.3rem;
+            font-size: 1rem;
+        }
+
+        .priority_heading {
+            font-size: 1rem;
         }
 
     }

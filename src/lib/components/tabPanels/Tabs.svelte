@@ -122,9 +122,9 @@
         .tab {
             font-size: 1.35rem;
         }
-      }
+    }
   
-      @media (max-width: 720px) {
+    @media (max-width: 720px) {
         .active_tab {
             font-size: 1rem;
         }
@@ -146,6 +146,6 @@
         .capitolIcon_active {
             max-width: 2rem;
         }
-      }
+    }
 
 </style>
