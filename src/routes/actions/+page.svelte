@@ -78,6 +78,8 @@
         align-items: center;
         width: 100%;
         max-width: 40rem;
+        padding: 0 1rem 1rem 1rem;
+
     }
 
     .search_endorsements_by_address_input {

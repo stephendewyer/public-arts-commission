@@ -557,7 +557,7 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        z-index: 4;
+        z-index: 1;
         box-shadow:
             0 1px 1px hsl(0deg 0% 0% / 0.075),
             0 2px 2px hsl(0deg 0% 0% / 0.075),
@@ -575,7 +575,7 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        z-index: 4;
+        z-index: 1;
         box-shadow:
             0 1px 1px hsl(0deg 0% 0% / 0.075),
             0 2px 2px hsl(0deg 0% 0% / 0.075),
@@ -721,7 +721,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            z-index: 4;
+            z-index: 1;
             box-shadow: none;
         }
 
@@ -734,7 +734,7 @@
             justify-content: center;
             padding: 0;
             margin: 0;
-            z-index: 4;
+            z-index: 1;
             box-shadow:
                 0 1px 1px hsl(0deg 0% 0% / 0.075),
                 0 2px 2px hsl(0deg 0% 0% / 0.075),
@@ -802,7 +802,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            z-index: 4;
+            z-index: 1;
             box-shadow: none;
         }
 
