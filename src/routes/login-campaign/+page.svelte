@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LoginBackground from '$lib/images/11_December_2012_take_Lansing,_Michigan.jpg';
+    import LoginBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import CampaignLoginPanel from '$lib/components/logins/LoginCampaign.svelte';
 </script>
 

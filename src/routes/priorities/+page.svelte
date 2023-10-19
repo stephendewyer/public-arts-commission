@@ -781,12 +781,12 @@
             font-size: 1.25rem;
         }
 
-        .category_priorities {
-            font-size: 1rem;
+        .category_priorities > li {
+            font-size: 1.25rem;
         }
 
-        .priority_heading > h2{
-            font-size: 1rem;
+        .priority_heading > h2 {
+            font-size: 1.25rem;
         }
 
     }
@@ -828,11 +828,12 @@
             font-size: 0.75rem;
         }
 
-        .priority_heading {
+        .category_priorities > li {
             font-size: 1rem;
         }
 
-        .priority_heading {
+        .priority_heading > h2 {
+            margin: 0;
             font-size: 1rem;
         }
 

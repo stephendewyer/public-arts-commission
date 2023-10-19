@@ -92,7 +92,16 @@ declare global {
 		summary: summaryReverseGeoLocation;
 	}
 
-	
+	interface TeamMember {
+        index: number;
+        imageSource: string;
+        imageAltText: string;
+        name: string;
+        title: string;
+        board_director: boolean;
+        staff: boolean;
+    }
+
 }
 
 export {};

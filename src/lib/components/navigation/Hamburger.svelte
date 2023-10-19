@@ -6,6 +6,7 @@
 	class="hamburger" 
 	class:open 
 	on:click={() => open = !open}
+	aria-pressed={open}
 >
     <svg width=32 height=24>
         <line id="top" x1=0 y1=2  x2=32 y2=2/>
