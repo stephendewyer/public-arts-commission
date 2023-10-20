@@ -100,6 +100,9 @@ declare global {
         title: string;
         board_director: boolean;
         staff: boolean;
+		bio: string;
+		email: string | null;
+		urlAddress: string[] | string | null;
     }
 
 }

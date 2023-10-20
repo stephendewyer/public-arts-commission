@@ -1,5 +1,5 @@
 <script lang="ts">
-    import productsBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
+    import productsBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan_02.jpg';
 
     const poleParagraphs = () => {
         return (`

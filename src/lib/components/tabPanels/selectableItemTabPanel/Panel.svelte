@@ -1,7 +1,8 @@
 <script lang="ts">
     export let tabPanels: tabPanels[];
     export let activeTab: number;
-
+    export let selectedItemId: number | null;
+    
 </script>
 
 {#each tabPanels as tabPanel, i}
@@ -12,6 +13,7 @@
             role="tabpanel"
             tabindex={-i}
             aria-labelledby="tabpanel_header_{tabPanel.label}"
+            bind:selectedItem={selectedItemId}
         />
     {/if}
 {/each}

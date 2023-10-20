@@ -22,6 +22,9 @@
 		<Backdrop bind:open />
 	{/if}
 	<SideDrawer bind:open />
+	<!-- {#if (TeamMemberOpen)}
+		<Backdrop bind:TeamMemberOpen />
+	{/if} -->
 </div>
 
 <style>

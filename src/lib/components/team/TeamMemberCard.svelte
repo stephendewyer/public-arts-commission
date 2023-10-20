@@ -1,9 +1,10 @@
 <script lang="ts">
-    import TeamMemberImage from '$lib/images/people/stephen_dewyer_profile.jpg';
 
     export let memberData: TeamMember;
 
     export let memberCardHovered: boolean = false;
+
+    export let memberCardSelectedId: number | null = null;
 
     const memberCardActiveHandler = () => {
         memberCardHovered = true;
@@ -13,10 +14,14 @@
         memberCardHovered = false;
     }
 
+    const memberCardSelectedHandler = (index: number) => {
+        memberCardSelectedId = index;
+    }
+
 </script>
 
 <div 
-    tabindex={1}
+    tabindex={memberData.index}
     class={(memberCardHovered) ? "card_container_active" : "card_container"}
     role="treeitem"
     aria-selected={memberCardHovered}
@@ -26,6 +31,8 @@
     on:mouseover={() => memberCardActiveHandler()}
     on:mouseleave={() => memberCardHandler()}
     on:mouseout={() => memberCardHandler()}
+    on:click={() => memberCardSelectedHandler(memberData.index)}
+    on:keyup={() => memberCardSelectedHandler(memberData.index)}
 >
     <div 
         class="meatballs_container"

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import Tabs from '$lib/components/tabPanels/Tabs.svelte';
-    import Panel from '$lib/components/tabPanels/Panel.svelte';
+    import Tabs from '$lib/components/tabPanels/selectableItemTabPanel/Tabs.svelte';
+    import Panel from '$lib/components/tabPanels/selectableItemTabPanel/Panel.svelte';
     import { v4 as uuidv4 } from 'uuid';
     import AllTeam from '$lib/components/team/All.svelte';
     import Staff from '$lib/components/team/Staff.svelte';
@@ -8,7 +8,10 @@
     import MemorialHallGalleryDoors from '$lib/images/backgrounds/Boston,_MA_30_October_2017_02.jpg';
 
     let activeTeamTab: number = 0;
-    $: activeTeamTab;
+
+    let memberCardSelectId: number | null = null;
+
+    $: console.log(memberCardSelectId)
 
     const teamTabPanels: tabPanels[] = [
 		{
@@ -45,6 +48,7 @@
         <Panel 
             tabPanels={teamTabPanels} 
             bind:activeTab={activeTeamTab}
+            bind:selectedItemId={memberCardSelectId}
         />		
     </div>
     <div 
