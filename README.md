@@ -19,6 +19,6 @@ The tech stack will include:
 - GraphQL
 - Stripe
 - SendGrid
-- Google Maps
+- TomTom (for geocoding)
 
 The live version is at https://public-arts-commission.vercel.app.

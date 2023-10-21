@@ -64,6 +64,48 @@
     <h2 class="story_section_heading">
         history
     </h2>
+    <ul class="history_list">
+        <li>
+            <h3>
+                2011
+            </h3>
+            <p>
+                public arts commission Founder stephen dewyer participates in Occupy Wall Street.  Many of the organizers of Occupy Wall Street are artists.  The protests evenually fizzle due to failure to translate popular support into government change.  A key learning lesson is to engage electoral politics with popular movements for democratic change organized by art workers.
+            </p>
+        </li>
+        <li>
+            <h3>
+                2017
+            </h3>
+            <p>
+                public arts commission launches to strengthen democracy by expanding the political imaginary.  public arts commission plans to strengthen the political imaginary by supporting democratic movements that support greater public art and by giving a platform for the art community participating in politics.
+            </p>
+        </li>
+        <li>
+            <h3>
+                2018
+            </h3>
+            <p>
+                First election featuring campaigns endorsed by public arts commission.  Elections have historic turnout with many of the campaigns endorsed by public arts commission winning in the primaries and general elections.  
+            </p>
+        </li>
+        <li>
+            <h3>
+                2020
+            </h3>
+            <p>
+                public arts commission debuts a web portal for campaigns to apply for endorsement.  Progressive turnout saves democracy by helping defeat authoritarian candidates and electing progressive, democratic office holders.
+            </p>
+        </li>
+        <li>
+            <h3>
+                2023
+            </h3>
+            <p>
+                public arts commission begins working on a web platform to better achieve goals using advanced technologies and artificial intelligence.
+            </p>
+        </li>
+    </ul>
     <h2 class="story_section_heading">
         impact
     </h2>
@@ -76,6 +118,7 @@
 </section>
 
 <style>
+
     .story_section_heading {
         display: flex;
         flex-direction: column;
@@ -88,4 +131,34 @@
         width: 100%;
         margin: 0 auto;
     }
+
+    .history_list {
+        list-style: none;
+        width: 100%;
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .history_list > li {
+        display: flex;
+        gap: 2rem;
+        padding: 1rem;
+        align-items: flex-start;
+    }
+
+    .history_list > li > h3 {
+        padding: 0;
+        margin: 0;
+    }
+
+    @media (max-width: 720px) {
+
+        .history_list > li {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+    }
+
 </style>

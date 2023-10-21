@@ -51,7 +51,7 @@
         unsubscribeSidedrawerOpenStore();
     })
 
-    $: if ((selectedTeamMemberId !== null) && (sidedrawerIsOpen == false)) {
+    $: if ((selectedTeamMemberId) && (sidedrawerIsOpen == false)) {
         sidedrawerIsOpen = true;
     } else { 
         sidedrawerIsOpen = false;
