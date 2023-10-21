@@ -94,7 +94,7 @@
                         <ul>
                             {#each teamMember.urlAddress as url, i}
                                 <a href={url} target="_blank">
-                                    <li>
+                                    <li class="urlAddress">
                                         {url}
                                     </li>
                                 </a>
@@ -152,6 +152,7 @@
         display: flex;
         background-color: #F4F5FB;
         justify-content: flex-end;
+        border-bottom: #1C2226 2px solid;
     }
 
     .close_button {
@@ -163,6 +164,7 @@
         width: 3rem;
         margin: 1rem;
         cursor: pointer;
+        
     }
 
     .close_button:hover {
@@ -175,9 +177,19 @@
 
     .info_heading {
         text-decoration: underline;
+        font-size: 1.5rem;
+    }
+
+    .urlAddress {
+        overflow-wrap: break-word;
     }
     
-    @media (min-width: 1140px) {
+    @media (max-width: 1140px) {
+
+        .close_button {
+            width: 2rem;
+            margin: 1rem;
+        }
         
         .side_drawer_closed {
             left: auto;
@@ -185,6 +197,18 @@
 
         .side_drawer_open {
             left: auto;
+        }
+
+        .info_heading {
+            font-size: 1.3rem;
+        }
+
+    }
+
+    @media (max-width: 720px) {
+
+        .info_heading {
+            font-size: 1rem;
         }
 
     }
