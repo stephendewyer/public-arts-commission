@@ -324,6 +324,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        font-size: 1rem;
     }
 
     .footer_nav_tab[aria-current='page'] {
@@ -338,6 +339,7 @@
         color: #E3CDB2;
         transition: color 0.2s linear;
         cursor: pointer;
+        font-size: 1rem;
     }
 
     .footer_nav_tab_secondary:hover {
@@ -410,6 +412,14 @@
         .footer_nav_column {
             width: auto;
             margin: 0 auto;
+        }
+
+        .footer_nav_tab_secondary {
+            font-size: 0.8rem;
+        }
+
+        .footer_nav_tab {
+            font-size: 0.8rem;
         }
 
         .footer_info {

@@ -115,11 +115,13 @@
     }
 
     .side_drawer_closed {
-        position: absolute;
-        height: 100%;
+        position: fixed;
+        height: 100vh;
+        overflow-y: scroll;
         width: 100%;
         max-width: 40rem;
         background-color: #F4F5FB;
+        top: 0;
         left: auto;
         right: 0;
         transform: translateX(100%);
@@ -127,29 +129,35 @@
     }
 
     .side_drawer_open {
-        position: absolute;
-        height: 100%;
+        position: fixed;
+        height: 100vh;
+        overflow-y: scroll;
         width: 100%;
         max-width: 40rem;
         background-color: #F4F5FB;
         top: 0;
         right: 0;
         left: auto;
-        width: auto;
         transform: translateX(0);
         transition: transform 0.3s ease-in-out;
     }
 
     .close_button_container {
+        position: sticky;
+        position: -webkit-sticky;
+        top: 0;
+        left: 0;
+        right: 0;
         width: 100%;
         display: flex;
+        background-color: #F4F5FB;
         justify-content: flex-end;
     }
 
     .close_button {
         outline: none;
         border: none;
-        background-color: none;
+        background-color: transparent;
         fill: #4C4239;
         transition: fill 0.2s linear;
         width: 3rem;
@@ -170,7 +178,14 @@
     }
     
     @media (min-width: 1140px) {
+        
+        .side_drawer_closed {
+            left: auto;
+        }
 
+        .side_drawer_open {
+            left: auto;
+        }
 
     }
 

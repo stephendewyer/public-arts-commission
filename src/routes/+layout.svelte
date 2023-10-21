@@ -27,7 +27,7 @@
 	// $: if (selectedTeamMemberId) {
 	// 	sideDrawerOpen = true;
 	// }
-	
+
 	let sideDrawerOpen: boolean = false;
 
 	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
@@ -56,7 +56,9 @@
 	{#if (sideDrawerOpen)}
 		<TeamMemberBackdrop />
 	{/if}
-	<svelte:component this={TeamMemberSideDrawer} />
+	<svelte:component 
+		this={TeamMemberSideDrawer} 
+	/>
 
 </div>
 

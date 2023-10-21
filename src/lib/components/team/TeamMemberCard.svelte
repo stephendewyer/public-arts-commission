@@ -1,10 +1,12 @@
 <script lang="ts">
 
+    import { TeamMemberSelectedStore } from "$lib/stores/TeamMemberSelectedStore";
+
     export let memberData: TeamMember;
 
-    export let memberCardHovered: boolean = false;
+    let memberCardHovered: boolean = false;
 
-    export let memberCardSelectedId: number | null = null;
+    // update the team member selected store with the value for the member Id of selected member card
 
     const memberCardActiveHandler = () => {
         memberCardHovered = true;
@@ -14,9 +16,14 @@
         memberCardHovered = false;
     }
 
+    let memberCardSelectedId: number | null = null;
+
     const memberCardSelectedHandler = (index: number) => {
+
         memberCardSelectedId = index;
-        // do something to register index on each click for every index, not just different
+
+        TeamMemberSelectedStore.update((value) => value = memberCardSelectedId);
+
     }
 
 </script>

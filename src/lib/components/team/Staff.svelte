@@ -2,10 +2,7 @@
     import TeamMemberData from '$lib/data/teamMembers.json';
     import TeamMemberCard from '$lib/components/team/TeamMemberCard.svelte';
 
-    export let selectedItem: number | null;
-
     const data: TeamMember[] = TeamMemberData;
-
 
 </script>
 
@@ -14,7 +11,6 @@
         {#if TeamMemberData.staff === true}
             <TeamMemberCard 
                 memberData={TeamMemberData} 
-                bind:memberCardSelectedId={selectedItem}
             />
         {/if}
     {/each}

@@ -2,8 +2,6 @@
     import TeamMemberData from '$lib/data/teamMembers.json';
     import TeamMemberCard from '$lib/components/team/TeamMemberCard.svelte';
 
-    export let selectedItem: number | null;
-
     const data: TeamMember[] = TeamMemberData;
 
 </script>
@@ -11,8 +9,7 @@
 <div class="members_container">
     {#each data as TeamMemberData, i}
         <TeamMemberCard 
-            memberData={TeamMemberData} 
-            bind:memberCardSelectedId={selectedItem}
+            memberData={TeamMemberData}
         />
     {/each}
 </div>

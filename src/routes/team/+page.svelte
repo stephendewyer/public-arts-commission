@@ -22,10 +22,6 @@
 
     let sidedrawerIsOpen: boolean = false;
 
-    // update the team member selected store with the value for the member Id of selected member card
-
-    $: TeamMemberSelectedStore.update((value) => value = memberCardSelectId);
-
     // update the sidedrawer open store using sidedrawerIsOpen variable
 
     $: SidedrawerOpenStore.update((value) => value = sidedrawerIsOpen);    
