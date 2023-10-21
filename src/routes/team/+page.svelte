@@ -6,12 +6,62 @@
     import Staff from '$lib/components/team/Staff.svelte';
     import BoardOfDirectors from '$lib/components/team/BoardOfDirectors.svelte';
     import MemorialHallGalleryDoors from '$lib/images/backgrounds/Boston,_MA_30_October_2017_02.jpg';
+    import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
+    import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
+    import { onDestroy } from 'svelte';
+
+    // set the value for the active panel
 
     let activeTeamTab: number = 0;
 
+    // set the value for member Id of selected member card
+
     let memberCardSelectId: number | null = null;
 
-    $: console.log(memberCardSelectId)
+    // set the value for sidedrawer open
+
+    let sidedrawerIsOpen: boolean = false;
+
+    // update the team member selected store with the value for the member Id of selected member card
+
+    $: TeamMemberSelectedStore.update((value) => value = memberCardSelectId);
+
+    // update the sidedrawer open store using sidedrawerIsOpen variable
+
+    $: SidedrawerOpenStore.update((value) => value = sidedrawerIsOpen);    
+
+    // set the value for the selected team member id from store
+
+    let selectedTeamMemberId: number | null = null;
+
+    // get the value for the selected team member id from store
+
+	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
+		selectedTeamMemberId = value;
+	});
+
+    // set the value for the sidedrawer open value from store
+
+    let sideDrawerOpen: boolean = false;
+
+    // get the value for the sidedrawer open value from store
+
+	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
+		sideDrawerOpen = value;
+	});
+
+    onDestroy(() => {
+        unsubscribeTeamMemberSelectedStore();
+        unsubscribeSidedrawerOpenStore();
+    })
+
+    $: if ((selectedTeamMemberId !== null) && (sidedrawerIsOpen == false)) {
+        sidedrawerIsOpen = true;
+    } else { 
+        sidedrawerIsOpen = false;
+    }
+
+    $: console.log(selectedTeamMemberId);
 
     const teamTabPanels: tabPanels[] = [
 		{

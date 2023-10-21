@@ -1,13 +1,44 @@
-<script>
+<script lang="ts">
 	import MainHeader from '$lib/components/MainHeader.svelte';
 	import MainFooter from '$lib/components/MainFooter.svelte';
 	import SideDrawer from '$lib/components/navigation/sideDrawer/SideDrawer.svelte';
 	import Backdrop from '$lib/components/navigation/sideDrawer/Backdrop.svelte';
+	import TeamMemberBackdrop from '$lib/components/team/teamMemberSidedrawer/TeamMemberBackdrop.svelte'
+	import TeamMemberSideDrawer from '$lib/components/team/teamMemberSidedrawer/TeamMemberSidedrawer.svelte'
+	import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
+	import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
+  	import { onDestroy } from 'svelte';
 	import './styles.css';
 
-	let open = false;
+	let open: boolean = false;
 
-	let footerElHeight = 0;
+	
+
+	let footerElHeight: number = 0;
+
+	let selectedTeamMemberId: number | null = null;
+
+	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
+		selectedTeamMemberId = value;
+	});
+
+	// if the team member is selected, open the sidedrawer
+
+	// $: if (selectedTeamMemberId) {
+	// 	sideDrawerOpen = true;
+	// }
+	
+	let sideDrawerOpen: boolean = false;
+
+	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
+		sideDrawerOpen = value;
+	});
+
+	onDestroy(() => {
+		unsubscribeTeamMemberSelectedStore();
+		unsubscribeSidedrawerOpenStore();
+	});
+
 </script>
 
 <div class="app">
@@ -22,9 +53,11 @@
 		<Backdrop bind:open />
 	{/if}
 	<SideDrawer bind:open />
-	<!-- {#if (TeamMemberOpen)}
-		<Backdrop bind:TeamMemberOpen />
-	{/if} -->
+	{#if (sideDrawerOpen)}
+		<TeamMemberBackdrop />
+	{/if}
+	<svelte:component this={TeamMemberSideDrawer} />
+
 </div>
 
 <style>

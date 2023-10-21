@@ -16,6 +16,7 @@
 
     const memberCardSelectedHandler = (index: number) => {
         memberCardSelectedId = index;
+        // do something to register index on each click for every index, not just different
     }
 
 </script>

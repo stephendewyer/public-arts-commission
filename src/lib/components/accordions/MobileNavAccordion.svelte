@@ -14,10 +14,6 @@
 
     $: activeTab = setActiveIndex;
 
-    // $: console.log(`tab is activated ${setIsActive}`)
-    // $: console.log(`activated tab is ${activeTab}`);
-    // $: console.log(`activated tab index is ${setActiveIndex}`);
-
 </script>
 
 <ul>
