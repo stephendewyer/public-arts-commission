@@ -57,8 +57,6 @@
         sidedrawerIsOpen = false;
     }
 
-    $: console.log(selectedTeamMemberId);
-
     const teamTabPanels: tabPanels[] = [
 		{
 			id: uuidv4(),
