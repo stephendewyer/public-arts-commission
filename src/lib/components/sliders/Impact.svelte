@@ -2,7 +2,6 @@
     import { Splide, SplideSlide, SplideTrack } from '@splidejs/svelte-splide';
     import '@splidejs/svelte-splide/css';
     import SliderImage01 from '$lib/images/slides/slideshow_01/Erin_Maye_Quade_and_stephen_dewyer_13_August_2018.jpg';
-    // import SliderImage02 from '$lib/images/slides/slideshow_01/Julia_Salazar_screenshot.jpg';
     import SliderImage03 from '$lib/images/slides/slideshow_01/Katie_for_Ward_10_endorsed.jpg';
 
     const options = {
@@ -18,9 +17,6 @@
       <SplideSlide class="slide">
         <img src={SliderImage01} alt="public arts commission Founder stephen dewyer handshakes with Erin Maye Quade in front of public art in Northfield, Minnesota on 13 August 2018" />
       </SplideSlide>
-      <!-- <SplideSlide class="slide">
-        <img src={SliderImage02} alt="Julia Salazar on receiving a public arts commission endorsement" />
-      </SplideSlide> -->
       <SplideSlide class="slide">
         <img src={SliderImage03} alt="Katie Jones for Ward 10 endorsed by public arts commission" />
       </SplideSlide>

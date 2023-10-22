@@ -103,6 +103,9 @@
   .document_icon {
     width: 100%;
     max-width: 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   .download_icon {
@@ -143,10 +146,19 @@
 
     .download_button {
       padding: 0.5rem;
+      border: 1px solid #E3CDB2;
+    }
+
+    .download_button:hover {
+      border: 1px solid #4C4239;
     }
 
     .document_text {
       font-size: 1rem;
+    }
+
+    .document_icon {
+      height: 2.5rem;
     }
 
     .download_icon {
