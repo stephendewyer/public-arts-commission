@@ -6,6 +6,8 @@
     import ExhibitingPanel from '$lib/components/howWeWork/Exhibiting.svelte';
     import PlatformingPanel from '$lib/components/howWeWork/Platforming.svelte';
     import ConnectingPanel from '$lib/components/howWeWork/Connecting.svelte';
+    import ImpactSlider from '$lib/components/sliders/Impact.svelte';
+    import DownloadButton from '$lib/components/buttons/DownloadButton.svelte';
 
     let activeProcessTab: number = 0;
     $: activeProcessTab;
@@ -109,12 +111,33 @@
     <h2 class="story_section_heading">
         impact
     </h2>
+    <div class="impact_slider">
+        <ImpactSlider />
+    </div>
     <h2 class="story_section_heading">
         organization
     </h2>
+    <p class="story_paragraphs">
+        public arts commission is a grassroots, 501(c)(4) non-profit organization based in Minnesota.
+    </p>
+    <div class="organization_documents">
+        <DownloadButton
+            linkTarget="/assets/PDFs/public_arts_commission_bylaws.pdf"
+        >
+            bylaws
+        </DownloadButton>
+        <DownloadButton
+            linkTarget="/assets/PDFs/public_arts_commission_conflict_of_interest_policy.pdf"
+        >
+            conflict of interest policy
+        </DownloadButton>
+    </div>
     <h2 class="story_section_heading">
         location
     </h2>
+    <p class="story_paragraphs">
+        public arts commission combines art and politics across the United States at all levels of government and is currently headquartered in Minneapolis, Minnesota.
+    </p>
 </section>
 
 <style>
@@ -150,6 +173,18 @@
     .history_list > li > h3 {
         padding: 0;
         margin: 0;
+    }
+
+    .impact_slider {
+        width: 100%;
+        max-width: 60rem;
+        margin: 0 auto;
+    }
+
+    .organization_documents {
+        width: 100%;
+        max-width: 40rem;
+        margin: 0 auto;
     }
 
     @media (max-width: 720px) {

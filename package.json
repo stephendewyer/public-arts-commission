@@ -22,6 +22,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@splidejs/svelte-splide": "^0.2.9",
 		"@types/uuid": "^9.0.5",
 		"mysql2": "^3.6.1",
 		"uuid": "^9.0.1"
