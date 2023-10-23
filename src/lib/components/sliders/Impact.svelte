@@ -33,7 +33,7 @@
       // console.log({ main, thumbs });
       main.sync(thumbs.splide);
     });
-  }
+  };
   
 
 </script>

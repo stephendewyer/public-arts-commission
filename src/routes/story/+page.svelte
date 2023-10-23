@@ -12,6 +12,8 @@
     let activeProcessTab: number = 0;
     $: activeProcessTab;
 
+    $: slider = ImpactSlider;
+
     const loginTabPanels: tabPanels[] = [
 		{
 			id: uuidv4(),
@@ -112,7 +114,8 @@
         impact
     </h2>
     <div class="impact_slider">
-        <ImpactSlider />
+        <svelte:component this={slider} />
+        <!-- <ImpactSlider /> -->
     </div>
     <h2 class="story_section_heading">
         organization
