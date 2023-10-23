@@ -8,11 +8,18 @@
     import ConnectingPanel from '$lib/components/howWeWork/Connecting.svelte';
     import ImpactSlider from '$lib/components/sliders/Impact.svelte';
     import DownloadButton from '$lib/components/buttons/DownloadButton.svelte';
+  import { onMount } from 'svelte';
 
     let activeProcessTab: number = 0;
     $: activeProcessTab;
 
     $: slider = ImpactSlider;
+
+    let sliderImpact: any;
+
+    onMount(() => {
+        sliderImpact = slider;
+    })
 
     const loginTabPanels: tabPanels[] = [
 		{
@@ -114,7 +121,7 @@
         impact
     </h2>
     <div class="impact_slider">
-        <svelte:component this={slider} />
+        <svelte:component this={sliderImpact} />
         <!-- <ImpactSlider /> -->
     </div>
     <h2 class="story_section_heading">
