@@ -1,9 +1,26 @@
 <script lang="ts">
   import { Splide, SplideSlide } from '@splidejs/svelte-splide';
   import '@splidejs/svelte-splide/css';
-  import SliderImage01 from '$lib/images/slides/slideshow_01/Erin_Maye_Quade_and_stephen_dewyer_13_August_2018.jpg';
-  import SliderImage03 from '$lib/images/slides/slideshow_01/Katie_for_Ward_10_endorsed.jpg';
   import { afterUpdate } from 'svelte';
+
+  interface image {
+    index: number;
+    src: string;
+    alt: string
+  }
+
+  let images: image[] = [
+    {
+      index: 0,
+      src: "assets/images/sliders/slideshow_01/Erin_Maye_Quade_and_stephen_dewyer_13_August_2018.jpg",
+      alt: "public arts commission Founder stephen dewyer handshakes with Erin Maye Quade in front of public art in Northfield, Minnesota on 13 August 2018"
+    }, 
+    {
+      index: 1,
+      src: "assets/images/sliders/slideshow_01/Katie_for_Ward_10_endorsed.jpg",
+      alt: "Katie Jones for Ward 10 endorsed by public arts commission"
+    }
+  ]
 
   // set up carousel config
   const mainOptions = {
@@ -30,7 +47,6 @@
 
   $: if (main && thumbs) {
     afterUpdate(() => {
-      // console.log({ main, thumbs });
       main.sync(thumbs.splide);
     });
   };
@@ -45,12 +61,15 @@
         options={ mainOptions }
         aria-label="impact splide main gallery"
       >
-        <SplideSlide >
-          <img src={SliderImage01} alt="public arts commission Founder stephen dewyer handshakes with Erin Maye Quade in front of public art in Northfield, Minnesota on 13 August 2018" />
-        </SplideSlide>
-        <SplideSlide class="splide__slide">
-          <img src={SliderImage03} alt="Katie Jones for Ward 10 endorsed by public arts commission" />
-        </SplideSlide>
+        {#each images as image, i}
+          <SplideSlide >
+            <img 
+              class="main_image" 
+              src={image.src} 
+              alt={image.alt} 
+            />
+          </SplideSlide>
+        {/each}
       </Splide>
     </div>
     <div class="gallery_thumbs">
@@ -60,17 +79,58 @@
         options={ thumbsOptions }
         aria-label="impact splide thumbnails"
       >
-        <SplideSlide >
-          <img src={SliderImage01} alt="public arts commission Founder stephen dewyer handshakes with Erin Maye Quade in front of public art in Northfield, Minnesota on 13 August 2018" />
-        </SplideSlide>
-        <SplideSlide class="splide__slide">
-          <img src={SliderImage03} alt="Katie Jones for Ward 10 endorsed by public arts commission" />
-        </SplideSlide>
+        {#each images as thumbnailImage, i}
+          <SplideSlide >
+            <img 
+              class="thumbnail_image"
+              src={thumbnailImage.src} 
+              alt={thumbnailImage.alt} 
+            />
+          </SplideSlide>
+        {/each}
       </Splide>
     </div>
   </div>
 </div>
 
 <style>
+
+  .gallery_main {
+    padding: 0 0 1rem 0;
+  }
+
+  .main_image {
+    height: 100%;
+    max-height: 40rem;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .thumbnail_image {
+    height: 100%;
+    max-height: 10rem;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  @media (max-width: 1440px) {
+
+    .main_image {
+      max-height: 40rem;
+    }
+
+  }
+
+  @media (max-width: 720px) {
+
+    .main_image {
+      max-height: 14rem;
+    }
+
+    .thumbnail_image {
+      max-height: 4rem;
+    }
+
+  }
 
 </style>
