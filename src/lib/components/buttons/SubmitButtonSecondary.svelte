@@ -1,12 +1,20 @@
-<script>
-
+<script lang="ts">
+	export let disable: boolean;
 </script>
 
-<button class="submit_button" type="submit">
+<button 
+	class={ disable ? "submit_button_disabled" : "submit_button" }
+	type="submit"
+	disabled={disable}
+>
     <slot />
 </button>
 
 <style>
+
+	.submit_button_disabled {
+		display: none;
+	}
 
     .submit_button {
         margin: 1rem 1rem 0 1rem;

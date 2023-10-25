@@ -1,34 +1,43 @@
 <script lang="ts">
-  export let placeholder: string;
-  export let inputID: string;
-  export let inputName: string;
-  export let inputLabel: boolean;
-  export let textInputValue: string;
-  export let textInputValueChanged: any;
-  export let textInputFocusChanged: any;
-  export let textInputBlurChanged: any;
+    export let placeholder: string;
+    export let inputID: string;
+    export let inputName: string;
+    export let inputLabel: boolean;
+    export let textInputValue: string;
+    export let textInputValueChanged: any;
+    export let textInputFocusChanged: any;
+    export let textInputBlurChanged: any;
     export let isValid: boolean;
 </script>
-{#if inputLabel !== false}
-    <div class="input_label">
-        <label for={inputID} >
-            <slot />
-        </label>
-    </div>
-{/if}
-<input 
-    style={isValid ? "border-color: #EFF9F2" : "border-color: #9F1D20"}
-    placeholder={placeholder}
-    id={inputID}
-    name={inputName}
-    type="text"
-    bind:value={textInputValue}
-    on:input={textInputValueChanged}
-    on:focus={textInputFocusChanged}
-    on:blur={textInputBlurChanged}
-/>
+
+<div class="input_and_label_container">
+    {#if inputLabel !== false}
+        <div class="input_label">
+            <label for={inputID} >
+                <slot />
+            </label>
+        </div>
+    {/if}
+    <input 
+        style={isValid ? "border-color: #EFF9F2" : "border-color: #9F1D20"}
+        placeholder={placeholder}
+        id={inputID}
+        name={inputName}
+        type="text"
+        bind:value={textInputValue}
+        on:input={textInputValueChanged}
+        on:focus={textInputFocusChanged}
+        on:blur={textInputBlurChanged}
+    />
+</div>
 
 <style>
+
+    .input_and_label_container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
 
     label {
         font-size: 1.4rem;

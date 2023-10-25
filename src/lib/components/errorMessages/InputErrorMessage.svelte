@@ -12,4 +12,18 @@
         font-size: 1.5rem;
         padding: 0.25rem 1rem;
     }
+
+    @media (max-width: 1440px) {
+        .error_message {
+            font-size: 1.25rem;
+            padding: 0.25rem 1rem;
+        }
+    }
+
+    @media (max-width: 1440px) {
+        .error_message {
+            font-size: 1rem;
+            padding: 0.25rem 1rem;
+        }
+    }
 </style>

@@ -171,7 +171,7 @@
         </div>
         <SubmitButton 
             on:click={() => voterLoginHandler()}
-            bind:disable={loginVoterButtonDisabled}
+            disable={loginVoterButtonDisabled}
         >
             log in
         </SubmitButton>
