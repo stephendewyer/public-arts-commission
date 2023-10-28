@@ -7,6 +7,10 @@
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 
+    import ErrorFlashMessage from '$lib/components/flashMessages/ErrorFlashMessage.svelte';
+	import SuccessFlashMessage from '$lib/components/flashMessages/SuccessFlashMessage.svelte';
+	import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
+
     let emailInputValue: string = "";
     let nameFirstInputValue: string = "";
     let nameLastInputValue: string = "";
@@ -49,7 +53,7 @@
         sendMessageButtonDisabled = false;
     } else {
         sendMessageButtonDisabled = true;
-    }
+    };
 
     // begin input value change handlers
 
@@ -242,13 +246,87 @@
         } else if (messageInputValue !== "") {
             messageIsValid = true;
         }
+    };
+
+    interface responseObj {
+        success: string;
+        error: string;
+        status: number | null
     }
 
-    // begin send message handler
+    // after submit
 
-    const sendMessageHandler = () => {
+	let item: responseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
 
+    $: if((item.success) || (item.error)) {
+        setTimeout(() => {
+            item.success = "";
+            item.error = "";
+            status: null;
+        }, 4000)
     }
+
+    async function createMessage(
+        email: string, 
+        nameFirst: string, 
+        nameLast: string, 
+        subject: string, 
+        message: string
+    ) {		
+        const response = await fetch("/api/sendMail", {
+
+            method: 'POST',
+            body: JSON.stringify({
+                email,
+                nameFirst,
+                nameLast,
+                subject,
+                message
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        item = await response.json();
+        console.log(item);
+        return item;
+    }
+
+let pending: boolean = false;
+
+$: if((item.success) || (item.error)) {
+    pending = false;
+}
+
+async function sendMessageHandler() {
+
+    pending = true;
+
+    try {
+
+        await createMessage(
+            emailInputValue,
+            nameFirstInputValue,
+            nameLastInputValue,
+            subjectInputValue,
+            messageInputValue
+        );
+
+        if (item.success) {
+            emailInputValue = "",
+            nameFirstInputValue = "",
+            nameLastInputValue = "",
+            subjectInputValue = "",
+            messageInputValue = ""
+        }
+    } catch (error) {
+        console.log("catch");
+    }
+}
 
 </script>
 
@@ -358,6 +436,19 @@
                     </SubmitButtonSecondary>
                 </div>
             </form>
+            {#if (pending)}
+                <PendingFlashMessage >
+                    please wait while we validate your data
+                </PendingFlashMessage>
+            {:else if (item.error)}
+                <ErrorFlashMessage >
+                    {item.error}
+                </ErrorFlashMessage>
+            {:else if (item.success)}
+                <SuccessFlashMessage>
+                    {item.success}
+                </SuccessFlashMessage>
+            {/if}
 		</div>
         <div class="contact_section">
             <h1>headquarters mailing address</h1>
