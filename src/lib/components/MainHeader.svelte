@@ -398,6 +398,7 @@
 	}
 
 	.panel_container {
+		background-color: #DBE4D7;
 		overflow: hidden;
         will-change: height;
         transition: height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);

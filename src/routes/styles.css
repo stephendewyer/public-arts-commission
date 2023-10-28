@@ -25,6 +25,10 @@ body {
 	color: #1C2226;
 }
 
+input, textarea {
+	font-family: "IBM_Plex_Sans";
+}
+
 a {
 	text-decoration: none;
 	color: #4C4239;

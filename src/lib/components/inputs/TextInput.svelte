@@ -19,7 +19,7 @@
         </div>
     {/if}
     <input 
-        style={isValid ? "border-color: #EFF9F2" : "border-color: #9F1D20"}
+        class={isValid ? "input" : "invalid_input"}
         placeholder={placeholder}
         id={inputID}
         name={inputName}
@@ -49,7 +49,7 @@
         padding: 0 0 0.5rem 0;
     }
     
-    input {
+    .input {
         background-color: #EFF9F2;
         border-radius: 3rem;
         color: #484B47;
@@ -63,12 +63,26 @@
         width: 100%;
     }
 
-    input:hover {
+    .invalid_input {
+        background-color: #EFF9F2;
+        border-radius: 3rem;
+        color: #484B47;
+        font-size: 1.4rem;
+        padding: 0.5rem 1rem;
+        border-width: 2px;
+        border-color: #9F1D20;
+        border-style: solid;
+        transition: border-color 0.2s linear;
+        outline: none;
+        width: 100%;
+    }
+
+    .input:hover {
         border-color: #CB6D44;
         transition: border-color 0.2s linear;
     }
 
-    input:focus {
+    .input:focus {
         border-color: #1C2226;
         transition: border-color 0.2s linear;
     }
@@ -79,7 +93,12 @@
     }
 
     @media (max-width: 1440px) {
-        input {
+
+        .input {
+            font-size: 1.2rem;
+        }
+
+        .invalid_input {
             font-size: 1.2rem;
         }
 
@@ -90,10 +109,16 @@
         .input_label {
             padding: 0 0 0.4rem 0;
         }
+
     }
 
     @media (max-width: 720px) {
-        input {
+
+        .input {
+            font-size: 1rem;
+        }
+
+        .invalid_input {
             font-size: 1rem;
         }
 

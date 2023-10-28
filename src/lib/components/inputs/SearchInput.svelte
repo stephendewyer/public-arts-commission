@@ -45,21 +45,21 @@
     }
     
     input {
-    background-color: #EFF9F2;
-    border-radius: 3rem;
-    color: #484B47;
-    font-size: 1.4rem;
-    padding: 0.5rem 1rem 0.5rem 3rem;
-    border-width: 2px;
-    border-color: #EFF9F2;
-    border-style: solid;
-    transition: border-color 0.2s linear;
-    outline: none;
-    width: 100%;
-    background-image: url('$lib/images/icons/magnifying_glass.svg');
-    background-size: 1.8rem;
-    background-repeat: no-repeat;
-    background-position: 10px center;          
+        background-color: #EFF9F2;
+        border-radius: 3rem;
+        color: #484B47;
+        font-size: 1.4rem;
+        padding: 0.5rem 1rem 0.5rem 3rem;
+        border-width: 2px;
+        border-color: #EFF9F2;
+        border-style: solid;
+        transition: border-color 0.2s linear;
+        outline: none;
+        width: 100%;
+        background-image: url('$lib/images/icons/magnifying_glass.svg');
+        background-size: 1.8rem;
+        background-repeat: no-repeat;
+        background-position: 10px center;          
     }
 
     input:hover {

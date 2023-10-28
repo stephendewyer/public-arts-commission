@@ -11,9 +11,7 @@
 	import './styles.css';
 
 	let open: boolean = false;
-
 	
-
 	let footerElHeight: number = 0;
 
 	let selectedTeamMemberId: number | null = null;
@@ -21,12 +19,6 @@
 	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
 		selectedTeamMemberId = value;
 	});
-
-	// if the team member is selected, open the sidedrawer
-
-	// $: if (selectedTeamMemberId) {
-	// 	sideDrawerOpen = true;
-	// }
 
 	let sideDrawerOpen: boolean = false;
 
