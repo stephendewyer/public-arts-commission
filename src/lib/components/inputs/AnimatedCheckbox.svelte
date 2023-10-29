@@ -1,15 +1,19 @@
 <script lang="ts">
   export let checked: boolean = false;
+  import { v4 as uuidv4 } from 'uuid';
+
+  let checkboxId = uuidv4();
 </script>
 
 <div class="checkbox_container">
+
     <input 
       type="checkbox" 
       name="checkbox" 
-      id="terms-checkbox-37" 
+      id={checkboxId}
       bind:checked={checked}
     />
-    <label for="terms-checkbox-37" class="terms-label">
+    <label for={checkboxId} class="terms-label">
         <svg
           class="checkbox-svg"
           viewBox="0 0 200 200"

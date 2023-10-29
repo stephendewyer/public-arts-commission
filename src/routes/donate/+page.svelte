@@ -6,6 +6,8 @@
     import { onMount } from 'svelte';
     import { PUBLIC_STRIPEPUBLISHABLEKey } from "$env/static/public";
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
+    import DonateAnyAmountButton from "$lib/components/buttons/DonateAnyAmountButton.svelte";
+    import PaymentOccurence from "$lib/components/payments/PaymentOccurence.svelte";
 
     let processing: boolean = false;
     let stripe: any = null;
@@ -13,6 +15,10 @@
     let cardElement: any;
     let name: string = "";
 
+    let donateAmountButtonClicked: boolean = false;
+    let clickedIndex: number = 0;
+
+    $: console.log(clickedIndex);
     interface contributionAmount {
         id: number;
         amount: number;
@@ -32,15 +38,15 @@
             amount: 25
         },
         {
-            id: 1,
+            id: 4,
             amount: 50
         },
         {
-            id: 1,
+            id: 5,
             amount: 100
         },
         {
-            id: 1,
+            id: 6,
             amount: 250
         },
     ];
@@ -80,18 +86,18 @@
             }
         })
 
-    // log results, for debugging
-    console.log({ result })
+        // log results, for debugging
+        console.log({ result })
 
-    if (result.error) {
-      // payment failed, notify user
-      error = result.error
-      processing = false
-    } else {
-      // payment succeeded, redirect to "thank you" page
-      goto('/examples/credit-card/thanks')
+        if (result.error) {
+        // payment failed, notify user
+        error = result.error
+        processing = false
+        } else {
+        // payment succeeded, redirect to "thank you" page
+        goto('/examples/credit-card/thanks')
+        }
     }
-  }
 
 </script>
 
@@ -108,15 +114,22 @@
         </h3>
         <div class="donation_amounts">
             {#each contributionAmounts as contributionAmount, i}
-                <DonateAmountButton>
+                <DonateAmountButton
+                    bind:clicked={donateAmountButtonClicked}
+                    bind:activatedIndex={clickedIndex}
+                    index={i}
+                >
                     {contributionAmount.amount}
                 </DonateAmountButton>
             {/each}
+            <DonateAnyAmountButton bind:activatedIndex={clickedIndex}/>
         </div>
-        
         <h3>
-            would you like to make your contribution monthly?
+            select payment occurence
         </h3>
+        <PaymentOccurence />
+        
+        
         {#if error}
             <p class="error">{error.message} Please try again.</p>
         {/if}
