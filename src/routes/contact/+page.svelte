@@ -71,7 +71,7 @@
         } else if (!emailInputTouched) {
             emailIsValid = true;
         }
-    }
+    };
 
     const nameFirstValueChangedHandler = () => {
         if (nameFirstInputTouched) {
@@ -84,8 +84,7 @@
         } else if (!nameFirstInputTouched) {
             nameFirstIsValid = true;
         }
-
-    }
+    };
 
     const nameLastValueChangedHandler = () => {
         if (nameFirstInputTouched) {
@@ -98,7 +97,7 @@
         } else if (!nameFirstInputTouched) {
             nameFirstIsValid = true;
         }
-    }
+    };
 
     const subjectValueChangedHandler = () => {
         if (subjectInputTouched) {
@@ -111,7 +110,7 @@
         } else if (!subjectInputTouched) {
             subjectIsValid = true;
         }
-    }
+    };
 
     const messageValueChangedHandler = () => {
         if (messageInputTouched) {
@@ -124,7 +123,7 @@
         } else if (!messageInputTouched) {
             messageIsValid = true;
         }
-    }
+    };
 
     // begin input focus change handlers
 
@@ -142,7 +141,7 @@
         } else if (!emailInputTouched) {
             emailIsValid = true;
         }
-    }
+    };
 
     const nameFirstFocusChangedHandler = () => {
         if (nameFirstInputTouched) {
@@ -153,7 +152,7 @@
         } else if (!nameFirstInputTouched) {
             nameFirstIsValid = true;
         }
-    }
+    };
 
     const nameLastFocusChangedHandler = () => {
         if (nameLastInputTouched) {
@@ -164,7 +163,7 @@
         } else if (!nameLastInputTouched) {
             nameLastIsValid = true;
         }
-    }
+    };
 
     const subjectFocusChangedHandler = () => {
         if (subjectInputTouched) {
@@ -175,7 +174,7 @@
         } else if (!subjectInputTouched) {
             subjectIsValid = true;
         }
-    }
+    };
 
     const messageFocusChangedHandler = () => {
         if (messageInputTouched) {
@@ -186,7 +185,7 @@
         } else if (!messageInputTouched) {
             messageIsValid = true;
         }
-    }
+    };
 
     // begin input blur change handlers
 
@@ -202,7 +201,7 @@
         } else if (emailInputValue !== "") {
             emailIsValid = true;
         }
-    }
+    };
 
     const nameFirstBlurChangedHandler = () => {
         nameFirstInputTouched = true;
@@ -213,7 +212,7 @@
         } else if (nameFirstInputValue !== "") {
             nameFirstIsValid = true;
         }
-    }
+    };
 
     const nameLastBlurChangedHandler = () => {
         nameLastInputTouched = true;
@@ -224,7 +223,7 @@
         } else if (nameLastInputValue !== "") {
             nameLastIsValid = true;
         }
-    }
+    };
 
     const subjectBlurChangedHandler = () => {
         subjectInputTouched = true;
@@ -235,7 +234,7 @@
         } else if (subjectInputValue !== "") {
             subjectIsValid = true;
         }
-    }
+    };
 
     const messageBlurChangedHandler = () => {
         messageInputTouched = true;
@@ -252,7 +251,7 @@
         success: string;
         error: string;
         status: number | null
-    }
+    };
 
     // after submit
 
@@ -268,7 +267,7 @@
             item.error = "";
             status: null;
         }, 4000)
-    }
+    };
 
     async function createMessage(
         email: string, 
@@ -294,39 +293,39 @@
         item = await response.json();
         console.log(item);
         return item;
+    };
+
+    let pending: boolean = false;
+
+    $: if((item.success) || (item.error)) {
+        pending = false;
     }
 
-let pending: boolean = false;
+    async function sendMessageHandler() {
 
-$: if((item.success) || (item.error)) {
-    pending = false;
-}
+        pending = true;
 
-async function sendMessageHandler() {
+        try {
 
-    pending = true;
+            await createMessage(
+                emailInputValue,
+                nameFirstInputValue,
+                nameLastInputValue,
+                subjectInputValue,
+                messageInputValue
+            );
 
-    try {
-
-        await createMessage(
-            emailInputValue,
-            nameFirstInputValue,
-            nameLastInputValue,
-            subjectInputValue,
-            messageInputValue
-        );
-
-        if (item.success) {
-            emailInputValue = "",
-            nameFirstInputValue = "",
-            nameLastInputValue = "",
-            subjectInputValue = "",
-            messageInputValue = ""
+            if (item.success) {
+                emailInputValue = "",
+                nameFirstInputValue = "",
+                nameLastInputValue = "",
+                subjectInputValue = "",
+                messageInputValue = ""
+            }
+        } catch (error) {
+            console.log("catch");
         }
-    } catch (error) {
-        console.log("catch");
-    }
-}
+    };
 
 </script>
 

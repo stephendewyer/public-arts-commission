@@ -1,5 +1,17 @@
 <script lang="ts">
     import DonateAmountButton from "$lib/components/buttons/DonateAmountButton.svelte";
+    import { goto } from '$app/navigation';
+    import { loadStripe } from '@stripe/stripe-js';
+    import { Elements, CardNumber, CardExpiry, CardCvc } from 'svelte-stripe';
+    import { onMount } from 'svelte';
+    import { PUBLIC_STRIPEPUBLISHABLEKey } from "$env/static/public";
+    import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
+
+    let processing: boolean = false;
+    let stripe: any = null;
+    let error: any = null;
+    let cardElement: any;
+    let name: string = "";
 
     interface contributionAmount {
         id: number;
@@ -33,6 +45,54 @@
         },
     ];
 
+    onMount(async () => {
+        stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
+    });
+
+    async function createPaymentIntent() {
+        const response = await fetch('/api/createPaymentIntent', { 
+            method: 'POST' 
+        });
+        const { clientSecret } = await response.json();
+
+        return clientSecret
+    }
+
+    async function submit() {
+
+        // avoid processing duplicates
+        if (processing) {
+            return
+        }
+
+        processing = true
+
+        // create the payment intent server-side
+        const clientSecret = await createPaymentIntent()
+
+        // confirm payment with stripe
+        const result = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: cardElement,
+                billing_details: {
+                    name
+                }
+            }
+        })
+
+    // log results, for debugging
+    console.log({ result })
+
+    if (result.error) {
+      // payment failed, notify user
+      error = result.error
+      processing = false
+    } else {
+      // payment succeeded, redirect to "thank you" page
+      goto('/examples/credit-card/thanks')
+    }
+  }
+
 </script>
 
 <section>
@@ -57,15 +117,119 @@
         <h3>
             would you like to make your contribution monthly?
         </h3>
+        {#if error}
+            <p class="error">{error.message} Please try again.</p>
+        {/if}
+        {#if stripe}
+            <Elements {stripe}>
+                <form on:submit|preventDefault={submit}>
+                    <input 
+                        name="name" 
+                        bind:value={name}
+                        placeholder="your name"
+                        disabled={processing}
+                    />
+                    <CardNumber 
+                        bind:element={cardElement} 
+                        classes={{base: 'base_input', invalid: 'invalid_input'}}
+                    />
+                    <div class="row">
+                        <CardExpiry 
+                            classes={{base: 'base_input', invalid: 'invalid_input'}} 
+                        />
+                        <CardCvc classes={{base: 'base_input', invalid: 'invalid_input'}} />
+                    </div>
+                    
+                    <div class="submit_payment_button">
+                        <SubmitButtonSecondary 
+                            disable={processing}
+                        >
+                            {#if processing}
+                                processing...
+                            {:else}
+                                pay 
+                            {/if}
+                        </SubmitButtonSecondary>
+                    </div>
+                    
+                </form>
+            </Elements>
+        {:else}
+            loading...
+        {/if}
     </div>
     
 </section>
 
 <style>
-    .donate_section{
+
+    .donate_section {
         width: 100%;
         max-width: 40rem;
         margin: 0 auto;
+        justify-content: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .submit_payment_button {
+        width: auto;
+        margin: 0 auto;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    input,
+    :global(.base_input) {
+        background-color: #EFF9F2;
+        border-radius: 3rem;
+        color: #484B47;
+        padding: 0.5rem 1rem;
+        border-width: 2px;
+        border-color: #EFF9F2;
+        border-style: solid;
+        transition: border-color 0.2s linear;
+        outline: none;
+        width: 100%;
+    }
+
+
+    :global(.invalid_input) {
+        background-color: #EFF9F2;
+        border-radius: 3rem;
+        color: #484B47;
+        padding: 0.5rem 1rem;
+        border-width: 2px;
+        border-color: #9F1D20;
+        border-style: solid;
+        transition: border-color 0.2s linear;
+        outline: none;
+        width: 100%;
+    }
+
+    input:hover,
+    :global(.base_input:hover) {
+        border-color: #CB6D44;
+        transition: border-color 0.2s linear;
+    }
+
+    input:focus,
+    :global(.base_input:focus) {
+        border-color: #1C2226;
+        transition: border-color 0.2s linear;
+    }
+
+    ::placeholder {
+        color: #484B47;
+        opacity: 50%; /* Firefox */
     }
 
     .donation_amounts {
@@ -73,4 +237,5 @@
         flex-wrap: wrap;
         gap: 1rem;
     }
+
 </style>
