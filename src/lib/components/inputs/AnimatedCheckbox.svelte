@@ -3,6 +3,7 @@
   import { v4 as uuidv4 } from 'uuid';
 
   let checkboxId = uuidv4();
+
 </script>
 
 <div class="checkbox_container">
@@ -37,7 +38,9 @@
         />
         </svg>
     </label>
-    <span class="label-text"><slot /></span>
+    <span class="label-text">
+      <slot />
+    </span>
 </div>
 
 <style>

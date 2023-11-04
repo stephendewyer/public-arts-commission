@@ -1,88 +1,200 @@
 <script lang="ts">
-    import AnimatedCheckbox from "../inputs/AnimatedCheckbox.svelte";
+    import MonthlyDonationIcon from "$lib/images/icons/recurring_payment_month.svg?raw";
+    import YearlyDonationIcon from '$lib/images/icons/recurring_payment_year.svg?raw';
+    import SingleDonationIcon from '$lib/images/icons/single_payment_icon.svg?raw';
+
+    interface PaymentOccurence {
+        id: number;
+        image: string;
+        heading: string;
+    }
+
+    const paymentOccurenceOptions: PaymentOccurence[] = [
+        {
+            id: 1,
+            image: MonthlyDonationIcon,
+            heading: "monthly contribution"
+        },
+        {
+            id: 2,
+            image: YearlyDonationIcon,
+            heading: "yearly contribution"
+        },
+        {
+            id: 3,
+            image: SingleDonationIcon,
+            heading: "one-time donation"
+        }
+    ]
+
+    let activatedOccurenceIndex: number = 1;
+
+    const paymentOccurenceClickHandler = (index: number, paymentIndex: number) => {
+
+        if ((index + 1) === paymentIndex) {
+
+            activatedOccurenceIndex = paymentIndex;
+        };
+    }
+
 </script>
 
 <div class="payment_occurence_options">
-    <div class="occurence_payment_card">
-        <AnimatedCheckbox />
-        <div class="single_payment_icon">
-            <svg 
-                id="Layer_1" 
-                data-name="Layer 1" 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 788.15 291.89"
-            >
-                <defs>
-                <style>
-                    .cls-12 {
-                    fill: inherit;
-                    }
-            
-                    .cls-12, .cls-22 {
-                    stroke-width: 0px;
-                    }
-            
-                    .cls-22 {
-                    fill: inherit;
-                    }
-                </style>
-                </defs>
-                <g id="Layer_1-2" data-name="Layer 1-2">
-                <path class="cls-22" d="m405.59,154.19c-.23,2.34-2.69,4.78-7.35,7.35-10.74,5.9-25.58,7.76-44.52,5.55l43.86-23.76,2.28,2.09c4.06,3.52,5.98,6.44,5.73,8.78Z"/>
-                <path class="cls-22" d="m447.88,98.69l-41.65,22.23-.02.02c-.52-.41-1.22-.91-2.13-1.47-5.26-3.37-7.99-6.19-8.24-8.47-.25-2.28,1.92-4.6,6.48-7,5.03-2.63,11.8-4.45,20.28-5.42,8.51-.99,16.91-.97,25.27.1Z"/>
-                <path class="cls-22" d="m238.82,0L0,145.95l549.33,145.95,238.82-145.95L238.82,0Zm254.62,123.32c-1.43-8.03-8.86-14.63-22.27-19.87l-47.98,26c12.56,6.04,19.08,12.32,19.62,18.84.52,6.56-4.57,12.85-15.26,18.82-10.68,5.96-24.49,10.25-41.4,12.77-8.4,1.26-16.72,1.88-24.98,1.88s-18.07-.93-29.48-2.73l-26.27,14.22-23.06-6.19,26.23-13.99c-14.32-4.68-26.35-12.17-36.08-22.33l29.66-15.3c1.99,5.67,5.09,10.56,9.29,14.68,4.2,4.14,10.49,7.93,18.86,11.36l51.95-27.74c-10.87-5.98-17.51-10.68-19.89-14.16-2.38-3.46-2.61-7.02-.66-10.68,1.93-3.64,5.73-6.91,11.38-9.83,11.05-5.71,25.36-9.58,42.87-11.67,17.53-2.13,35.25-2.15,53.13,0l8.73-4.66,23.27,4.47-8.65,4.7c16.04,4.91,25.46,10.33,28.25,16.25l-27.28,15.17Z"/>
-                <path class="cls-12" d="m501.12,87.2l.06.02.04-.06-.1.04Z"/>
-                </g>
-            </svg>
+    {#each paymentOccurenceOptions as paymentOccurence, index}
+        <div
+            on:click={() => paymentOccurenceClickHandler(index, paymentOccurence.id)}
+            on:keyup={() => paymentOccurenceClickHandler(index, paymentOccurence.id)}
+            role="checkbox"
+            tabindex={-index}
+            aria-checked={(index + 1) === activatedOccurenceIndex ? true : false}
+            class={ (index + 1) === activatedOccurenceIndex ? "occurence_payment_card_selected" : "occurence_payment_card" } 
+        >
+            <div class="payment_occurence_image">
+                {@html paymentOccurence.image}
+            </div>
+            <h4 class="payment_occurence_heading">
+                {paymentOccurence.heading}
+            </h4>
         </div>
-        <h4>make a single contribution</h4>
-    </div>
-    <div class="occurence_payment_card">
-        <AnimatedCheckbox />
-        <div class="recurring_payment_icon">
-            <svg 
-                id="Layer_1" 
-                data-name="Layer 1" 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 734.71 564.45"
-            >
-                <defs>
-                <style>
-                    .cls-13 {
-                    fill: inherit;
-                    }
-            
-                    .cls-13, .cls-23, .cls-33 {
-                    stroke-width: 0px;
-                    }
-            
-                    .cls-23 {
-                    fill: inherit;
-                    }
-            
-                    .cls-33 {
-                    fill: inherit;
-                    }
-                </style>
-                </defs>
-                <path class="cls-23" d="m282.23,515.42c-128.79,0-233.2-104.4-233.2-233.19S153.44,49.03,282.23,49.03c79.01,0,148.85,39.29,191.02,99.4l-54.62-10.53,14.33,23.66,88.47,17.07,25.9-86.3-14.33-23.67-16.73,55.78C465.55,49.36,379.66,0,282.23,0,126.37,0,0,126.36,0,282.23s126.37,282.22,282.23,282.22c111.41,0,207.75-64.56,253.63-158.31l-46.44-16.79c-38.8,74.89-117.02,126.07-207.19,126.07Zm225.12-361.27l-.24.81-1.02-.2,1.26-.61Z"/>
-                <g id="Layer_1-2" data-name="Layer 1-2">
-                <path class="cls-33" d="m549.89,286.2c-.11,1.13-1.3,2.31-3.55,3.55-5.19,2.85-12.36,3.75-21.51,2.68l21.19-11.48,1.1,1.01c1.96,1.7,2.89,3.11,2.77,4.24Z"/>
-                <path class="cls-33" d="m570.32,259.39l-20.12,10.74h0c-.25-.19-.59-.43-1.03-.7-2.54-1.63-3.86-2.99-3.98-4.09-.12-1.1.93-2.22,3.13-3.38,2.43-1.27,5.7-2.15,9.8-2.62,4.11-.48,8.17-.47,12.21.05Z"/>
-                <path class="cls-33" d="m469.32,211.71l-115.38,70.51,265.39,70.51,115.38-70.51-265.39-70.51Zm123.01,59.58c-.69-3.88-4.28-7.07-10.76-9.6l-23.18,12.56c6.07,2.92,9.22,5.95,9.48,9.1.25,3.17-2.21,6.21-7.37,9.09-5.16,2.88-11.83,4.95-20,6.17-4.06.61-8.08.91-12.07.91s-8.73-.45-14.24-1.32l-12.69,6.87-11.14-2.99,12.67-6.76c-6.92-2.26-12.73-5.88-17.43-10.79l14.33-7.39c.96,2.74,2.46,5.1,4.49,7.09,2.03,2,5.07,3.83,9.11,5.49l25.1-13.4c-5.25-2.89-8.46-5.16-9.61-6.84-1.15-1.67-1.26-3.39-.32-5.16.93-1.76,2.77-3.34,5.5-4.75,5.34-2.76,12.25-4.63,20.71-5.64,8.47-1.03,17.03-1.04,25.67,0l4.22-2.25,11.24,2.16-4.18,2.27c7.75,2.37,12.3,4.99,13.65,7.85l-13.18,7.33Z"/>
-                <path class="cls-13" d="m596.04,253.85h.03s.02-.02.02-.02l-.05.02Z"/>
-                </g>
-            </svg>
-        </div>
-        <h4>make a recurring monthly contribution</h4>
-    </div>
-    
+    {/each}
 </div>
 
 <style>
     .payment_occurence_options {
         display: flex;
         flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 1rem;
+        margin: 0 0 2rem 0;
+    }
+
+    .occurence_payment_card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 14rem;
+        padding: 2rem;
+        background-color: none;
+        fill: #4C4239;
+        cursor: pointer;
+        will-change: background-color;
+        transition: background-color 0.2s linear;
+        border-radius: 1rem;
+    }
+
+    .occurence_payment_card:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .occurence_payment_card_selected {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 14rem;
+        padding: 2rem;
+        background-color: #4C4239;
+        fill: #D8EAC5;
+        cursor: pointer;
+        will-change: background-color, fill;
+        transition: background-color 0.2s linear, fill 0.2s linear;
+        border-radius: 1rem;
+    }
+
+    .occurence_payment_card_selected > .payment_occurence_heading {
+        color: #D8EAC5;
+        will-change: color;
+        transition: color 0.2s linear;
+    }
+
+    .occurence_payment_card > .payment_occurence_heading {
+        color: #4C4239;
+        will-change: color;
+        transition: color 0.2s linear;
+    }
+
+    .payment_occurence_image {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .payment_occurence_heading {
+        margin: 0;
+        padding: 1rem 0 0 0;
+        text-align: center;
+    }
+
+    @media (max-width: 1440px) {
+
+        .payment_occurence_options {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-around;
+            gap: 0.75rem;
+            margin: 0 0 1.5rem 0;
+        }
+        .occurence_payment_card {
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        .occurence_payment_card_selected {
+            flex-direction: column;
+            width: 100%;
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+    }
+
+    @media (max-width: 720px) {
+
+        .payment_occurence_options {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-around;
+            gap: 0.75rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .occurence_payment_card {
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+
+        .occurence_payment_card_selected {
+            flex-direction: column;
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 1rem;
+        }
+
+        .payment_occurence_image {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .payment_occurence_heading {
+            margin: 0;
+            padding: 0.5rem 0 0 0;
+            text-align: center;
+            font-size: 0.75rem;
+        }
     }
 
 </style>

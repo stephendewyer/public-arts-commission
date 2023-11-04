@@ -107,11 +107,13 @@
             help amplify the voice of the art community in politics to strengthen democracy by donating to public arts commission
         </h1>
         <h2>
-            select an amount
+            how often would like you like to donate?
         </h2>
-        <h3>
-            your contribution will benefit public arts commission and help us expand the political imagination
-        </h3>
+        <PaymentOccurence />
+        <h2>
+            how much would you like to donate?
+        </h2>
+        
         <div class="donation_amounts">
             {#each contributionAmounts as contributionAmount, i}
                 <DonateAmountButton
@@ -125,11 +127,8 @@
             <DonateAnyAmountButton bind:activatedIndex={clickedIndex}/>
         </div>
         <h3>
-            select payment occurence
+            your contribution will benefit public arts commission and help us expand the political imagination
         </h3>
-        <PaymentOccurence />
-        
-        
         {#if error}
             <p class="error">{error.message} Please try again.</p>
         {/if}
@@ -179,6 +178,7 @@
     .donate_section {
         width: 100%;
         max-width: 40rem;
+        padding: 0 1rem;
         margin: 0 auto;
         justify-content: center;
     }
