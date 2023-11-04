@@ -4,11 +4,17 @@
 
     export let activatedIndex: number = 0;
 
+	let amount: number | undefined;
+
     const anyAmountClickHandler = () => {
         if (anyAmountClicked)
         anyAmountClicked = !anyAmountClicked;
         activatedIndex = 7;
     }
+
+	const inputValueHandler = () => {
+
+	}
 
 </script>
 
@@ -17,9 +23,14 @@
     on:click={() => anyAmountClickHandler()}
     on:keyup={() => anyAmountClickHandler()}
 >
-    <p>$</p><input class={ activatedIndex === 7 ? "anyAmountInputActive" : "anyAmountInput" } />
+    <p>$</p><input 
+		class={ activatedIndex === 7 ? "anyAmountInputActive" : "anyAmountInput" } 
+		bind:value={amount}
+		on:input={() => inputValueHandler()}
+		type="number"
+	/>
+	
 </button>
-
 <style>
     .donate_amount_button {
 		color: #4C4239;
@@ -79,6 +90,18 @@
 		outline: none;
 		font-size: 1.5rem;
 		font-weight: 600;
+	}
+
+	/* Chrome, Safari, Edge, Opera */
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+	}
+
+	/* Firefox */
+	input[type=number] {
+		-moz-appearance: textfield;
 	}
 
 	@media (max-width: 1440px) {
