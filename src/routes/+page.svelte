@@ -9,7 +9,7 @@
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
-	import { goto } from '$app/navigation'
+	import { goto } from '$app/navigation';
 
     export let data;
 

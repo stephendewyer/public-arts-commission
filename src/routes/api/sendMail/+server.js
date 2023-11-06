@@ -55,10 +55,8 @@ export async function POST({request}) {
 
   try {
     await sgMail.send(msg);
-    console.log("message sent");
     return new Response(JSON.stringify({success: "data sent"}), {status: 200})
   } catch (error) {
-    console.error(error);
     return new Response(JSON.stringify({error: "message not sent due to a problem with the API"}), {status: 422});
   }
 

@@ -1,37 +1,91 @@
 <script lang="ts">
+	import InputErrorMessage from "$lib/components/errorMessages/InputErrorMessage.svelte";
 
     export let anyAmountClicked: boolean = false;
 
     export let activatedIndex: number = 0;
 
-	let amount: number | undefined;
+	export let anyAmountValue: number | undefined;
+
+	export let anyAmountIsValid: boolean = true;
+
+	let anyAmountIsTouched: boolean = false;
+
+	$: if (activatedIndex !== 7) {
+		anyAmountIsValid = true;
+		anyAmountIsTouched = false;
+	};
 
     const anyAmountClickHandler = () => {
         if (anyAmountClicked)
         anyAmountClicked = !anyAmountClicked;
         activatedIndex = 7;
-    }
+    };
 
-	const inputValueHandler = () => {
+	const anyAmountFocusHandler = () => {
+		if (anyAmountIsTouched) {
+			if (anyAmountValue === undefined || anyAmountValue <= 0) {
+				anyAmountIsValid = false;
+			} else {
+				anyAmountIsValid = true;
+			}
+		} else if (!anyAmountIsTouched) {
+            anyAmountIsValid = true;
+        }
+	};
 
-	}
+	const anyAmountBlurHandler = () => {
+		anyAmountIsTouched = true;
+		if (anyAmountValue === undefined || anyAmountValue <= 0) {
+			anyAmountIsValid = false;
+		} else {
+			anyAmountIsValid = true;
+		}
+	};
+
+	const inputValueChangeHandler = () => {
+		if (anyAmountIsTouched) {
+			if (anyAmountValue === undefined || anyAmountValue <= 0) {
+				anyAmountIsValid = false;
+			} else {
+				anyAmountIsValid = true;
+			}
+		} else if (!anyAmountIsTouched) {
+            anyAmountIsValid = true;
+        }
+	};
 
 </script>
 
-<button 
-    class={ activatedIndex === 7 ? "donate_amount_button_active" : "donate_amount_button" }
-    on:click={() => anyAmountClickHandler()}
-    on:keyup={() => anyAmountClickHandler()}
->
-    <p>$</p><input 
-		class={ activatedIndex === 7 ? "anyAmountInputActive" : "anyAmountInput" } 
-		bind:value={amount}
-		on:input={() => inputValueHandler()}
-		type="number"
-	/>
-	
-</button>
+<div class="donate_any_amount_button_container">
+	<button 
+		class={ activatedIndex === 7 ? "donate_amount_button_active" : "donate_amount_button" }
+		on:click={() => anyAmountClickHandler()}
+		on:keyup={() => anyAmountClickHandler()}
+	>
+		<p>$</p>
+		<input 
+			class={ activatedIndex === 7 ? "anyAmountInputActive" : "anyAmountInput" } 
+			bind:value={anyAmountValue}
+			on:focus={() => anyAmountFocusHandler()}
+			on:blur={() => anyAmountBlurHandler()}
+			on:input={() => inputValueChangeHandler()}
+			type="number"
+		/>
+	</button>
+	{#if (!anyAmountIsValid)}
+		<InputErrorMessage>a valid amount required</InputErrorMessage>
+	{/if}
+</div>
+
+
 <style>
+
+	.donate_any_amount_button_container {
+		display: flex;
+		flex-direction: column;
+	}
+
     .donate_amount_button {
 		color: #4C4239;
 		fill: #4C4239;
@@ -70,7 +124,7 @@
 
 	.anyAmountInput {
 		background: transparent;
-		color: #D8EAC5;
+		color: #4C4239;
 		border-top: 0;
 		border-left: 0;
 		border-right: 0;

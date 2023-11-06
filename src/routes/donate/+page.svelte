@@ -3,24 +3,27 @@
     import ActionButton from "$lib/components/buttons/ActionButton.svelte";
     import TextInput from "$lib/components/inputs/TextInput.svelte";
     import EmailInput from "$lib/components/inputs/EmailInput.svelte";
-    import InputErrorMessage from "$lib/components/errorMessages/InputErrorMessage.svelte"
-    import { goto } from '$app/navigation';
-    import { loadStripe } from '@stripe/stripe-js';
-    import { Elements, CardNumber, CardExpiry, CardCvc } from 'svelte-stripe';
-    import { onMount } from 'svelte';
-    import { PUBLIC_STRIPEPUBLISHABLEKey } from "$env/static/public";
-    import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
+    import InputErrorMessage from "$lib/components/errorMessages/InputErrorMessage.svelte";
     import DonateAnyAmountButton from "$lib/components/buttons/DonateAnyAmountButton.svelte";
     import PaymentOccurence from "$lib/components/payments/PaymentOccurence.svelte";
+    import ErrorFlashMessage from '$lib/components/flashMessages/ErrorFlashMessage.svelte';
+	import SuccessFlashMessage from '$lib/components/flashMessages/SuccessFlashMessage.svelte';
+	import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
+    import { goto } from '$app/navigation';
 
-    // let processing: boolean = false;
-    // let stripe: any = null;
-    // let error: any = null;
-    // let cardElement: any;
-    // let name: string = "";
+    // set the variables for donate any amount button
 
-    let donateAmountButtonClicked: boolean = false;
-    let clickedIndex: number = 0;
+    let donationAmountInputValue: number | undefined;
+    let donationAmountIndexValue: number;
+    let donateAnyAmountValue: number | undefined;
+
+    let donationAmountIsValid: boolean = true;
+
+    $: if (donateAnyAmountValue !== undefined) { donationAmountIsValid = true}
+
+    // set the varibable for donation occurence value
+
+    let donationOccurenceInputValue: string;
 
     let nameFirstInputValue: string = "";
     let nameLastInputValue: string = "";
@@ -40,9 +43,6 @@
     let nameLastInputErrorMessage: string = "";
     let emailInputErrorMessage: string = "";
 
-    let nameFirst: string;
-    let nameLast: string;
-    let email: string;
     let disableButton: boolean = false;
 
     interface contributionAmount {
@@ -77,6 +77,14 @@
         },
     ];
 
+    // convert the active donation amount index to donation amount value
+
+    $: if (donationAmountIndexValue < 7  && donationAmountIndexValue > 0) {
+        donationAmountInputValue = contributionAmounts[donationAmountIndexValue -1].amount;
+    } else {
+        donationAmountInputValue = donateAnyAmountValue;
+    };
+
     // $: if (
     //     emailIsValid &&
     //     passwordIsValid &&
@@ -87,6 +95,8 @@
     // } else {
     //     loginVoterButtonDisabled = true;
     // }
+
+    // begin client-side form error handling
 
     const nameFirstValueChangeHandler = () => {
         if (nameFirstInputTouched) {
@@ -214,27 +224,107 @@
         }
     }
 
-    // onMount(async () => {
-    //     stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
-    // });
+    // after submit
 
-    // async function createPaymentIntent() {
-    //     const response = await fetch('/api/createPaymentIntent', { 
-    //         method: 'POST' 
-    //     });
-    //     const { clientSecret } = await response.json();
+    interface responseObj {
+        success: string;
+        error: string;
+        status: number | null
+    };
 
-    //     return clientSecret
-    // }
+	let item: responseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
 
+    $: if((item.success) || (item.error)) {
+        setTimeout(() => {
+            item.success = "";
+            item.error = "";
+            status: null;
+        }, 4000)
+    };
 
-    const continueClickHandler = (
+    async function createPaymentIntent (
+        donationOccurenceInputValue: string, 
+        donationAmountInputValue: number | undefined, 
         nameFirstInputValue: string, 
         nameLastInputValue: string, 
         emailInputValue: string
-    ) => {
+    ) {		
+        const response = await fetch("/api/createPaymentIntent", {
 
+            method: 'POST',
+            body: JSON.stringify({
+                donationOccurenceInputValue,
+                donationAmountInputValue,
+                nameFirstInputValue,
+                nameLastInputValue,
+                emailInputValue
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        item = await response.json();
+        console.log(item);
+        return item;
+    };
+
+    let pending: boolean = false;
+
+    $: if((item.success) || (item.error)) {
+        pending = false;
     }
+
+    async function submitPaymentIntentHandler() {
+
+        pending = true;
+
+        try {
+
+            await createPaymentIntent(
+                donationOccurenceInputValue,
+                donationAmountInputValue,
+                nameFirstInputValue,
+                nameLastInputValue,
+                emailInputValue
+            );
+
+            pending = false;
+
+            if (!donationAmountInputValue) {
+                donationAmountIsValid = false;
+            }
+
+            if (!nameFirstInputValue) {
+                nameFirstInputErrorMessage = "first name required"
+                nameFirstIsValid = false;
+                nameFirstInputTouched = true;
+            }
+
+            if (!nameLastInputValue) {
+                nameLastInputErrorMessage = "last name required"
+                nameLastIsValid = false;
+                nameLastInputTouched = true;
+            }
+
+            if (!emailInputValue) {
+                emailInputErrorMessage = "email required"
+                emailIsValid = false;
+                emailInputTouched = true;
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+
+        if (item.success) {
+            goto(`/donate/payment?donation_occurence=${donationOccurenceInputValue}?donation_amount=${donationAmountInputValue}?checkout_user_nameFirst=${nameFirstInputValue}?checkout_user_nameLast=${nameLastInputValue}?email=${emailInputValue}`);
+        }
+
+    };
 
     // async function submit() {
 
@@ -281,30 +371,55 @@
         <h2>
             how often would like you like to donate?
         </h2>
-        <PaymentOccurence />
+        <PaymentOccurence bind:activatedOccurence={donationOccurenceInputValue}/>
         <h2>
-            how much would you like to donate?
+            how much would you like to donate at a time?
         </h2>
         
         <div class="donation_amounts">
             {#each contributionAmounts as contributionAmount, i}
                 <DonateAmountButton
-                    bind:clicked={donateAmountButtonClicked}
-                    bind:activatedIndex={clickedIndex}
+                    bind:activatedIndex={donationAmountIndexValue}
                     index={i}
                 >
                     {contributionAmount.amount}
                 </DonateAmountButton>
             {/each}
-            <DonateAnyAmountButton bind:activatedIndex={clickedIndex}/>
+            <DonateAnyAmountButton 
+                bind:activatedIndex={donationAmountIndexValue}
+                bind:anyAmountValue={donateAnyAmountValue}
+            />
         </div>
+        {#if (!donationAmountIsValid)}
+            <InputErrorMessage>donation amount is required</InputErrorMessage>
+        {/if}
         <h3>
             your contribution will benefit public arts commission and help us expand the political imagination
         </h3>
         <h2>
             checkout
         </h2>
-        <form method="POST" action="?/register_user_checkout">
+        <form method="POST" on:submit|preventDefault={submitPaymentIntentHandler}>
+            <label 
+                for="donation_occurence" 
+                class="hidden_label"
+            />
+            <input 
+                value={donationOccurenceInputValue} 
+                id="donation_occurence" 
+                name="donation_occurence"
+                class="hidden_input"
+            />
+            <label 
+                for="donation_amount" 
+                class="hidden_label"
+            />
+            <input 
+                value={donationAmountInputValue}
+                id="donation_amount"
+                name="donation_amount"
+                class="hidden_input"
+            />
             <TextInput 
                 isValid={nameFirstIsValid}
                 placeholder="Marco"
@@ -358,46 +473,19 @@
                 continue
             </ActionButton>
         </form>
-        <!-- {#if error}
-            <p class="error">{error.message} Please try again.</p>
-        {/if}
-        {#if stripe}
-            <Elements {stripe}>
-                <form on:submit|preventDefault={submit}>
-                    <input 
-                        name="name" 
-                        bind:value={name}
-                        placeholder="your name"
-                        disabled={processing}
-                    />
-                    <CardNumber 
-                        bind:element={cardElement} 
-                        classes={{base: 'base_input', invalid: 'invalid_input'}}
-                    />
-                    <div class="row">
-                        <CardExpiry 
-                            classes={{base: 'base_input', invalid: 'invalid_input'}} 
-                        />
-                        <CardCvc classes={{base: 'base_input', invalid: 'invalid_input'}} />
-                    </div>
-                    
-                    <div class="submit_payment_button">
-                        <SubmitButtonSecondary 
-                            disable={processing}
-                        >
-                            {#if processing}
-                                processing...
-                            {:else}
-                                pay 
-                            {/if}
-                        </SubmitButtonSecondary>
-                    </div>
-                    
-                </form>
-            </Elements>
-        {:else}
-            loading...
-        {/if} -->
+        {#if (pending)}
+                <PendingFlashMessage >
+                    please wait while we validate your data
+                </PendingFlashMessage>
+            {:else if (item.error)}
+                <ErrorFlashMessage >
+                    {item.error}
+                </ErrorFlashMessage>
+            {:else if (item.success)}
+                <SuccessFlashMessage>
+                    {item.success}
+                </SuccessFlashMessage>
+            {/if}
     </div>
     
 </section>
@@ -418,60 +506,12 @@
         gap: 1rem;
     }
 
-    .submit_payment_button {
-        width: auto;
-        margin: 0 auto;
+    .hidden_label {
+        display: none;
     }
 
-    .row {
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-    }
-
-    input,
-    :global(.base_input) {
-        background-color: #EFF9F2;
-        border-radius: 3rem;
-        color: #484B47;
-        padding: 0.5rem 1rem;
-        border-width: 2px;
-        border-color: #EFF9F2;
-        border-style: solid;
-        transition: border-color 0.2s linear;
-        outline: none;
-        width: 100%;
-    }
-
-
-    :global(.invalid_input) {
-        background-color: #EFF9F2;
-        border-radius: 3rem;
-        color: #484B47;
-        padding: 0.5rem 1rem;
-        border-width: 2px;
-        border-color: #9F1D20;
-        border-style: solid;
-        transition: border-color 0.2s linear;
-        outline: none;
-        width: 100%;
-    }
-
-    input:hover,
-    :global(.base_input:hover) {
-        border-color: #CB6D44;
-        transition: border-color 0.2s linear;
-    }
-
-    input:focus,
-    :global(.base_input:focus) {
-        border-color: #1C2226;
-        transition: border-color 0.2s linear;
-    }
-
-    ::placeholder {
-        color: #484B47;
-        opacity: 50%; /* Firefox */
+    .hidden_input {
+        display: none;
     }
 
     .donation_amounts {

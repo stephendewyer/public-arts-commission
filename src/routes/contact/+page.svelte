@@ -247,13 +247,13 @@
         }
     };
 
+    // after submit
+
     interface responseObj {
         success: string;
         error: string;
         status: number | null
     };
-
-    // after submit
 
 	let item: responseObj = {
         success: "",

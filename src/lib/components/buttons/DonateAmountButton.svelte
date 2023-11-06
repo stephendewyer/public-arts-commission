@@ -4,7 +4,7 @@
 
     export let activatedIndex: number = 0;
 
-    export let clicked: boolean = false;	
+    let clicked: boolean = false;	
 
     const amountClickHandler = () => {
 

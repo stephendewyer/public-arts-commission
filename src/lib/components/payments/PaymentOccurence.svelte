@@ -7,27 +7,35 @@
         id: number;
         image: string;
         heading: string;
+        name: string;
     }
 
     const paymentOccurenceOptions: PaymentOccurence[] = [
         {
             id: 1,
             image: MonthlyDonationIcon,
-            heading: "monthly contribution"
+            heading: "monthly contribution",
+            name: "monthly_contribution"
         },
         {
             id: 2,
             image: YearlyDonationIcon,
-            heading: "yearly contribution"
+            heading: "yearly contribution",
+            name: "yearly_contribution"
         },
         {
             id: 3,
             image: SingleDonationIcon,
-            heading: "one-time donation"
+            heading: "one-time donation",
+            name: "one-time_donation"
         }
     ]
 
-    let activatedOccurenceIndex: number = 1;
+    export let activatedOccurenceIndex: number = 1;
+
+    export let activatedOccurence: string;
+
+    $: activatedOccurence = paymentOccurenceOptions[activatedOccurenceIndex - 1].name;
 
     const paymentOccurenceClickHandler = (index: number, paymentIndex: number) => {
 
