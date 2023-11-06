@@ -1,9 +1,4 @@
-import Stripe from 'stripe';
-import { STRIPESECRETAPIKey } from '$env/static/private';
-
-// initialize Stripe
-
-const stripe = new Stripe(STRIPESECRETAPIKey);
+import { stripe } from '$lib/server/stripe/stripe';
 
 // handle POST /createPaymentIntent
 export async function POST() {

@@ -1,5 +1,9 @@
 <script lang="ts">
     import DonateAmountButton from "$lib/components/buttons/DonateAmountButton.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+    import TextInput from "$lib/components/inputs/TextInput.svelte";
+    import EmailInput from "$lib/components/inputs/EmailInput.svelte";
+    import InputErrorMessage from "$lib/components/errorMessages/InputErrorMessage.svelte"
     import { goto } from '$app/navigation';
     import { loadStripe } from '@stripe/stripe-js';
     import { Elements, CardNumber, CardExpiry, CardCvc } from 'svelte-stripe';
@@ -9,16 +13,38 @@
     import DonateAnyAmountButton from "$lib/components/buttons/DonateAnyAmountButton.svelte";
     import PaymentOccurence from "$lib/components/payments/PaymentOccurence.svelte";
 
-    let processing: boolean = false;
-    let stripe: any = null;
-    let error: any = null;
-    let cardElement: any;
-    let name: string = "";
+    // let processing: boolean = false;
+    // let stripe: any = null;
+    // let error: any = null;
+    // let cardElement: any;
+    // let name: string = "";
 
     let donateAmountButtonClicked: boolean = false;
     let clickedIndex: number = 0;
 
-    $: console.log(clickedIndex);
+    let nameFirstInputValue: string = "";
+    let nameLastInputValue: string = "";
+    let emailInputValue: string = "";
+
+    let nameFirstIsValid: boolean = true;
+    let nameLastIsValid: boolean = true;
+    let emailIsValid: boolean = true;
+
+    let nameFirstInputTouched: boolean = false;
+    let nameLastInputTouched: boolean = false;
+    let emailInputTouched: boolean = false;
+
+    // let loginVoterButtonDisabled: boolean = true;
+
+    let nameFirstInputErrorMessage: string = "";
+    let nameLastInputErrorMessage: string = "";
+    let emailInputErrorMessage: string = "";
+
+    let nameFirst: string;
+    let nameLast: string;
+    let email: string;
+    let disableButton: boolean = false;
+
     interface contributionAmount {
         id: number;
         amount: number;
@@ -51,53 +77,199 @@
         },
     ];
 
-    onMount(async () => {
-        stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
-    });
+    // $: if (
+    //     emailIsValid &&
+    //     passwordIsValid &&
+    //     (passwordInputValue !== "") &&
+    //     (emailInputValue !== "")
+    // ) {
+    //     loginVoterButtonDisabled = false;
+    // } else {
+    //     loginVoterButtonDisabled = true;
+    // }
 
-    async function createPaymentIntent() {
-        const response = await fetch('/api/createPaymentIntent', { 
-            method: 'POST' 
-        });
-        const { clientSecret } = await response.json();
-
-        return clientSecret
-    }
-
-    async function submit() {
-
-        // avoid processing duplicates
-        if (processing) {
-            return
-        }
-
-        processing = true
-
-        // create the payment intent server-side
-        const clientSecret = await createPaymentIntent()
-
-        // confirm payment with stripe
-        const result = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: cardElement,
-                billing_details: {
-                    name
-                }
+    const nameFirstValueChangeHandler = () => {
+        if (nameFirstInputTouched) {
+            if (nameFirstInputValue === "") {
+                nameFirstIsValid = false;
+                nameFirstInputErrorMessage = "first name required";
+            } else if (nameFirstInputValue !== "") {
+                nameFirstIsValid = true;
             }
-        })
-
-        // log results, for debugging
-        console.log({ result })
-
-        if (result.error) {
-        // payment failed, notify user
-        error = result.error
-        processing = false
-        } else {
-        // payment succeeded, redirect to "thank you" page
-        goto('/examples/credit-card/thanks')
+        } else if (!nameFirstInputTouched) {
+            nameFirstIsValid = true;
         }
     }
+
+    const nameLastValueChangeHandler = () => {
+        console.log(nameLastInputValue)
+        if (nameLastInputTouched) {
+            if (nameLastInputValue === "") {
+                nameLastIsValid = false;
+                nameLastInputErrorMessage = "last name required";
+            } else if (nameLastInputValue !== "") {
+                nameLastIsValid = true;
+            }
+        } else if (!nameFirstInputTouched) {
+            nameLastIsValid = true;
+        }
+    }
+
+    const emailValueChangedHandler = () => {
+        if (emailInputTouched) {
+            if (emailInputValue === "") {
+                emailIsValid = false;
+                emailInputErrorMessage = "a valid email required";
+            } else if (!emailInputValue.includes('@')) {
+                emailIsValid = false;
+                emailInputErrorMessage = "email must have an @ symbol";
+            } else if (emailInputValue !== "") {
+                emailIsValid = true;
+            }
+        } else if (!emailInputTouched) {
+            emailIsValid = true;
+        }
+    }
+
+    const nameFirstFocusChangedHandler = () => {
+        if (nameFirstInputTouched) {
+            if (nameFirstInputValue === "") {
+                nameFirstIsValid = false;
+                nameFirstInputErrorMessage = "first name required";
+            } else if (nameFirstInputValue !== "") {
+                nameFirstIsValid = true;
+            }
+        } else if (!nameFirstInputTouched) {
+            nameFirstIsValid = true;
+        }
+        
+    }
+    const nameLastFocusChangedHandler = () => {
+        if (nameLastInputTouched) {
+            if (nameLastInputValue === "") {
+                nameLastIsValid = false;
+                nameLastInputErrorMessage = "last name required";
+            } else if (nameLastInputValue !== "") {
+                nameLastIsValid = true;
+            }
+        } else if (!nameLastInputTouched) {
+            nameLastIsValid = true;
+        }
+        
+    }
+
+    const emailFocusChangedHandler = () => {
+        if (emailInputTouched) {
+            if (emailInputValue === "") {
+                emailIsValid = false;
+                emailInputErrorMessage = "a valid email required";
+            } else if (!emailInputValue.includes('@')) {
+                emailIsValid = false;
+                emailInputErrorMessage = "email must have an @ symbol";
+            } else if (emailInputValue !== "") {
+                emailIsValid = true;
+            }
+        } else if (!emailInputTouched) {
+            emailIsValid = true;
+        }
+        
+    }
+
+    const nameFirstBlurChangedHandler = () => {
+
+        nameFirstInputTouched = true;
+
+        if (nameFirstInputValue === "") {
+            nameFirstIsValid = false;
+            nameFirstInputErrorMessage = "first name required";
+        } else if (nameFirstInputValue !== "") {
+            nameFirstIsValid = true;
+        }
+    }
+
+    const nameLastBlurChangedHandler = () => {
+
+        nameLastInputTouched = true;
+
+        if (nameLastInputValue === "") {
+            nameLastIsValid = false;
+            nameLastInputErrorMessage = "last name required";
+        } else if (nameLastInputValue !== "") {
+            nameLastIsValid = true;
+        }
+    }
+
+    const emailBlurChangedHandler = () => {
+
+        emailInputTouched = true;
+
+        if (emailInputValue === "") {
+            emailIsValid = false;
+            emailInputErrorMessage = "a valid email required";
+        } else if (!emailInputValue.includes('@')) {
+            emailIsValid = false;
+            emailInputErrorMessage = "email must have an @ symbol";
+        } else if (emailInputValue !== "") {
+            emailIsValid = true;
+        }
+    }
+
+    // onMount(async () => {
+    //     stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
+    // });
+
+    // async function createPaymentIntent() {
+    //     const response = await fetch('/api/createPaymentIntent', { 
+    //         method: 'POST' 
+    //     });
+    //     const { clientSecret } = await response.json();
+
+    //     return clientSecret
+    // }
+
+
+    const continueClickHandler = (
+        nameFirstInputValue: string, 
+        nameLastInputValue: string, 
+        emailInputValue: string
+    ) => {
+
+    }
+
+    // async function submit() {
+
+    //     // avoid processing duplicates
+    //     if (processing) {
+    //         return
+    //     }
+
+    //     processing = true
+
+    //     // create the payment intent server-side
+    //     const clientSecret = await createPaymentIntent()
+
+    //     // confirm payment with stripe
+    //     const result = await stripe.confirmCardPayment(clientSecret, {
+    //         payment_method: {
+    //             card: cardElement,
+    //             billing_details: {
+    //                 name
+    //             }
+    //         }
+    //     })
+
+    //     // log results, for debugging
+    //     console.log({ result })
+
+    //     if (result.error) {
+    //     // payment failed, notify user
+    //     error = result.error
+    //     processing = false
+    //     } else {
+    //     // payment succeeded, redirect to "thank you" page
+    //     goto('/examples/credit-card/thanks')
+    //     }
+    // }
 
 </script>
 
@@ -129,7 +301,64 @@
         <h3>
             your contribution will benefit public arts commission and help us expand the political imagination
         </h3>
-        {#if error}
+        <h2>
+            checkout
+        </h2>
+        <form method="POST" action="?/register_user_checkout">
+            <TextInput 
+                isValid={nameFirstIsValid}
+                placeholder="Marco"
+                inputID="checkout_user_nameFirst"
+                inputName="checkout_user_nameFirst"
+                bind:textInputValue={nameFirstInputValue}
+                inputLabel={true}
+                textInputValueChanged={() => nameFirstValueChangeHandler()}
+                textInputFocusChanged={() => nameFirstFocusChangedHandler()}
+                textInputBlurChanged={() => nameFirstBlurChangedHandler()}
+            >
+                first name
+            </TextInput>
+            {#if (!nameFirstIsValid)}
+                <InputErrorMessage>{nameFirstInputErrorMessage}</InputErrorMessage>
+            {/if}
+            <TextInput 
+                isValid={nameLastIsValid}
+                placeholder="Polo"
+                inputID="checkout_user_nameLast"
+                inputName="checkout_user_nameLast"
+                bind:textInputValue={nameLastInputValue}
+                inputLabel={true}
+                textInputValueChanged={() => nameLastValueChangeHandler()}
+                textInputFocusChanged={() => nameLastFocusChangedHandler()}
+                textInputBlurChanged={() => nameLastBlurChangedHandler()}
+            >
+                last name
+            </TextInput>
+            {#if (!nameLastIsValid)}
+                <InputErrorMessage>{nameLastInputErrorMessage}</InputErrorMessage>
+            {/if}
+            <EmailInput
+                isValid={emailIsValid}
+                placeholder="myEmail@myDomain.com"
+                inputID="checkout_user_nameFirst"
+                inputName="email"
+                bind:emailInputValue={emailInputValue}
+                inputLabel={true}
+                emailInputValueChanged={() => emailValueChangedHandler()}
+                emailInputFocusChanged={() => emailFocusChangedHandler()}
+                emailInputBlurChanged={() => emailBlurChangedHandler()}
+            >
+                email
+            </EmailInput>
+            {#if (!emailIsValid)}
+                <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
+            {/if}
+            
+            <ActionButton bind:disable={disableButton} >
+                continue
+            </ActionButton>
+        </form>
+        <!-- {#if error}
             <p class="error">{error.message} Please try again.</p>
         {/if}
         {#if stripe}
@@ -168,7 +397,7 @@
             </Elements>
         {:else}
             loading...
-        {/if}
+        {/if} -->
     </div>
     
 </section>
