@@ -1,7 +1,7 @@
 import { stripe } from '$lib/server/stripe/stripe';
 import { mysqlConnection } from "$lib/server/db/mysql";
 
-export async function POST({request}) {
+export const POST = async ({request}) => {
 
     if (request.method !== 'POST') {
 
@@ -32,7 +32,7 @@ export async function POST({request}) {
 
     const customer = await stripe.customers.create({
 
-        email: email?.toString(),
+        email: email,
 
         name: `${nameFirst} ${nameLast}`
 
@@ -40,7 +40,7 @@ export async function POST({request}) {
 
     let res = await mysqlConnection();
 
-    const insertQuery = `INSERT INTO users_in_checkout (NameFirst, NameLast, Email) VALUES ("${nameFirst}", "${nameLast}", "${email}")`;
+    const insertQuery = `INSERT INTO users_in_checkout (NameFirst, NameLast, Email, stripe_id) VALUES ("${nameFirst}", "${nameLast}", "${email}", "${customer.id}")`;
 
     let success = false;
 

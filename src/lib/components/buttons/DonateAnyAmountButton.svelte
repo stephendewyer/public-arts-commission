@@ -70,6 +70,7 @@
 			on:focus={() => anyAmountFocusHandler()}
 			on:blur={() => anyAmountBlurHandler()}
 			on:input={() => inputValueChangeHandler()}
+			step="0.01"
 			type="number"
 		/>
 	</button>

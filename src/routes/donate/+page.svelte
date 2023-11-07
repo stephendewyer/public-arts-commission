@@ -19,7 +19,7 @@
 
     let donationAmountIsValid: boolean = true;
 
-    $: if (donateAnyAmountValue !== undefined) { donationAmountIsValid = true}
+    $: if (donationAmountInputValue !== undefined) { donationAmountIsValid = true}
 
     // set the varibable for donation occurence value
 
@@ -321,7 +321,7 @@
         }
 
         if (item.success) {
-            goto(`/donate/payment?donation_occurence=${donationOccurenceInputValue}?donation_amount=${donationAmountInputValue}?checkout_user_nameFirst=${nameFirstInputValue}?checkout_user_nameLast=${nameLastInputValue}?email=${emailInputValue}`);
+            goto(`/donate/payment?donation_occurence=${donationOccurenceInputValue}&donation_amount=${donationAmountInputValue}&checkout_user_nameFirst=${nameFirstInputValue}&checkout_user_nameLast=${nameLastInputValue}&email=${emailInputValue}`);
         }
 
     };
