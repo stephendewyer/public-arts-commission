@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { loadStripe } from '@stripe/stripe-js';
     import { Elements, PaymentElement } from 'svelte-stripe';
+    import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
 
     // data from server
     export let data;
@@ -82,7 +83,14 @@
                     <PaymentElement  />
                     
                 </Elements>
-                <button>pay</button>
+                <div class="submit_button_container">
+                    <SubmitButtonSecondary
+                        disable={false}
+                    >
+                        pay
+                    </SubmitButtonSecondary>
+                </div>
+                
             </form>
 
         {:else}
@@ -106,5 +114,12 @@
 
     .payment_form_container {
         width: 100%;
+        padding: 0 1rem;
+    }
+
+    .submit_button_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 </style>

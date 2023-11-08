@@ -454,7 +454,7 @@
             {/if}
             <EmailInput
                 isValid={emailIsValid}
-                placeholder="myEmail@myDomain.com"
+                placeholder="marco.polo@marcopolo.com"
                 inputID="checkout_user_nameFirst"
                 inputName="email"
                 bind:emailInputValue={emailInputValue}
