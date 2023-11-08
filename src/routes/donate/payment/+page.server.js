@@ -3,9 +3,6 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 import { DOMAIN } from '$env/static/private';
 
 export const load = async ({ url }) => {
-    console.log(url);
-
-    // const paramsSearch = url.search.slice(1).split("&");
 
     const paramsSearch = url.searchParams;
 
@@ -37,8 +34,6 @@ export const load = async ({ url }) => {
 
     };
 
-    console.log(chargeAmount);
-
     let res = await mysqlConnection();
 
     const customerIdQuery = `SELECT stripe_id FROM users_in_checkout WHERE Email = '${email}';`;
@@ -53,12 +48,10 @@ export const load = async ({ url }) => {
 
     const customerId = rowsJson[rowsLength].stripe_id;
 
-    console.log(customerId);
+    // console.log(customerId);
 
     // create the subscription
     // status is `incomplete` until payment succeeds
-
-    // if 
 
     const subscription = await stripe.subscriptions.create({
         customer: customerId,
@@ -79,17 +72,27 @@ export const load = async ({ url }) => {
         payment_settings: {
             save_default_payment_method: 'on_subscription'
         },
-        // expand: ['latest_invoice.payment.intent']
+        // expand gets the object from which string originates
+        expand: ['latest_invoice.payment_intent']
     });
 
+    const invoice = subscription.latest_invoice;
 
-    console.log(subscription);
+    let clientSecretKey = "";
+
+    if (invoice) {
+
+        // @ts-ignore
+        clientSecretKey = invoice.payment_intent.client_secret;
+
+    }
 
     return {
 
-        // @ts-ignore
-        // clientSecret: subscription.latest_invoice?.payment_intent.client_secret,
-        // returnUrl: new URL('/payment/complete', DOMAIN).toString();
+        clientSecret: clientSecretKey,
+        returnUrl: new URL('/donate/payment/complete', DOMAIN).toString(),
+        customerId: customerId,
+
     }
 
 }
