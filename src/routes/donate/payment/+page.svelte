@@ -64,8 +64,6 @@
 
 </script>
 
-
-
 <div class="payment_container">
     <h1>payment</h1>
     <div class="payment_form_container">

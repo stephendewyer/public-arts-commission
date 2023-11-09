@@ -141,9 +141,7 @@
 
 <section>
 	<p>
-		{#each data.data as voter}
-			{voter.email}
-		{/each}
+
 	</p>
 	<picture class="banner">
 		<img src={PublicArtsCommissionBanner} alt="public arts commission banner" />
