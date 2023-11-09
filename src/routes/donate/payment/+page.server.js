@@ -53,39 +53,89 @@ export const load = async ({ url }) => {
     // create the subscription
     // status is `incomplete` until payment succeeds
 
-    const subscription = await stripe.subscriptions.create({
-        customer: customerId,
-        items: [
-            {
-                price_data: {
-                    currency: 'usd',
-                    product: 'prod_OxttdibezV52Y0',
-                    unit_amount: chargeAmount,
-                    recurring: {
-                        interval: "month"
-                    }
-                },
-                quantity: 1,
+    // create the subscription instance
+
+    let subscription;
+
+    // create the sessions instance
+
+    let paymentIntent;
+
+    // create the client secret key
+
+    let clientSecretKey;
+
+    if (donationOccurence === "monthly_contribution") {
+        subscription = await stripe.subscriptions.create({
+            customer: customerId,
+            items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product: 'prod_OxttdibezV52Y0',
+                        unit_amount: chargeAmount,
+                        recurring: {
+                            interval: 'month'
+                        }
+                    },
+                    quantity: 1,
+                }
+            ],
+            payment_behavior: 'default_incomplete',
+            payment_settings: {
+                save_default_payment_method: 'on_subscription'
+            },
+            // expand gets the object from which string originates
+            expand: ['latest_invoice.payment_intent']
+        });
+
+    } else if (donationOccurence === "yearly_contribution") {
+        subscription = await stripe.subscriptions.create({
+            customer: customerId,
+            items: [
+                {
+                    price_data: {
+                        currency: 'usd',
+                        product: 'prod_OxttdibezV52Y0',
+                        unit_amount: chargeAmount,
+                        recurring: {
+                            interval: 'year'
+                        }
+                    },
+                    quantity: 1,
+                }
+            ],
+            payment_behavior: 'default_incomplete',
+            payment_settings: {
+                save_default_payment_method: 'on_subscription'
+            },
+            // expand gets the object from which string originates
+            expand: ['latest_invoice.payment_intent']
+        });
+    } else if (donationOccurence === "one-time_donation") {
+        paymentIntent = await stripe.paymentIntents.create({
+            customer: customerId,
+            amount: chargeAmount,
+            currency: 'usd',
+            automatic_payment_methods: {
+                enabled: true
             }
-        ],
-        payment_behavior: 'default_incomplete',
-        payment_settings: {
-            save_default_payment_method: 'on_subscription'
-        },
-        // expand gets the object from which string originates
-        expand: ['latest_invoice.payment_intent']
-    });
+        });
+    };
 
-    const invoice = subscription.latest_invoice;
+    const invoice = subscription?.latest_invoice;
 
-    let clientSecretKey = "";
-
-    if (invoice) {
+    
+    if (donationOccurence === "yearly_donation" || donationOccurence === "monthly_contribution") {
 
         // @ts-ignore
-        clientSecretKey = invoice.payment_intent.client_secret;
+        clientSecretKey = invoice?.payment_intent.client_secret;
 
-    }
+    } else if (donationOccurence === "one-time_donation") {
+
+        clientSecretKey = paymentIntent?.client_secret;
+    };
+
 
     return {
 
