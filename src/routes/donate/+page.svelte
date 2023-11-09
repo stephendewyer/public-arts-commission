@@ -326,41 +326,6 @@
 
     };
 
-    // async function submit() {
-
-    //     // avoid processing duplicates
-    //     if (processing) {
-    //         return
-    //     }
-
-    //     processing = true
-
-    //     // create the payment intent server-side
-    //     const clientSecret = await createPaymentIntent()
-
-    //     // confirm payment with stripe
-    //     const result = await stripe.confirmCardPayment(clientSecret, {
-    //         payment_method: {
-    //             card: cardElement,
-    //             billing_details: {
-    //                 name
-    //             }
-    //         }
-    //     })
-
-    //     // log results, for debugging
-    //     console.log({ result })
-
-    //     if (result.error) {
-    //     // payment failed, notify user
-    //     error = result.error
-    //     processing = false
-    //     } else {
-    //     // payment succeeded, redirect to "thank you" page
-    //     goto('/examples/credit-card/thanks')
-    //     }
-    // }
-
 </script>
 
 <section>
