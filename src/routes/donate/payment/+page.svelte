@@ -9,7 +9,16 @@
     export let data;
 
     // destructure the server data
-    $: ({ clientSecret, returnUrl, customerId } = data);
+    $: ({ 
+        clientSecret, 
+        returnUrl, 
+        customerId, 
+        donationOccurence, 
+        donationAmount, 
+        nameFirst,
+        nameLast,
+        email
+    } = data);
 
     // const options = {
     //     // passing the client secret key
@@ -66,6 +75,10 @@
 
 <div class="payment_container">
     <h1>payment</h1>
+    <h2>donation occurence: {donationOccurence?.replace(/_/g, ' ')}</h2>
+    <h2>donation amount: ${donationAmount}</h2>
+    <h2>name: {nameFirst} {nameLast}</h2>
+    <h2>email: {email}</h2>
     <div class="payment_form_container">
         {#if stripe && clientSecret}
 

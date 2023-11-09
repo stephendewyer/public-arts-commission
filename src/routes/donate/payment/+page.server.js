@@ -92,7 +92,12 @@ export const load = async ({ url }) => {
         clientSecret: clientSecretKey,
         returnUrl: new URL('/donate/payment/complete', DOMAIN).toString(),
         customerId: customerId,
-
+        nameFirst: nameFirst,
+        nameLast: nameLast,
+        email: email,
+        donationAmount: donationAmount,
+        donationOccurence: donationOccurence,
+        
     }
 
 }
