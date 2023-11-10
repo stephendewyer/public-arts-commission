@@ -4,20 +4,20 @@
     import { loadStripe } from '@stripe/stripe-js';
     import { Elements, PaymentElement } from 'svelte-stripe';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
-
+    import CancelButton from '$lib/components/buttons/CancelButton.svelte';
     // data from server
     export let data;
 
     // destructure the server data
     $: ({ 
         clientSecret, 
-        returnUrl, 
-        customerId, 
+        returnUrl,
         donationOccurence, 
         donationAmount, 
         nameFirst,
         nameLast,
-        email
+        email,
+        timeStamp
     } = data);
 
     // const options = {
@@ -48,7 +48,7 @@
 
         // ask Stripe to confirm the payment
         
-        const { error } = await stripe.confirmPayment({
+        const result = await stripe.confirmPayment({
 
             // pass instance that was used to create the Payment Element
 
@@ -59,26 +59,47 @@
             confirmParams: {
 
                 return_url: returnUrl
-            }
+            },
 
         });
 
-        if (error) {
+        if (result.error) {
 
             // handle error
 
-            console.log(error);
+            console.log(result.error);
         }
     };
 
 </script>
 
 <div class="payment_container">
-    <h1>payment</h1>
-    <h2>donation occurence: {donationOccurence?.replace(/_/g, ' ')}</h2>
-    <h2>donation amount: ${donationAmount}</h2>
-    <h2>name: {nameFirst} {nameLast}</h2>
-    <h2>email: {email}</h2>
+    <h1>review payment intent</h1>
+    <table>
+        <tr>
+            <td><h3>donation occurence:</h3></td>
+            <td><h3>{donationOccurence?.replace(/_/g, ' ')}</h3></td>
+        </tr>
+        <tr>
+            <td><h3>donation amount at a time:</h3></td>
+            <td><h3>${donationAmount}</h3></td>
+        </tr>
+        <tr>
+            <td><h3>name:</h3></td>
+            <td><h3>{nameFirst} {nameLast}</h3></td>
+        </tr>
+        <tr>
+            <td><h3>email:</h3></td>
+            <td><h3>{email}</h3></td>
+        </tr>
+        <tr>
+            <td><h3>date created:</h3></td>
+            <td><h3>{timeStamp}</h3></td>
+        </tr>
+    </table>
+    <h4>
+        Donations to public arts commission are not tax deductible because public arts commission is a 501(c)(4) non-profit organization.
+    </h4>
     <div class="payment_form_container">
         {#if stripe && clientSecret}
 
@@ -91,7 +112,7 @@
                     {clientSecret}
                     bind:elements
                 >
-                    <PaymentElement  />
+                    <PaymentElement />
                     
                 </Elements>
                 <div class="submit_button_container">
@@ -103,7 +124,12 @@
                 </div>
                 
             </form>
-
+            <div class="cancel_button_container">
+                <a href="/donate" >
+                    <CancelButton>cancel payment</CancelButton>
+                </a>
+            </div>
+            
         {:else}
 
             Loading stripe...
@@ -114,6 +140,7 @@
 </div>
 
 <style>
+
     .payment_container {
         width: 100%;
         max-width: 40rem;
@@ -123,9 +150,35 @@
         align-items: center;
     }
 
+    table {
+        border-spacing: 0;
+        margin: 0 0 2rem 0;
+        width: 100%;
+        table-layout: fixed;
+    }
+    
+    td {
+        padding: 0.5rem 1rem 0.5rem 1rem;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    td > h3 {
+        margin: 0;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    td:nth-child(odd) {
+        width: 25%;
+    }
+
+    tr:nth-child(even) {
+        background-color: #FBF4F9;
+    }
+
     .payment_form_container {
         width: 100%;
-        padding: 0 1rem;
     }
 
     .submit_button_container {
@@ -133,4 +186,40 @@
         flex-direction: column;
         align-items: center;
     }
+
+    .cancel_button_container {
+        padding: 2rem 0 0 0;
+    }
+    
+    @media (max-width: 1440px) {
+
+        table {
+            margin: 0 0 1.5rem 0;
+        }
+
+        td {
+            padding: 0.5rem 1rem 0.5rem 1rem;
+        }
+
+        td > h3 {
+            font-size: 1rem;
+        }
+
+    }
+
+    @media (max-width: 720px) {
+
+        table {
+            margin: 0 0 1rem 0;
+        }
+
+        td {
+            padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+        }
+        
+        td > h3 {
+            font-size: 0.8rem;
+        }
+    }
+
 </style>

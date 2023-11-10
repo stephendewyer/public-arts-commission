@@ -48,8 +48,6 @@ export const load = async ({ url }) => {
 
     const customerId = rowsJson[rowsLength].stripe_id;
 
-    // console.log(customerId);
-
     // create the subscription
     // status is `incomplete` until payment succeeds
 
@@ -65,6 +63,10 @@ export const load = async ({ url }) => {
 
     let clientSecretKey;
 
+    // const productKey = "prod_OywpYrMrJQw6L1"; // productKey for test mode
+
+    const productKey = "prod_OxttdibezV52Y0"; // productKey for live mode
+
     if (donationOccurence === "monthly_contribution") {
         subscription = await stripe.subscriptions.create({
             customer: customerId,
@@ -72,7 +74,7 @@ export const load = async ({ url }) => {
                 {
                     price_data: {
                         currency: 'usd',
-                        product: 'prod_OxttdibezV52Y0',
+                        product: productKey,
                         unit_amount: chargeAmount,
                         recurring: {
                             interval: 'month'
@@ -96,7 +98,7 @@ export const load = async ({ url }) => {
                 {
                     price_data: {
                         currency: 'usd',
-                        product: 'prod_OxttdibezV52Y0',
+                        product: productKey,
                         unit_amount: chargeAmount,
                         recurring: {
                             interval: 'year'
@@ -117,6 +119,7 @@ export const load = async ({ url }) => {
             customer: customerId,
             amount: chargeAmount,
             currency: 'usd',
+            receipt_email: email,
             automatic_payment_methods: {
                 enabled: true
             }
@@ -125,29 +128,49 @@ export const load = async ({ url }) => {
 
     const invoice = subscription?.latest_invoice;
 
+    let createdTimeStamp;
     
-    if (donationOccurence === "yearly_donation" || donationOccurence === "monthly_contribution") {
+    if (donationOccurence === "yearly_contribution" || donationOccurence === "monthly_contribution") {
 
         // @ts-ignore
         clientSecretKey = invoice?.payment_intent.client_secret;
 
+        // @ts-ignore
+        // get the timeStamp in seconds for when invoice intent created
+        const invoiceCreated = invoice?.payment_intent.created;
+        
+        const timeStamp = new Date(invoiceCreated * 1000);
+
+        createdTimeStamp = timeStamp;
+
     } else if (donationOccurence === "one-time_donation") {
 
         clientSecretKey = paymentIntent?.client_secret;
-    };
 
+        // get the timeStamp in seconds for when invoice intent created
+        const paymentIntentCreated = paymentIntent?.created;
+
+        // @ts-ignore
+
+        // get convert the timestamp to milliseconds and then convert to human readable date
+        const timeStamp = new Date(paymentIntentCreated * 1000);
+
+        createdTimeStamp = timeStamp;
+
+    };
 
     return {
 
         clientSecret: clientSecretKey,
-        returnUrl: new URL('/donate/payment/complete', DOMAIN).toString(),
+        timeStamp: createdTimeStamp,
+        returnUrl: new URL('/donate/complete', DOMAIN).toString(),
         customerId: customerId,
         nameFirst: nameFirst,
         nameLast: nameLast,
         email: email,
         donationAmount: donationAmount,
         donationOccurence: donationOccurence,
-        
+
     }
 
 }

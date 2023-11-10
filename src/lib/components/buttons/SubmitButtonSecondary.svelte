@@ -17,6 +17,7 @@
 	}
 
     .submit_button {
+		width: 100%;
         margin: 1rem 1rem 0 1rem;
 		color: #3A2B35;
 		fill: #3A2B35;
@@ -28,6 +29,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		justify-content: center;
 		border-radius: 3rem;
 		cursor: pointer;
 		transition: gap 0.2s ease-out, background-color 0.2s linear, color 0.2s linear, fill 0.2s linear;
