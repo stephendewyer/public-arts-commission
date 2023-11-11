@@ -192,6 +192,7 @@
             <h4 class="login_helper_prompt">
                 forgot your password?
             </h4>
+            
             <a href="/reset-password">
                 <ActionButtonSecondary>
                     reset password
