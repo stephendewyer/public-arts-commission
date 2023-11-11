@@ -175,27 +175,30 @@
         >
             log in
         </SubmitButton>
-        <div class="login_helpers_container">
-            <div class="login_helpers_column">
-                <h4 class="login_helper_prompt">
-                    don't have an account?
-                </h4>
+        
+    </form>
+    <div class="login_helpers_container">
+        <div class="login_helpers_column">
+            <h4 class="login_helper_prompt">
+                don't have an account?
+            </h4>
+            <a href="/create-account-voter">
                 <ActionButtonSecondary>
                     create a free account
                 </ActionButtonSecondary>
-            </div>
-            <div class="login_helpers_column">
-                <h4 class="login_helper_prompt">
-                    forgot your password?
-                </h4>
-                <a href="/reset-password">
-                    <ActionButtonSecondary>
-                        reset password
-                    </ActionButtonSecondary>
-                </a>
-            </div>
+            </a>
         </div>
-    </form>
+        <div class="login_helpers_column">
+            <h4 class="login_helper_prompt">
+                forgot your password?
+            </h4>
+            <a href="/reset-password">
+                <ActionButtonSecondary>
+                    reset password
+                </ActionButtonSecondary>
+            </a>
+        </div>
+    </div>
 </div>
 
 <style>
@@ -213,7 +216,7 @@
         align-items: center;
         width: 100%;
         max-width: 28rem;
-        padding: 1rem 0;
+        padding: 1rem 0 0 0;
     }
 
     .login_input {

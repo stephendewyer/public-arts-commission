@@ -52,6 +52,14 @@
         NavTabsSticky = false;
     }
 
+    // if scrollHeight is between top and bottom of governemnt priorities section, government tab is active
+
+    // else if scrollHeight is between top and bottom of climate priorities section, climate tab is active
+    // else if scrollHeight is between top and bottom of economy priorities section, economy tab is active
+    // else if scrollHeight is between top and bottom of education priorities section, education tab is active
+
+    // else if scrollHeight is between top and bottom of health priorities section, health tab is active
+
 </script>
 <svelte:window bind:scrollY={y} />
 <section>
@@ -156,7 +164,7 @@
                 <li 
                     class="priority_heading"
                 >
-                    <PriorityAccordion>
+                    <PriorityAccordion >
                         <span slot="head">
                             Excellent public art for everyone, by everyone and available to everyone
                         </span>

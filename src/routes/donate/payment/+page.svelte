@@ -113,7 +113,6 @@
                     bind:elements
                 >
                     <PaymentElement />
-                    
                 </Elements>
                 <div class="submit_button_container">
                     <SubmitButtonSecondary

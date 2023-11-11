@@ -5,11 +5,16 @@
 </script>
 
 <HowWeWorkPanel>
-    <img 
+    <div
         slot="process_image"
-        src={Lobbying} 
-        alt="lobbying" 
-    />
+        class="lobbying_image"
+    >
+        <img 
+            src={Lobbying} 
+            alt="lobbying" 
+        />
+    </div>
+    
     <p
         slot="process_paragraphs"
     >
@@ -19,4 +24,9 @@
 
 <style>
 
+    .lobbying_image {
+        max-width: 18rem;
+        margin: 0 auto;
+    }
+    
 </style>

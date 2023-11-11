@@ -4,8 +4,7 @@
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
-
-    export let campaignLoginClicked: string | undefined = "";
+	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
 
     let passwordInputValue: string = "";
     let emailInputValue: string = "";
@@ -32,7 +31,7 @@
         loginVoterButtonDisabled = true;
     }
 
-    const loginEmailValueChangedHandler = () => {
+    const createAccountEmailValueChangedHandler = () => {
         if (emailInputTouched) {
             if (emailInputValue === "") {
                 emailIsValid = false;
@@ -48,7 +47,7 @@
         }
     }
 
-    const loginEmailFocusChangedHandler = () => {
+    const createAccountEmailFocusChangedHandler = () => {
         if (emailInputTouched) {
             if (emailInputValue === "") {
                 emailIsValid = false;
@@ -65,7 +64,7 @@
         
     }
 
-    const loginEmailBlurChangedHandler = () => {
+    const createAccountEmailBlurChangedHandler = () => {
 
         emailInputTouched = true;
 
@@ -80,7 +79,7 @@
         }
     }
 
-    const loginPasswordValueChangedHandler = () => {
+    const createAccountPasswordValueChangedHandler = () => {
         if (passwordInputTouched) {
             if (passwordInputValue === "") {
                 passwordIsValid = false;
@@ -93,7 +92,7 @@
         }
     }
 
-    const loginPasswordFocusChangedHandler = () => {
+    const createAccountPasswordFocusChangedHandler = () => {
         if (passwordInputTouched) {
             if (passwordInputValue === "") {
                 passwordIsValid = false;
@@ -106,7 +105,7 @@
         }
     }
 
-    const loginPasswordBlurChangedHandler = () => {
+    const createAccountPasswordBlurChangedHandler = () => {
 
         passwordInputTouched = true;
 
@@ -119,85 +118,90 @@
 
     }
 
-    const campaignLoginHandler = () => {
-        campaignLoginClicked = "campaign login clicked!";
-	}
+    const createAccountHandler = () => {
+
+    }
 
 </script>
-
-<div id="campaign">
-    <h3>
-        apply for an endorsement
-    </h3>
-    <form 
-        on:submit|preventDefault={campaignLoginHandler} 
-        class="login_form"
-    > 
-        <div class="login_input">
-            <EmailInput 
-                isValid={emailIsValid}
-                placeholder="campaignEmail@campaignDomain.com"
-                inputID="campaign_email"
-                inputName="campaign_email"
-                bind:emailInputValue={emailInputValue}
-                inputLabel={true}
-                emailInputValueChanged={() => loginEmailValueChangedHandler()}
-                emailInputFocusChanged={() => loginEmailFocusChangedHandler()}
-                emailInputBlurChanged={() => loginEmailBlurChangedHandler()}
+<div 
+    class="create_account_container"
+    style="background-image: url({createAccountBackground});"
+>
+    <div 
+        id="campaign" 
+        class="create_account_section"
+    >
+        <h1>
+            create a free campaign account
+        </h1>
+        <form 
+            on:submit|preventDefault={createAccountHandler}
+            class="create_account_form"
+        > 
+            <div class="create_account_input">
+                <EmailInput 
+                    isValid={emailIsValid}
+                    placeholder="myEmail@myCampaign.com"
+                    inputID="campaign_email"
+                    inputName="campaign_email"
+                    inputLabel={true}
+                    bind:emailInputValue={emailInputValue}
+                    emailInputValueChanged={() => createAccountEmailValueChangedHandler()}
+                    emailInputFocusChanged={() => createAccountEmailFocusChangedHandler()}
+                    emailInputBlurChanged={() => createAccountEmailBlurChangedHandler()}
+                >
+                    email
+                </EmailInput>
+                {#if (!emailIsValid)}
+                    <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <PasswordInput 
+                    isValid={passwordIsValid}
+                    placeholder="myPassword"
+                    inputID="voter_password"
+                    inputName="voter_password"
+                    inputLabel={true}
+                    bind:passwordInputValue={passwordInputValue}
+                    passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
+                    passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
+                    passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
+                >
+                    password
+                </PasswordInput>
+                {#if (!passwordIsValid)}
+                    <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <SubmitButton 
+                disable={loginVoterButtonDisabled}
             >
-                email
-            </EmailInput>
-            {#if (!emailIsValid)}
-                <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
-            {/if}
+                log in
+            </SubmitButton>
+        </form>
+        <div class="create_account_helpers_container">
+            <div class="create_account_helpers_column">
+                <h4 class="create_account_helper_prompt">
+                    don't have an account?
+                </h4>
+                <a href="/create-account-voter">
+                    <ActionButtonSecondary>
+                        create a free account
+                    </ActionButtonSecondary>
+                </a>
+            </div>
+            <div class="create_account_helpers_column">
+                <h4 class="create_account_helper_prompt">
+                    forgot your password?
+                </h4>
+                <a href="/reset-password">
+                    <ActionButtonSecondary>
+                        reset password
+                    </ActionButtonSecondary>
+                </a>
+            </div>
         </div>
-        <div class="login_input">
-            <PasswordInput 
-                isValid={passwordIsValid}
-                placeholder="campaignPassword"
-                inputID="campaign_password"
-                inputName="campaign_password"
-                bind:passwordInputValue={passwordInputValue}
-                inputLabel={true}
-                passwordInputValueChanged={() => loginPasswordValueChangedHandler()}
-                passwordInputFocusChanged={() => loginPasswordFocusChangedHandler()}
-                passwordInputBlurChanged={() => loginPasswordBlurChangedHandler()}
-            >
-                password
-            </PasswordInput>
-            {#if (!passwordIsValid)}
-                <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
-            {/if}
-        </div>
-        <SubmitButton 
-            disable={loginVoterButtonDisabled}
-            on:click={() => campaignLoginHandler()}
-        >
-            log in
-        </SubmitButton>
-        
-    </form>
-    <div class="login_helpers_container">
-        <div class="login_helpers_column">
-            <h4 class="login_helper_prompt">
-                don't have an account?
-            </h4>
-            <a href="/create-account-campaign">
-                <ActionButtonSecondary>
-                    create a free account
-                </ActionButtonSecondary>
-            </a>
-        </div>
-    </div>
-    <div class="login_helpers_column">
-        <h4 class="login_helper_prompt">
-            forgot your password?
-        </h4>
-        <a href="/reset-password">
-            <ActionButtonSecondary>
-                reset password
-            </ActionButtonSecondary>
-        </a>
     </div>
 </div>
 
@@ -210,7 +214,28 @@
         width: 100%;
     }
 
-    .login_form {
+    .create_account_container {
+		width: 100%;
+		background-size: cover;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 2rem 1rem;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+
+	.create_account_section {
+		background-color: rgba(239,249,242,0.7);
+		max-width: 40rem;
+		width: 100%;
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+    .create_account_form {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -219,20 +244,21 @@
         padding: 1rem 0 0 0;
     }
 
-    .login_input {
+    .create_account_input {
 		padding: 0.5rem 0;
         width: 100%;
 	}
 
-    .login_helpers_container {
+    .create_account_helpers_container {
         display: flex;
         flex-direction: row;
         align-items: flex-start;
         width: 100%;
         padding: 2rem 0 0 0;
+        gap: 0.25rem;
     }
 
-    .login_helpers_column {
+    .create_account_helpers_column {
         width: 50%;
         display: flex;
         flex-direction: column;
@@ -240,21 +266,21 @@
         align-items: center;
     }
 
-    .login_helper_prompt {
+    .create_account_helper_prompt {
         text-align: center;
         width: 100%;
         padding: 0 0.5rem;
     }
 
     @media (max-width: 1140px) {
-        
-        .login_helpers_container {
+
+        .create_account_helpers_container {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
 
-        .login_helpers_column {
+        .create_account_helpers_column {
             width: 100%;
             display: flex;
             flex-direction: column;

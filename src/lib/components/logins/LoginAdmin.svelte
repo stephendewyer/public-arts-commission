@@ -175,18 +175,17 @@
         >
             log in
         </SubmitButton>
-        <div class="login_helpers_container">
-            <h4>
-                forgot your password?
-            </h4>
-            <a href="/reset-password">
-                <ActionButtonSecondary>
-                    reset password
-                </ActionButtonSecondary>
-            </a>
-        </div>
-        
     </form>
+    <div class="login_helpers_container">
+        <h4>
+            forgot your password?
+        </h4>
+        <a href="/reset-password">
+            <ActionButtonSecondary>
+                reset password
+            </ActionButtonSecondary>
+        </a>
+    </div>
 </div>
 
 <style>
@@ -204,7 +203,7 @@
         align-items: center;
         width: 100%;
         max-width: 28rem;
-        padding: 1rem 0;
+        padding: 1rem 0 0 0;
     }
 
     .login_input {
