@@ -188,16 +188,16 @@
                 </ActionButtonSecondary>
             </a>
         </div>
-    </div>
-    <div class="login_helpers_column">
-        <h4 class="login_helper_prompt">
-            forgot your password?
-        </h4>
-        <a href="/reset-password">
-            <ActionButtonSecondary>
-                reset password
-            </ActionButtonSecondary>
-        </a>
+        <div class="login_helpers_column">
+            <h4 class="login_helper_prompt">
+                forgot your password?
+            </h4>
+            <a href="/reset-password">
+                <ActionButtonSecondary>
+                    reset password
+                </ActionButtonSecondary>
+            </a>
+        </div>
     </div>
 </div>
 

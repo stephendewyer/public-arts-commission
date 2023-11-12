@@ -11,7 +11,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
 
-    export let data;
+    // export let data;
 
 	let activeLoginTab: number;
 
