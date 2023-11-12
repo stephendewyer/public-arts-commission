@@ -17,12 +17,6 @@
     let educationPrioritiesElement: HTMLElement;
     let healthPrioritiesElement: HTMLElement;
 
-    let governmentPrioritiesOnceIntersect: boolean;
-    let climatePrioritiesOnceIntersect: boolean;
-    let economicPrioritiesOnceIntersect: boolean;
-    let educationPrioritiesOnceIntersect: boolean;
-    let healthPrioritiesOnceIntersect: boolean;
-
     let intersecting: string;
 
     let activeIntersection: string;
@@ -61,13 +55,6 @@
         NavTabsSticky = false;
     }
 
-    // if scrollHeight is between top and bottom of governemnt priorities section, government tab is active
-
-    // else if scrollHeight is between top and bottom of climate priorities section, climate tab is active
-    // else if scrollHeight is between top and bottom of economy priorities section, economy tab is active
-    // else if scrollHeight is between top and bottom of education priorities section, education tab is active
-
-    // else if scrollHeight is between top and bottom of health priorities section, health tab is active
 
 </script>
 <svelte:window bind:scrollY={y} />
@@ -207,7 +194,6 @@
         </ul>
         <IntersectionObserver
             element={governmentPrioritiesElement}
-            bind:intersecting={governmentPrioritiesOnceIntersect}
             on:intersect={() => {
                 // if government tab is clicked, active intersection is government section and return an empty string as selectedPrioritiesSection
                 if (selectedPrioritiesSection === "prioritiesSelectedGovernment") {
