@@ -5,6 +5,8 @@
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
+    import CorrectIcon from '$lib/components/flashIcons/CorrectIcon.svelte';
+    import ErrorIcon from '$lib/components/flashIcons/ErrorIcon.svelte';
 
     let passwordInputValue: string = "";
     let emailInputValue: string = "";
@@ -156,24 +158,49 @@
                     <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
                 {/if}
             </div>
-            <div class="create_account_input">
-                <PasswordInput 
-                    isValid={passwordIsValid}
-                    placeholder="myPassword"
-                    inputID="voter_password"
-                    inputName="voter_password"
-                    inputLabel={true}
-                    bind:passwordInputValue={passwordInputValue}
-                    passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
-                    passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
-                    passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
-                >
-                    password
-                </PasswordInput>
-                {#if (!passwordIsValid)}
-                    <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
-                {/if}
+            <div class="passwords_container">
+                <div class="passwords">
+                    <div class="create_account_input">
+                        <PasswordInput 
+                            isValid={passwordIsValid}
+                            placeholder="myPassword"
+                            inputID="voter_password"
+                            inputName="voter_password"
+                            inputLabel={true}
+                            bind:passwordInputValue={passwordInputValue}
+                            passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
+                            passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
+                            passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
+                        >
+                            password
+                        </PasswordInput>
+                        {#if (!passwordIsValid)}
+                            <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
+                        {/if}
+                    </div>
+                    <div class="create_account_input">
+                        <PasswordInput 
+                            isValid={passwordIsValid}
+                            placeholder="myPassword"
+                            inputID="voter_password"
+                            inputName="voter_password"
+                            inputLabel={true}
+                            bind:passwordInputValue={passwordInputValue}
+                            passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
+                            passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
+                            passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
+                        >
+                            re-enter password
+                        </PasswordInput>
+                        {#if (!passwordIsValid)}
+                            <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
+                        {/if}
+                    </div>
+                </div>
+                <CorrectIcon />
+                <ErrorIcon />
             </div>
+            
             <SubmitButton 
                 disable={loginVoterButtonDisabled}
             >
@@ -183,11 +210,11 @@
         <div class="create_account_helpers_container">
             <div class="create_account_helpers_column">
                 <h4 class="create_account_helper_prompt">
-                    don't have an account?
+                    already have an account?
                 </h4>
-                <a href="/create-account-voter">
+                <a href="/login-campaign">
                     <ActionButtonSecondary>
-                        create a free account
+                        campaign login
                     </ActionButtonSecondary>
                 </a>
             </div>

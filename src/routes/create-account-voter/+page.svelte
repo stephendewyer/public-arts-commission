@@ -184,11 +184,11 @@
         <div class="create_account_helpers_container">
             <div class="create_account_helpers_column">
                 <h4 class="create_account_helper_prompt">
-                    don't have an account?
+                    already have an account?
                 </h4>
-                <a href="/create-account-voter">
+                <a href="/login-voter">
                     <ActionButtonSecondary>
-                        create a free account
+                        voter login
                     </ActionButtonSecondary>
                 </a>
             </div>

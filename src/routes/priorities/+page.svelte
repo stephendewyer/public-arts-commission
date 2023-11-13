@@ -207,7 +207,7 @@
                         activeIntersection = activeIntersection
                     );
                 // if selectedPrioritiesSection is an empty string, return the activeIntersection as "prioritiesIntersectedGovernment"
-                } else if (selectedPrioritiesSection === "") {
+                } else {
                     activeIntersection = "prioritiesIntersectedGovernment";
                 };
             }}
@@ -406,7 +406,7 @@
                     return (
                         activeIntersection = activeIntersection
                     );
-                } else if (selectedPrioritiesSection === "") {
+                } else {
                     activeIntersection = "prioritiesIntersectedClimate";
                 };
             }}
@@ -453,7 +453,7 @@
                     return (
                         activeIntersection = activeIntersection
                     );
-                } else if (selectedPrioritiesSection === "") {
+                } else {
                     activeIntersection = "prioritiesIntersectedEconomic";
                 };
             
@@ -614,7 +614,7 @@
                     return (
                         activeIntersection = activeIntersection
                     );
-                } else if (selectedPrioritiesSection === "") {
+                } else {
                     activeIntersection = "prioritiesIntersectedEducation";
                 };
             }}
@@ -656,7 +656,7 @@
                     return (
                         activeIntersection = activeIntersection
                     );
-                } else if (selectedPrioritiesSection === "") {
+                } else {
                     activeIntersection = "prioritiesIntersectedHealth";
                 };
             }}
