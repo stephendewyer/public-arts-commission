@@ -7,7 +7,7 @@
     export let passwordInputValueChanged: any;
     export let passwordInputFocusChanged: any;
     export let passwordInputBlurChanged: any;
-    export let isValid: boolean;
+    export let isValid: boolean | null;
   
 </script>
 
@@ -20,7 +20,7 @@
         </div>
     {/if}
     <input 
-        class={isValid ? "input" : "invalid_input"}
+        class={isValid || (isValid === null) ? "input" : "invalid_input"}
         placeholder={placeholder}
         id={inputID}
         name={inputName}
