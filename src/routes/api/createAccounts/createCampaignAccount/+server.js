@@ -91,7 +91,7 @@ export async function POST({request}) {
     {
       to: 'sdewyer@publicartscommission.org',
       from: 'sdewyer@publicartscommission.org',
-      subject: `new campaign account created for ${email}`,
+      subject: `new campaign account created`,
       text: `new campaign account created for ${email}`,
       html: `<p>Hi stephen,<br /><br />A new campaign account has been created for ${email}.<br /><br />
       Kind regards,<br /><br />public arts commission<br />https://public-arts-commission.vercel.app/</p></p>`,

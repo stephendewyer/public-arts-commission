@@ -17,7 +17,7 @@
     let passwordInputValue: string = "";
     let passwordReenteredInputValue: string = "";
 
-    let campaignNameIsValid: boolean = false;
+    let campaignNameIsValid: boolean = true;
     let emailIsValid: boolean = true;
     let passwordIsValid: boolean = true;
     let passwordReenteredIsValid: boolean | null = null;
@@ -303,7 +303,8 @@
                 campaignNameInputValue = "",
                 emailInputValue = "",
                 passwordInputValue = "",
-                passwordReenteredInputValue = ""
+                passwordReenteredInputValue = "",
+                passwordReenteredIsValid = null
             };
         } catch (error) {
             console.log("catch");
