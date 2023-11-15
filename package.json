@@ -27,6 +27,7 @@
 		"@sendgrid/mail": "^7.7.0",
 		"@splidejs/svelte-splide": "^0.2.9",
 		"@types/uuid": "^9.0.5",
+		"bcrypt": "^5.1.1",
 		"mysql2": "^3.6.1",
 		"uuid": "^9.0.1"
 	}

@@ -144,16 +144,17 @@
         width: 100%;
         max-width: 40rem;
         margin: 0 auto;
+        padding: 0 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
     table {
-        border-spacing: 0;
         margin: 0 0 2rem 0;
         width: 100%;
         table-layout: fixed;
+        border-spacing: 0;
     }
     
     td {
@@ -194,6 +195,10 @@
 
         table {
             margin: 0 0 1.5rem 0;
+        }
+
+        td:nth-child(odd) {
+            width: 40%;
         }
 
         td {

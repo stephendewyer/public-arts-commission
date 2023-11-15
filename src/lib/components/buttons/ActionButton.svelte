@@ -35,7 +35,7 @@
 		background-color: #D8EAC5;
 		border: solid 3px #4C4239;
 		padding: 0.5rem 1rem;
-		gap: 0.25rem;
+		gap: 0.5rem;
 		font-size: 1.5rem;
 		font-weight: 600;
 		display: flex;
@@ -48,7 +48,7 @@
 
 	.submit_button:hover {
 		background-color: #E3CDB2;
-		gap: 0.75rem;
+		gap: 1rem;
 	}
 
 

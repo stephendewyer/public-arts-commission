@@ -36,7 +36,7 @@
 		background-color: #E3CDB2;
         border: none;
 		padding: 0.5rem 1rem;
-		gap: 0.25rem;
+		gap: 0.5rem;
 		font-size: 1.5rem;
 		font-weight: 600;
 		display: flex;
@@ -51,7 +51,7 @@
         color: #D8EAC5;
 		fill: #D8EAC5;
 		background-color: #3A2B35;
-		gap: 0.75rem;
+		gap: 1rem;
 	}
 
 	.arrow {

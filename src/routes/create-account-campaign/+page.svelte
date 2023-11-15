@@ -1,4 +1,5 @@
 <script lang="ts">
+    import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
     import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
@@ -7,29 +8,38 @@
 	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import CorrectIcon from '$lib/components/flashIcons/CorrectIcon.svelte';
     import ErrorIcon from '$lib/components/flashIcons/ErrorIcon.svelte';
+    import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
+    import SuccessFlashMessage from '$lib/components/flashMessages/SuccessFlashMessage.svelte';
+    import ErrorFlashMessage from '$lib/components/flashMessages/ErrorFlashMessage.svelte';
 
+    let campaignNameInputValue: string = "";
     let emailInputValue: string = "";
     let passwordInputValue: string = "";
     let passwordReenteredInputValue: string = "";
 
+    let campaignNameIsValid: boolean = false;
     let emailIsValid: boolean = true;
     let passwordIsValid: boolean = true;
     let passwordReenteredIsValid: boolean | null = null;
 
+    let campaignNameInputTouched: boolean = false;
     let emailInputTouched: boolean = false;
     let passwordInputTouched: boolean = false;
     let passwordReenteredInputTouched: boolean = false;
 
-    let loginVoterButtonDisabled: boolean = true;
-
+    let campaignNameInputErrorMessage: string = "";
     let emailInputErrorMessage: string = "";
     let passwordInputErrorMessage: string = "";
     let passwordReenteredInputErrorMessage: string = "";
 
+    let loginVoterButtonDisabled: boolean = true;
+
     $: if (
+        campaignNameIsValid &&
         emailIsValid &&
         passwordIsValid &&
         passwordReenteredIsValid &&
+        (campaignNameInputValue !== "") &&
         (emailInputValue !== "") &&
         (passwordInputValue !== "") &&
         (passwordReenteredInputValue !== "")
@@ -37,7 +47,43 @@
         loginVoterButtonDisabled = false;
     } else {
         loginVoterButtonDisabled = true;
-    }
+    };
+
+    const createAccountCampaignNameValueChangedHandler = () => {
+        if (campaignNameInputTouched) {
+            if (campaignNameInputValue === "") {
+                campaignNameIsValid = false;
+                campaignNameInputErrorMessage = "a valid campaign name required";
+            } else if (campaignNameInputValue !== "") {
+                campaignNameIsValid = true;
+            }
+        } else if (!campaignNameInputTouched) {
+            campaignNameIsValid = true;
+        };
+    };
+
+    const createAccountCampaignNameFocusChangedHandler = () => {
+        if (campaignNameInputTouched) {
+            if (campaignNameInputValue === "") {
+                campaignNameIsValid = false;
+                campaignNameInputErrorMessage = "a valid campaign name required";
+            } else if (campaignNameInputValue !== "") {
+                campaignNameIsValid = true;
+            };
+        } else if (!campaignNameInputTouched) {
+            campaignNameIsValid = true;
+        };
+    };
+
+    const createAccountCampaignNameBlurChangedHandler = () => {
+        campaignNameInputTouched = true;
+        if (campaignNameInputValue === "") {
+            campaignNameIsValid = false;
+            campaignNameInputErrorMessage = "a valid campaign name required";
+        } else if (campaignNameInputValue !== "") {
+            campaignNameIsValid = true;
+        };
+    };
 
     const createAccountEmailValueChangedHandler = () => {
         if (emailInputTouched) {
@@ -52,8 +98,8 @@
             }
         } else if (!emailInputTouched) {
             emailIsValid = true;
-        }
-    }
+        };
+    };
 
     const createAccountEmailFocusChangedHandler = () => {
         if (emailInputTouched) {
@@ -65,11 +111,11 @@
                 emailInputErrorMessage = "email must have an @ symbol";
             } else if (emailInputValue !== "") {
                 emailIsValid = true;
-            }
+            };
         } else if (!emailInputTouched) {
             emailIsValid = true;
-        }
-    }
+        };
+    };
 
     const createAccountEmailBlurChangedHandler = () => {
         emailInputTouched = true;
@@ -81,8 +127,8 @@
             emailInputErrorMessage = "email must have an @ symbol";
         } else if (emailInputValue !== "") {
             emailIsValid = true;
-        }
-    }
+        };
+    };
 
     const createAccountPasswordValueChangedHandler = () => {
         if (passwordInputTouched) {
@@ -102,11 +148,11 @@
                 passwordIsValid = false;
                 passwordInputErrorMessage = "a valid password required"
                 passwordReenteredIsValid = false;
-            } 
+            };
         } else if (!passwordInputTouched) {
             passwordIsValid = true;
-        }
-    }
+        };
+    };
 
     const createAccountPasswordFocusChangedHandler = () => {
         if (passwordInputTouched) {
@@ -115,11 +161,11 @@
                 passwordInputErrorMessage = "a valid password required"
             } else if (passwordInputValue !== "") {
                 passwordIsValid = true;
-            }
+            };
         } else if (!passwordInputTouched) {
             passwordIsValid = true;
-        }
-    }
+        };
+    };
 
     const createAccountPasswordBlurChangedHandler = () => {
 
@@ -130,9 +176,9 @@
             passwordInputErrorMessage = "a valid password required"
         } else if (passwordInputValue !== "") {
             passwordIsValid = true;
-        }
+        };
 
-    }
+    };
 
     const createAccountReenteredPasswordValueChangedHandler = () => {
         if (passwordReenteredInputTouched) {
@@ -147,15 +193,15 @@
                 passwordReenteredInputErrorMessage = "";
             } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
                 passwordReenteredIsValid = true;
-            } 
+            };
         } else if (!passwordReenteredInputTouched) {
             if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
                 passwordReenteredIsValid = true;
             } else {
                 passwordReenteredIsValid = null;
-            }
-        }
-    }
+            };
+        };
+    };
 
     const createAccountReenteredPasswordFocusChangedHandler = () => {
         if (passwordReenteredInputTouched) {
@@ -170,13 +216,13 @@
                 passwordReenteredInputErrorMessage = "";
             } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
                 passwordReenteredIsValid = true;
-            } 
+            };
         } else if (!passwordInputTouched) {
             passwordReenteredIsValid = null;
         } else {
             passwordReenteredIsValid = null;
-        }
-    }
+        };
+    };
 
     const createAccountReenteredPasswordBlurChangedHandler = () => {
 
@@ -195,13 +241,80 @@
             passwordReenteredIsValid = true;
         } else {
             passwordReenteredIsValid = null;
+        };
+
+    };
+
+    // after submit
+
+    interface responseObj {
+        success: string;
+        error: string;
+        status: number | null
+    };
+
+	let responseItem: responseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        setTimeout(() => {
+            responseItem.success = "";
+            responseItem.error = "";
+            status: null;
+        }, 4000)
+    };
+
+    const createAccount = async (
+        campaignName: string,
+        email: string,
+        password: string,
+        reenteredPassword: string
+    ) => {
+        const response = await fetch("/api/createAccounts/createCampaignAccount", {
+            method: 'POST',
+            body: JSON.stringify({
+                campaignName,
+                email,
+                password,
+                reenteredPassword
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        responseItem = await response.json();
+        console.log(responseItem);
+        return responseItem;
+    }
+
+    const createAccountHandler = async () => {
+        pending = true;
+        try {
+            await createAccount(
+                campaignNameInputValue,
+                emailInputValue,
+                passwordInputValue,
+                passwordReenteredInputValue
+            );
+            if (responseItem.success) {
+                campaignNameInputValue = "",
+                emailInputValue = "",
+                passwordInputValue = "",
+                passwordReenteredInputValue = ""
+            };
+        } catch (error) {
+            console.log("catch");
         }
+    };
 
-    }
+    let pending: boolean = false;
 
-    const createAccountHandler = () => {
-
-    }
+    $: if((responseItem.success) || (responseItem.error)) {
+        pending = false;
+    };
 
 </script>
 <div 
@@ -222,6 +335,27 @@
             <div class="form_grid">
                 <div class="form_grid_item">
                     <div class="create_account_input">
+                        <TextInput 
+                            isValid={campaignNameIsValid}
+                            placeholder="candidate name for office name"
+                            inputID="campaign_name"
+                            inputName="campaign_name"
+                            inputLabel={true}
+                            bind:textInputValue={campaignNameInputValue}
+                            textInputValueChanged={() => createAccountCampaignNameValueChangedHandler()}
+                            textInputFocusChanged={() => createAccountCampaignNameFocusChangedHandler()}
+                            textInputBlurChanged={() => createAccountCampaignNameBlurChangedHandler()}
+                        >
+                            campaign name
+                        </TextInput>
+                        {#if (!campaignNameIsValid)}
+                            <InputErrorMessage>{campaignNameInputErrorMessage}</InputErrorMessage>
+                        {/if}
+                    </div>
+                </div>
+                <div class="form_grid_item"></div>
+                <div class="form_grid_item">
+                    <div class="create_account_input">
                         <EmailInput 
                             isValid={emailIsValid}
                             placeholder="myEmail@myCampaign.com"
@@ -239,10 +373,8 @@
                             <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
                         {/if}
                     </div>
-                    
                 </div>
                 <div class="form_grid_item"></div>
-
                 <div class="form_grid_item">
                     <div class="create_account_input">
                         <PasswordInput 
@@ -296,9 +428,22 @@
             <SubmitButton 
                 disable={loginVoterButtonDisabled}
             >
-                log in
+                create account
             </SubmitButton>
         </form>
+        {#if (pending)}
+            <PendingFlashMessage >
+                please wait while we validate your data
+            </PendingFlashMessage>
+        {:else if (responseItem.error)}
+            <ErrorFlashMessage >
+                {responseItem.error}
+            </ErrorFlashMessage>
+        {:else if (responseItem.success)}
+            <SuccessFlashMessage>
+                {responseItem.success}
+            </SuccessFlashMessage>
+        {/if}
         <div class="create_account_helpers_container">
             <div class="create_account_helpers_column">
                 <h4 class="create_account_helper_prompt">
@@ -366,9 +511,6 @@
         display: grid;
         grid-template-columns: 28rem 12rem;
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
     }
 
     .form_grid_item {
@@ -453,7 +595,6 @@
         }
 
         .form_grid {
-            
             display: grid;
             grid-template-columns: 100%;
         }

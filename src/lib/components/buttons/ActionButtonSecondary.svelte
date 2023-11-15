@@ -29,7 +29,7 @@
         text-align: left;
 		border: none;
 		padding: 0.5rem 0;
-		gap: 0.25rem;
+		gap: 0.5rem;
 		font-size: 1.25rem;
 		font-weight: 600;
 		display: flex;
@@ -41,7 +41,7 @@
 	}
 
 	.submit_button:hover {
-		gap: 0.75rem;
+		gap: 1rem;
         color: #3A2B35;
 		fill: #3A2B35;
 	}
