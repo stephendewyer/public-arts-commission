@@ -229,7 +229,7 @@
         flex-direction: row;
         align-items: flex-start;
         width: 100%;
-        padding: 2rem 0 0 0;
+        padding: 1rem 0;
     }
 
     .login_helpers_column {

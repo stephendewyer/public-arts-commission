@@ -1,0 +1,132 @@
+import { mysqlConnection } from "$lib/server/db/mysql";
+import sgMail from "@sendgrid/mail";
+import { SENDGRIDAPIKey } from '$env/static/private';
+import bcrypt from 'bcrypt';
+
+export async function POST({request}) {
+
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({error: "method is not POST"}), {status: 422});
+  }
+
+  const data = await request.json();
+
+  const { nameFirst, nameLast, email, password, reenteredPassword } = data;
+
+  if (
+    !nameFirst ||
+    !nameLast ||
+    !email ||
+    !password ||
+    !reenteredPassword  
+  ) {
+    return new Response(JSON.stringify({error: "missing form data!"}), {status: 422});
+  } else if (!email.includes('@')) {
+    return new Response(JSON.stringify({error: "missing an @ symbol in email address!"}), {status: 422});
+  } else if (password !== reenteredPassword) {
+    return new Response(JSON.stringify({error: "passwords do not match!"}), {status: 422});
+  };
+
+  // hash the password
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // check to see if email and campaign name already exist
+  let res = await mysqlConnection();
+
+  // load query to check if row with same voter first name and voter last name exists
+
+  const checkNameFirstAndLastQuery = `SELECT * FROM voters WHERE name_first = '${nameFirst}' AND name_last = '${nameLast}'`;
+
+  const [nameFirstAndLastRows, nameFirstAndLastFields] = await res.query(checkNameFirstAndLastQuery);
+
+  const nameFirstAndLastExists = JSON.parse(JSON.stringify(nameFirstAndLastRows));
+
+  if (nameFirstAndLastExists.length) {
+
+    return new Response(JSON.stringify({error: "a voter account with the same first and last name already exists!"}));
+
+  };
+
+  const checkEmailQuery = `SELECT email FROM voters WHERE email = '${email}'`;
+
+  const [emailRows, emailFields] = await res.query(checkEmailQuery);
+
+  // convert the rows into valid json to avoid OKPacket type
+
+  const emailExists = JSON.parse(JSON.stringify(emailRows));
+
+  if (emailExists.length) {
+
+    return new Response(JSON.stringify({error: "a voter account with the same email already exists!"}));
+
+  };
+
+  // if voter email and voter combined first and last names are new, create the account
+
+  const insertQuery = `INSERT INTO voters (name_first, name_last, email, password) VALUES ("${nameFirst}", "${nameLast}","${email}", "${hashedPassword}")`;
+
+  let success = false;
+
+  try {
+
+      // add the user data to users_in_checkout database table
+
+      await res.query(insertQuery);
+
+      // redirect to collect payment
+
+      success = true;
+
+      // return {success: "data entered into user checkout registration database"};
+
+  } catch (error) {
+
+      success = false;
+
+  }
+
+  // begin sending the message
+
+  sgMail.setApiKey(SENDGRIDAPIKey);
+
+  const msg = [
+    {
+      to: 'sdewyer@publicartscommission.org',
+      from: 'sdewyer@publicartscommission.org',
+      subject: `new voter account created`,
+      text: `new voter account created.`,
+      html: `<p>Hi stephen,<br /><br />A new voter account has been created for ${nameFirst} ${nameLast}.<br /><br />
+      Kind regards,<br /><br />public arts commission<br />https://public-arts-commission.vercel.app/</p></p>`,
+    },
+    {
+      to: email,
+      from: 'sdewyer@publicartscommission.org',
+      subject: `created your voter account at public arts commission`,
+      text: 'Your public arts commission voter account created.',
+      html: `<p>Hi ${nameFirst},<br /><br />
+      Thank you for creating a voter account at public arts commission.<br /><br />
+      You can now nominate campaigns and propose actions for endorsement by public arts commission.<br /><br />
+      You can also now connect with other voters in addition to public arts commission-endorsed actions and campaigns.<br /><br />
+      If you have any questions, please contact stephen dewyer at sdewyer@publicartscommission.org.<br /><br />
+      Kind regards,<br /><br />public arts commission<br />https://public-arts-commission.vercel.app/</p>`,
+    },
+  ];
+
+  try {
+
+    await sgMail.send(msg);
+    
+  } catch (error) {
+
+    return new Response(JSON.stringify({error: "new voter account messages not sent due to a problem with the API"}), {status: 422});
+
+  };
+
+  if (success) {
+
+    return new Response(JSON.stringify({success: `voter account successfully created for ${nameFirst} ${nameLast}`}), {status: 200});
+
+  };
+
+}

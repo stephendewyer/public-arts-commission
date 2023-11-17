@@ -275,7 +275,7 @@
 			</li>
 		</ul>
 		<ul id="nav_right_mobile">
-			<li>
+			<li class="mobile_nav_menu_toggle_button_container">
 				<Hamburger bind:open={sideDrawer}/>			
 			</li>
 		</ul>
@@ -434,6 +434,10 @@
 
 	#nav_left_mobile {
 		display: none;
+	}
+
+	.mobile_nav_menu_toggle_button_container {
+		margin: 0 1rem 0 0;
 	}
 
 	@media (max-width: 1920px) {

@@ -6,11 +6,12 @@
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
-    import CorrectIcon from '$lib/components/flashIcons/CorrectIcon.svelte';
-    import ErrorIcon from '$lib/components/flashIcons/ErrorIcon.svelte';
     import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
     import SuccessFlashMessage from '$lib/components/flashMessages/SuccessFlashMessage.svelte';
     import ErrorFlashMessage from '$lib/components/flashMessages/ErrorFlashMessage.svelte';
+	import { goto } from '$app/navigation';
+    import PasswordsMismatchMessage from '$lib/components/errorMessages/PasswordsMismatchMessage.svelte';
+    import PasswordsMatchMessage from '$lib/components/successMessages/PasswordsMatchMessage.svelte';
 
     let campaignNameInputValue: string = "";
     let emailInputValue: string = "";
@@ -239,6 +240,8 @@
             passwordReenteredInputErrorMessage = "";
         } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
             passwordReenteredIsValid = true;
+        } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue !== passwordInputValue) {
+            passwordReenteredIsValid = false;
         } else {
             passwordReenteredIsValid = null;
         };
@@ -304,7 +307,8 @@
                 emailInputValue = "",
                 passwordInputValue = "",
                 passwordReenteredInputValue = "",
-                passwordReenteredIsValid = null
+                passwordReenteredIsValid = null,
+                goto("/login-campaign");
             };
         } catch (error) {
             console.log("catch");
@@ -416,13 +420,9 @@
                 </div>
                 <div class="form_grid_item">
                     {#if (passwordReenteredIsValid)}
-                        <div class="passwords_match_validation">
-                            <CorrectIcon /><p style="color: #545D50">passwords match</p>
-                        </div>
+                        <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
                     {:else if (!passwordReenteredIsValid && passwordReenteredIsValid !== null)}
-                        <div class="passwords_match_validation">
-                            <ErrorIcon /><p style="color: #9F1D20">passwords do not match</p>
-                        </div>
+                        <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
                     {/if}
                 </div>
             </div>
@@ -531,7 +531,7 @@
         flex-direction: row;
         align-items: flex-start;
         width: 100%;
-        padding: 2rem 0 0 0;
+        padding: 1rem 0;
         gap: 0.25rem;
     }
 
@@ -547,10 +547,6 @@
         text-align: center;
         width: 100%;
         padding: 0 0.5rem;
-    }
-
-    .passwords_match_validation {
-        padding: 0 1rem;
     }
 
     @media (max-width: 1140px) {
@@ -574,9 +570,6 @@
             grid-template-columns: 22rem 9rem;
         }
 
-        .passwords_match_validation {
-            padding: 0 1rem;
-        }
     }
 
     @media (max-width: 720px) {
@@ -600,9 +593,6 @@
             grid-template-columns: 100%;
         }
 
-        .passwords_match_validation {
-            padding: 0 1rem;
-        }
     }
 
 </style>

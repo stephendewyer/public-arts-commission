@@ -4,6 +4,10 @@
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
+    import { goto } from '$app/navigation';
+    import PendingFlashMessage from '../flashMessages/PendingFlashMessage.svelte';
+    import SuccessFlashMessage from '../flashMessages/SuccessFlashMessage.svelte';
+    import ErrorFlashMessage from '../flashMessages/ErrorFlashMessage.svelte';
 
     export let voterLoginClicked: string | undefined = "";
 
@@ -30,7 +34,7 @@
         loginVoterButtonDisabled = false;
     } else {
         loginVoterButtonDisabled = true;
-    }
+    };
 
     const loginEmailValueChangedHandler = () => {
         if (emailInputTouched) {
@@ -42,11 +46,11 @@
                 emailInputErrorMessage = "email must have an @ symbol";
             } else if (emailInputValue !== "") {
                 emailIsValid = true;
-            }
+            };
         } else if (!emailInputTouched) {
             emailIsValid = true;
-        }
-    }
+        };
+    };
 
     const loginEmailFocusChangedHandler = () => {
         if (emailInputTouched) {
@@ -58,12 +62,12 @@
                 emailInputErrorMessage = "email must have an @ symbol";
             } else if (emailInputValue !== "") {
                 emailIsValid = true;
-            }
+            };
         } else if (!emailInputTouched) {
             emailIsValid = true;
-        }
+        };
         
-    }
+    };
 
     const loginEmailBlurChangedHandler = () => {
 
@@ -77,8 +81,8 @@
             emailInputErrorMessage = "email must have an @ symbol";
         } else if (emailInputValue !== "") {
             emailIsValid = true;
-        }
-    }
+        };
+    };
 
     const loginPasswordValueChangedHandler = () => {
         if (passwordInputTouched) {
@@ -87,11 +91,11 @@
                 passwordInputErrorMessage = "a valid password required"
             } else if (passwordInputValue !== "") {
                 passwordIsValid = true;
-            }
+            };
         } else if (!passwordInputTouched) {
             passwordIsValid = true;
-        }
-    }
+        };
+    };
 
     const loginPasswordFocusChangedHandler = () => {
         if (passwordInputTouched) {
@@ -100,11 +104,11 @@
                 passwordInputErrorMessage = "a valid password required"
             } else if (passwordInputValue !== "") {
                 passwordIsValid = true;
-            }
+            };
         } else if (!passwordInputTouched) {
             passwordIsValid = true;
-        }
-    }
+        };
+    };
 
     const loginPasswordBlurChangedHandler = () => {
 
@@ -115,13 +119,74 @@
             passwordInputErrorMessage = "a valid password required"
         } else if (passwordInputValue !== "") {
             passwordIsValid = true;
-        }
+        };
 
+    };
+
+    // after submit
+
+    interface responseObj {
+        success: string;
+        error: string;
+        status: number | null
+    };
+
+	let responseItem: responseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        setTimeout(() => {
+            responseItem.success = "";
+            responseItem.error = "";
+            status: null;
+        }, 4000)
+    };
+
+    const voterLogin = async (
+        email: string,
+        password: string
+    ) => {
+        const response = await fetch("/api/logins/loginVoter", {
+            method: 'POST',
+            body: JSON.stringify({
+                email,
+                password
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        responseItem = await response.json();
+        console.log(responseItem);
+        return responseItem;
     }
 
-    const voterLoginHandler = () => {
-        voterLoginClicked = "voter login clicked!";
-	}
+    const voterLoginHandler = async () => {
+        pending = true;
+        try {
+            await voterLogin(
+                emailInputValue,
+                passwordInputValue
+            );
+            if (responseItem.success) {
+                emailInputValue = "",
+                passwordInputValue = ""
+
+                // goto("/login-voter");
+            };
+        } catch (error) {
+            console.log("catch");
+        }
+    };
+
+    let pending: boolean = false;
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        pending = false;
+    };
 
 </script>
 
@@ -170,13 +235,25 @@
             {/if}
         </div>
         <SubmitButton 
-            on:click={() => voterLoginHandler()}
             disable={loginVoterButtonDisabled}
         >
             log in
         </SubmitButton>
         
     </form>
+    {#if (pending)}
+        <PendingFlashMessage >
+            please wait while we validate your data
+        </PendingFlashMessage>
+    {:else if (responseItem.error)}
+        <ErrorFlashMessage >
+            {responseItem.error}
+        </ErrorFlashMessage>
+    {:else if (responseItem.success)}
+        <SuccessFlashMessage>
+            {responseItem.success}
+        </SuccessFlashMessage>
+    {/if}
     <div class="login_helpers_container">
         <div class="login_helpers_column">
             <h4 class="login_helper_prompt">
@@ -230,7 +307,7 @@
         flex-direction: row;
         align-items: flex-start;
         width: 100%;
-        padding: 2rem 0 0 0;
+        padding: 1rem 0;
         gap: 0.25rem;
     }
 

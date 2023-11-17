@@ -22,13 +22,13 @@
 <style>
 
     .submit_button {
-        margin: 1rem 0 2rem 0;
+        margin: 0.5rem 0;
 		color: #4C4239;
 		fill: #4C4239;
 		background-color: transparent;
         text-align: left;
 		border: none;
-		padding: 0.5rem 0;
+		padding: 0 0 0.5rem 0;
 		gap: 0.5rem;
 		font-size: 1.25rem;
 		font-weight: 600;
