@@ -240,7 +240,7 @@
 		display: flex;
 		flex-direction: row;
 		width: 100%;
-		padding: 2rem 0;
+		padding: 0 1rem;
 	}
 
 	.use_current_location_checkbox {

@@ -34,12 +34,21 @@ export async function POST({request}) {
 
   const voterExists = JSON.parse(JSON.stringify(voterRows));
 
+  const voterExistsPassword = voterExists[0].password;
+
   if (!voterExists.length) {
 
-    return new Response(JSON.stringify({error: `no voter account exists with ${email}`}));
+    return new Response(JSON.stringify({error: `no voter account exists for ${email}`}), {status: 422});
 
   };
 
-  // const userPassword = await bcrypt.compare(password, hashedPassword)
+  const userPassword = await bcrypt.compare(password, voterExistsPassword);
 
+  if (!userPassword) {
+    
+    return new Response(JSON.stringify({ error: "incorrect password!"}), {status: 422});
+
+  };
+
+  return new Response(JSON.stringify({ success: "successfully logged into voter account!", }), {status: 200});
 }
