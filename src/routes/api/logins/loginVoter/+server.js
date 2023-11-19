@@ -51,5 +51,4 @@ export async function POST({request}) {
   };
 
   return new Response(JSON.stringify({ success: "successfully logged into voter account!", }), {status: 200});
-
 }
