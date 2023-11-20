@@ -1,6 +1,6 @@
 import { stripe } from '$lib/server/stripe/stripe';
-import { error, json } from '@sveltejs/kit';
-import SECRET_STRIPE_WEBHOOK_KEY from '$env/dynamic/private';
+import { error } from '@sveltejs/kit';
+import SECRET_STRIPE_WEBHOOK_KEY from '$env/static/private';
 
 // endpoint to handle incoming webhooks
 
