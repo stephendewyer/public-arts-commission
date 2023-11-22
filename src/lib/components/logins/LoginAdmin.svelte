@@ -144,7 +144,7 @@
         pending = true;
         try {
             const response = await signIn('credentials', {
-                providerId: "voter-login",
+                providerId: "admin-login",
                 email: emailInputValue,
                 password: passwordInputValue,
                 redirect: false,
