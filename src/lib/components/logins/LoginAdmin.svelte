@@ -4,6 +4,10 @@
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
+    import { goto } from '$app/navigation';
+    import PendingFlashMessage from '../flashMessages/PendingFlashMessage.svelte';
+    import SuccessFlashMessage from '../flashMessages/SuccessFlashMessage.svelte';
+    import ErrorFlashMessage from '../flashMessages/ErrorFlashMessage.svelte';
     import { signIn } from "@auth/sveltekit/client";
 
     let passwordInputValue: string = "";
@@ -230,6 +234,19 @@
             log in
         </SubmitButton>
     </form>
+    {#if (pending)}
+        <PendingFlashMessage >
+            please wait while we validate your data
+        </PendingFlashMessage>
+    {:else if (responseItem.error)}
+        <ErrorFlashMessage >
+            {responseItem.error}
+        </ErrorFlashMessage>
+    {:else if (responseItem.success)}
+        <SuccessFlashMessage>
+            {responseItem.success}
+        </SuccessFlashMessage>
+    {/if}
     <div class="login_helpers_container">
         <h4>
             forgot your password?
