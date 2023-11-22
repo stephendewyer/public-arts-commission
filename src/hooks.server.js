@@ -1,53 +1,56 @@
 import { SvelteKitAuth } from "@auth/sveltekit";
 import CredentialsProvider from "@auth/core/providers/credentials";
 import { AUTHSECRETKEY } from '$env/static/private';
+import { voterAuthentication } from "$lib/server/authentication/voter-authentication";
 
 /** @type {import('@sveltejs/kit').Handle} */
-export async function handle({ event, resolve }) {
-    if (event.url.pathname.startsWith('/custom')) {
-		return new Response('custom response');
-	}
-    console.log("hook is working!")
-	const response = await resolve(event);
-	return response;
-    
-}
+
+export const handle = SvelteKitAuth({
+
+    providers: [
+
+        CredentialsProvider({
+
+            async authorize(credentials) {
+
+                if (credentials.providerId === "voter-login"){
+
+                    // @ts-ignore
+                    const response = await voterAuthentication(credentials);
+                    // console.log(response);
+                    if (!response) {
+
+                        return null;
+
+                    };
+
+                    const responseItem = await response.json();
+
+                    return responseItem ?? null;
 
 
-// export const handle = SvelteKitAuth({
-//     providers: [
-//         CredentialsProvider({
-//             id: "campaign-login",
-//             async authorize(credentials, request) {
-//                 // function to get a user
-//                 const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
+                } else if (credentials.providerId === "campaign-login") {
 
-//                 if (user) {
-//                     // Any object returned will be saved in `user` property of the JWT
-//                     return user
-//                 } else {
-//                     // If you return null then an error will be displayed advising the user to check their details.
-//                     return null
-//                 }
-//             }
-//         }),
-//         CredentialsProvider({
-//             id: "voter-login",
-//             async authorize(credentials, request) {
+                } else if (credentials.providerId === "admin-login") {
 
-//             }
-//         }),
-//         CredentialsProvider({
-//             id: "admin-login",
-//             async authorize(credentials, request) {
+                } else {
 
-//             }
-//         })
-//     ],
-//     secret: AUTHSECRETKEY,
-//     debug: true,
-//     session: {
-//         maxAge: 1800, // 30 mins
-//         strategy: "jwt"
-//     }
-// });
+                    return null;
+
+                };
+            // const result = {email: "test@test.com"}
+            
+            // return a user object
+
+            }
+
+        }),
+        
+    ],
+    secret: AUTHSECRETKEY,
+    debug: true,
+    session: {
+        // maxAge: 1800, // 30 mins
+        strategy: "jwt"
+    }
+});

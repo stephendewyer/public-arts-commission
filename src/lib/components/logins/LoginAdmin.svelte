@@ -4,8 +4,7 @@
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
-
-    export let campaignLoginClicked: string | undefined = "";
+    import { signIn } from "@auth/sveltekit/client";
 
     let passwordInputValue: string = "";
     let emailInputValue: string = "";
@@ -119,9 +118,71 @@
 
     }
 
-    const campaignLoginHandler = () => {
-        campaignLoginClicked = "campaign login clicked!";
-	}
+    // after submit
+
+    interface responseObj {
+        success: string;
+        error: string;
+        status: number | null
+    };
+
+	let responseItem: responseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        setTimeout(() => {
+            responseItem.success = "";
+            responseItem.error = "";
+            status: null;
+        }, 4000)
+    };
+
+    const adminLoginHandler = async () => {
+        pending = true;
+        try {
+            const responseItem = await signIn('credentials', {
+                providerId: "voter-login",
+                email: emailInputValue,
+                password: passwordInputValue,
+                redirect: false,
+            });
+            if (responseItem.success) {
+                emailInputValue = "",
+                passwordInputValue = ""
+
+                // goto("/login-voter");
+            };
+            if (!responseItem.error) {
+                throw new Error(response.error || "something went wrong!");
+            }
+
+            console.log(responseItem);
+
+        } catch (error) {
+            console.log("catch");
+            if (emailInputValue === "")  {
+                emailIsValid = false;
+                emailInputErrorMessage = "a valid email required";
+            };
+            if (emailInputValue !== "" && !emailInputValue.includes("@")) {
+                emailIsValid = false;
+                emailInputErrorMessage = "email must have an @ symbol";
+            };
+            if (passwordInputValue === "") {
+                passwordIsValid = false;
+                passwordInputErrorMessage = "a valid password required";
+            };
+        };
+	};
+
+    let pending: boolean = false;
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        pending = false;
+    };
 
 </script>
 
@@ -130,15 +191,15 @@
         administrator login
     </h1>
     <form 
-        on:submit|preventDefault={campaignLoginHandler} 
+        on:submit|preventDefault={adminLoginHandler} 
         class="login_form"
     > 
         <div class="login_input">
             <EmailInput 
                 isValid={emailIsValid}
-                placeholder="campaignEmail@campaignDomain.com"
-                inputID="campaign_email"
-                inputName="campaign_email"
+                placeholder="adminEmail@publicartscommission.org"
+                inputID="admin_email"
+                inputName="admin_email"
                 bind:emailInputValue={emailInputValue}
                 inputLabel={true}
                 emailInputValueChanged={() => loginEmailValueChangedHandler()}
@@ -154,9 +215,9 @@
         <div class="login_input">
             <PasswordInput 
                 isValid={passwordIsValid}
-                placeholder="campaignPassword"
-                inputID="campaign_password"
-                inputName="campaign_password"
+                placeholder="adminPassword"
+                inputID="admin_password"
+                inputName="admin_password"
                 bind:passwordInputValue={passwordInputValue}
                 inputLabel={true}
                 passwordInputValueChanged={() => loginPasswordValueChangedHandler()}
@@ -171,7 +232,6 @@
         </div>
         <SubmitButton 
             disable={loginVoterButtonDisabled}
-            on:click={() => campaignLoginHandler()}
         >
             log in
         </SubmitButton>

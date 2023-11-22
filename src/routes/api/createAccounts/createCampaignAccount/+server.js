@@ -1,7 +1,7 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
 import sgMail from "@sendgrid/mail";
 import { SENDGRIDAPIKey } from '$env/static/private';
-import bcrypt from 'bcrypt';
+import { hashPassword } from "$lib/authentication/PasswordAuth.js";
 
 export async function POST({request}) {
 
@@ -28,7 +28,7 @@ export async function POST({request}) {
 
   // hash the password
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hashPassword(password);
 
   // check to see if email and campaign name already exist
   let res = await mysqlConnection();

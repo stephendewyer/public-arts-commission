@@ -8,9 +8,8 @@
     import PendingFlashMessage from '../flashMessages/PendingFlashMessage.svelte';
     import SuccessFlashMessage from '../flashMessages/SuccessFlashMessage.svelte';
     import ErrorFlashMessage from '../flashMessages/ErrorFlashMessage.svelte';
-
-    export let voterLoginClicked: string | undefined = "";
-
+    import { signIn } from "@auth/sveltekit/client";
+    
     let passwordInputValue: string = "";
     let emailInputValue: string = "";
 
@@ -128,7 +127,7 @@
     interface responseObj {
         success: string;
         error: string;
-        status: number | null
+        status: number | null;
     };
 
 	let responseItem: responseObj = {
@@ -145,47 +144,47 @@
         }, 4000)
     };
 
-    const voterLogin = async (
-        email: string,
-        password: string
-    ) => {
-        const response = await fetch("/api/logins/loginVoter", {
-            method: 'POST',
-            body: JSON.stringify({
-                email,
-                password
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        responseItem = await response.json();
-        console.log(responseItem);
-        return responseItem;
-    }
-
     const voterLoginHandler = async () => {
-        pending = true;
-        try {
-            await voterLogin(
-                emailInputValue,
-                passwordInputValue
-            );
-            if (responseItem.success) {
-                emailInputValue = "",
-                passwordInputValue = ""
 
-                // goto("/login-voter");
+        pending = true;
+
+        try {
+
+            const response = await signIn('credentials', {
+                providerId: "voter-login",
+                email: emailInputValue,
+                password: passwordInputValue,
+                redirect: false
+            });
+
+            if (!response?.ok) {
+
+                responseItem.error = "Incorrect email and/or password.";
+                throw new Error("Incorrect email and/or password.");
+                
             };
+
+            if (response?.ok) {
+
+                responseItem.success = "Valid email and password.";
+                // goto("/login-voter");
+                
+            };
+
         } catch (error) {
-            console.log("catch");
-        }
+
+            console.log(error);
+
+        };
+
     };
 
     let pending: boolean = false;
 
-    $: if((responseItem.success) || (responseItem.error)) {
+    $: if((responseItem.error) || (!responseItem.error)) {
+
         pending = false;
+
     };
 
 </script>
