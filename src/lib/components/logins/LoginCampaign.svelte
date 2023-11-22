@@ -141,45 +141,45 @@
     };
 
     const campaignLoginHandler = async () => {
+
         pending = true;
+
         try {
-            const responseItem = await signIn('credentials', {
+
+            const response = await signIn('credentials', {
                 providerId: "campaign-login",
                 email: emailInputValue,
                 password: passwordInputValue,
                 redirect: false
             });
-            console.log(responseItem);
-            if (responseItem.success) {
-                emailInputValue = "",
-                passwordInputValue = ""
 
+            if (!response?.ok) {
+
+                responseItem.error = "Incorrect email and/or password.";
+                throw new Error("Incorrect email and/or password.");
+
+            };
+
+            if (response?.ok) {
+
+                responseItem.success = "Valid email and password.";
                 // goto("/login-voter");
+
             };
-            if (!responseItem.error) {
-                throw new Error(response.error || "something went wrong!");
-            }
+
         } catch (error) {
+
             console.log(error);
-            if (emailInputValue === "")  {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            };
-            if (emailInputValue !== "" && !emailInputValue.includes("@")) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            };
-            if (passwordInputValue === "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required";
-            };
+
         };
     };
 
     let pending: boolean = false;
 
-    $: if((responseItem.success) || (responseItem.error)) {
+    $: if((responseItem.error) || (!responseItem.error)) {
+
         pending = false;
+
     };
 
 </script>

@@ -143,45 +143,39 @@
     const adminLoginHandler = async () => {
         pending = true;
         try {
-            const responseItem = await signIn('credentials', {
+            const response = await signIn('credentials', {
                 providerId: "voter-login",
                 email: emailInputValue,
                 password: passwordInputValue,
                 redirect: false,
             });
-            if (responseItem.success) {
-                emailInputValue = "",
-                passwordInputValue = ""
+            if (!response?.ok) {
 
-                // goto("/login-voter");
+                responseItem.error = "Incorrect email and/or password.";
+                throw new Error("Incorrect email and/or password.");
+
             };
-            if (!responseItem.error) {
-                throw new Error(response.error || "something went wrong!");
-            }
 
-            console.log(responseItem);
+            if (response?.ok) {
+
+                responseItem.success = "Valid email and password.";
+                // goto("/login-voter");
+
+            };
 
         } catch (error) {
+
             console.log("catch");
-            if (emailInputValue === "")  {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            };
-            if (emailInputValue !== "" && !emailInputValue.includes("@")) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            };
-            if (passwordInputValue === "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required";
-            };
+
         };
 	};
 
     let pending: boolean = false;
 
-    $: if((responseItem.success) || (responseItem.error)) {
+    $: if((responseItem.error) || (!responseItem.error)) {
+
         pending = false;
+
     };
 
 </script>
