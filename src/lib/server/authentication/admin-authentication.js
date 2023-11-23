@@ -48,7 +48,7 @@ export const adminAuthentication = async (/** @type {{ email: string; password: 
 
     };
 
-    const result = JSON.parse(JSON.stringify({email: adminExistsEmail, role: "administrator"}));
+    const result = JSON.parse(JSON.stringify({email: adminExistsEmail, name: "administrator"}));
 
     return result;
 

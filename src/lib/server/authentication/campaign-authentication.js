@@ -43,7 +43,7 @@ export const campaignAuthentication = async (/** @type {{ email: string; passwor
 
     };
 
-    const result = JSON.parse(JSON.stringify({email: campaignExistsEmail, role: "campaign"}));
+    const result = JSON.parse(JSON.stringify({email: campaignExistsEmail, name: "campaign"}));
 
     return result;
 

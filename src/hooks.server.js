@@ -26,7 +26,9 @@ export const handle = SvelteKitAuth({
 
                     };
 
-                    const responseItem = await response.json();
+                    const responseItem = await response;
+
+                    console.log(responseItem)
 
                     return responseItem ?? null;
 
@@ -42,7 +44,7 @@ export const handle = SvelteKitAuth({
 
                     };
 
-                    const responseItem = await response.json();
+                    const responseItem = await response;
 
                     return responseItem ?? null;
 
@@ -57,7 +59,7 @@ export const handle = SvelteKitAuth({
 
                     };
 
-                    const responseItem = await response.json();
+                    const responseItem = await response;
 
                     return responseItem ?? null;
 
@@ -77,5 +79,7 @@ export const handle = SvelteKitAuth({
     session: {
         // maxAge: 1800, // 30 mins
         strategy: "jwt"
-    }
+        
+    },
+
 });

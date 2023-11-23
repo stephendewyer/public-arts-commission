@@ -161,13 +161,15 @@
 
                 responseItem.error = "Incorrect email and/or password.";
                 throw new Error("Incorrect email and/or password.");
-                
+
             };
 
             if (response?.ok) {
 
                 responseItem.success = "Valid email and password.";
-                // goto("/login-voter");
+                emailInputValue = "";
+                passwordInputValue = "";
+                goto("/authenticated-voter/voter");
                 
             };
 

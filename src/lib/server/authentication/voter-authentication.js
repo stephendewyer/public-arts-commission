@@ -10,7 +10,7 @@ export const voterAuthentication = async (/** @type {{ email: string; password: 
     } else if (credentials.password === "") {
 
         return null;
-        
+
     };
 
     // search voters for voter account with email that matches the user
@@ -43,7 +43,7 @@ export const voterAuthentication = async (/** @type {{ email: string; password: 
 
     };
 
-    const result = JSON.parse(JSON.stringify({email: voterExistsEmail, role: "voter"}));
+    const result = JSON.parse(JSON.stringify({email: voterExistsEmail, name: "voter"}));
 
     return result;
 

@@ -167,7 +167,9 @@
             if (response?.ok) {
 
                 responseItem.success = "Valid email and password.";
-                // goto("/login-voter");
+                passwordInputValue = "";
+                emailInputValue = "";
+                goto(`/authenticated-campaign/campaign`);
 
             };
 

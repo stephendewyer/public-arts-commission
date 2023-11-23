@@ -9,6 +9,9 @@
 	import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
   	import { onDestroy } from 'svelte';
 	import './styles.css';
+	import { page } from '$app/stores';
+
+	console.log($page.data);
 
 	let open: boolean = false;
 	
