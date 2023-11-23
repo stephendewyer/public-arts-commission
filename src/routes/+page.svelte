@@ -10,7 +10,9 @@
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
+	console.log($page.data?.session)
     // export let data;
 
 	let activeLoginTab: number;
@@ -140,9 +142,13 @@
 </svelte:head>
 
 <section>
-	<p>
+	{#if $page.data?.session?.user}
+		<p>
+		
+			session is active
 
-	</p>
+		</p>
+	{/if}
 	<picture class="banner">
 		<img src={PublicArtsCommissionBanner} alt="public arts commission banner" />
 	</picture>
