@@ -4,6 +4,7 @@
     import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
+    import YearSelection from '$lib/components/selections/YearSelection.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
@@ -14,21 +15,76 @@
     import PasswordsMatchMessage from '$lib/components/successMessages/PasswordsMatchMessage.svelte';
 
     let campaignNameInputValue: string = "";
+    let electionYearInputValue: number;
+    let electorateInputValue: string = "";
+    let partyInputValue: string = "";
+    let primaryElectionDateInputValue: string = "";
+    let generalElectionDateInputValue: string = "";
+    let nameFirstInputValue: string = "";
+    let nameLastInputValue: string = "";
+    let phoneInputValue: string = "";
+    let streetAddressInputValue: string = "";
+    let streetAddress02InputValue: string = "";
+    let cityInputValue: string = "";
+    let stateInputValue: string = "";
+    let zipCodeInputValue: number;
+    let authorizedRepresentativeInputValue: boolean = false;
     let emailInputValue: string = "";
     let passwordInputValue: string = "";
     let passwordReenteredInputValue: string = "";
 
     let campaignNameIsValid: boolean = true;
+    let electionYearIsValid: boolean = true;
+    let electorateIsValid: boolean = true;
+    let partyIsValid: boolean = true;
+    let primaryElectionDateIsValid: boolean = true;
+    let generalElectionDateIsValid: boolean = true;
+    let nameFirstIsValid: boolean = true;
+    let nameLastIsValid: boolean = true;
+    let phoneIsValid: boolean = true;
+    let streetAddressIsValid: boolean = true;
+    let streetAddress02IsValid: boolean = true;
+    let cityIsValid: boolean = true;
+    let stateIsValid: boolean = true;
+    let zipCodeIsValid: boolean = true;
+    let authorizedRepresentativeIsValid: boolean = true;
     let emailIsValid: boolean = true;
     let passwordIsValid: boolean = true;
     let passwordReenteredIsValid: boolean | null = null;
 
     let campaignNameInputTouched: boolean = false;
+    let electionYearInputTouched: boolean = false;
+    let electorateInputTouched: boolean = false;
+    let partyInputTouched: boolean = false;
+    let primaryElectionDateInputIsTouched: boolean = false;
+    let generalElectionDateInputIsTouched: boolean = false;
+    let nameFirstInputTouched: boolean = false;
+    let nameLastInputTouched: boolean = false;
+    let phoneInputTouched: boolean = false;
+    let streetAddressInputTouched: boolean = false;
+    let streetAddress02InputTouched: boolean = false;
+    let cityInputTouched: boolean = false;
+    let stateInputTouched: boolean = false;
+    let zipCodeInputTouched: boolean = false;
+    let authorizedRepresentativeInputTouched: boolean = false;
     let emailInputTouched: boolean = false;
     let passwordInputTouched: boolean = false;
     let passwordReenteredInputTouched: boolean = false;
 
     let campaignNameInputErrorMessage: string = "";
+    let electionYearInputErrorMessage: string = "";
+    let electorateInputErrorMessage: string = "";
+    let partyInputErrorMessage: string = "";
+    let primaryElectionDateInputErrorMessage: string = "";
+    let generalElectionDateInputErrorMessage: string = "";
+    let nameFirstInputErrorMessage: string = "";
+    let nameLastInputErrorMessage: string = "";
+    let phoneInputErrorMessage: string = "";
+    let streetAddressInputErrorMessage: string = "";
+    let streetAddress02InputErrorMessage: string = "";
+    let cityInputErrorMessage: string = "";
+    let zipCodeInputErrorMessage: string = "";
+    let authorizedRepresentativeInputErrorMessage: string = "";
     let emailInputErrorMessage: string = "";
     let passwordInputErrorMessage: string = "";
     let passwordReenteredInputErrorMessage: string = "";
@@ -272,6 +328,20 @@
 
     const createAccount = async (
         campaignName: string,
+        electionYear: number,
+        electorate: string,
+        party: string,
+        primaryElectionDate: string,
+        generalElectionDate: string,
+        nameFirst: string,
+        nameLast: string,
+        phoneNumber: string,
+        streetAddress: string,
+        streetAddress02: string,
+        city: string,
+        state: string,
+        zipCode: number,
+        authorizedRepresentative: boolean,
         email: string,
         password: string,
         reenteredPassword: string
@@ -280,6 +350,20 @@
             method: 'POST',
             body: JSON.stringify({
                 campaignName,
+                electionYear,
+                electorate,
+                party,
+                primaryElectionDate,
+                generalElectionDate,
+                nameFirst,
+                nameLast,
+                phoneNumber,
+                streetAddress,
+                streetAddress02,
+                city,
+                state,
+                zipCode,
+                authorizedRepresentative,
                 email,
                 password,
                 reenteredPassword
@@ -298,12 +382,40 @@
         try {
             await createAccount(
                 campaignNameInputValue,
+                electionYearInputValue,
+                electorateInputValue,
+                partyInputValue,
+                primaryElectionDateInputValue,
+                generalElectionDateInputValue,
+                nameFirstInputValue,
+                nameLastInputValue,
+                phoneInputValue,
+                streetAddressInputValue,
+                streetAddress02InputValue,
+                cityInputValue,
+                stateInputValue,
+                zipCodeInputValue,
+                authorizedRepresentativeInputValue,
                 emailInputValue,
                 passwordInputValue,
                 passwordReenteredInputValue
             );
             if (responseItem.success) {
                 campaignNameInputValue = "",
+                electionYearInputValue = 0,
+                electorateInputValue = "",
+                partyInputValue = "",
+                primaryElectionDateInputValue = "",
+                generalElectionDateInputValue = "",
+                nameFirstInputValue = "",
+                nameLastInputValue = "",
+                phoneInputValue = "",
+                streetAddressInputValue = "",
+                streetAddress02InputValue = "",
+                cityInputValue = "",
+                stateInputValue = "",
+                zipCodeInputValue = 0,
+                authorizedRepresentativeInputValue = false,
                 emailInputValue = "",
                 passwordInputValue = "",
                 passwordReenteredInputValue = "",
@@ -337,6 +449,83 @@
             on:submit|preventDefault={createAccountHandler}
             class="create_account_form"
         > 
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={campaignNameIsValid}
+                    placeholder="candidate for X office"
+                    inputID="campaign_name"
+                    inputName="campaign_name"
+                    bind:textInputValue={campaignNameInputValue}
+                    inputLabel={true}
+                    textInputValueChanged={() => campaignNameValueChangedHandler()}
+                    textInputFocusChanged={() => campaignNameFocusChangedHandler()}
+                    textInputBlurChanged={() => campaignNameBlurChangedHandler()}
+                >
+                    campaign name
+                </TextInput>
+                {#if (!campaignNameIsValid)}
+                    <InputErrorMessage>{campaignNameInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <YearSelection  bind:yearInputValue={electionYearInputValue}>
+                    election year
+                </YearSelection>
+            </div>
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={electorateIsValid}
+                    placeholder="area represented by office sought"
+                    inputID="electorate"
+                    inputName="electorate"
+                    bind:textInputValue={electorateInputValue}
+                    inputLabel={true}
+                    textInputValueChanged={() => electorateValueChangedHandler()}
+                    textInputFocusChanged={() => electorateFocusChangedHandler()}
+                    textInputBlurChanged={() => electorateBlurChangedHandler()}
+                >
+                    electorate
+                </TextInput>
+                {#if (!electorateIsValid)}
+                    <InputErrorMessage>{electorateInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={partyIsValid}
+                    placeholder="The Party"
+                    inputID="party"
+                    inputName="party"
+                    bind:textInputValue={partyInputValue}
+                    inputLabel={true}
+                    textInputValueChanged={() => partyValueChangedHandler()}
+                    textInputFocusChanged={() => partyFocusChangedHandler()}
+                    textInputBlurChanged={() => partyBlurChangedHandler()}
+                >
+                    party
+                </TextInput>
+                {#if (!partyIsValid)}
+                    <InputErrorMessage>{partyInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={partyIsValid}
+                    placeholder="The Party"
+                    inputID="party"
+                    inputName="party"
+                    bind:textInputValue={partyInputValue}
+                    inputLabel={true}
+                    textInputValueChanged={() => partyValueChangedHandler()}
+                    textInputFocusChanged={() => partyFocusChangedHandler()}
+                    textInputBlurChanged={() => partyBlurChangedHandler()}
+                >
+                    party
+                </TextInput>
+                {#if (!partyIsValid)}
+                    <InputErrorMessage>{partyInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
             <div class="form_grid">
                 <div class="form_grid_item">
                     <div class="create_account_input">

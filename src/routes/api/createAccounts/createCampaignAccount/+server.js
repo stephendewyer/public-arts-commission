@@ -14,7 +14,7 @@ export async function POST({request}) {
   const { campaignName, email, password, reenteredPassword } = data;
 
   if (
-    !campaignName ||
+    // !campaignName ||
     !email ||
     !password ||
     !reenteredPassword  
@@ -29,23 +29,12 @@ export async function POST({request}) {
   // hash the password
 
   const hashedPassword = await hashPassword(password);
-
-  // check to see if email and campaign name already exist
+  
   let res = await mysqlConnection();
 
-  const checkCampaignNameQuery = `SELECT campaign_name FROM campaigns WHERE campaign_name = '${campaignName}'`;
+  // check to see if user email already exists in users_campaigns
 
-  const [campaignNameRows, campaignNameFields] = await res.query(checkCampaignNameQuery);
-
-  const campaignNameExists = JSON.parse(JSON.stringify(campaignNameRows));
-
-  if (campaignNameExists.length) {
-
-    return new Response(JSON.stringify({error: "an account with the same campaign name already exists!"}));
-
-  };
-
-  const checkEmailQuery = `SELECT email FROM campaigns WHERE email = '${email}'`;
+  const checkEmailQuery = `SELECT email FROM users_campaigns WHERE email = '${email}'`;
 
   const [emailRows, emailFields] = await res.query(checkEmailQuery);
 
@@ -59,9 +48,23 @@ export async function POST({request}) {
 
   };
 
+  // check to see if campaign name already exist in campaign_information
+
+  // const checkCampaignNameQuery = `SELECT campaign_name FROM campaign_information WHERE campaign_name = '${campaignName}'`;
+
+  // const [campaignNameRows, campaignNameFields] = await res.query(checkCampaignNameQuery);
+
+  // const campaignNameExists = JSON.parse(JSON.stringify(campaignNameRows));
+
+  // if (campaignNameExists.length) {
+
+  //   return new Response(JSON.stringify({error: "an account with the same campaign name already exists!"}));
+
+  // };
+
   // if email and campaign name are new, create the account
 
-  const insertQuery = `INSERT INTO campaigns (campaign_name, email, password) VALUES ("${campaignName}", "${email}", "${hashedPassword}")`;
+  const insertQuery = `INSERT INTO users_campaigns (email, password) VALUES ("${email}", "${hashedPassword}")`;
 
   let success = false;
 
@@ -122,7 +125,7 @@ export async function POST({request}) {
 
   if (success) {
 
-    return new Response(JSON.stringify({success: `campaign account successfully created for ${campaignName}`}), {status: 200});
+    return new Response(JSON.stringify({success: `campaign account successfully created for ${email}`}), {status: 200});
 
   };
 

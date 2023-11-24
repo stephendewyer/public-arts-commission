@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    export let yearInputValue: number;
 </script>
 
 <div class="selection_container">
@@ -10,6 +10,7 @@
         id="election_years" 
         name="years"
         placeholder="2024"
+        bind:value={yearInputValue}
     >
         <option value="2024">2024</option>
         <option value="2023">2023</option>

@@ -19,7 +19,7 @@ export const campaignAuthentication = async (/** @type {{ email: string; passwor
 
     // load query to check if row with same voter first name and voter last name exists
 
-    const checkCampaignsEmailQuery = `SELECT * FROM campaigns WHERE email = '${credentials.email}'`;
+    const checkCampaignsEmailQuery = `SELECT * FROM users_campaigns WHERE email = '${credentials.email}'`;
 
     const [campaignRows, campaignFields] = await res.query(checkCampaignsEmailQuery);
 
