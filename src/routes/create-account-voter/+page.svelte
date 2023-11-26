@@ -2,6 +2,7 @@
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
     import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
+    import AnimatedCheckbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
@@ -37,24 +38,7 @@
     let passwordInputErrorMessage: string = "";
     let passwordReenteredInputErrorMessage: string = "";
 
-    let loginVoterButtonDisabled: boolean = true;
-
-    $: if (
-        nameFirstIsValid &&
-        nameLastIsValid &&
-        emailIsValid &&
-        passwordIsValid &&
-        passwordReenteredIsValid &&
-        (nameFirstInputValue !== "") &&
-        (nameLastInputValue !== "") &&
-        (emailInputValue !== "") &&
-        (passwordInputValue !== "") &&
-        (passwordReenteredInputValue !== "")
-    ) {
-        loginVoterButtonDisabled = false;
-    } else {
-        loginVoterButtonDisabled = true;
-    };
+    let loginVoterButtonDisabled: boolean = false;
 
     const createAccountNameFirstValueChangedHandler = () => {
         if (nameFirstInputTouched) {
@@ -383,115 +367,106 @@
             on:submit|preventDefault={createAccountHandler}
             class="create_account_form"
         > 
-            <div class="form_grid">
-                <div class="form_grid_item">
-                    <div class="create_account_input">
-                        <TextInput 
-                            isValid={nameFirstIsValid}
-                            placeholder="Marco"
-                            inputID="voter_name_first"
-                            inputName="voter_name_first"
-                            inputLabel={true}
-                            bind:textInputValue={nameFirstInputValue}
-                            textInputValueChanged={() => createAccountNameFirstValueChangedHandler()}
-                            textInputFocusChanged={() => createAccountNameFirstFocusChangedHandler()}
-                            textInputBlurChanged={() => createAccountNameFirstBlurChangedHandler()}
-                        >
-                            first name
-                        </TextInput>
-                        {#if (!nameFirstIsValid)}
-                            <InputErrorMessage>{nameFirstInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                    <div class="create_account_input">
-                        <TextInput 
-                            isValid={nameLastIsValid}
-                            placeholder="Polo"
-                            inputID="last_name"
-                            inputName="last_name"
-                            inputLabel={true}
-                            bind:textInputValue={nameLastInputValue}
-                            textInputValueChanged={() => createAccountNameLastValueChangedHandler()}
-                            textInputFocusChanged={() => createAccountNameLastFocusChangedHandler()}
-                            textInputBlurChanged={() => createAccountNameLastBlurChangedHandler()}
-                        >
-                            last name
-                        </TextInput>
-                        {#if (!nameLastIsValid)}
-                            <InputErrorMessage>{nameLastInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                    
-                </div>
-                <div class="form_grid_item">
-                    
-                </div>
-                <div class="form_grid_item">
-                    <div class="create_account_input">
-                        <EmailInput 
-                            isValid={emailIsValid}
-                            placeholder="myEmail@myCampaign.com"
-                            inputID="campaign_email"
-                            inputName="campaign_email"
-                            inputLabel={true}
-                            bind:emailInputValue={emailInputValue}
-                            emailInputValueChanged={() => createAccountEmailValueChangedHandler()}
-                            emailInputFocusChanged={() => createAccountEmailFocusChangedHandler()}
-                            emailInputBlurChanged={() => createAccountEmailBlurChangedHandler()}
-                        >
-                            email
-                        </EmailInput>
-                        {#if (!emailIsValid)}
-                            <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                </div>
-                <div class="form_grid_item"></div>
-                <div class="form_grid_item">
-                    <div class="create_account_input">
-                        <PasswordInput 
-                            isValid={passwordIsValid}
-                            placeholder="myPassword"
-                            inputID="voter_password"
-                            inputName="voter_password"
-                            inputLabel={true}
-                            bind:passwordInputValue={passwordInputValue}
-                            passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
-                            passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
-                            passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
-                        >
-                            password
-                        </PasswordInput>
-                        {#if (!passwordIsValid)}
-                            <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                    <div class="create_account_input">
-                        <PasswordInput 
-                            isValid={passwordReenteredIsValid}
-                            placeholder="myPassword"
-                            inputID="voter_password_reentered"
-                            inputName="voter_password_reentered"
-                            inputLabel={true}
-                            bind:passwordInputValue={passwordReenteredInputValue}
-                            passwordInputValueChanged={() => createAccountReenteredPasswordValueChangedHandler()}
-                            passwordInputFocusChanged={() => createAccountReenteredPasswordFocusChangedHandler()}
-                            passwordInputBlurChanged={() => createAccountReenteredPasswordBlurChangedHandler()}
-                        >
-                            re-enter password
-                        </PasswordInput>
-                        {#if (!passwordReenteredIsValid)}
-                            <InputErrorMessage>{passwordReenteredInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                </div>
-                <div class="form_grid_item">
-                    {#if (passwordReenteredIsValid)}
-                        <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
-                    {:else if (!passwordReenteredIsValid && passwordReenteredIsValid !== null)}
-                        <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
-                    {/if}
-                </div>
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={nameFirstIsValid}
+                    placeholder="Marco"
+                    inputID="voter_name_first"
+                    inputName="voter_name_first"
+                    inputLabel={true}
+                    bind:textInputValue={nameFirstInputValue}
+                    textInputValueChanged={() => createAccountNameFirstValueChangedHandler()}
+                    textInputFocusChanged={() => createAccountNameFirstFocusChangedHandler()}
+                    textInputBlurChanged={() => createAccountNameFirstBlurChangedHandler()}
+                >
+                    first name
+                </TextInput>
+                {#if (!nameFirstIsValid)}
+                    <InputErrorMessage>{nameFirstInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={nameLastIsValid}
+                    placeholder="Polo"
+                    inputID="last_name"
+                    inputName="last_name"
+                    inputLabel={true}
+                    bind:textInputValue={nameLastInputValue}
+                    textInputValueChanged={() => createAccountNameLastValueChangedHandler()}
+                    textInputFocusChanged={() => createAccountNameLastFocusChangedHandler()}
+                    textInputBlurChanged={() => createAccountNameLastBlurChangedHandler()}
+                >
+                    last name
+                </TextInput>
+                {#if (!nameLastIsValid)}
+                    <InputErrorMessage>{nameLastInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <EmailInput 
+                    isValid={emailIsValid}
+                    placeholder="myEmail@myCampaign.com"
+                    inputID="campaign_email"
+                    inputName="campaign_email"
+                    inputLabel={true}
+                    bind:emailInputValue={emailInputValue}
+                    emailInputValueChanged={() => createAccountEmailValueChangedHandler()}
+                    emailInputFocusChanged={() => createAccountEmailFocusChangedHandler()}
+                    emailInputBlurChanged={() => createAccountEmailBlurChangedHandler()}
+                >
+                    email
+                </EmailInput>
+                {#if (!emailIsValid)}
+                    <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <PasswordInput 
+                    isValid={passwordIsValid}
+                    placeholder="myPassword"
+                    inputID="voter_password"
+                    inputName="voter_password"
+                    inputLabel={true}
+                    bind:passwordInputValue={passwordInputValue}
+                    passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
+                    passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
+                    passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
+                >
+                    password
+                </PasswordInput>
+                {#if (!passwordIsValid)}
+                    <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input" style={"flex-direction: column"}>
+                <PasswordInput 
+                    isValid={passwordReenteredIsValid}
+                    placeholder="myPassword"
+                    inputID="voter_password_reentered"
+                    inputName="voter_password_reentered"
+                    inputLabel={true}
+                    bind:passwordInputValue={passwordReenteredInputValue}
+                    passwordInputValueChanged={() => createAccountReenteredPasswordValueChangedHandler()}
+                    passwordInputFocusChanged={() => createAccountReenteredPasswordFocusChangedHandler()}
+                    passwordInputBlurChanged={() => createAccountReenteredPasswordBlurChangedHandler()}
+                >
+                    re-enter password
+                </PasswordInput>
+                {#if (!passwordReenteredIsValid)}
+                    <InputErrorMessage>{passwordReenteredInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            {#if (passwordReenteredIsValid)}
+                <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
+            {:else if (!passwordReenteredIsValid && passwordReenteredIsValid !== null)}
+                <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
+            {/if}
+            <div class="create_account_input">
+                <AnimatedCheckbox>I am a citizen of the United States and eligible to vote in elections held within the United States.</AnimatedCheckbox>
+            </div>
+            <div class="create_account_input">
+                <AnimatedCheckbox>I am a union member.</AnimatedCheckbox>
             </div>
             <SubmitButton 
                 disable={loginVoterButtonDisabled}
@@ -517,9 +492,9 @@
                 <h4 class="create_account_helper_prompt">
                     already have an account?
                 </h4>
-                <a href="/login-campaign">
+                <a href="/login-voter">
                     <ActionButtonSecondary>
-                        campaign login
+                        voter login
                     </ActionButtonSecondary>
                 </a>
             </div>
@@ -575,22 +550,12 @@
         max-width: 40rem;
     }
 
-    .form_grid {
-        display: grid;
-        grid-template-columns: 28rem 12rem;
-        width: 100%;
-    }
-
-    .form_grid_item {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
     .create_account_input {
 		padding: 0.5rem 0;
         width: 100%;
         max-width: 28rem;
+        display: flex;
+        flex-direction: row;
 	}
 
     .create_account_helpers_container {
@@ -632,11 +597,6 @@
             align-items: center;
         }
 
-        .form_grid {
-            display: grid;
-            grid-template-columns: 22rem 9rem;
-        }
-
     }
 
     @media (max-width: 720px) {
@@ -653,11 +613,6 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-        }
-
-        .form_grid {
-            display: grid;
-            grid-template-columns: 100%;
         }
         
     }

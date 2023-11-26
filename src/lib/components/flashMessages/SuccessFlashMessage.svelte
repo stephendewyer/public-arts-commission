@@ -1,17 +1,23 @@
-<div class="success_flash_message">
-    <slot/>
+<div class="success_flash_message_container">
+    <div class="success_flash_message">
+        <p><slot/></p>
+    </div>
 </div>
 
 <style>
 
-    .success_flash_message {
-        color: #15060B;
-        background-color: #D1E9D1;
+    .success_flash_message_container {
+        padding: 0 1rem 1rem 1rem;
         width: 100%;
-        margin: 1rem 0;
-        padding: 1rem;
+    }
+
+    .success_flash_message {
+        background-color: #D1E9D1;
+        color: #545D50;
+        border: 2px solid #545D50;
+        width: 100%;
+        padding: 0.5rem 1rem;
         text-align: center;
-        filter: drop-shadow(0 0.5rem 0.5rem rgba(0, 0, 0, 0.25));
     }
     
 </style>

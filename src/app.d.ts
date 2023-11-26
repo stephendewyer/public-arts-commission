@@ -105,6 +105,11 @@ declare global {
 		urlAddress: string[] | string | null;
     }
 
+	interface State {
+		name: string;
+		abbreviation: string;
+	}
+
 }
 
 export {};

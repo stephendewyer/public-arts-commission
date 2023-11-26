@@ -1,10 +1,12 @@
 <script lang="ts">
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
+    import DateInput from '$lib/components/inputs/DateInput.svelte';
     import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
+    import SelectInput from '$lib/components/inputs/SelectInput.svelte';
+    import PhoneInput from '$lib/components/inputs/PhoneInput.svelte';
+    import NumberInput from '$lib/components/inputs/NumberInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
-    import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
-    import YearSelection from '$lib/components/selections/YearSelection.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
@@ -13,13 +15,15 @@
 	import { goto } from '$app/navigation';
     import PasswordsMismatchMessage from '$lib/components/errorMessages/PasswordsMismatchMessage.svelte';
     import PasswordsMatchMessage from '$lib/components/successMessages/PasswordsMatchMessage.svelte';
+    import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
+    import States from '$lib/data/states.titlecase.json';
 
     let campaignNameInputValue: string = "";
-    let electionYearInputValue: number;
     let electorateInputValue: string = "";
     let partyInputValue: string = "";
     let primaryElectionDateInputValue: string = "";
     let generalElectionDateInputValue: string = "";
+    let websiteURLInputValue: string = "";
     let nameFirstInputValue: string = "";
     let nameLastInputValue: string = "";
     let phoneInputValue: string = "";
@@ -34,11 +38,11 @@
     let passwordReenteredInputValue: string = "";
 
     let campaignNameIsValid: boolean = true;
-    let electionYearIsValid: boolean = true;
     let electorateIsValid: boolean = true;
     let partyIsValid: boolean = true;
     let primaryElectionDateIsValid: boolean = true;
     let generalElectionDateIsValid: boolean = true;
+    let websiteURLIsValid: boolean = true;
     let nameFirstIsValid: boolean = true;
     let nameLastIsValid: boolean = true;
     let phoneIsValid: boolean = true;
@@ -53,11 +57,11 @@
     let passwordReenteredIsValid: boolean | null = null;
 
     let campaignNameInputTouched: boolean = false;
-    let electionYearInputTouched: boolean = false;
     let electorateInputTouched: boolean = false;
     let partyInputTouched: boolean = false;
     let primaryElectionDateInputIsTouched: boolean = false;
     let generalElectionDateInputIsTouched: boolean = false;
+    let websiteURLInputIsTouched: boolean = false;
     let nameFirstInputTouched: boolean = false;
     let nameLastInputTouched: boolean = false;
     let phoneInputTouched: boolean = false;
@@ -72,39 +76,25 @@
     let passwordReenteredInputTouched: boolean = false;
 
     let campaignNameInputErrorMessage: string = "";
-    let electionYearInputErrorMessage: string = "";
     let electorateInputErrorMessage: string = "";
     let partyInputErrorMessage: string = "";
     let primaryElectionDateInputErrorMessage: string = "";
     let generalElectionDateInputErrorMessage: string = "";
+    let websiteURLInputErrorMessage: string = "";
     let nameFirstInputErrorMessage: string = "";
     let nameLastInputErrorMessage: string = "";
     let phoneInputErrorMessage: string = "";
     let streetAddressInputErrorMessage: string = "";
     let streetAddress02InputErrorMessage: string = "";
     let cityInputErrorMessage: string = "";
+    let stateInputErrorMessage: string = "";
     let zipCodeInputErrorMessage: string = "";
     let authorizedRepresentativeInputErrorMessage: string = "";
     let emailInputErrorMessage: string = "";
     let passwordInputErrorMessage: string = "";
     let passwordReenteredInputErrorMessage: string = "";
 
-    let loginVoterButtonDisabled: boolean = true;
-
-    $: if (
-        campaignNameIsValid &&
-        emailIsValid &&
-        passwordIsValid &&
-        passwordReenteredIsValid &&
-        (campaignNameInputValue !== "") &&
-        (emailInputValue !== "") &&
-        (passwordInputValue !== "") &&
-        (passwordReenteredInputValue !== "")
-    ) {
-        loginVoterButtonDisabled = false;
-    } else {
-        loginVoterButtonDisabled = true;
-    };
+    let loginVoterButtonDisabled: boolean = false;
 
     const createAccountCampaignNameValueChangedHandler = () => {
         if (campaignNameInputTouched) {
@@ -328,11 +318,11 @@
 
     const createAccount = async (
         campaignName: string,
-        electionYear: number,
         electorate: string,
         party: string,
         primaryElectionDate: string,
         generalElectionDate: string,
+        websiteURL: string,
         nameFirst: string,
         nameLast: string,
         phoneNumber: string,
@@ -350,11 +340,11 @@
             method: 'POST',
             body: JSON.stringify({
                 campaignName,
-                electionYear,
                 electorate,
                 party,
                 primaryElectionDate,
                 generalElectionDate,
+                websiteURL,
                 nameFirst,
                 nameLast,
                 phoneNumber,
@@ -382,11 +372,11 @@
         try {
             await createAccount(
                 campaignNameInputValue,
-                electionYearInputValue,
                 electorateInputValue,
                 partyInputValue,
                 primaryElectionDateInputValue,
                 generalElectionDateInputValue,
+                websiteURLInputValue,
                 nameFirstInputValue,
                 nameLastInputValue,
                 phoneInputValue,
@@ -402,11 +392,11 @@
             );
             if (responseItem.success) {
                 campaignNameInputValue = "",
-                electionYearInputValue = 0,
                 electorateInputValue = "",
                 partyInputValue = "",
                 primaryElectionDateInputValue = "",
                 generalElectionDateInputValue = "",
+                websiteURLInputValue = "",
                 nameFirstInputValue = "",
                 nameLastInputValue = "",
                 phoneInputValue = "",
@@ -449,6 +439,7 @@
             on:submit|preventDefault={createAccountHandler}
             class="create_account_form"
         > 
+            <h2>campaign information</h2>
             <div class="create_account_input">
                 <TextInput 
                     isValid={campaignNameIsValid}
@@ -466,11 +457,6 @@
                 {#if (!campaignNameIsValid)}
                     <InputErrorMessage>{campaignNameInputErrorMessage}</InputErrorMessage>
                 {/if}
-            </div>
-            <div class="create_account_input">
-                <YearSelection  bind:yearInputValue={electionYearInputValue}>
-                    election year
-                </YearSelection>
             </div>
             <div class="create_account_input">
                 <TextInput 
@@ -508,113 +494,269 @@
                     <InputErrorMessage>{partyInputErrorMessage}</InputErrorMessage>
                 {/if}
             </div>
-            <div class="create_account_input">
-                <TextInput 
-                    isValid={partyIsValid}
-                    placeholder="The Party"
-                    inputID="party"
-                    inputName="party"
-                    bind:textInputValue={partyInputValue}
-                    inputLabel={true}
-                    textInputValueChanged={() => partyValueChangedHandler()}
-                    textInputFocusChanged={() => partyFocusChangedHandler()}
-                    textInputBlurChanged={() => partyBlurChangedHandler()}
-                >
-                    party
-                </TextInput>
-                {#if (!partyIsValid)}
-                    <InputErrorMessage>{partyInputErrorMessage}</InputErrorMessage>
-                {/if}
-            </div>
-            <div class="form_grid">
-                <div class="form_grid_item">
-                    <div class="create_account_input">
-                        <TextInput 
-                            isValid={campaignNameIsValid}
-                            placeholder="candidate name for office name"
-                            inputID="campaign_name"
-                            inputName="campaign_name"
-                            inputLabel={true}
-                            bind:textInputValue={campaignNameInputValue}
-                            textInputValueChanged={() => createAccountCampaignNameValueChangedHandler()}
-                            textInputFocusChanged={() => createAccountCampaignNameFocusChangedHandler()}
-                            textInputBlurChanged={() => createAccountCampaignNameBlurChangedHandler()}
-                        >
-                            campaign name
-                        </TextInput>
-                        {#if (!campaignNameIsValid)}
-                            <InputErrorMessage>{campaignNameInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
+            <div class="two_columns_inputs_row">
+                <div class="create_account_input">
+                    <DateInput 
+                        isValid={primaryElectionDateIsValid}
+                        inputID="primary_election_date"
+                        inputName="primary_election_date"
+                        bind:dateInputValue={primaryElectionDateInputValue}
+                        inputLabel={true}
+                        dateInputValueChanged={() => primaryElectionDateValueChangedHandler()}
+                        dateInputFocusChanged={() => primaryElectionDateFocusChangedHandler()}
+                        dateInputBlurChanged={() => primaryElectionDateBlurChangedHandler()}
+                    >
+                        primary election date
+                    </DateInput>
+                    {#if (!primaryElectionDateIsValid)}
+                        <InputErrorMessage>{primaryElectionDateInputErrorMessage}</InputErrorMessage>
+                    {/if}
                 </div>
-                <div class="form_grid_item"></div>
-                <div class="form_grid_item">
-                    <div class="create_account_input">
-                        <EmailInput 
-                            isValid={emailIsValid}
-                            placeholder="myEmail@myCampaign.com"
-                            inputID="campaign_email"
-                            inputName="campaign_email"
-                            inputLabel={true}
-                            bind:emailInputValue={emailInputValue}
-                            emailInputValueChanged={() => createAccountEmailValueChangedHandler()}
-                            emailInputFocusChanged={() => createAccountEmailFocusChangedHandler()}
-                            emailInputBlurChanged={() => createAccountEmailBlurChangedHandler()}
-                        >
-                            email
-                        </EmailInput>
-                        {#if (!emailIsValid)}
-                            <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                </div>
-                <div class="form_grid_item"></div>
-                <div class="form_grid_item">
-                    <div class="create_account_input">
-                        <PasswordInput 
-                            isValid={passwordIsValid}
-                            placeholder="myPassword"
-                            inputID="voter_password"
-                            inputName="voter_password"
-                            inputLabel={true}
-                            bind:passwordInputValue={passwordInputValue}
-                            passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
-                            passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
-                            passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
-                        >
-                            password
-                        </PasswordInput>
-                        {#if (!passwordIsValid)}
-                            <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                    <div class="create_account_input">
-                        <PasswordInput 
-                            isValid={passwordReenteredIsValid}
-                            placeholder="myPassword"
-                            inputID="voter_password_reentered"
-                            inputName="voter_password_reentered"
-                            inputLabel={true}
-                            bind:passwordInputValue={passwordReenteredInputValue}
-                            passwordInputValueChanged={() => createAccountReenteredPasswordValueChangedHandler()}
-                            passwordInputFocusChanged={() => createAccountReenteredPasswordFocusChangedHandler()}
-                            passwordInputBlurChanged={() => createAccountReenteredPasswordBlurChangedHandler()}
-                        >
-                            re-enter password
-                        </PasswordInput>
-                        {#if (!passwordReenteredIsValid)}
-                            <InputErrorMessage>{passwordReenteredInputErrorMessage}</InputErrorMessage>
-                        {/if}
-                    </div>
-                </div>
-                <div class="form_grid_item">
-                    {#if (passwordReenteredIsValid)}
-                        <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
-                    {:else if (!passwordReenteredIsValid && passwordReenteredIsValid !== null)}
-                        <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
+                <div class="create_account_input">
+                    <DateInput 
+                        isValid={generalElectionDateIsValid}
+                        inputID="general_election_date"
+                        inputName="general_election_date"
+                        bind:dateInputValue={generalElectionDateInputValue}
+                        inputLabel={true}
+                        dateInputValueChanged={() => generalElectionDateValueChangedHandler()}
+                        dateInputFocusChanged={() => generalElectionDateFocusChangedHandler()}
+                        dateInputBlurChanged={() => generalElectionDateBlurChangedHandler()}
+                    >
+                        general election date
+                    </DateInput>
+                    {#if (!generalElectionDateIsValid)}
+                        <InputErrorMessage>{generalElectionDateInputErrorMessage}</InputErrorMessage>
                     {/if}
                 </div>
             </div>
+            <div class="create_account_input">
+                <TextInput 
+                    isValid={websiteURLIsValid}
+                    placeholder="https://candidateforXoffice.com"
+                    inputID="website_URL"
+                    inputName="website_URL"
+                    bind:textInputValue={websiteURLInputValue}
+                    inputLabel={true}
+                    textInputValueChanged={() => websiteURLValueChangedHandler()}
+                    textInputFocusChanged={() => websiteURLFocusChangedHandler()}
+                    textInputBlurChanged={() => websiteURLBlurChangedHandler()}
+                >
+                    campaign website URL
+                </TextInput>
+                {#if (!websiteURLIsValid)}
+                    <InputErrorMessage>{websiteURLInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <h2>campaign contact information</h2>
+            <div class="two_columns_inputs_row">
+                <div class="create_account_input">
+                    <TextInput 
+                        isValid={nameFirstIsValid}
+                        placeholder="Marco"
+                        inputID="name_first"
+                        inputName="name_first"
+                        bind:textInputValue={nameFirstInputValue}
+                        inputLabel={true}
+                        textInputValueChanged={() => nameFirstValueChangedHandler()}
+                        textInputFocusChanged={() => nameFirstFocusChangedHandler()}
+                        textInputBlurChanged={() => nameFirstBlurChangedHandler()}
+                    >
+                        first name
+                    </TextInput>
+                    {#if (!nameFirstIsValid)}
+                        <InputErrorMessage>{nameFirstInputErrorMessage}</InputErrorMessage>
+                    {/if}
+                </div>
+                <div class="create_account_input">
+                    <TextInput 
+                        isValid={nameLastIsValid}
+                        placeholder="Polo"
+                        inputID="name_last"
+                        inputName="name_last"
+                        bind:textInputValue={nameLastInputValue}
+                        inputLabel={true}
+                        textInputValueChanged={() => nameLastValueChangedHandler()}
+                        textInputFocusChanged={() => nameLastFocusChangedHandler()}
+                        textInputBlurChanged={() => nameLastBlurChangedHandler()}
+                    >
+                        last name
+                    </TextInput>
+                    {#if (!nameLastIsValid)}
+                        <InputErrorMessage>{nameLastInputErrorMessage}</InputErrorMessage>
+                    {/if}
+                </div>
+            </div>
+            <div class="create_account_input">
+                <EmailInput 
+                    isValid={emailIsValid}
+                    placeholder="marcopolo@domain.com"
+                    inputID="email"
+                    inputName="email"
+                    bind:emailInputValue={emailInputValue}
+                    inputLabel={true}
+                    emailInputValueChanged={() => emailValueChangedHandler()}
+                    emailInputFocusChanged={() => emailFocusChangedHandler()}
+                    emailInputBlurChanged={() => emailBlurChangedHandler()}
+                >
+                    email
+                </EmailInput>
+                {#if (!emailIsValid)}
+                    <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <PhoneInput 
+                    isValid={phoneIsValid}
+                    inputID="phone"
+                    inputName="phone"
+                    bind:phoneInputValue={phoneInputValue}
+                    inputLabel={true}
+                    phoneInputValueChanged={() => phoneValueChangedHandler()}
+                    phoneInputFocusChanged={() => phoneFocusChangedHandler()}
+                    phoneInputBlurChanged={() => phoneBlurChangedHandler()}
+                >
+                    phone number
+                </PhoneInput>
+                {#if (!phoneIsValid)}
+                    <InputErrorMessage>{phoneInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="two_columns_inputs_row">
+                <div class="create_account_input">
+                    <TextInput 
+                        isValid={streetAddressIsValid}
+                        placeholder="1111 State Street"
+                        inputID="street_address"
+                        inputName="street_address"
+                        bind:textInputValue={streetAddressInputValue}
+                        inputLabel={true}
+                        textInputValueChanged={() => streetAddressValueChangedHandler()}
+                        textInputFocusChanged={() => streetAddressFocusChangedHandler()}
+                        textInputBlurChanged={() => streetAddressBlurChangedHandler()}
+                    >
+                        street address
+                    </TextInput>
+                    {#if (!streetAddressIsValid)}
+                        <InputErrorMessage>{streetAddressInputErrorMessage}</InputErrorMessage>
+                    {/if}
+                </div>
+                <div class="create_account_input">
+                    <TextInput 
+                        isValid={streetAddress02IsValid}
+                        placeholder="Suite 2"
+                        inputID="street_address_02"
+                        inputName="street_address_02"
+                        bind:textInputValue={streetAddress02InputValue}
+                        inputLabel={true}
+                        textInputValueChanged={() => streetAddress02ValueChangedHandler()}
+                        textInputFocusChanged={() => streetAddress02FocusChangedHandler()}
+                        textInputBlurChanged={() => streetAddress02BlurChangedHandler()}
+                    >
+                        street address 2
+                    </TextInput>
+                    {#if (!streetAddress02IsValid)}
+                        <InputErrorMessage>{streetAddress02InputErrorMessage}</InputErrorMessage>
+                    {/if}
+                </div>
+            </div>
+            <div class="two_columns_inputs_row">
+                <div class="create_account_input">
+                    <TextInput 
+                        isValid={cityIsValid}
+                        placeholder="Democracy City"
+                        inputID="city"
+                        inputName="city"
+                        bind:textInputValue={cityInputValue}
+                        inputLabel={true}
+                        textInputValueChanged={() => cityValueChangedHandler()}
+                        textInputFocusChanged={() => cityFocusChangedHandler()}
+                        textInputBlurChanged={() => cityBlurChangedHandler()}
+                    >
+                        city
+                    </TextInput>
+                    {#if (!cityIsValid)}
+                        <InputErrorMessage>{cityInputErrorMessage}</InputErrorMessage>
+                    {/if}
+                </div>
+                <div class="create_account_input">
+                    <SelectInput 
+                        isValid={stateIsValid}
+                        inputID="state"
+                        inputName="state"
+                        options={States}
+                        bind:selectInputValue={stateInputValue}
+                        inputLabel={true}
+                        selectInputValueChanged={() => stateValueChangedHandler()}
+                        selectInputFocusChanged={() => stateFocusChangedHandler()}
+                        selectInputBlurChanged={() => stateBlurChangedHandler()}
+                    >
+                        state
+                    </SelectInput>
+                    {#if (!stateIsValid)}
+                        <InputErrorMessage>{stateInputErrorMessage}</InputErrorMessage>
+                    {/if}
+                </div>
+            </div>
+            <div class="create_account_input">
+                <NumberInput 
+                    isValid={zipCodeIsValid}
+                    placeholder=11111
+                    inputID="zip_code"
+                    inputName="zip_code"
+                    bind:numberInputValue={zipCodeInputValue}
+                    inputLabel={true}
+                    numberInputValueChanged={() => zipCodeValueChangedHandler()}
+                    numberInputFocusChanged={() => zipCodeFocusChangedHandler()}
+                    numberInputBlurChanged={() => zipCodeBlurChangedHandler()}
+                >
+                    zip code
+                </NumberInput>
+                {#if (!zipCodeIsValid)}
+                    <InputErrorMessage>{zipCodeInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <PasswordInput 
+                    isValid={passwordIsValid}
+                    placeholder="myPassword"
+                    inputID="voter_password"
+                    inputName="voter_password"
+                    inputLabel={true}
+                    bind:passwordInputValue={passwordInputValue}
+                    passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
+                    passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
+                    passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
+                >
+                    password
+                </PasswordInput>
+                {#if (!passwordIsValid)}
+                    <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            <div class="create_account_input">
+                <PasswordInput 
+                    isValid={passwordReenteredIsValid}
+                    placeholder="myPassword"
+                    inputID="voter_password_reentered"
+                    inputName="voter_password_reentered"
+                    inputLabel={true}
+                    bind:passwordInputValue={passwordReenteredInputValue}
+                    passwordInputValueChanged={() => createAccountReenteredPasswordValueChangedHandler()}
+                    passwordInputFocusChanged={() => createAccountReenteredPasswordFocusChangedHandler()}
+                    passwordInputBlurChanged={() => createAccountReenteredPasswordBlurChangedHandler()}
+                >
+                    re-enter password
+                </PasswordInput>
+                {#if (passwordReenteredIsValid === false)}
+                    <InputErrorMessage>{passwordReenteredInputErrorMessage}</InputErrorMessage>
+                {/if}
+            </div>
+            {#if (passwordReenteredIsValid)}
+                <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
+            {:else if (!passwordReenteredIsValid && passwordReenteredIsValid !== null)}
+                <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
+            {/if}
             <SubmitButton 
                 disable={loginVoterButtonDisabled}
             >
@@ -694,19 +836,14 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
-        max-width: 40rem;
+        max-width: 28rem;
     }
 
-    .form_grid {
-        display: grid;
-        grid-template-columns: 28rem 12rem;
-        width: 100%;
-    }
-
-    .form_grid_item {
+    .two_columns_inputs_row {
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
+        gap: 1rem;
+        width: 100%;
     }
 
     .create_account_input {
@@ -754,11 +891,6 @@
             align-items: center;
         }
 
-        .form_grid {
-            display: grid;
-            grid-template-columns: 22rem 9rem;
-        }
-
     }
 
     @media (max-width: 720px) {
@@ -775,11 +907,6 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-        }
-
-        .form_grid {
-            display: grid;
-            grid-template-columns: 100%;
         }
 
     }

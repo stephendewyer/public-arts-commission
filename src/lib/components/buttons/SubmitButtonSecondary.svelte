@@ -17,13 +17,12 @@
 	}
 
     .submit_button {
-		width: 100%;
-        margin: 1rem 1rem 0 1rem;
+        margin: 1rem auto;
 		color: #3A2B35;
 		fill: #3A2B35;
 		background-color: #E3CDB2;
         border: none;
-		padding: 0.5rem 1rem;
+		padding: 0.5rem 2rem;
 		font-size: 1.5rem;
 		font-weight: 600;
 		display: flex;

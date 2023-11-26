@@ -31,6 +31,7 @@
 		"@types/uuid": "^9.0.5",
 		"bcrypt": "^5.1.1",
 		"mysql2": "^3.6.1",
+		"svelte-tel-input": "^3.3.9",
 		"uuid": "^9.0.1"
 	}
 }

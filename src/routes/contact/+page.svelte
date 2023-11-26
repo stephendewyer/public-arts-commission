@@ -36,24 +36,7 @@
     let subjectInputErrorMessage: string = "";
     let messageInputErrorMessage: string = "";
 
-    let sendMessageButtonDisabled: boolean = true;
-
-    $: if (
-        emailIsValid &&
-        nameFirstIsValid &&
-        nameLastIsValid &&
-        subjectIsValid &&
-        messageIsValid &&
-        (emailInputValue !== "") &&
-        (nameFirstInputValue !== "") &&
-        (nameLastInputValue !== "") &&
-        (subjectInputValue !== "") &&
-        (messageInputValue !== "") 
-    ) {
-        sendMessageButtonDisabled = false;
-    } else {
-        sendMessageButtonDisabled = true;
-    };
+    let sendMessageButtonDisabled: boolean = false;
 
     // begin input value change handlers
 
@@ -67,10 +50,10 @@
                 emailInputErrorMessage = "email must have an @ symbol";
             } else if (emailInputValue !== "") {
                 emailIsValid = true;
-            }
+            };
         } else if (!emailInputTouched) {
             emailIsValid = true;
-        }
+        };
     };
 
     const nameFirstValueChangedHandler = () => {
@@ -80,10 +63,10 @@
                 nameFirstInputErrorMessage = "a first name required";
             } else if (nameFirstInputValue !== "") {
                 nameFirstIsValid = true;
-            }
+            };
         } else if (!nameFirstInputTouched) {
             nameFirstIsValid = true;
-        }
+        };
     };
 
     const nameLastValueChangedHandler = () => {
@@ -93,10 +76,10 @@
                 nameLastInputErrorMessage = "a last name required";
             } else if (nameLastInputValue !== "") {
                 nameLastIsValid = true;
-            }
+            };
         } else if (!nameFirstInputTouched) {
             nameFirstIsValid = true;
-        }
+        };
     };
 
     const subjectValueChangedHandler = () => {
@@ -106,10 +89,10 @@
                 subjectInputErrorMessage = "a subject is required";
             } else if (subjectInputValue !== "") {
                 subjectIsValid = true;
-            }
+            };
         } else if (!subjectInputTouched) {
             subjectIsValid = true;
-        }
+        };
     };
 
     const messageValueChangedHandler = () => {
@@ -119,10 +102,10 @@
                 messageInputErrorMessage = "a message required"
             } else if (messageInputValue !== "") {
                 messageIsValid = true;
-            }
+            };
         } else if (!messageInputTouched) {
             messageIsValid = true;
-        }
+        };
     };
 
     // begin input focus change handlers
@@ -137,10 +120,10 @@
                 emailInputErrorMessage = "email must have an @ symbol";
             } else if (emailInputValue !== "") {
                 emailIsValid = true;
-            }
+            };
         } else if (!emailInputTouched) {
             emailIsValid = true;
-        }
+        };
     };
 
     const nameFirstFocusChangedHandler = () => {
@@ -148,10 +131,10 @@
             if (nameFirstInputValue === "") {
                 nameFirstIsValid = false;
                 nameFirstInputErrorMessage = "a first name required";
-            }
+            };
         } else if (!nameFirstInputTouched) {
             nameFirstIsValid = true;
-        }
+        };
     };
 
     const nameLastFocusChangedHandler = () => {
@@ -159,10 +142,10 @@
             if (nameLastInputValue === "") {
                 nameLastIsValid = false;
                 nameLastInputErrorMessage = "a last name required";
-            }
+            };
         } else if (!nameLastInputTouched) {
             nameLastIsValid = true;
-        }
+        };
     };
 
     const subjectFocusChangedHandler = () => {
@@ -170,10 +153,10 @@
             if (subjectInputValue === "") {
                 subjectIsValid = false;
                 subjectInputErrorMessage = "a subject required";
-            }
+            };
         } else if (!subjectInputTouched) {
             subjectIsValid = true;
-        }
+        };
     };
 
     const messageFocusChangedHandler = () => {
@@ -181,10 +164,10 @@
             if (messageInputValue === "") {
                 messageIsValid = false;
                 messageInputErrorMessage = "a message required";
-            }
+            };
         } else if (!messageInputTouched) {
             messageIsValid = true;
-        }
+        };
     };
 
     // begin input blur change handlers
@@ -200,7 +183,7 @@
             emailInputErrorMessage = "email must have an @ symbol";
         } else if (emailInputValue !== "") {
             emailIsValid = true;
-        }
+        };
     };
 
     const nameFirstBlurChangedHandler = () => {
@@ -211,7 +194,7 @@
             nameFirstInputErrorMessage = "a first name required";
         } else if (nameFirstInputValue !== "") {
             nameFirstIsValid = true;
-        }
+        };
     };
 
     const nameLastBlurChangedHandler = () => {
@@ -222,7 +205,7 @@
             nameLastInputErrorMessage = "a last name required";
         } else if (nameLastInputValue !== "") {
             nameLastIsValid = true;
-        }
+        };
     };
 
     const subjectBlurChangedHandler = () => {
@@ -233,7 +216,7 @@
             subjectInputErrorMessage = "a subject is required";
         } else if (subjectInputValue !== "") {
             subjectIsValid = true;
-        }
+        };
     };
 
     const messageBlurChangedHandler = () => {
@@ -244,7 +227,7 @@
             messageInputErrorMessage = "a message is required";
         } else if (messageInputValue !== "") {
             messageIsValid = true;
-        }
+        };
     };
 
     // after submit
@@ -316,14 +299,55 @@
             );
 
             if (item.success) {
+
                 emailInputValue = "",
                 nameFirstInputValue = "",
                 nameLastInputValue = "",
                 subjectInputValue = "",
                 messageInputValue = ""
-            }
+            };
+
+            if (item.error) {
+                if (emailInputValue === "") {
+                    emailIsValid = false;
+                    emailInputErrorMessage = "a valid email required";
+                } else if (!emailInputValue.includes('@')) {
+                    emailIsValid = false;
+                    emailInputErrorMessage = "email must have an @ symbol";
+                } else if (emailInputValue !== "") {
+                    emailIsValid = true;
+                };
+
+                if (nameFirstInputValue === "") {
+                    nameFirstIsValid = false;
+                    nameFirstInputErrorMessage = "a first name required";
+                } else if (nameFirstInputValue !== "") {
+                    nameFirstIsValid = true;
+                };
+
+                if (nameLastInputValue === "") {
+                    nameLastIsValid = false;
+                    nameLastInputErrorMessage = "a last name required";
+                } else if (nameLastInputValue !== "") {
+                    nameLastIsValid = true;
+                };
+
+                if (subjectInputValue === "") {
+                    subjectIsValid = false;
+                    subjectInputErrorMessage = "a subject is required";
+                } else if (subjectInputValue !== "") {
+                    subjectIsValid = true;
+                };
+
+                if (messageInputValue === "") {
+                    messageIsValid = false;
+                    messageInputErrorMessage = "a message required"
+                } else if (messageInputValue !== "") {
+                    messageIsValid = true;
+                };
+            };
         } catch (error) {
-            console.log("catch");
+            console.log(error);
         }
     };
 
@@ -492,7 +516,7 @@
 	}
 
     .contact_form {
-        padding: 0 1rem 2rem 1rem;
+        padding: 0 1rem 0 1rem;
         width: 100%;
     }
 
