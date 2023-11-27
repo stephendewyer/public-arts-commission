@@ -1,13 +1,68 @@
 <script lang="ts">
+    import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
+
     export let placeholder: string;
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
     export let emailInputValue: string;
-    export let emailInputValueChanged: any;
-    export let emailInputFocusChanged: any;
-    export let emailInputBlurChanged: any;
     export let isValid: boolean;
+    export let required: boolean;
+
+    let emailInputErrorMessage: string = "";
+
+    let emailInputTouched: boolean = false;
+
+    const emailInputValueChangedHandler = () => {
+        if (required) {
+            if (emailInputTouched) {
+                if (emailInputValue === "") {
+                    isValid = false;
+                    emailInputErrorMessage = "a valid email required";
+                } else if (!emailInputValue.includes('@')) {
+                    isValid = false;
+                    emailInputErrorMessage = "email must have an @ symbol";
+                } else if (emailInputValue !== "") {
+                    isValid = true;
+                }
+            } else if (!emailInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const emailInputFocusChangedHandler = () => {
+        if (required) {
+            if (emailInputTouched) {
+                if (emailInputValue === "") {
+                    isValid = false;
+                    emailInputErrorMessage = "a valid email required";
+                } else if (!emailInputValue.includes('@')) {
+                    isValid = false;
+                    emailInputErrorMessage = "email must have an @ symbol";
+                } else if (emailInputValue !== "") {
+                    isValid = true;
+                };
+            } else if (!emailInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const emailInputBlurChangedHandler = () => {
+        if (required) {
+            emailInputTouched = true;
+            if (emailInputValue === "") {
+                isValid = false;
+                emailInputErrorMessage = "a valid email required";
+            } else if (!emailInputValue.includes('@')) {
+                isValid = false;
+                emailInputErrorMessage = "email must have an @ symbol";
+            } else if (emailInputValue !== "") {
+                isValid = true;
+            };
+        };
+    };
   
 </script>
 
@@ -24,10 +79,15 @@
         name={inputName}
         type="text"
         bind:value={emailInputValue}
-        on:input={emailInputValueChanged}
-        on:focus={emailInputFocusChanged}
-        on:blur={emailInputBlurChanged}
+        on:input={emailInputValueChangedHandler}
+        on:focus={emailInputFocusChangedHandler}
+        on:blur={emailInputBlurChangedHandler}
     />
+    {#if (!isValid)}
+        <InputErrorMessage>
+            {emailInputErrorMessage}
+        </InputErrorMessage>
+    {/if}
 </div>
 
 <style>

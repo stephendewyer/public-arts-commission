@@ -3,7 +3,6 @@
     import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
-    import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
     import { goto } from '$app/navigation';
     import PendingFlashMessage from '../flashMessages/PendingFlashMessage.svelte';
     import SuccessFlashMessage from '../flashMessages/SuccessFlashMessage.svelte';
@@ -16,13 +15,7 @@
     let passwordIsValid: boolean = true;
     let emailIsValid: boolean = true;
 
-    let emailInputTouched: boolean = false;
-    let passwordInputTouched: boolean = false;
-
     let loginVoterButtonDisabled: boolean = true;
-
-    let emailInputErrorMessage: string = "";
-    let passwordInputErrorMessage: string = "";
 
     $: if (
         emailIsValid &&
@@ -33,94 +26,7 @@
         loginVoterButtonDisabled = false;
     } else {
         loginVoterButtonDisabled = true;
-    }
-
-    const loginEmailValueChangedHandler = () => {
-        if (emailInputTouched) {
-            if (emailInputValue === "") {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            } else if (!emailInputValue.includes('@')) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            } else if (emailInputValue !== "") {
-                emailIsValid = true;
-            }
-        } else if (!emailInputTouched) {
-            emailIsValid = true;
-        }
-    }
-
-    const loginEmailFocusChangedHandler = () => {
-        if (emailInputTouched) {
-            if (emailInputValue === "") {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            } else if (!emailInputValue.includes('@')) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            } else if (emailInputValue !== "") {
-                emailIsValid = true;
-            }
-        } else if (!emailInputTouched) {
-            emailIsValid = true;
-        }
-        
-    }
-
-    const loginEmailBlurChangedHandler = () => {
-
-        emailInputTouched = true;
-
-        if (emailInputValue === "") {
-            emailIsValid = false;
-            emailInputErrorMessage = "a valid email required";
-        } else if (!emailInputValue.includes('@')) {
-            emailIsValid = false;
-            emailInputErrorMessage = "email must have an @ symbol";
-        } else if (emailInputValue !== "") {
-            emailIsValid = true;
-        }
-    }
-
-    const loginPasswordValueChangedHandler = () => {
-        if (passwordInputTouched) {
-            if (passwordInputValue === "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required"
-            } else if (passwordInputValue !== "") {
-                passwordIsValid = true;
-            }
-        } else if (!passwordInputTouched) {
-            passwordIsValid = true;
-        }
-    }
-
-    const loginPasswordFocusChangedHandler = () => {
-        if (passwordInputTouched) {
-            if (passwordInputValue === "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required"
-            } else if (passwordInputValue !== "") {
-                passwordIsValid = true;
-            }
-        } else if (!passwordInputTouched) {
-            passwordIsValid = true;
-        }
-    }
-
-    const loginPasswordBlurChangedHandler = () => {
-
-        passwordInputTouched = true;
-
-        if (passwordInputValue === "") {
-            passwordIsValid = false;
-            passwordInputErrorMessage = "a valid password required"
-        } else if (passwordInputValue !== "") {
-            passwordIsValid = true;
-        }
-
-    }
+    };
 
     // after submit
 
@@ -171,7 +77,7 @@
 
         } catch (error) {
 
-            console.log("catch");
+            console.log(error);
 
         };
 	};
@@ -196,21 +102,16 @@
     > 
         <div class="login_input">
             <EmailInput 
-                isValid={emailIsValid}
-                placeholder="adminEmail@publicartscommission.org"
-                inputID="admin_email"
-                inputName="admin_email"
-                bind:emailInputValue={emailInputValue}
-                inputLabel={true}
-                emailInputValueChanged={() => loginEmailValueChangedHandler()}
-                emailInputFocusChanged={() => loginEmailFocusChangedHandler()}
-                emailInputBlurChanged={() => loginEmailBlurChangedHandler()}
-            >
-                email
+                    isValid={emailIsValid}
+                    placeholder="adminEmail@publicartscommission.org"
+                    inputID="admin_email"
+                    inputName="admin_email"
+                    bind:emailInputValue={emailInputValue}
+                    inputLabel={true}
+                    required={true}
+                >
+                    email
             </EmailInput>
-            {#if (!emailIsValid)}
-                <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
-            {/if}
         </div>
         <div class="login_input">
             <PasswordInput 
@@ -218,17 +119,13 @@
                 placeholder="adminPassword"
                 inputID="admin_password"
                 inputName="admin_password"
-                bind:passwordInputValue={passwordInputValue}
                 inputLabel={true}
-                passwordInputValueChanged={() => loginPasswordValueChangedHandler()}
-                passwordInputFocusChanged={() => loginPasswordFocusChangedHandler()}
-                passwordInputBlurChanged={() => loginPasswordBlurChangedHandler()}
+                bind:passwordInputValue={passwordInputValue}
+                required={true}
+                passwordInputErrorMessage="password required"
             >
                 password
             </PasswordInput>
-            {#if (!passwordIsValid)}
-                <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
-            {/if}
         </div>
         <SubmitButton 
             disable={loginVoterButtonDisabled}

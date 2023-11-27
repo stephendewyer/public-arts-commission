@@ -1,13 +1,66 @@
 <script lang="ts">
+    import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
     export let placeholder: string;
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
     export let passwordInputValue: string;
-    export let passwordInputValueChanged: any;
-    export let passwordInputFocusChanged: any;
-    export let passwordInputBlurChanged: any;
     export let isValid: boolean | null;
+    export let required: boolean;
+    export let passwordInputErrorMessage: string = "";
+    export let passwordsMatch: boolean | null = null;
+
+    let passwordMatchValidation: boolean = true;
+
+    let errorMessage: string = "";
+
+    let passwordInputTouched: boolean = false;
+
+    const passwordInputValueChangedHandler = () => {
+        if (required) {
+            if (passwordInputTouched) {
+                if (passwordInputValue === "") {
+                    isValid = false;
+                    errorMessage = passwordInputErrorMessage;
+                } else if (passwordInputValue !== "") {
+                    isValid = true;
+                };
+            } else if (!passwordInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const passwordInputFocusChangedHandler = () => {
+        if (passwordInputTouched) {
+            if (passwordInputValue === "") {
+                isValid = false;
+                errorMessage = passwordInputErrorMessage;
+            } else if (passwordInputValue !== "") {
+                isValid = true;
+            };
+        } else if (!passwordInputTouched) {
+            isValid = true;
+        };
+    };
+
+    const passwordInputBlurChangedHandler = () => {
+
+        passwordInputTouched = true;
+
+        if (passwordInputValue === "") {
+            isValid = false;
+            errorMessage = passwordInputErrorMessage;
+        } else if (passwordInputValue !== "") {
+            isValid = true;
+        };
+    };
+
+    $: if (passwordsMatch === false) {
+        passwordMatchValidation = false;
+    } else {
+        passwordMatchValidation = true;
+    };
   
 </script>
 
@@ -20,17 +73,23 @@
         </div>
     {/if}
     <input 
-        class={isValid || (isValid === null) ? "input" : "invalid_input"}
+        class={isValid ? "input" : "invalid_input"}
+        style={!passwordMatchValidation ? "border-color: #9F1D20" : ""}
         placeholder={placeholder}
         id={inputID}
         name={inputName}
         type="password"
         autocomplete="off"
         bind:value={passwordInputValue}
-        on:input={passwordInputValueChanged}
-        on:focus={passwordInputFocusChanged}
-        on:blur={passwordInputBlurChanged}
+        on:input={passwordInputValueChangedHandler}
+        on:focus={passwordInputFocusChangedHandler}
+        on:blur={passwordInputBlurChangedHandler}
     />
+    {#if (!isValid)}
+        <InputErrorMessage>
+            {errorMessage}
+        </InputErrorMessage>
+    {/if}
 </div>
   
 <style>

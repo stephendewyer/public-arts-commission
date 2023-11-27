@@ -11,7 +11,9 @@
 <style>
     .passwords_match_container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
         color: #545D50;
         font-size: 1.5rem;
         padding: 0 1rem;

@@ -85,145 +85,6 @@
         donationAmountInputValue = donateAnyAmountValue;
     };
 
-    // $: if (
-    //     emailIsValid &&
-    //     passwordIsValid &&
-    //     (passwordInputValue !== "") &&
-    //     (emailInputValue !== "")
-    // ) {
-    //     loginVoterButtonDisabled = false;
-    // } else {
-    //     loginVoterButtonDisabled = true;
-    // }
-
-    // begin client-side form error handling
-
-    const nameFirstValueChangeHandler = () => {
-        if (nameFirstInputTouched) {
-            if (nameFirstInputValue === "") {
-                nameFirstIsValid = false;
-                nameFirstInputErrorMessage = "first name required";
-            } else if (nameFirstInputValue !== "") {
-                nameFirstIsValid = true;
-            }
-        } else if (!nameFirstInputTouched) {
-            nameFirstIsValid = true;
-        }
-    }
-
-    const nameLastValueChangeHandler = () => {
-        console.log(nameLastInputValue)
-        if (nameLastInputTouched) {
-            if (nameLastInputValue === "") {
-                nameLastIsValid = false;
-                nameLastInputErrorMessage = "last name required";
-            } else if (nameLastInputValue !== "") {
-                nameLastIsValid = true;
-            }
-        } else if (!nameFirstInputTouched) {
-            nameLastIsValid = true;
-        }
-    }
-
-    const emailValueChangedHandler = () => {
-        if (emailInputTouched) {
-            if (emailInputValue === "") {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            } else if (!emailInputValue.includes('@')) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            } else if (emailInputValue !== "") {
-                emailIsValid = true;
-            }
-        } else if (!emailInputTouched) {
-            emailIsValid = true;
-        }
-    }
-
-    const nameFirstFocusChangedHandler = () => {
-        if (nameFirstInputTouched) {
-            if (nameFirstInputValue === "") {
-                nameFirstIsValid = false;
-                nameFirstInputErrorMessage = "first name required";
-            } else if (nameFirstInputValue !== "") {
-                nameFirstIsValid = true;
-            }
-        } else if (!nameFirstInputTouched) {
-            nameFirstIsValid = true;
-        }
-        
-    }
-    const nameLastFocusChangedHandler = () => {
-        if (nameLastInputTouched) {
-            if (nameLastInputValue === "") {
-                nameLastIsValid = false;
-                nameLastInputErrorMessage = "last name required";
-            } else if (nameLastInputValue !== "") {
-                nameLastIsValid = true;
-            }
-        } else if (!nameLastInputTouched) {
-            nameLastIsValid = true;
-        }
-        
-    }
-
-    const emailFocusChangedHandler = () => {
-        if (emailInputTouched) {
-            if (emailInputValue === "") {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            } else if (!emailInputValue.includes('@')) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            } else if (emailInputValue !== "") {
-                emailIsValid = true;
-            }
-        } else if (!emailInputTouched) {
-            emailIsValid = true;
-        }
-        
-    }
-
-    const nameFirstBlurChangedHandler = () => {
-
-        nameFirstInputTouched = true;
-
-        if (nameFirstInputValue === "") {
-            nameFirstIsValid = false;
-            nameFirstInputErrorMessage = "first name required";
-        } else if (nameFirstInputValue !== "") {
-            nameFirstIsValid = true;
-        }
-    }
-
-    const nameLastBlurChangedHandler = () => {
-
-        nameLastInputTouched = true;
-
-        if (nameLastInputValue === "") {
-            nameLastIsValid = false;
-            nameLastInputErrorMessage = "last name required";
-        } else if (nameLastInputValue !== "") {
-            nameLastIsValid = true;
-        }
-    }
-
-    const emailBlurChangedHandler = () => {
-
-        emailInputTouched = true;
-
-        if (emailInputValue === "") {
-            emailIsValid = false;
-            emailInputErrorMessage = "a valid email required";
-        } else if (!emailInputValue.includes('@')) {
-            emailIsValid = false;
-            emailInputErrorMessage = "email must have an @ symbol";
-        } else if (emailInputValue !== "") {
-            emailIsValid = true;
-        }
-    }
-
     // after submit
 
     interface responseObj {
@@ -299,21 +160,15 @@
             }
 
             if (!nameFirstInputValue) {
-                nameFirstInputErrorMessage = "first name required"
                 nameFirstIsValid = false;
-                nameFirstInputTouched = true;
             }
 
             if (!nameLastInputValue) {
-                nameLastInputErrorMessage = "last name required"
                 nameLastIsValid = false;
-                nameLastInputTouched = true;
             }
 
             if (!emailInputValue) {
-                emailInputErrorMessage = "email required"
                 emailIsValid = false;
-                emailInputTouched = true;
             }
 
         } catch (error) {
@@ -392,15 +247,11 @@
                 inputName="checkout_user_nameFirst"
                 bind:textInputValue={nameFirstInputValue}
                 inputLabel={true}
-                textInputValueChanged={() => nameFirstValueChangeHandler()}
-                textInputFocusChanged={() => nameFirstFocusChangedHandler()}
-                textInputBlurChanged={() => nameFirstBlurChangedHandler()}
+                required={true}
+                textInputErrorMessage="first name required"
             >
                 first name
             </TextInput>
-            {#if (!nameFirstIsValid)}
-                <InputErrorMessage>{nameFirstInputErrorMessage}</InputErrorMessage>
-            {/if}
             <TextInput 
                 isValid={nameLastIsValid}
                 placeholder="Polo"
@@ -408,32 +259,22 @@
                 inputName="checkout_user_nameLast"
                 bind:textInputValue={nameLastInputValue}
                 inputLabel={true}
-                textInputValueChanged={() => nameLastValueChangeHandler()}
-                textInputFocusChanged={() => nameLastFocusChangedHandler()}
-                textInputBlurChanged={() => nameLastBlurChangedHandler()}
+                required={true}
+                textInputErrorMessage="last name required"
             >
                 last name
             </TextInput>
-            {#if (!nameLastIsValid)}
-                <InputErrorMessage>{nameLastInputErrorMessage}</InputErrorMessage>
-            {/if}
-            <EmailInput
+            <EmailInput 
                 isValid={emailIsValid}
                 placeholder="marco.polo@marcopolo.com"
                 inputID="checkout_user_nameFirst"
-                inputName="email"
+                inputName="checkout_user_nameFirst"
                 bind:emailInputValue={emailInputValue}
                 inputLabel={true}
-                emailInputValueChanged={() => emailValueChangedHandler()}
-                emailInputFocusChanged={() => emailFocusChangedHandler()}
-                emailInputBlurChanged={() => emailBlurChangedHandler()}
+                required={true}
             >
                 email
-            </EmailInput>
-            {#if (!emailIsValid)}
-                <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
-            {/if}
-            
+            </EmailInput>            
             <ActionButton bind:disable={disableButton} >
                 continue
             </ActionButton>

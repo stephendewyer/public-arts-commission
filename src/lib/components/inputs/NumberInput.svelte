@@ -1,13 +1,58 @@
 <script lang="ts">
+    import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
     export let placeholder: string;
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let numberInputValue: number;
-    export let numberInputValueChanged: any;
-    export let numberInputFocusChanged: any;
-    export let numberInputBlurChanged: any;
+    export let numberInputValue: number | null;
     export let isValid: boolean;
+    export let required: boolean;
+    export let numberInputErrorMessage: string = "";
+
+    let numberInputTouched: boolean = false;
+    let errorMessage: string = "";
+
+    const numberInputValueChangedHandler = () => {
+        if (required) {
+            if (numberInputTouched) {
+                if (numberInputValue === null) {
+                    isValid = false;
+                    errorMessage = numberInputErrorMessage;
+                } else if (numberInputValue !== null) {
+                    isValid = true;
+                }
+            } else if (!numberInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const numberInputFocusChangedHandler = () => {
+        if (required) {
+            if (numberInputTouched) {
+                if (numberInputValue === null) {
+                    isValid = false;
+                    errorMessage = numberInputErrorMessage;
+                } else if (numberInputValue !== null) {
+                    isValid = true;
+                };
+            } else if (!numberInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const numberInputBlurChangedHandler = () => {
+        if (required) {
+            numberInputTouched = true;
+            if (numberInputValue === null) {
+                isValid = false;
+                errorMessage = numberInputErrorMessage;
+            } else if (numberInputValue !== null) {
+                isValid = true;
+            };
+        };
+    };
 </script>
 
 <div class="input_and_label_container">
@@ -25,10 +70,13 @@
         name={inputName}
         type="number"
         bind:value={numberInputValue}
-        on:input={numberInputValueChanged}
-        on:focus={numberInputFocusChanged}
-        on:blur={numberInputBlurChanged}
+        on:input={numberInputValueChangedHandler}
+        on:focus={numberInputFocusChangedHandler}
+        on:blur={numberInputBlurChangedHandler}
     />
+    {#if (!isValid)}
+        <InputErrorMessage>{errorMessage}</InputErrorMessage>
+    {/if}
 </div>
 
 <style>

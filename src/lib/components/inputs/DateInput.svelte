@@ -1,12 +1,60 @@
 <script lang="ts">
+    import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
+
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
     export let dateInputValue: string;
-    export let dateInputValueChanged: any;
-    export let dateInputFocusChanged: any;
-    export let dateInputBlurChanged: any;
     export let isValid: boolean;
+    export let dateInputErrorMessage: string;
+    export let required: boolean;
+
+    let errorMessage: string = "";
+
+    let dateInputTouched: boolean = false;
+
+    const dateInputValueChangedHandler = () => {
+        if (required) {
+            if (dateInputTouched) {
+                if (dateInputValue === "") {
+                    isValid = false;
+                    errorMessage = dateInputErrorMessage;
+                } else if (dateInputValue !== "") {
+                    isValid = true;
+                }
+            } else if (!dateInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const dateInputFocusChangedHandler = () => {
+        if (required) {
+            if (dateInputTouched) {
+                if (dateInputValue === "") {
+                    isValid = false;
+                    errorMessage = dateInputErrorMessage;
+                } else if (dateInputValue !== "") {
+                    isValid = true;
+                };
+            } else if (!dateInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const dateInputBlurChangedHandler = () => {
+        if (required) {
+            dateInputTouched = true;
+            if (dateInputValue === "") {
+                isValid = false;
+                errorMessage = dateInputErrorMessage;
+            } else if (dateInputValue !== "") {
+                isValid = true;
+            };
+        };
+    };
+
 </script>
 
 <div class="input_and_label_container">
@@ -23,10 +71,15 @@
         name={inputName}
         type="date"
         bind:value={dateInputValue}
-        on:input={dateInputValueChanged}
-        on:focus={dateInputFocusChanged}
-        on:blur={dateInputBlurChanged}
+        on:input={dateInputValueChangedHandler}
+        on:focus={dateInputFocusChangedHandler}
+        on:blur={dateInputBlurChangedHandler}
     />
+    {#if (!isValid)}
+        <InputErrorMessage>
+            {errorMessage}
+        </InputErrorMessage>
+    {/if}
 </div>
 
 <style>

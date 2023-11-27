@@ -1,13 +1,58 @@
 <script lang="ts">
+    import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
     export let selectInputValue: string;
-    export let selectInputValueChanged: any;
-    export let selectInputFocusChanged: any;
-    export let selectInputBlurChanged: any;
+    export let selectInputErrorMessage: string;
     export let isValid: boolean;
     export let options: State[];
+    export let required: boolean;
+
+    let selectInputTouched: boolean = false;
+    let errorMessage: string = "";
+
+    const selectInputValueChangedHandler = () => {
+        if (required) {
+            if (selectInputTouched) {
+                if (selectInputValue === "") {
+                    isValid = false;
+                    errorMessage = selectInputErrorMessage;
+                } else if (selectInputValue !== "") {
+                    isValid = true;
+                }
+            } else if (!selectInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const selectInputFocusChangedHandler = () => {
+        if (required) {
+            if (selectInputTouched) {
+                if (selectInputValue === "") {
+                    isValid = false;
+                    errorMessage = selectInputErrorMessage;
+                } else if (selectInputValue !== "") {
+                    isValid = true;
+                };
+            } else if (!selectInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const selectInputBlurChangedHandler = () => {
+        if (required) {
+            selectInputTouched = true;
+            if (selectInputValue === "") {
+                isValid = false;
+                errorMessage = selectInputErrorMessage;
+            } else if (selectInputValue !== "") {
+                isValid = true;
+            };
+        };
+    };
   
 </script>
 
@@ -22,14 +67,20 @@
         id={inputID}
         name={inputName}
         bind:value={selectInputValue}
-        on:input={selectInputValueChanged}
-        on:focus={selectInputFocusChanged}
-        on:blur={selectInputBlurChanged}
+        on:input={selectInputValueChangedHandler}
+        on:change={selectInputValueChangedHandler}
+        on:focus={selectInputFocusChangedHandler}
+        on:blur={selectInputBlurChangedHandler}
     >
         {#each options as option, i}
             <option value={option.name}>{option.name}</option>
         {/each}
-        </select>
+    </select>
+    {#if (!isValid)}
+        <InputErrorMessage>
+            {errorMessage}
+        </InputErrorMessage>
+    {/if}
 </div>
 
 <style>

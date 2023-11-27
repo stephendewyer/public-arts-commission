@@ -13,6 +13,9 @@ import ErrorIcon from '$lib/components/flashIcons/ErrorIcon.svelte';
         color: #9F1D20;
         font-size: 1.5rem;
         padding: 0 1rem;
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
     }
 
     @media (max-width: 1440px) {

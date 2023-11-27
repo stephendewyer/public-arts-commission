@@ -1,4 +1,5 @@
 <script lang="ts">
+    import InputErrorMessage from '../errorMessages/InputErrorMessage.svelte';
     import { TelInput, normalizedCountries } from 'svelte-tel-input';
     import type { DetailedValue, CountryCode, E164Number } from 'svelte-tel-input/types';
 
@@ -6,13 +7,59 @@
     export let inputName: string;
     export let inputLabel: boolean;
     export let phoneInputValue: E164Number | null = '+36301234567';
-    export let phoneInputValueChanged: any;
-    export let phoneInputFocusChanged: any;
-    export let phoneInputBlurChanged: any;
     export let isValid: boolean = true;
+    export let required: boolean;
+
     let selectedCountry: CountryCode | null = 'US';
-    // Optional - Extended details about the parsed phone number
+
+    // optional - extended details about the parsed phone number
     let detailedValue: DetailedValue | null = null;
+
+    let phoneInputTouched: boolean = false;
+    let phoneInputErrorMessage: string = "";
+
+    const phoneInputValueChangedHandler = () => {
+        if (required) {
+            if (phoneInputTouched) {
+                if (phoneInputValue === "") {
+                    isValid = false;
+                    phoneInputErrorMessage = "phone number required";
+                } else if (phoneInputValue !== "") {
+                    isValid = true;
+                }
+            } else if (!phoneInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const phoneInputFocusChangedHandler = () => {
+        if (required) {
+            if (phoneInputTouched) {
+                if (phoneInputValue === "") {
+                    isValid = false;
+                    phoneInputErrorMessage = "phone number required";
+                } else if (phoneInputValue !== "") {
+                    isValid = true;
+                };
+            } else if (!phoneInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const phoneInputBlurChangedHandler = () => {
+        if (required) {
+            phoneInputTouched = true;
+            if (phoneInputValue === "") {
+                isValid = false;
+                phoneInputErrorMessage = "phone number required";
+            } else if (phoneInputValue !== "") {
+                isValid = true;
+            };
+        };
+    };
+
 </script>
 
 <div class="input_and_label_container">
@@ -30,10 +77,15 @@
         bind:country={selectedCountry}
         bind:value={phoneInputValue}
         bind:detailedValue
-        on:input={phoneInputValueChanged}
-        on:focus={phoneInputFocusChanged}
-        on:blur={phoneInputBlurChanged}
+        on:input={phoneInputValueChangedHandler}
+        on:focus={phoneInputFocusChangedHandler}
+        on:blur={phoneInputBlurChangedHandler}
     />
+    {#if (!isValid)}
+        <InputErrorMessage>
+            {phoneInputErrorMessage}
+        </InputErrorMessage>
+    {/if}
 </div>
 
 <style>

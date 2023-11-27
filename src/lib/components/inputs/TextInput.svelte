@@ -1,13 +1,62 @@
 <script lang="ts">
+    import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
+
     export let placeholder: string;
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
     export let textInputValue: string;
-    export let textInputValueChanged: any;
-    export let textInputFocusChanged: any;
-    export let textInputBlurChanged: any;
     export let isValid: boolean;
+    export let textInputErrorMessage: string = "";
+    export let required: boolean;
+
+    let errorMessage: string = "";
+
+    let textInputTouched: boolean = false;
+
+    const textInputValueChangedHandler = () => {
+        if (required) {
+            if (textInputTouched) {
+                if (textInputValue === "") {
+                    isValid = false;
+                    errorMessage = textInputErrorMessage;
+                } else if (textInputValue !== "") {
+                    isValid = true;
+                }
+            } else if (!textInputTouched) {
+                isValid = true;
+            };
+        };
+    };
+
+    const textInputFocusChangedHandler = () => {
+        if (required) {
+            if (textInputTouched) {
+                if (textInputValue === "") {
+                    isValid = false;
+                    errorMessage = textInputErrorMessage;
+                } else if (textInputValue !== "") {
+                    isValid = true;
+                };
+            } else if (!textInputTouched) {
+                isValid = true;
+            };
+        }
+        
+    };
+
+    const textInputBlurChangedHandler = () => {
+        if (required) {
+            textInputTouched = true;
+            if (textInputValue === "") {
+                isValid = false;
+                errorMessage = textInputErrorMessage;
+            } else if (textInputValue !== "") {
+                isValid = true;
+            };
+        };
+    };
+
 </script>
 
 <div class="input_and_label_container">
@@ -25,10 +74,15 @@
         name={inputName}
         type="text"
         bind:value={textInputValue}
-        on:input={textInputValueChanged}
-        on:focus={textInputFocusChanged}
-        on:blur={textInputBlurChanged}
+        on:input={textInputValueChangedHandler}
+        on:focus={textInputFocusChangedHandler}
+        on:blur={textInputBlurChangedHandler}
     />
+    {#if (!isValid)}
+        <InputErrorMessage>
+            {errorMessage}
+        </InputErrorMessage>
+    {/if}
 </div>
 
 <style>
