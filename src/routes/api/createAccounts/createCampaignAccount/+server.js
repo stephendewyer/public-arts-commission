@@ -9,22 +9,70 @@ export async function POST({request}) {
     return new Response(JSON.stringify({error: "method is not POST"}), {status: 422});
   }
 
+  let authorizedRepresentativeINT = 0;
+
   const data = await request.json();
 
-  const { campaignName, email, password, reenteredPassword } = data;
+  const { 
+    campaignName,
+    electorate,
+    party,
+    primaryElectionDate,
+    generalElectionDate,
+    websiteURL,
+    nameFirst,
+    nameLast,
+    phoneNumber,
+    streetAddress,
+    streetAddress02,
+    city,
+    state,
+    zipCode,
+    authorizedRepresentative,
+    email,
+    password,
+    reenteredPassword 
+  } = data;
 
   if (
-    // !campaignName ||
+    !campaignName ||
+    !electorate ||
+    !party ||
+    !primaryElectionDate ||
+    !generalElectionDate ||
+    !nameFirst ||
+    !nameLast ||
+    !phoneNumber ||
+    !streetAddress ||
+    !city ||
+    !state ||
+    !zipCode ||
     !email ||
     !password ||
-    !reenteredPassword  
+    !reenteredPassword
   ) {
+
     return new Response(JSON.stringify({error: "missing form data!"}), {status: 422});
+
   } else if (!email.includes('@')) {
+
     return new Response(JSON.stringify({error: "missing an @ symbol in email address!"}), {status: 422});
+
   } else if (password !== reenteredPassword) {
+
     return new Response(JSON.stringify({error: "passwords do not match!"}), {status: 422});
+
+  } else if (!authorizedRepresentative) {
+
+    return new Response(JSON.stringify({error: "cannot create account for unauthorized campaign representative!"}), {status: 422});
+
+  } else if (authorizedRepresentative) {
+
+    authorizedRepresentativeINT = 1;
+
   };
+
+
 
   // hash the password
 
@@ -50,41 +98,79 @@ export async function POST({request}) {
 
   // check to see if campaign name already exist in campaign_information
 
-  // const checkCampaignNameQuery = `SELECT campaign_name FROM campaign_information WHERE campaign_name = '${campaignName}'`;
+  const checkCampaignNameQuery = `SELECT campaign_name FROM campaign_information WHERE campaign_name = '${campaignName}'`;
 
-  // const [campaignNameRows, campaignNameFields] = await res.query(checkCampaignNameQuery);
+  const [campaignNameRows, campaignNameFields] = await res.query(checkCampaignNameQuery);
 
-  // const campaignNameExists = JSON.parse(JSON.stringify(campaignNameRows));
+  const campaignNameExists = JSON.parse(JSON.stringify(campaignNameRows));
 
-  // if (campaignNameExists.length) {
+  if (campaignNameExists.length) {
 
-  //   return new Response(JSON.stringify({error: "an account with the same campaign name already exists!"}));
+    return new Response(JSON.stringify({error: "an account with the same campaign name already exists!"}));
 
-  // };
+  };
 
-  // if email and campaign name are new, create the account
+  // if email and campaign name are new, create the campaign user account
 
-  const insertQuery = `INSERT INTO users_campaigns (email, password) VALUES ("${email}", "${hashedPassword}")`;
+  const insertCampaignUserStatement = `INSERT INTO users_campaigns (email, password) VALUES ("${email}", "${hashedPassword}")`;
 
-  let success = false;
+  let campaignUserID;
 
-  try {
+  // insert the user into users_campaigns table and get the user_ID
+  await res.query(insertCampaignUserStatement)
+  .then(([ rows ]) => {
+    const rowsJSON = JSON.parse(JSON.stringify(rows));
+    campaignUserID = rowsJSON.insertId;
+  })
+  .catch(error => {
+    throw error;
+  });
 
-      // add the user data to users_in_checkout database table
+  // insert the campaign information in the campaign_information table
 
-      await res.query(insertQuery);
+  const insertCampaignInformationStatement = `INSERT INTO campaign_information (
+    user_ID,
+    campaign_name,
+    electorate,
+    party,
+    primary_election_date,
+    general_election_date,
+    name_first,
+    name_last,
+    phone_number,
+    street_address,
+    street_address_02,
+    city,
+    state,
+    zip_code,
+    authorized_campaign_representative,
+    website_URL
+  ) VALUES (
+    "${campaignUserID}",
+    "${campaignName}",
+    "${electorate}",
+    "${party}",
+    "${primaryElectionDate}",
+    "${generalElectionDate}",
+    "${nameFirst}",
+    "${nameLast}",
+    "${phoneNumber}",
+    "${streetAddress}",
+    "${streetAddress02}",
+    "${city}",
+    "${state}",
+    "${zipCode}",
+    "${authorizedRepresentativeINT}",
+    "${websiteURL}"
+  )`;
 
-      // redirect to collect payment
-
-      success = true;
-
-      // return {success: "data entered into user checkout registration database"};
-
-  } catch (error) {
-
-      success = false;
-
-  }
+  await res.query(insertCampaignInformationStatement)
+  .then(() => {
+    console.log(`campaign information for ${campaignName} created`);
+  })
+  .catch(error => {
+    throw error;
+  });
 
   // begin sending the message
 
@@ -92,7 +178,7 @@ export async function POST({request}) {
 
   const msg = [
     {
-      to: 'sdewyer@publicartscommission.org',
+      to: 'sdewyer@artintechservices.com',
       from: 'sdewyer@publicartscommission.org',
       subject: `new campaign account created`,
       text: `new campaign account created.`,
@@ -123,10 +209,6 @@ export async function POST({request}) {
 
   };
 
-  if (success) {
-
-    return new Response(JSON.stringify({success: `campaign account successfully created for ${email}`}), {status: 200});
-
-  };
+  return new Response(JSON.stringify({success: `campaign account successfully created for ${email}`}), {status: 200});
 
 }

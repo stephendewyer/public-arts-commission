@@ -78,7 +78,7 @@
     {#if (passwordsMatch === true)}
         <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
     {:else if (passwordsMatch === null)}
-        <p>pending</p>
+        <p></p>
     {:else if (passwordsMatch === false)}
         <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
     {/if}

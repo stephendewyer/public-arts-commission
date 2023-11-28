@@ -96,7 +96,7 @@
         streetAddress02: string,
         city: string,
         state: string,
-        zipCode: number,
+        zipCode: number | null,
         authorizedRepresentative: boolean,
         email: string,
         password: string,
@@ -170,12 +170,11 @@
                 streetAddress02InputValue = "",
                 cityInputValue = "",
                 stateInputValue = "",
-                zipCodeInputValue = 0,
+                zipCodeInputValue = null,
                 authorizedRepresentativeInputValue = false,
                 emailInputValue = "",
                 passwordInputValue = "",
-                passwordReenteredInputValue = "",
-                passwordReenteredIsValid = null,
+                passwordReenteredInputValue = ""
                 goto("/login-campaign");
             };
         } catch (error) {
@@ -426,8 +425,8 @@
                     bind:passwordReenteredInputValue
                     bind:passwordIsValid
                     bind:passwordReenteredIsValid
-                    required={true}
                 />
+            </div>
             <h2>campaign authorization</h2>
             <div class="create_account_input">
                 <AnimatedCheckbox
