@@ -1,278 +1,33 @@
 <script lang="ts">
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
-    import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
+    import ComparePasswords from '$lib/components/inputs/ComparePasswords.svelte';
     import AnimatedCheckbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
-    import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
 	import createAccountBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
     import SuccessFlashMessage from '$lib/components/flashMessages/SuccessFlashMessage.svelte';
+    import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
     import ErrorFlashMessage from '$lib/components/flashMessages/ErrorFlashMessage.svelte';
 	import { goto } from '$app/navigation';
-    import PasswordsMismatchMessage from '$lib/components/errorMessages/PasswordsMismatchMessage.svelte';
-    import PasswordsMatchMessage from '$lib/components/successMessages/PasswordsMatchMessage.svelte';
 
     let nameFirstInputValue: string = "";
     let nameLastInputValue: string = "";
     let emailInputValue: string = "";
     let passwordInputValue: string = "";
     let passwordReenteredInputValue: string = "";
+    let citizenEligibleVoterInputValue: boolean = false;
+    let unionMemberInputValue: boolean = false;
 
     let nameFirstIsValid: boolean = true;
     let nameLastIsValid: boolean = true;
     let emailIsValid: boolean = true;
     let passwordIsValid: boolean = true;
-    let passwordReenteredIsValid: boolean | null = null;
+    let passwordReenteredIsValid: boolean = true;
+    let citizenEligibleVoterIsValid: boolean = true;
 
-    let nameFirstInputTouched: boolean = false;
-    let nameLastInputTouched: boolean = false;
-    let emailInputTouched: boolean = false;
-    let passwordInputTouched: boolean = false;
-    let passwordReenteredInputTouched: boolean = false;
-
-    let nameFirstInputErrorMessage: string = "";
-    let nameLastInputErrorMessage: string = "";
-    let emailInputErrorMessage: string = "";
-    let passwordInputErrorMessage: string = "";
-    let passwordReenteredInputErrorMessage: string = "";
-
-    let loginVoterButtonDisabled: boolean = false;
-
-    const createAccountNameFirstValueChangedHandler = () => {
-        if (nameFirstInputTouched) {
-            if (nameFirstInputValue === "") {
-                nameFirstIsValid = false;
-                nameFirstInputErrorMessage = "a valid first name required";
-            } else if (nameFirstInputValue !== "") {
-                nameFirstIsValid = true;
-            }
-        } else if (!nameFirstInputTouched) {
-            nameFirstIsValid = true;
-        };
-    };
-
-    const createAccountNameFirstFocusChangedHandler = () => {
-        if (nameFirstInputTouched) {
-            if (nameFirstInputValue === "") {
-                nameFirstIsValid = false;
-                nameFirstInputErrorMessage = "a valid first name required";
-            } else if (nameFirstInputValue !== "") {
-                nameFirstIsValid = true;
-            };
-        } else if (!nameFirstInputTouched) {
-            nameFirstIsValid = true;
-        };
-    };
-
-    const createAccountNameFirstBlurChangedHandler = () => {
-        nameFirstInputTouched = true;
-        if (nameFirstInputValue === "") {
-            nameFirstIsValid = false;
-            nameFirstInputErrorMessage = "a valid first name required";
-        } else if (nameFirstInputValue !== "") {
-            nameFirstIsValid = true;
-        };
-    };
-
-    const createAccountNameLastValueChangedHandler = () => {
-        if (nameLastInputTouched) {
-            if (nameLastInputValue === "") {
-                nameLastIsValid = false;
-                nameLastInputErrorMessage = "a valid last name required";
-            } else if (nameLastInputValue !== "") {
-                nameLastIsValid = true;
-            }
-        } else if (!nameLastInputTouched) {
-            nameLastIsValid = true;
-        };
-    };
-
-    const createAccountNameLastFocusChangedHandler = () => {
-        if (nameLastInputTouched) {
-            if (nameLastInputValue === "") {
-                nameLastIsValid = false;
-                nameLastInputErrorMessage = "a valid last name required";
-            } else if (nameLastInputValue !== "") {
-                nameLastIsValid = true;
-            };
-        } else if (!nameLastInputTouched) {
-            nameLastIsValid = true;
-        };
-    };
-
-    const createAccountNameLastBlurChangedHandler = () => {
-        nameLastInputTouched = true;
-        if (nameLastInputValue === "") {
-            nameLastIsValid = false;
-            nameLastInputErrorMessage = "a valid last name required";
-        } else if (nameLastInputValue !== "") {
-            nameLastIsValid = true;
-        };
-    };
-
-    const createAccountEmailValueChangedHandler = () => {
-        if (emailInputTouched) {
-            if (emailInputValue === "") {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            } else if (!emailInputValue.includes('@')) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            } else if (emailInputValue !== "") {
-                emailIsValid = true;
-            }
-        } else if (!emailInputTouched) {
-            emailIsValid = true;
-        };
-    };
-
-    const createAccountEmailFocusChangedHandler = () => {
-        if (emailInputTouched) {
-            if (emailInputValue === "") {
-                emailIsValid = false;
-                emailInputErrorMessage = "a valid email required";
-            } else if (!emailInputValue.includes('@')) {
-                emailIsValid = false;
-                emailInputErrorMessage = "email must have an @ symbol";
-            } else if (emailInputValue !== "") {
-                emailIsValid = true;
-            };
-        } else if (!emailInputTouched) {
-            emailIsValid = true;
-        };
-    };
-
-    const createAccountEmailBlurChangedHandler = () => {
-        emailInputTouched = true;
-        if (emailInputValue === "") {
-            emailIsValid = false;
-            emailInputErrorMessage = "a valid email required";
-        } else if (!emailInputValue.includes('@')) {
-            emailIsValid = false;
-            emailInputErrorMessage = "email must have an @ symbol";
-        } else if (emailInputValue !== "") {
-            emailIsValid = true;
-        };
-    };
-
-    const createAccountPasswordValueChangedHandler = () => {
-        if (passwordInputTouched) {
-            if (passwordInputValue === "" && passwordReenteredInputValue === "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required";
-                passwordReenteredIsValid = null;
-            } else if (passwordInputValue !== "" && passwordReenteredInputValue === "") {
-                passwordIsValid = true;
-            } else if (passwordInputValue !== "" && passwordInputValue === passwordReenteredInputValue) {
-                passwordIsValid = true;
-                passwordReenteredIsValid = true;
-            } else if (passwordInputValue !== "" && passwordReenteredInputValue !== "" && passwordInputValue !== passwordReenteredInputValue) {
-                passwordReenteredIsValid = false;
-            
-            } else if (passwordInputValue === "" && passwordReenteredInputValue !== "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required"
-                passwordReenteredIsValid = false;
-            };
-        } else if (!passwordInputTouched) {
-            passwordIsValid = true;
-        };
-    };
-
-    const createAccountPasswordFocusChangedHandler = () => {
-        if (passwordInputTouched) {
-            if (passwordInputValue === "") {
-                passwordIsValid = false;
-                passwordInputErrorMessage = "a valid password required"
-            } else if (passwordInputValue !== "") {
-                passwordIsValid = true;
-            };
-        } else if (!passwordInputTouched) {
-            passwordIsValid = true;
-        };
-    };
-
-    const createAccountPasswordBlurChangedHandler = () => {
-
-        passwordInputTouched = true;
-
-        if (passwordInputValue === "") {
-            passwordIsValid = false;
-            passwordInputErrorMessage = "a valid password required"
-        } else if (passwordInputValue !== "") {
-            passwordIsValid = true;
-        };
-
-    };
-
-    const createAccountReenteredPasswordValueChangedHandler = () => {
-        if (passwordReenteredInputTouched) {
-            if (passwordReenteredInputValue === "" && passwordInputValue !== "") {
-                passwordReenteredIsValid = false;
-                passwordReenteredInputErrorMessage = "reentered password required"
-            } else if (passwordReenteredInputValue === "" && passwordInputValue === "") {
-                passwordReenteredIsValid = null;
-                passwordReenteredInputErrorMessage = "reentered password required"
-            } else if (passwordReenteredInputValue !== passwordInputValue) {
-                passwordReenteredIsValid = false;
-                passwordReenteredInputErrorMessage = "";
-            } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
-                passwordReenteredIsValid = true;
-            };
-        } else if (!passwordReenteredInputTouched) {
-            if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
-                passwordReenteredIsValid = true;
-            } else {
-                passwordReenteredIsValid = null;
-            };
-        };
-    };
-
-    const createAccountReenteredPasswordFocusChangedHandler = () => {
-        if (passwordReenteredInputTouched) {
-            if (passwordReenteredInputValue === "" && passwordInputValue !== "") {
-                passwordReenteredIsValid = false;
-                passwordReenteredInputErrorMessage = "reentered password required"
-            } else if (passwordReenteredInputValue === "" && passwordInputValue === "") {
-                passwordReenteredIsValid = null;
-                passwordReenteredInputErrorMessage = "reentered password required"
-            } else if (passwordReenteredInputValue !== passwordInputValue) {
-                passwordReenteredIsValid = false;
-                passwordReenteredInputErrorMessage = "";
-            } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
-                passwordReenteredIsValid = true;
-            };
-        } else if (!passwordInputTouched) {
-            passwordReenteredIsValid = null;
-        } else {
-            passwordReenteredIsValid = null;
-        };
-    };
-
-    const createAccountReenteredPasswordBlurChangedHandler = () => {
-
-        passwordReenteredInputTouched = true;
-
-        if (passwordReenteredInputValue === "" && passwordInputValue !== "") {
-            passwordReenteredIsValid = false;
-            passwordReenteredInputErrorMessage = "reentered password required"
-        } else if (passwordReenteredInputValue === "" && passwordInputValue === "") {
-            passwordReenteredIsValid = null;
-            passwordReenteredInputErrorMessage = "reentered password required"
-        } else if (passwordReenteredInputValue !== passwordInputValue) {
-            passwordReenteredIsValid = false;
-            passwordReenteredInputErrorMessage = "";
-        } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue === passwordInputValue) {
-            passwordReenteredIsValid = true;
-        } else if (passwordReenteredInputValue !== "" && passwordReenteredInputValue !== passwordInputValue) {
-            passwordReenteredIsValid = false;
-        } else {
-            passwordReenteredIsValid = null;
-        };
-
-    };
+    let createVoterAccountButtonDisabled: boolean = false;
 
     // after submit
 
@@ -296,12 +51,18 @@
         }, 4000)
     };
 
+    $: if (citizenEligibleVoterInputValue === true) {
+        citizenEligibleVoterIsValid = true;
+    };
+
     const createAccount = async (
         nameFirst: string,
         nameLast: string,
         email: string,
         password: string,
-        reenteredPassword: string
+        reenteredPassword: string,
+        citizenEligibleVoter: boolean,
+        unionMember: boolean
     ) => {
         const response = await fetch("/api/createAccounts/createVoterAccount", {
             method: 'POST',
@@ -310,7 +71,9 @@
                 nameLast,
                 email,
                 password,
-                reenteredPassword
+                reenteredPassword,
+                citizenEligibleVoter,
+                unionMember
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -329,20 +92,42 @@
                 nameLastInputValue,
                 emailInputValue,
                 passwordInputValue,
-                passwordReenteredInputValue
+                passwordReenteredInputValue,
+                citizenEligibleVoterInputValue,
+                unionMemberInputValue
             );
             if (responseItem.success) {
-                nameFirstInputValue = "",
-                nameLastInputValue = "",
-                emailInputValue = "",
-                passwordInputValue = "",
-                passwordReenteredInputValue = "",
-                passwordReenteredIsValid = null,
+                nameFirstInputValue = "";
+                nameLastInputValue = "";
+                emailInputValue = "";
+                passwordInputValue = "";
+                passwordReenteredInputValue = "";
                 goto("/login-voter");
             };
+
+            if (responseItem.error) {
+                if (nameFirstInputValue === "") {
+                    nameFirstIsValid = false;
+                };
+                if (nameLastInputValue === "") {
+                    nameLastIsValid = false;
+                };
+                if (emailInputValue === "") {
+                    emailIsValid = false;
+                };
+                if (passwordInputValue === "") {
+                    passwordIsValid = false;
+                };
+                if (passwordReenteredInputValue === "") {
+                    passwordReenteredIsValid = false;
+                };
+                if (citizenEligibleVoterInputValue === false) {
+                    citizenEligibleVoterIsValid = false;
+                };
+            };
         } catch (error) {
-            console.log("catch");
-        }
+            console.log(error);
+        };
     };
 
     let pending: boolean = false;
@@ -367,6 +152,7 @@
             on:submit|preventDefault={createAccountHandler}
             class="create_account_form"
         > 
+            <h3>*indicates required</h3>
             <div class="create_account_input">
                 <TextInput 
                     isValid={nameFirstIsValid}
@@ -375,15 +161,11 @@
                     inputName="voter_name_first"
                     inputLabel={true}
                     bind:textInputValue={nameFirstInputValue}
-                    textInputValueChanged={() => createAccountNameFirstValueChangedHandler()}
-                    textInputFocusChanged={() => createAccountNameFirstFocusChangedHandler()}
-                    textInputBlurChanged={() => createAccountNameFirstBlurChangedHandler()}
+                    required={true}
+                    textInputErrorMessage="first name required"
                 >
-                    first name
+                    first name*
                 </TextInput>
-                {#if (!nameFirstIsValid)}
-                    <InputErrorMessage>{nameFirstInputErrorMessage}</InputErrorMessage>
-                {/if}
             </div>
             <div class="create_account_input">
                 <TextInput 
@@ -393,15 +175,11 @@
                     inputName="last_name"
                     inputLabel={true}
                     bind:textInputValue={nameLastInputValue}
-                    textInputValueChanged={() => createAccountNameLastValueChangedHandler()}
-                    textInputFocusChanged={() => createAccountNameLastFocusChangedHandler()}
-                    textInputBlurChanged={() => createAccountNameLastBlurChangedHandler()}
+                    required={true}
+                    textInputErrorMessage="last name required"
                 >
-                    last name
+                    last name*
                 </TextInput>
-                {#if (!nameLastIsValid)}
-                    <InputErrorMessage>{nameLastInputErrorMessage}</InputErrorMessage>
-                {/if}
             </div>
             <div class="create_account_input">
                 <EmailInput 
@@ -411,65 +189,35 @@
                     inputName="campaign_email"
                     inputLabel={true}
                     bind:emailInputValue={emailInputValue}
-                    emailInputValueChanged={() => createAccountEmailValueChangedHandler()}
-                    emailInputFocusChanged={() => createAccountEmailFocusChangedHandler()}
-                    emailInputBlurChanged={() => createAccountEmailBlurChangedHandler()}
+                    required={true}
                 >
-                    email
+                    email*
                 </EmailInput>
-                {#if (!emailIsValid)}
-                    <InputErrorMessage>{emailInputErrorMessage}</InputErrorMessage>
+            </div>
+
+            <div class="create_account_input">
+                <ComparePasswords 
+                    bind:passwordInputValue
+                    bind:passwordReenteredInputValue
+                    bind:passwordIsValid
+                    bind:passwordReenteredIsValid
+                />
+            </div>
+            <div class="create_account_input" style={"display: flex; flex-direction: column; align-items: flex-start;"}>
+                <AnimatedCheckbox bind:checked={citizenEligibleVoterInputValue}>
+                    I am a citizen of the United States and eligible to vote in United States elections.*
+                </AnimatedCheckbox>
+                {#if (!citizenEligibleVoterIsValid)}
+                    <InputErrorMessage>must have citizenship and voter eligibility to create account</InputErrorMessage>
                 {/if}
             </div>
-            <div class="create_account_input">
-                <PasswordInput 
-                    isValid={passwordIsValid}
-                    placeholder="myPassword"
-                    inputID="voter_password"
-                    inputName="voter_password"
-                    inputLabel={true}
-                    bind:passwordInputValue={passwordInputValue}
-                    passwordInputValueChanged={() => createAccountPasswordValueChangedHandler()}
-                    passwordInputFocusChanged={() => createAccountPasswordFocusChangedHandler()}
-                    passwordInputBlurChanged={() => createAccountPasswordBlurChangedHandler()}
-                >
-                    password
-                </PasswordInput>
-                {#if (!passwordIsValid)}
-                    <InputErrorMessage>{passwordInputErrorMessage}</InputErrorMessage>
-                {/if}
-            </div>
-            <div class="create_account_input" style={"flex-direction: column"}>
-                <PasswordInput 
-                    isValid={passwordReenteredIsValid}
-                    placeholder="myPassword"
-                    inputID="voter_password_reentered"
-                    inputName="voter_password_reentered"
-                    inputLabel={true}
-                    bind:passwordInputValue={passwordReenteredInputValue}
-                    passwordInputValueChanged={() => createAccountReenteredPasswordValueChangedHandler()}
-                    passwordInputFocusChanged={() => createAccountReenteredPasswordFocusChangedHandler()}
-                    passwordInputBlurChanged={() => createAccountReenteredPasswordBlurChangedHandler()}
-                >
-                    re-enter password
-                </PasswordInput>
-                {#if (!passwordReenteredIsValid)}
-                    <InputErrorMessage>{passwordReenteredInputErrorMessage}</InputErrorMessage>
-                {/if}
-            </div>
-            {#if (passwordReenteredIsValid)}
-                <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
-            {:else if (!passwordReenteredIsValid && passwordReenteredIsValid !== null)}
-                <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
-            {/if}
-            <div class="create_account_input">
-                <AnimatedCheckbox>I am a citizen of the United States and eligible to vote in elections held within the United States.</AnimatedCheckbox>
-            </div>
-            <div class="create_account_input">
-                <AnimatedCheckbox>I am a union member.</AnimatedCheckbox>
+            <div class="create_account_input" style={"display: flex; flex-direction: column; align-items: flex-start;"}>
+                <AnimatedCheckbox bind:checked={unionMemberInputValue}>
+                    I am a union member.
+                </AnimatedCheckbox>
             </div>
             <SubmitButton 
-                disable={loginVoterButtonDisabled}
+                disable={createVoterAccountButtonDisabled}
             >
                 create account
             </SubmitButton>
@@ -554,8 +302,6 @@
 		padding: 0.5rem 0;
         width: 100%;
         max-width: 28rem;
-        display: flex;
-        flex-direction: row;
 	}
 
     .create_account_helpers_container {

@@ -3,7 +3,6 @@
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
     import DateInput from '$lib/components/inputs/DateInput.svelte';
     import ComparePasswords from '$lib/components/inputs/ComparePasswords.svelte';
-    import PasswordInput from '$lib/components/inputs/PasswordInput.svelte';
     import SelectInput from '$lib/components/inputs/SelectInput.svelte';
     import PhoneInput from '$lib/components/inputs/PhoneInput.svelte';
     import NumberInput from '$lib/components/inputs/NumberInput.svelte';
@@ -55,6 +54,10 @@
     let emailIsValid: boolean = true;
     let passwordIsValid: boolean = true;
     let passwordReenteredIsValid: boolean = true;
+
+    $: if (authorizedRepresentativeInputValue === true) {
+        authorizedRepresentativeIsValid = true;
+    };
 
     let authorizedRepresentativeInputErrorMessage: string = "campaign authorization required to create account"
 
@@ -177,9 +180,57 @@
                 passwordReenteredInputValue = ""
                 goto("/login-campaign");
             };
+
+            if (responseItem.error) {
+                if (campaignNameInputValue === "") {
+                    campaignNameIsValid = false;
+                };
+                if (electorateInputValue === "") {
+                    electorateIsValid = false;
+                };
+                if (partyInputValue === "") {
+                    partyIsValid = false;
+                };
+                if (primaryElectionDateInputValue === "") {
+                    primaryElectionDateIsValid = false;
+                };
+                if (generalElectionDateInputValue === "") {
+                    generalElectionDateIsValid = false;
+                };
+                if (nameFirstInputValue === "") {
+                    nameFirstIsValid = false;
+                };
+                if (nameLastInputValue === "") {
+                    nameLastIsValid = false;
+                };
+                if (phoneInputValue === "") {
+                    phoneIsValid = false;
+                };
+                if (streetAddressInputValue === "") {
+                    streetAddressIsValid = false;
+                };
+                if (cityInputValue === "") {
+                    cityIsValid = false;
+                };
+                if (stateInputValue === "") {
+                    stateIsValid = false;
+                };
+                if (zipCodeInputValue === null) {
+                    zipCodeIsValid = false;
+                };
+                if (authorizedRepresentativeInputValue === false) {
+                    authorizedRepresentativeIsValid = false;
+                };
+                if (passwordInputValue === "") {
+                    passwordIsValid = false;
+                };
+                if (passwordReenteredInputValue === "") {
+                    passwordReenteredIsValid = false;
+                };
+            };
         } catch (error) {
             console.log(error);
-        }
+        };
     };
 
     let pending: boolean = false;
