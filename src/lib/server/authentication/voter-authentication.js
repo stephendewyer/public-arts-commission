@@ -19,7 +19,7 @@ export const voterAuthentication = async (/** @type {{ email: string; password: 
 
     // load query to check if row with same voter first name and voter last name exists
 
-    const checkVoterEmailQuery = `SELECT * FROM voters WHERE email = '${credentials.email}'`;
+    const checkVoterEmailQuery = `SELECT * FROM users_voters WHERE email = '${credentials.email}'`;
 
     const [voterRows, voterFields] = await res.query(checkVoterEmailQuery);
 

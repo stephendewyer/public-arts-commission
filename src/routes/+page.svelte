@@ -12,7 +12,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	console.log($page.data?.session)
+	// console.log($page.data?.session)
     // export let data;
 
 	let activeLoginTab: number;
@@ -107,8 +107,6 @@
 
 		}
 	}
-
-	console.log($page.data);
 
 	const searchSubmitHandler = () => {
 
