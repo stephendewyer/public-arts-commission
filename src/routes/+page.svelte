@@ -108,7 +108,7 @@
 		}
 	}
 
-	// console.log(data);
+	console.log($page.data);
 
 	const searchSubmitHandler = () => {
 
