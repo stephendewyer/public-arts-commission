@@ -1,9 +1,9 @@
 import { SvelteKitAuth } from "@auth/sveltekit";
 import CredentialsProvider from "@auth/core/providers/credentials";
 import { AUTHSECRETKEY } from '$env/static/private';
-import { voterAuthentication } from "$lib/server/authentication/voter-authentication";
-import { adminAuthentication } from "$lib/server/authentication/admin-authentication";
-import { campaignAuthentication } from "$lib/server/authentication/campaign-authentication";
+import { voterAuthentication } from "./lib/server/authentication/voter-authentication";
+import { adminAuthentication } from "./lib/server/authentication/admin-authentication";
+import { campaignAuthentication } from "./lib/server/authentication/campaign-authentication";
 
 /** @type {import('@sveltejs/kit').Handle} */
 

@@ -523,7 +523,7 @@
                 <h4 class="create_account_helper_prompt">
                     forgot your password?
                 </h4>
-                <a href="/reset-password">
+                <a href="/reset-password/campaign">
                     <ActionButtonSecondary>
                         reset password
                     </ActionButtonSecondary>

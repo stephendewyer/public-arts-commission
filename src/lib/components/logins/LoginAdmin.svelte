@@ -150,7 +150,7 @@
         <h4>
             forgot your password?
         </h4>
-        <a href="/reset-password">
+        <a href="/reset-password/admin">
             <ActionButtonSecondary>
                 reset password
             </ActionButtonSecondary>

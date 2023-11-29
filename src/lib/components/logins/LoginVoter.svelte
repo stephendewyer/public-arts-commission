@@ -168,7 +168,7 @@
                 forgot your password?
             </h4>
             
-            <a href="/reset-password">
+            <a href="/reset-password/voter">
                 <ActionButtonSecondary>
                     reset password
                 </ActionButtonSecondary>
