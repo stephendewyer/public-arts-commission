@@ -203,6 +203,7 @@ export async function POST({request}) {
 
     await sgMail.send(msg);
     
+    
   } catch (error) {
 
     return new Response(JSON.stringify({error: "new campaign account messages not sent due to a problem with the API"}), {status: 422});

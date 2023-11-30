@@ -46,7 +46,7 @@
     const resetPassword = async (
         email: string
     ) => {
-        const response = await fetch("/api/authentication/reset-password-voter", {
+        const response = await fetch("/api/authentication/resetPassword/resetPasswordVoter", {
             method: 'POST',
             body: JSON.stringify({
                 email

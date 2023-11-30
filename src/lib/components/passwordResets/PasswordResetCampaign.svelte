@@ -46,7 +46,7 @@
     const resetPassword = async (
         email: string
     ) => {
-        const response = await fetch("/api/authentication/reset-password-campaign", {
+        const response = await fetch("/api/authentication/resetPassword/resetPasswordCampaign", {
             method: 'POST',
             body: JSON.stringify({
                 email

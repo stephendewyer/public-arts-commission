@@ -1,9 +1,9 @@
 import { hashPassword } from '../../../library/auth';
 import { connectToDatabase } from '../../../library/db';
 
-async function handler(req, res) {
+export async function PATCH({request}) {
     
-    if (req.method !== 'PATCH') {
+    if (request.method !== 'PATCH') {
       return;
     }
 
