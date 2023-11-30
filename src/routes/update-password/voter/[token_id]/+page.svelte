@@ -1,6 +1,6 @@
 <script lang="ts">
     import LoginBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
-    // import UpdatePasswordVoterPanel from '$lib/components/passwordUpdates/password-update-voter';
+	import PasswordUpdateVoter from '$lib/components/passwordUpdates/PasswordUpdateVoter.svelte';
 </script>
 
 <section>
@@ -11,7 +11,7 @@
 		<div class="login_section">
             <h1>update password</h1>
             <h2>voter</h2>
-			<!-- <UpdatePasswordVoterPanel /> -->
+			<PasswordUpdateVoter />
 		</div>
 	</div>
 </section>

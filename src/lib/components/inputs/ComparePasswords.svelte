@@ -8,7 +8,7 @@
     export let passwordIsValid: boolean = true;
     export let passwordReenteredIsValid: boolean = true;
 
-    let passwordsMatch: boolean | null = null;
+    export let passwordsMatch: boolean | null = null;
 
     let passwordReenteredInputValueLength: number = 0;
 
@@ -56,7 +56,7 @@
             passwordInputErrorMessage="password required"
             passwordsMatch={passwordsMatch}
         >
-            password*
+            <slot name="password_label" />
         </PasswordInput>
     </div>
     <div class="password_input">
@@ -71,7 +71,7 @@
             passwordInputErrorMessage="re-entered password required"
             passwordsMatch={passwordsMatch}
         >
-            re-enter password*
+            <slot name="re-entered_password_label" />
         </PasswordInput>
     </div>
     

@@ -476,7 +476,10 @@
                     bind:passwordReenteredInputValue
                     bind:passwordIsValid
                     bind:passwordReenteredIsValid
-                />
+                >
+                    <p slot="password_label">password*</p>
+                    <p slot="re-entered_password_label">re-enter password*</p>
+                </ComparePasswords>
             </div>
             <h2>campaign authorization</h2>
             <div class="create_account_input">

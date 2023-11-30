@@ -201,7 +201,10 @@
                     bind:passwordReenteredInputValue
                     bind:passwordIsValid
                     bind:passwordReenteredIsValid
-                />
+                >
+                    <p slot="password_label">password*</p>
+                    <p slot="re-entered_password_label">re-enter password*</p>
+                </ComparePasswords>
             </div>
             <div class="create_account_input" style={"display: flex; flex-direction: column; align-items: flex-start;"}>
                 <AnimatedCheckbox bind:checked={citizenEligibleVoterInputValue}>
