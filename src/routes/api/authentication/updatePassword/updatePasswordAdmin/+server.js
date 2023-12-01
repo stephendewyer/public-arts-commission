@@ -1,70 +1,108 @@
-// import { hashPassword } from '../../../library/auth';
-// import { connectToDatabase } from '../../../library/db';
+import { hashPassword } from '$lib/authentication/PasswordAuth';
+import { mysqlConnection } from "$lib/server/db/mysql";
+import sgMail from "@sendgrid/mail";
+import { SENDGRIDAPIKey } from '$env/static/private';
 
-// export async function PATCH({request}) {
+export async function PATCH({request}) {
     
-//     if (request.method !== 'PATCH') {
-//       return;
-//     }
+    if (request.method !== 'PATCH') {
 
-//     const newPassword = req.body.newPassword;
+        return new Response(JSON.stringify({error: "method is not PATCH"}), {status: 422});
 
-//     const validUserEmail = req.body.userEmail.validatedUserEmail;
+    };
 
-//     // validate the new password
+    const data = await request.json();
 
-//     if (
-//         !newPassword ||
-//         newPassword.trim().length < 7
-//     ) {
-//         res.status(422).json({
-//             message:
-//                 'invalid input - password should be at least 7 characters long.',
-//         });
-//         return;
-//     }
+    const {password, reenteredPassword, paramsTokenID, } = data;
 
-//     // if password is valid, connect to the database
-  
-//     const client = await connectToDatabase();
-  
-//     const usersCollection = client.db().collection('users');
-  
-//     const hashedPassword = await hashPassword(newPassword);
-  
-//     await usersCollection.updateOne(
-//       { email: validUserEmail },
-//       { $set: { password: hashedPassword } }
-//     );
-  
-//     client.close();
+    // connect to the database
 
-//     // begin send email verification
+    let res = await mysqlConnection();
 
-//     const sgMail = require('@sendgrid/mail')
-//     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-//     const msg = {
-//         to: validUserEmail,
-//         from: 'stephen.dewyer@stephengdewyer.info',
-//         subject: 'password update',
-//         html: '<h1>Your myLOGO gallery creator password has been updated.  If you are receiving this email in error, please contact the myLOGO gallery creator administrator at stephen.dewyer@stephengdewyer.info.</h1>'
-//     };
-//     (async () => {
-//         try {
-//           await sgMail.send(msg);
-//           res.status(200).json({ message: 'password updated' });
-//         } catch (error) {
-//           console.error(error);
+    const searchTokenQuery = `SELECT * FROM administrators WHERE reset_token = '${paramsTokenID}';`;
+
+    /**
+     * @type {string | any[]}
+     */
+    let userInAdministrators = [];
+
+    await res.query(searchTokenQuery)
+    .then(([ rows ]) => {
+
+        userInAdministrators = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    if (userInAdministrators.length === 0) {
+
+        return new Response(JSON.stringify({error: "no user found with token ID"}), {status: 422});
+
+    };
+
+    if (
+        !password || 
+        password.trim().length < 7
+    ) {
+        
+        return new Response(JSON.stringify({error: "invalid input - password should be at least 7 characters long"}), {status: 422});
+
+    };
+
+    const userEmail = userInAdministrators[0].email;
     
-//           if (error.response) {
-//             console.error(error.response.body)
-//             res.status(422).json({ message: 'message not sent due to a problem with the API' });
-//           }
-//         }
-//     })();
+    // hash the password
 
-//     // end send email verification
+    const hashedPassword = await hashPassword(password);
 
-//   }
-  
-//   export default handler;
+    // update the password in the database
+
+    const passwordUpdateStatement = `UPDATE administrators
+    SET 
+        password = "${hashedPassword}"
+    WHERE email = "${userEmail}";`
+
+    await res.query(passwordUpdateStatement)
+    .then(() => {
+
+        console.log("password has been updated!");
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    // begin send email verification
+
+    sgMail.setApiKey(SENDGRIDAPIKey)
+    const msg = {
+        to: userEmail,
+        from: 'sdewyer@publicartscommission.org',
+        subject: 'password update',
+        html: `<p>Hi ${userEmail},<p>
+        <p>Your public arts commission administrator password has been updated.</p>
+        <p>Kind regards,</p>
+        <p>public arts commission</p>
+        <a href="https://www.publicartscommission.org">https://www.publicartscommission.org</a>`
+    };
+    try {
+
+        await sgMail.send(msg);
+
+    } catch (error) {
+
+        console.error(error);
+
+        return new Response(JSON.stringify({error: "message not sent due to a problem with the API"}), {status: 422});
+    
+    };
+
+    return new Response(JSON.stringify({success: "your password has been updated"}), {status: 200});
+
+}

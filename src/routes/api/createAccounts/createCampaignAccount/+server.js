@@ -92,7 +92,7 @@ export async function POST({request}) {
 
   if (emailExists.length) {
 
-    return new Response(JSON.stringify({error: "an account with the same email already exists!"}));
+    return new Response(JSON.stringify({error: "an account with the same email already exists!"}), {status: 422});
 
   };
 
@@ -106,7 +106,7 @@ export async function POST({request}) {
 
   if (campaignNameExists.length) {
 
-    return new Response(JSON.stringify({error: "an account with the same campaign name already exists!"}));
+    return new Response(JSON.stringify({error: "an account with the same campaign name already exists!"}), {status: 422});
 
   };
 

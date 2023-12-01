@@ -6,6 +6,8 @@
     import SubmitButton from '../buttons/SubmitButton.svelte';
     import { goto } from '$app/navigation';
 
+    export let paramsTokenID: string;
+
     let passwordInputValue: string = "";
     let passwordIsValid: boolean = true;
 
@@ -52,13 +54,15 @@
 
     const updatePassword = async (
         password: string,
-        passwordReentered: string
+        passwordReentered: string,
+        paramsTokenID: string
     ) => {
         const response = await fetch("/api/authentication/updatePassword/updatePasswordAdmin", {
-            method: 'POST',
+            method: 'PATCH',
             body: JSON.stringify({
                 password,
-                passwordReentered
+                passwordReentered,
+                paramsTokenID
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -74,7 +78,8 @@
         try {
             await updatePassword(
                 passwordInputValue,
-                passwordReenteredInputValue
+                passwordReenteredInputValue,
+                paramsTokenID
             );
             if (responseItem.success) {
                 passwordInputValue = "";

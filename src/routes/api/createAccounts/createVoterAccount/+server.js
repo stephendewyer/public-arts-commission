@@ -74,7 +74,7 @@ export async function POST({request}) {
 
   if (emailExists.length) {
 
-    return new Response(JSON.stringify({error: "a voter account with the same email already exists!"}));
+    return new Response(JSON.stringify({error: "a voter account with the same email already exists!"}), {status: 422});
 
   };
 
@@ -86,7 +86,7 @@ export async function POST({request}) {
 
   if (nameFirstAndLastExists.length) {
 
-    return new Response(JSON.stringify({error: "a voter account with the same first and last name already exists!"}));
+    return new Response(JSON.stringify({error: "a voter account with the same first and last name already exists!"}), {status: 422});
 
   };
 
@@ -163,7 +163,7 @@ export async function POST({request}) {
     
   } catch (error) {
 
-    return new Response(JSON.stringify({error: "new voter account messages not sent due to a problem with the API"}), {status: 422});
+    return new Response(JSON.stringify({error: "new voter account message not sent due to a problem with the API"}), {status: 422});
 
   };
 

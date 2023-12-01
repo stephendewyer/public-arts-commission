@@ -1,6 +1,12 @@
 <script lang="ts">
     import LoginBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
 	import PasswordUpdateVoter from '$lib/components/passwordUpdates/PasswordUpdateVoter.svelte';
+
+	/** @type {import('./$types').PageData} */
+	export let data: any;
+
+	const paramsTokenID = data.tokenID;
+
 </script>
 
 <section>
@@ -11,7 +17,7 @@
 		<div class="login_section">
             <h1>update password</h1>
             <h2>voter</h2>
-			<PasswordUpdateVoter />
+			<PasswordUpdateVoter paramsTokenID={paramsTokenID}/>
 		</div>
 	</div>
 </section>
