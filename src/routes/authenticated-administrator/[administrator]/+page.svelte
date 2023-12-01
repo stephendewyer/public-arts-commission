@@ -4,6 +4,6 @@
 </script>
 
 <h1>administrator</h1>
-<SignoutButton callbackUrl="/login-admin">
+<SignoutButton callbackUrl="/login-administrator">
     sign out!
 </SignoutButton>

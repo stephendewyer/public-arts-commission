@@ -1,4 +1,5 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
+import { verifyPassword } from '$lib/authentication/PasswordAuth';
 
 export const adminAuthentication = async (/** @type {{ email: string; password: string; }} */ credentials) => {
     
@@ -34,14 +35,8 @@ export const adminAuthentication = async (/** @type {{ email: string; password: 
 
     const adminExistsPassword = adminExists[0].password;
 
-    let isValidPassword;
-
-    if (credentials.password === adminExistsPassword) {
-        isValidPassword = true;
-    } else {
-        isValidPassword = false;
-    }
-    
+    const isValidPassword = await verifyPassword(credentials.password, adminExistsPassword);
+        
     if (!isValidPassword) {
 
         return null;

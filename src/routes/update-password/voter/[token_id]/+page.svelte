@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LoginBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
+    import UpdateBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
 	import PasswordUpdateVoter from '$lib/components/passwordUpdates/PasswordUpdateVoter.svelte';
 
 	/** @type {import('./$types').PageData} */
@@ -11,10 +11,10 @@
 
 <section>
     <div 
-		class="login_container"
-		style="background-image: url({LoginBackground});"
+		class="update_container"
+		style="background-image: url({UpdateBackground});"
 	>
-		<div class="login_section">
+		<div class="update_section">
             <h1>update password</h1>
             <h2>voter</h2>
 			<PasswordUpdateVoter paramsTokenID={paramsTokenID}/>
@@ -23,7 +23,7 @@
 </section>
 
 <style>
-    .login_container {
+    .update_container {
 		width: 100%;
 		background-size: cover;
 		display: flex;
@@ -34,7 +34,7 @@
 		background-position: center;
 	}
 
-	.login_section {
+	.update_section {
 		background-color: rgba(239,249,242,0.7);
 		max-width: 40rem;
 		width: 100%;

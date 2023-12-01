@@ -29,7 +29,7 @@
     }
 
     .submit_button {
-        margin: 1rem;
+        margin: 1rem auto;
 		color: #4C4239;
 		fill: #4C4239;
 		background-color: #D8EAC5;

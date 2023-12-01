@@ -17,7 +17,7 @@ const authorization = async ({ event, resolve }) => {
 
     if (event.url.pathname.startsWith("/authenticated-administrator")) {        
 
-        if (session?.user?.name !== "admin") {
+        if (session?.user?.name !== "administrator") {
 
             throw redirect(303, "/login-administrator");
 
@@ -29,7 +29,7 @@ const authorization = async ({ event, resolve }) => {
 
     if (!event.url.pathname.startsWith("/authenticated-administrator")) {
 
-        if (session?.user?.name === "admin") {
+        if (session?.user?.name === "administrator") {
 
             throw redirect(303, "/authenticated-administrator/administrator");
 

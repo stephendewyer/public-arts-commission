@@ -3,14 +3,12 @@
     import PierreHuygheAfterDream from '$lib/images/theme/Pierre_Huyghe_Minneapolis_Sculpture_Garden_03_July_2023_02.jpg';
     import LogoSecondary from "$lib/images/logo/public_arts_commission_logo_secondary.svg?raw";
     import type { Session } from '@auth/core/types';
-    import { onMount } from 'svelte';
 
     export let session: Session | null;
-    onMount(async () => {
-		console.log(session?.user?.email);
-	});
-    
-    // $:console.log(session.user)
+
+    let userName: string | null | undefined = "";
+
+    $: userName = session?.user?.name;
 
     const today = new Date();
     const year = today.getFullYear();
@@ -36,7 +34,7 @@
                         {@html LogoSecondary}
                     </a>
                 </div>
-                {#if (session?.user?.name !== "voter")}
+                {#if (!userName)}
                     <div class="footer_nav_tabs">
                         <ul class="footer_nav_tabs_row">
                             <li class="footer_nav_column">

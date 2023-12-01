@@ -6,6 +6,10 @@
 
 	export let session: Session | null;
 
+	let userName: string | null | undefined = "";
+
+    $: userName = session?.user?.name;
+
 	export let sideDrawer: boolean = false;
 
 	let aboutTabPanelIsActive: boolean;
@@ -40,30 +44,32 @@
 <header>
 	<nav>
 		<ul id="nav_left">
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/products' ? 'page' : undefined}
-			>
-				<a href="/products">products</a>
-			</li>
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/endorsements' ? 'page' : undefined}
-			>
-				<a href="/endorsements">endorsements</a>
-			</li>
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/actions' ? 'page' : undefined}
-			>
-				<a href="/actions">actions</a>
-			</li>
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/priorities' ? 'page' : undefined}
-			>
-				<a href="/priorities">priorities</a>
-			</li>
+			{#if (!userName)}
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/products' ? 'page' : undefined}
+				>
+					<a href="/products">products</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/endorsements' ? 'page' : undefined}
+				>
+					<a href="/endorsements">endorsements</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/actions' ? 'page' : undefined}
+				>
+					<a href="/actions">actions</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/priorities' ? 'page' : undefined}
+				>
+					<a href="/priorities">priorities</a>
+				</li>
+			{/if}
 		</ul>
 		<ul id="nav_left_mobile">
 		</ul>
@@ -81,162 +87,164 @@
 			</li>
 		</ul>
 		<ul id="nav_right">
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
-				on:mouseleave={() => collapseAboutTabHandler()}
-				on:mouseout={() => collapseAboutTabHandler()}
-				on:blur={() => collapseAboutTabHandler()}
-				on:mouseenter={() => expandAboutTabHandler()}
-				on:mouseover={() => expandAboutTabHandler()}
-				on:focus={() => expandAboutTabHandler()}
-			>
-				<div 
-					id="tab_header_about"
-					class="menu_tab_header"
-					role="tab"
-					aria-selected={aboutTabPanelIsActive}
-					aria-controls="tab_panel_about"
-					tabindex="0"
-				>
-					<div class="tabPanel_header_text">about</div>
-					<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
-						<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
-							<defs>
-							<style>
-								.cls-3 {
-								fill: inherit;
-								stroke-width: 0px;
-								}
-							</style>
-							</defs>
-							<polygon class="cls-3" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
-						</svg>
-					</div>
-				</div>
-				<div>
-					<div
-						id="tab_panel_about"
-						role="tabpanel"
-						tabindex="0"
-						aria-labelledby="tab_header_about"
-						class="panel_container"
-						style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;' }
-					>
-						<div 
-							class="panel"
-							bind:clientHeight={about_panel_height}
-						>
-							<ul
-								class="panel_items"
-								style={ aboutTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
-							>
-								<li>
-									<a href="/story">story</a>
-								</li>
-								<li>
-									<a href="/team">team</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>
-				
-			</li>
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/donate' ? 'page' : undefined}
-			>
-				<a href="/donate">donate</a>
-			</li>
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/contact' ? 'page' : undefined}
-			>
-				<a href="/contact">contact</a>
-			</li>
-			<li 
-				class="nav_tab"
-				aria-current={$page.url.pathname === '/login-administrator' || $page.url.pathname === '/login-voter' || $page.url.pathname === '/login-campaign' ? 'page' : undefined}
-				on:mouseleave={() => collapseLoginTabHandler()}
-				on:mouseout={() => collapseLoginTabHandler()}
-				on:blur={() => collapseLoginTabHandler()}
-				on:mouseenter={() => expandLoginTabHandler()}
-				on:mouseover={() => expandLoginTabHandler()}
-				on:focus={() => expandLoginTabHandler()}
-			>
-				<div
-					id="tab_header_login"
-					class="menu_tab_header"
-					role="tab"
-					aria-selected={loginTabPanelIsActive}
-					aria-controls="tab_panel_login"
-					tabindex="-1"
+			{#if (!userName)}
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
+					on:mouseleave={() => collapseAboutTabHandler()}
+					on:mouseout={() => collapseAboutTabHandler()}
+					on:blur={() => collapseAboutTabHandler()}
+					on:mouseenter={() => expandAboutTabHandler()}
+					on:mouseover={() => expandAboutTabHandler()}
+					on:focus={() => expandAboutTabHandler()}
 				>
 					<div 
-						class="tabPanel_header_text"
+						id="tab_header_about"
+						class="menu_tab_header"
+						role="tab"
+						aria-selected={aboutTabPanelIsActive}
+						aria-controls="tab_panel_about"
+						tabindex="0"
 					>
-						<div class="nav_icon">
-							<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 494.31 414.36">
+						<div class="tabPanel_header_text">about</div>
+						<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
+							<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
 								<defs>
-									<style>
+								<style>
 									.cls-3 {
-										fill: inherit;
-										stroke-width: 0px;
+									fill: inherit;
+									stroke-width: 0px;
 									}
-									</style>
+								</style>
 								</defs>
-								<path class="cls-3" d="m287.12,0C193.83,0,114.74,61.98,88.88,146.93h42.48c24.22-62.41,84.91-106.76,155.77-106.76,92.09,0,167.01,74.93,167.01,167.01s-74.93,167.01-167.01,167.01c-70.85,0-131.54-44.35-155.77-106.76h-42.48c25.86,84.95,104.95,146.93,198.24,146.93,114.24,0,207.18-92.95,207.18-207.18S401.36,0,287.12,0Z"/>
-								<polygon class="cls-3" points="0 227.27 0 187.1 272.22 187.1 291.59 206.47 291.59 207.9 272.22 227.27 0 227.27"/>
+								<polygon class="cls-3" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
 							</svg>
 						</div>
-						login
 					</div>
-					<div class={ loginTabPanelIsActive ? "arrow_active" : "arrow" }>
-						<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
-							<defs>
-							<style>
-								.cls-3 {
-								fill: inherit;
-								stroke-width: 0px;
-								}
-							</style>
-							</defs>
-							<polygon class="cls-3" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
-						</svg>
+					<div>
+						<div
+							id="tab_panel_about"
+							role="tabpanel"
+							tabindex="0"
+							aria-labelledby="tab_header_about"
+							class="panel_container"
+							style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;' }
+						>
+							<div 
+								class="panel"
+								bind:clientHeight={about_panel_height}
+							>
+								<ul
+									class="panel_items"
+									style={ aboutTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+								>
+									<li>
+										<a href="/story">story</a>
+									</li>
+									<li>
+										<a href="/team">team</a>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div>
+					
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/donate' ? 'page' : undefined}
+				>
+					<a href="/donate">donate</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/contact' ? 'page' : undefined}
+				>
+					<a href="/contact">contact</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/login-administrator' || $page.url.pathname === '/login-voter' || $page.url.pathname === '/login-campaign' ? 'page' : undefined}
+					on:mouseleave={() => collapseLoginTabHandler()}
+					on:mouseout={() => collapseLoginTabHandler()}
+					on:blur={() => collapseLoginTabHandler()}
+					on:mouseenter={() => expandLoginTabHandler()}
+					on:mouseover={() => expandLoginTabHandler()}
+					on:focus={() => expandLoginTabHandler()}
+				>
 					<div
-						id="tab_panel_login"
-						role="tabpanel"
+						id="tab_header_login"
+						class="menu_tab_header"
+						role="tab"
+						aria-selected={loginTabPanelIsActive}
+						aria-controls="tab_panel_login"
 						tabindex="-1"
-						aria-labelledby="tab_header_login"
-						class="panel_container"
-						style={ loginTabPanelIsActive ? `height: ${login_panel_height}px;` : 'height: 0px;' }
 					>
 						<div 
-							class="panel"
-							bind:clientHeight={login_panel_height}
+							class="tabPanel_header_text"
 						>
-							<ul
-								class="panel_items"
-								style={ loginTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
-							>
-								<li>
-									<a href="/login-voter">voter</a>
-								</li>
-								<li>
-									<a href="/login-campaign">campaign</a>
-								</li>
-								<li>
-									<a href="/login-administrator">administrator</a>
-								</li>
-							</ul>
+							<div class="nav_icon">
+								<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 494.31 414.36">
+									<defs>
+										<style>
+										.cls-3 {
+											fill: inherit;
+											stroke-width: 0px;
+										}
+										</style>
+									</defs>
+									<path class="cls-3" d="m287.12,0C193.83,0,114.74,61.98,88.88,146.93h42.48c24.22-62.41,84.91-106.76,155.77-106.76,92.09,0,167.01,74.93,167.01,167.01s-74.93,167.01-167.01,167.01c-70.85,0-131.54-44.35-155.77-106.76h-42.48c25.86,84.95,104.95,146.93,198.24,146.93,114.24,0,207.18-92.95,207.18-207.18S401.36,0,287.12,0Z"/>
+									<polygon class="cls-3" points="0 227.27 0 187.1 272.22 187.1 291.59 206.47 291.59 207.9 272.22 227.27 0 227.27"/>
+								</svg>
+							</div>
+							login
 						</div>
+						<div class={ loginTabPanelIsActive ? "arrow_active" : "arrow" }>
+							<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
+								<defs>
+								<style>
+									.cls-3 {
+									fill: inherit;
+									stroke-width: 0px;
+									}
+								</style>
+								</defs>
+								<polygon class="cls-3" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
+							</svg>
+						</div>
+					</div>
 					<div>
-				</div>
-			</li>
+						<div
+							id="tab_panel_login"
+							role="tabpanel"
+							tabindex="-1"
+							aria-labelledby="tab_header_login"
+							class="panel_container"
+							style={ loginTabPanelIsActive ? `height: ${login_panel_height}px;` : 'height: 0px;' }
+						>
+							<div 
+								class="panel"
+								bind:clientHeight={login_panel_height}
+							>
+								<ul
+									class="panel_items"
+									style={ loginTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+								>
+									<li>
+										<a href="/login-voter">voter</a>
+									</li>
+									<li>
+										<a href="/login-campaign">campaign</a>
+									</li>
+									<li>
+										<a href="/login-administrator">administrator</a>
+									</li>
+								</ul>
+							</div>
+						<div>
+					</div>
+				</li>
+			{/if}
 		</ul>
 		<ul id="nav_right_mobile">
 			<li class="mobile_nav_menu_toggle_button_container">

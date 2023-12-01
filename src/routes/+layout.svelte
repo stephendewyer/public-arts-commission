@@ -12,8 +12,6 @@
 
 	export let data;
 
-	$: console.log(data)
-
 	let open: boolean = false;
 	
 	let footerElHeight: number = 0;
