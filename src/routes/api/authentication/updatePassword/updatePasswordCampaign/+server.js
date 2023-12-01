@@ -36,9 +36,7 @@ export async function PATCH({request}) {
 
         throw error;
 
-    });
-
-    const userEmail = userInCampaigns[0].email;
+    });    
 
     if (userInCampaigns.length === 0) {
 
@@ -55,6 +53,8 @@ export async function PATCH({request}) {
 
     };
 
+    const userEmail = userInCampaigns[0].email;
+    
     // hash the password
 
     const hashedPassword = await hashPassword(password);
