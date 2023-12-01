@@ -2,6 +2,9 @@
 	import { page } from '$app/stores';
 	import Hamburger from '$lib/components/navigation/Hamburger.svelte';
 	import Logo from "$lib/images/logo/public_arts_commission_logo.svg?raw";
+	import type { Session } from '@auth/core/types';
+
+	export let session: Session | null;
 
 	export let sideDrawer: boolean = false;
 

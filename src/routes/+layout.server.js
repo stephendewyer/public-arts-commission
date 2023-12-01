@@ -1,7 +1,15 @@
-export const load = async (event) => {
+// export const load = async (event) => {
 
-    const session = await event.locals.getSession();
+//     const session = await event.locals.getSession();
 
-    return { session };
+//     return { 
 
-}
+//         props: {
+
+//             user: session?.user 
+
+//         }
+
+//     };
+
+// }

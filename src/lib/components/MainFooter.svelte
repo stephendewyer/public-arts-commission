@@ -1,7 +1,16 @@
-<script>
+<script lang="ts">
     import { page } from '$app/stores';
     import PierreHuygheAfterDream from '$lib/images/theme/Pierre_Huyghe_Minneapolis_Sculpture_Garden_03_July_2023_02.jpg';
     import LogoSecondary from "$lib/images/logo/public_arts_commission_logo_secondary.svg?raw";
+    import type { Session } from '@auth/core/types';
+    import { onMount } from 'svelte';
+
+    export let session: Session | null;
+    onMount(async () => {
+		console.log(session?.user?.email);
+	});
+    
+    // $:console.log(session.user)
 
     const today = new Date();
     const year = today.getFullYear();
@@ -10,7 +19,6 @@
 </script>
 
 <footer bind:clientHeight={footerHeight}>
-
     <div class="footer_top">
             <img class="footer_top_image"src={PierreHuygheAfterDream} alt="Pierre Huyghe After Dream 1997/2009 at Minneapolis Sculpture Garden" />
             <div class="footer_top_gradient"/>
@@ -28,151 +36,153 @@
                         {@html LogoSecondary}
                     </a>
                 </div>
-                <div class="footer_nav_tabs">
-                    <ul class="footer_nav_tabs_row">
-                        <li class="footer_nav_column">
-                            <a 
-                                href="/products" 
-                                aria-label="link to products page" 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/products' ? 'page' : undefined}
-                            >
-                                products
-                            </a>
-                        </li>
-                        <li class="footer_nav_column">
-                            <a 
-                                href="/endorsements" 
-                                aria-label="link to endorsements page" 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/endorsements' ? 'page' : undefined}
-                            >
-                                endorsements
-                            </a>
-                        </li>
-                        <li class="footer_nav_column">
-                            <a 
-                                href="/actions" 
-                                aria-label="link to actions page" 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/actions' ? 'page' : undefined}
-                            >
-                                actions
-                            </a>
-                        </li>
-                        <li class="footer_nav_column">
-                            <a 
-                                href="/priorities" 
-                                aria-label="link to priorities page" 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/priorities' ? 'page' : undefined}
-                            >
-                                priorities
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="footer_nav_tabs_row">
-                        <li class="footer_nav_column">
-                            <div 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
-                            >
-                                <div style="text-decoration: underline;">
-                                    about
-                                </div>
-                                <ul class="footer_nav_tabs_panel">
-                                    <li>
-                                        <a 
-                                            href="/story" 
-                                            aria-label="link to story page" 
-                                            class="footer_nav_tab_secondary"
-                                            aria-current={$page.url.pathname === '/story' ? 'page' : undefined}
+                {#if (session?.user?.name !== "voter")}
+                    <div class="footer_nav_tabs">
+                        <ul class="footer_nav_tabs_row">
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/products" 
+                                    aria-label="link to products page" 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/products' ? 'page' : undefined}
+                                >
+                                    products
+                                </a>
+                            </li>
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/endorsements" 
+                                    aria-label="link to endorsements page" 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/endorsements' ? 'page' : undefined}
+                                >
+                                    endorsements
+                                </a>
+                            </li>
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/actions" 
+                                    aria-label="link to actions page" 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/actions' ? 'page' : undefined}
+                                >
+                                    actions
+                                </a>
+                            </li>
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/priorities" 
+                                    aria-label="link to priorities page" 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/priorities' ? 'page' : undefined}
+                                >
+                                    priorities
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="footer_nav_tabs_row">
+                            <li class="footer_nav_column">
+                                <div 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
+                                >
+                                    <div style="text-decoration: underline;">
+                                        about
+                                    </div>
+                                    <ul class="footer_nav_tabs_panel">
+                                        <li>
+                                            <a 
+                                                href="/story" 
+                                                aria-label="link to story page" 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={$page.url.pathname === '/story' ? 'page' : undefined}
 
-                                        >
-                                            story
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a 
-                                            href="/team" 
-                                            aria-label="link to team page" 
-                                            class="footer_nav_tab_secondary"
-                                            aria-current={$page.url.pathname === '/team' ? 'page' : undefined}
-                                        >
-                                            team
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="footer_nav_column">
-                            <a 
-                                href="/donate" 
-                                aria-label="link to donate page" 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/donate' ? 'page' : undefined}
-                            >
-                                donate
-                            </a>
-                        </li>
-                        <li class="footer_nav_column">
-                            <a 
-                                href="/contact" 
-                                aria-label="link to contact page" 
-                                class="footer_nav_tab"
-                                aria-current={$page.url.pathname === '/contact' ? 'page' : undefined}
-                            >
-                                contact
-                            </a>
-                        </li>
-                        <li class="footer_nav_column">
-                            <div 
-                                class="footer_nav_tab"
-                                aria-current={ 
-                                    $page.url.pathname === '/login-voter' || 
-                                    $page.url.pathname === '/login-campaign' || 
-                                    $page.url.pathname === '/login-administrator' 
-                                ? 'page' : undefined }
-                            >
-                                <div style="text-decoration: underline;">
-                                    login
+                                            >
+                                                story
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                href="/team" 
+                                                aria-label="link to team page" 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={$page.url.pathname === '/team' ? 'page' : undefined}
+                                            >
+                                                team
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <ul class="footer_nav_tabs_panel">
-                                    <li>
-                                        <a 
-                                            href="/login-voter" 
-                                            aria-label="link to voter login page" 
-                                            class="footer_nav_tab_secondary"
-                                            aria-current={$page.url.pathname === '/login-voter' ? 'page' : undefined}
-                                        >
-                                            voter
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a 
-                                            href="/login-campaign" 
-                                            aria-label="link to campaign login page" 
-                                            class="footer_nav_tab_secondary"
-                                            aria-current={$page.url.pathname === '/login-campaign' ? 'page' : undefined}
-                                        >
-                                            campaign
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a 
-                                            href="/login-administrator" 
-                                            aria-label="link to administrator login page" 
-                                            class="footer_nav_tab_secondary"
-                                            aria-current={$page.url.pathname === '/login-administrator' ? 'page' : undefined}
-                                        >
-                                            administrator
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                            </li>
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/donate" 
+                                    aria-label="link to donate page" 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/donate' ? 'page' : undefined}
+                                >
+                                    donate
+                                </a>
+                            </li>
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/contact" 
+                                    aria-label="link to contact page" 
+                                    class="footer_nav_tab"
+                                    aria-current={$page.url.pathname === '/contact' ? 'page' : undefined}
+                                >
+                                    contact
+                                </a>
+                            </li>
+                            <li class="footer_nav_column">
+                                <div 
+                                    class="footer_nav_tab"
+                                    aria-current={ 
+                                        $page.url.pathname === '/login-voter' || 
+                                        $page.url.pathname === '/login-campaign' || 
+                                        $page.url.pathname === '/login-administrator' 
+                                    ? 'page' : undefined }
+                                >
+                                    <div style="text-decoration: underline;">
+                                        login
+                                    </div>
+                                    <ul class="footer_nav_tabs_panel">
+                                        <li>
+                                            <a 
+                                                href="/login-voter" 
+                                                aria-label="link to voter login page" 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={$page.url.pathname === '/login-voter' ? 'page' : undefined}
+                                            >
+                                                voter
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                href="/login-campaign" 
+                                                aria-label="link to campaign login page" 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={$page.url.pathname === '/login-campaign' ? 'page' : undefined}
+                                            >
+                                                campaign
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                href="/login-administrator" 
+                                                aria-label="link to administrator login page" 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={$page.url.pathname === '/login-administrator' ? 'page' : undefined}
+                                            >
+                                                administrator
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                {/if}
             </nav>
             <div class="footer_info">
                 <p>

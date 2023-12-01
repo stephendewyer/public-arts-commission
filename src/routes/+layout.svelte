@@ -9,9 +9,10 @@
 	import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
   	import { onDestroy } from 'svelte';
 	import './styles.css';
-	import { page } from '$app/stores';
 
-	console.log($page.data);
+	export let data;
+
+	$: console.log(data)
 
 	let open: boolean = false;
 	
@@ -37,13 +38,19 @@
 </script>
 
 <div class="app">
-	<MainHeader bind:sideDrawer={open}/>
+	<MainHeader 
+		bind:sideDrawer={open}
+		session={data}
+	/>
 
 	<main style="padding-bottom: {footerElHeight}px">
 		<slot />
 	</main>
 
-	<MainFooter bind:footerHeight={footerElHeight}/>
+	<MainFooter 
+		bind:footerHeight={footerElHeight}
+		session={data}
+	/>
 	{#if (open)}
 		<Backdrop bind:open />
 	{/if}
