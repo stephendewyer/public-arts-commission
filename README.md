@@ -17,6 +17,8 @@ A redesign of the public arts commission website launched in 2017, this public a
 The tech stack will include:
 - SvelteKit
 - TypeScript
+- Auth.js
+- SvelteKitAuth
 - MySQL
 - MySQL2
 - GraphQL
