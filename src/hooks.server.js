@@ -85,8 +85,9 @@ const authorization = async ({ event, resolve }) => {
     };
 
     // if still request, proceed as normal
+    
 
-    return resolve(event);
+    return await resolve(event);
 
 }
 
@@ -167,4 +168,5 @@ export const handle = sequence(
 
     }),
     authorization
+
 );
