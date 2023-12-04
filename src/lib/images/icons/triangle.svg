@@ -2,11 +2,11 @@
 <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 332.93 332.93">
   <defs>
     <style>
-      .cls-1 {
+      .triangle {
         fill: #314659;
         stroke-width: 0px;
       }
     </style>
   </defs>
-  <polygon class="cls-1" points="332.93 .02 332.93 332.93 0 0 332.93 .02"/>
+  <polygon class="triangle" points="332.93 .02 332.93 332.93 0 0 332.93 .02"/>
 </svg>
