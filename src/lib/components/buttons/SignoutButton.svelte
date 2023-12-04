@@ -1,5 +1,6 @@
 <script lang="ts">
     import { signOut } from "@auth/sveltekit/client";
+    import LogoutIcon from "$lib/images/icons/logout_icon.svg?raw";
     export let callbackUrl: string;
 
 </script>
@@ -11,20 +12,10 @@
     })}
     class="submit_button"
 >
-    <slot />
-    <div class="arrow">
-        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
-            <defs>
-              <style>
-                .cls-4 {
-                  fill: inherit;
-                  stroke-width: 0px;
-                }
-              </style>
-            </defs>
-            <polygon class="cls-4" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
-          </svg>
+    <div class="logout_icon">
+        {@html LogoutIcon}
     </div>
+    <slot />
 </button>
 
 <style>
@@ -44,27 +35,21 @@
 		align-items: center;
 		border-radius: 3rem;
 		cursor: pointer;
-		transition: gap 0.2s ease-out, background-color 0.2s linear;
 	}
 
 	.submit_button:hover {
 		background-color: #E3CDB2;
-		gap: 1rem;
 	}
 
-
-	.arrow {
-		width: 0.6rem;
-	}
+    .logout_icon {
+        width: 1.5rem;
+    }
 
     @media (max-width: 1140px) {
         .submit_button {
             font-size: 1.25rem;
         }
 
-        .arrow {
-            width: 0.5rem;
-        }
 	}
 
 	@media (max-width: 720px) {
@@ -72,8 +57,5 @@
             font-size: 1rem;
         }
 
-        .arrow {
-            width: 0.4rem;
-        }
 	}
 </style>

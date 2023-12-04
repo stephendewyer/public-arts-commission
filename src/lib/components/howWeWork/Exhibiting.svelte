@@ -13,7 +13,7 @@
     <p
         slot="process_paragraphs"
     >
-        Organize exhibitions about public arts commission’s work    
+        Organize exhibitions about public arts commission&#39;s work    
     </p>
 </HowWeWorkPanel>
 

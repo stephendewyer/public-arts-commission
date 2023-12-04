@@ -1,5 +1,5 @@
 <script lang="ts">
-
+    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import { TeamMemberSelectedStore } from "$lib/stores/TeamMemberSelectedStore";
 
     export let memberData: TeamMember;
@@ -46,24 +46,7 @@
         class="meatballs_container"
         style={(memberCardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
     >
-        <svg 
-            id="Layer_1" 
-            data-name="Layer 1" 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 473.18 122.14"
-        >
-            <defs>
-            <style>
-                .cls-8 {
-                    stroke: none;
-                    fill: inherit;
-                }
-            </style>
-            </defs>
-            <circle class="cls-8" cx="61.07" cy="61.07" r="61.07"/>
-            <circle class="cls-8" cx="412.12" cy="61.07" r="61.07"/>
-            <circle class="cls-8" cx="236.59" cy="61.07" r="61.07"/>
-        </svg>
+        {@html MeatballsIcon}
     </div>
     <picture class="profile_image_container">
         <img src={memberData.imageSource} alt={memberData.imageAltText}/>

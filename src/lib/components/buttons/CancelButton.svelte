@@ -1,20 +1,11 @@
 <script lang="ts">
+    import Arrow from "$lib/images/icons/arrow.svg?raw";
 
 </script>
 
 <button class="cancel_button">
     <div class="arrow">
-        <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 329.46 500">
-            <defs>
-              <style>
-                .cls-6 {
-                  fill: inherit;
-                  stroke-width: 0px;
-                }
-              </style>
-            </defs>
-            <polygon class="cls-6" points="329.46 250 103.48 500 0 500 225.98 250 0 0 103.48 0 329.46 250"/>
-          </svg>
+        {@html Arrow}
     </div>
     <slot />
 </button>

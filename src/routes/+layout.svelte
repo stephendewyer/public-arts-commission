@@ -13,6 +13,8 @@
 	export let data;
 
 	let open: boolean = false;
+
+	$: console.log(data);
 	
 	let footerElHeight: number = 0;
 
@@ -38,7 +40,6 @@
 <div class="app">
 	<MainHeader 
 		bind:sideDrawer={open}
-		session={data}
 	/>
 
 	<main style="padding-bottom: {footerElHeight}px">
@@ -47,7 +48,6 @@
 
 	<MainFooter 
 		bind:footerHeight={footerElHeight}
-		session={data}
 	/>
 	{#if (open)}
 		<Backdrop bind:open />

@@ -52,6 +52,7 @@ img {
 
 svg {
 	width: 100%;
+	overflow: visible;
 }
 
 p {
