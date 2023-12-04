@@ -12,9 +12,11 @@
 
 	export let data;
 
+	$: user = data;
+
 	let open: boolean = false;
 
-	$: console.log(data);
+	$: console.log(user);
 	
 	let footerElHeight: number = 0;
 

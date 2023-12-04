@@ -4,10 +4,19 @@
 	import Logo from "$lib/images/logo/public_arts_commission_logo.svg?raw";
 	import Arrow from "$lib/images/icons/arrow.svg?raw";
 	import LoginIcon from "$lib/images/icons/login_icon.svg?raw";
+	import LogoutButton from '$lib/components/buttons/LogoutButton.svelte';
 
-	// $: console.log($page.data.user);
+	$: user = $page.data.user;
 
-	let user = $page.data.user;
+	let callbackURL: string = "";
+
+	$: if (user?.name === "voter") {
+		callbackURL = "/login-voter";
+	} else if (user?.name === "administrator") {
+		callbackURL = "/login-administrator";
+	} else if (user?.name === "campaign") {
+		callbackURL = "/login-campaign";
+	};
 
 	export let sideDrawer: boolean = false;
 
@@ -86,7 +95,9 @@
 			</li>
 		</ul>
 		<ul id="nav_right">
-			{#if (!user)}
+			{#if (user)}
+				<LogoutButton callbackUrl={callbackURL}>logout</LogoutButton>
+			{:else if (!user)}
 				<li 
 					class="nav_tab"
 					aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}

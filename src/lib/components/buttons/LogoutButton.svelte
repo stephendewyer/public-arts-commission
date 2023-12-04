@@ -21,11 +21,12 @@
 <style>
 
     .submit_button {
-        margin: 1rem auto;
+        margin: 1rem 1rem auto auto;
+        height: auto;
 		color: #4C4239;
 		fill: #4C4239;
-		background-color: #D8EAC5;
-		border: solid 3px #4C4239;
+		background-color: transparent;
+		border: none;
 		padding: 0.5rem 1rem;
 		gap: 0.5rem;
 		font-size: 1.5rem;
@@ -35,10 +36,12 @@
 		align-items: center;
 		border-radius: 3rem;
 		cursor: pointer;
+        transition: color 0.2s linear, fill 0.2s linear;
 	}
 
 	.submit_button:hover {
-		background-color: #E3CDB2;
+		color: #3A2B35;
+		fill: #3A2B35;
 	}
 
     .logout_icon {
@@ -50,11 +53,19 @@
             font-size: 1.25rem;
         }
 
+        .logout_icon {
+            width: 1.25rem;
+        }
+
 	}
 
 	@media (max-width: 720px) {
         .submit_button {
             font-size: 1rem;
+        }
+
+        .logout_icon {
+            width: 1rem;
         }
 
 	}

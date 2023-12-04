@@ -2,8 +2,19 @@
     import { page } from '$app/stores';
     import PierreHuygheAfterDream from '$lib/images/theme/Pierre_Huyghe_Minneapolis_Sculpture_Garden_03_July_2023_02.jpg';
     import LogoSecondary from "$lib/images/logo/public_arts_commission_logo_secondary.svg?raw";
+    import LogoutButtonSecondary from '$lib/components/buttons/LogoutButtonSecondary.svelte';
 
-    let user = $page.data.user;
+    $: user = $page.data.user;
+
+    let callbackURL: string = "";
+
+    $: if (user?.name === "voter") {
+        callbackURL = "/login-voter";
+    } else if (user?.name === "administrator") {
+        callbackURL = "/login-administrator";
+    } else if (user?.name === "campaign") {
+        callbackURL = "/login-campaign";
+    };
     
     const today = new Date();
     const year = today.getFullYear();
@@ -29,7 +40,9 @@
                         {@html LogoSecondary}
                     </a>
                 </div>
-                {#if (!user)}
+                {#if (user)}
+                    <LogoutButtonSecondary callbackUrl={callbackURL}>logout</LogoutButtonSecondary>
+                {:else if (!user)}
                     <div class="footer_nav_tabs">
                         <ul class="footer_nav_tabs_row">
                             <li class="footer_nav_column">

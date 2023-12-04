@@ -1,8 +1,21 @@
 <script lang="ts">
-
+    import { page } from '$app/stores';
+    import LogoutButtonMobile from "$lib/components/buttons/LogoutButtonMobile.svelte";
     import Accordion from '$lib/components/accordions/MobileNavAccordion.svelte';
 
     export let open = false;
+
+    $: user = $page.data.user;
+
+	let callbackURL: string = "";
+
+	$: if (user?.name === "voter") {
+		callbackURL = "/login-voter";
+	} else if (user?.name === "administrator") {
+		callbackURL = "/login-administrator";
+	} else if (user?.name === "campaign") {
+		callbackURL = "/login-campaign";
+	};
 
     const mobileNavTabs: AccordionTab[] = [
         {
@@ -93,10 +106,19 @@
     aria-hidden="{ (open) ? 'false' : 'true'}"
 >
     <nav>
-        <Accordion 
-            mobileNavTabsData={mobileNavTabs}
-            bind:openState={open}
-        />
+        {#if (user)}
+            <LogoutButtonMobile 
+                bind:openState={open}
+                callbackUrl={callbackURL}
+            >
+                logout
+            </LogoutButtonMobile>
+        {:else if (!user)}
+            <Accordion 
+                mobileNavTabsData={mobileNavTabs}
+                bind:openState={open}
+            />
+        {/if}
     </nav>
     
 </aside>

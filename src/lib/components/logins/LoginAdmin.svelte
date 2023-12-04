@@ -71,7 +71,7 @@
                 responseItem.success = "Valid email and password.";
                 passwordInputValue = "";
                 emailInputValue = "";
-                goto("/authenticated-administrator/admin");
+                goto("/authenticated-administrator/admin", { replaceState: true });
 
             };
 
