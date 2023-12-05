@@ -6,7 +6,7 @@
     export let selectInputValue: string;
     export let selectInputErrorMessage: string;
     export let isValid: boolean;
-    export let options: State[];
+    export let options: any;
     export let required: boolean;
 
     let selectInputTouched: boolean = false;

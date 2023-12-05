@@ -21,6 +21,8 @@
 
 	let activeEndorsementsTab: number;
 
+	let yearInputValue: number;
+
 	$: activeEndorsementsTab = 0;
 
     // get string from url of whether get current location checkbox checked and address
@@ -191,7 +193,7 @@
 				/>
 			</div>
 		</div>
-        <YearSelection>
+        <YearSelection bind:yearInputValue={yearInputValue}>
             select election year
         </YearSelection>
         
