@@ -12,9 +12,12 @@
     import NumberInput from '$lib/components/inputs/NumberInput.svelte';
     import SelectInput from '$lib/components/inputs/SelectInput.svelte';
     import States from '$lib/data/states.titlecase.json';
-  import TextInput from '$lib/components/inputs/TextInput.svelte';
-  import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
-  import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
+    import TextInput from '$lib/components/inputs/TextInput.svelte';
+    import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
+    import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
+    import { page } from '$app/stores';
+
+    const slug: string = $page.url.pathname;
 
     export let data;
 
@@ -104,7 +107,28 @@
     <FilterToggleButton bind:openFilters={openFilters}>
         filters
     </FilterToggleButton>
-
+    <div class="endorsement_options">
+        <h2>
+            endorsement:
+        </h2>
+        <div class="endorsement_buttons">
+            <a href={`${slug}/add-candidate-endorsement`}>
+                <AddItemButton>candidate</AddItemButton>
+            </a>
+            <a href={`${slug}/add-referendum-endorsement`}>
+                <AddItemButton>referendum</AddItemButton>
+            </a>
+            <a href={`${slug}/add-legislation-endorsement`}>
+                <AddItemButton>legislation</AddItemButton>
+            </a>
+            <a href={`${slug}/add-amendment-endorsement`}>
+                <AddItemButton>amendment</AddItemButton>
+            </a>
+            <a href={`${slug}/add-action-endorsement`}>
+                <AddItemButton>action</AddItemButton>
+            </a>
+        </div>
+    </div>
 </div>
 <div class="filters_and_panels">
     <div class="filters">
@@ -216,6 +240,28 @@
         margin: 0 auto 1rem auto;
     }
 
+    .endorsement_options {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.5rem;
+        align-items: center;
+        width: 100%;
+    }
+
+    .endorsement_buttons {
+        display: flex;
+        gap: 0.25rem;
+        flex-wrap: wrap;
+    }
+
+    .panel {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
     .filters_and_panels {
         display: flex;
     }
@@ -223,6 +269,7 @@
     .menu {
         background-color: #FBEFF6;
         padding: 1rem 0;
+        display: flex;
     }
 
     .filters {
@@ -232,4 +279,13 @@
         background-color: #CBC6C2;
         padding: 1rem;
     }
+
+    @media (max-width: 1440px) {
+
+    }
+
+    @media (max-width: 720px) {
+
+    }
+
 </style>
