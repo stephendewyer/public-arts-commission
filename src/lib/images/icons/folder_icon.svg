@@ -3,7 +3,7 @@
   <defs>
     <style>
       .folder_icon {
-        fill: #706861;
+        fill: inherit;
         stroke-width: 0px;
       }
     </style>

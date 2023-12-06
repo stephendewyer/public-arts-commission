@@ -93,10 +93,16 @@
 
         .filters_open_arrow {
             width: 0.4rem;
-        }
+			transform: rotateY(0) rotateX(180deg) rotate(90deg);
+			will-change: transform;
+			transition: transform 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+		}
 
-        .filters_closed_arrow {
+		.filters_closed_arrow {
             width: 0.4rem;
-        }
+			transform: rotateY(0) rotateX(0) rotate(90deg);
+			will-change: transform;
+			transition: transform 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+		}
     }
 </style>

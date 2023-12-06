@@ -12,6 +12,7 @@
 	import CountyEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/CountyEndorsementsPanel.svelte';
 	import StateEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/StateEndorsementsPanel.svelte';
 	import FederalEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/FederalEndorsementsPanel.svelte';
+	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 
     let searchValue: string;
 
@@ -165,6 +166,12 @@
 	]
 
 </script>
+
+<svelte:head>
+	<title>endorsements - public arts commission</title>
+	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums, amendments and actions" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 
 <section>    
     <form 
