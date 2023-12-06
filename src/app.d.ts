@@ -10,6 +10,10 @@ declare global {
 		// interface Platform {}
 	}
 
+	interface GovernmentLevel {
+        name: string;
+    };
+
 	interface AccordionTab {
         label: string;
         expandable: boolean;

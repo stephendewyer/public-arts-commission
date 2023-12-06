@@ -37,10 +37,6 @@
 
     let searchInputValueChange: string = "";
 
-    interface GovernmentLevel {
-        name: string;
-    };
-
     const governmentLevelOptions: GovernmentLevel[] = [
         {
             name: "federal"

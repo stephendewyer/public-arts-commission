@@ -1,14 +1,106 @@
 <script lang="ts">
     import ImageFileInput from "$lib/components/inputs/ImageFileInput.svelte";
     import TextInput from "$lib/components/inputs/TextInput.svelte";
+    import ActionButton from "$lib/components/buttons/ActionButton.svelte";
+    import PendingFlashMessage from "$lib/components/flashMessages/PendingFlashMessage.svelte";
+    import SuccessFlashMessage from "$lib/components/flashMessages/SuccessFlashMessage.svelte";
+    import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
+    import NumberInput from "$lib/components/inputs/NumberInput.svelte";
+    import DateInput from "$lib/components/inputs/DateInput.svelte";
+    import SelectInput from "$lib/components/inputs/SelectInput.svelte";
+    import States from '$lib/data/states.titlecase.json';
+    import EmailInput from "$lib/components/inputs/EmailInput.svelte";
+    import PhoneInput from "$lib/components/inputs/PhoneInput.svelte";
+    import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
 
     let imageFileInputValue: string = "";
-    let imageFileIsValid: boolean = true;
+    let imageAltTextInputValue: string = "";
     let image: any;
-    $: image;
+    let campaignNameInputValue: string = "";
+    let yearOfficeSoughtInputValue: number | null = null;
+    let electionDatePrimaryInputValue: string = "";
+    let electionDateGeneralInputValue: string = "";
+    let governmentLevelInputValue: string = "";
+    let stateInputValue: string = "";
+    let countyInputValue: string = "";
+    let cityInputValue: string = "";
+    let partyInputValue: string = "";
+    let websiteURLInputValue: string = "";
+    let nameFirstContactInputValue: string = "";
+    let nameLastContactInputValue: string = "";
+    let phoneContactInputValue: string = "";
+    let streetAddressContactInputValue: string = "";
+    let streetAddress02ContactInputValue: string = "";
+    let cityContactInputValue: string = "";
+    let stateContactInputValue: string = "";
+    let zipCodeContactInputValue: number | null = null;
+    let emailContactInputValue: string = ""
+
+    let imageFileIsValid: boolean = true;
+    let imageAltTextIsValid: boolean = true;
+    let campaignNameIsValid: boolean = true;
+    let yearOfficeSoughtIsValid: boolean = true;
+    let electionDatePrimaryIsValid: boolean = true;
+    let electionDateGeneralIsValid: boolean = true;
+    let governmentLevelIsValid: boolean = true;
+    let stateIsValid: boolean = true;
+    let countyIsValid: boolean = true;
+    let cityIsValid: boolean = true;
+    let partyIsValid: boolean = true;
+    let websiteURLIsValid: boolean = true;
+    let nameFirstContactIsValid: boolean = true;
+    let nameLastContactIsValid: boolean = true;
+    let phoneContactIsValid: boolean = true;
+    let streetAddressContactIsValid: boolean = true;
+    let streetAddress02ContactIsValid: boolean = true;
+    let cityContactIsValid: boolean = true;
+    let stateContactIsValid: boolean = true;
+    let zipCodeContactIsValid: boolean = true;
+    let emailContactIsValid: boolean = true;
+
+    const governmentLevelOptions: GovernmentLevel[] = [
+        {
+            name: "federal"
+        },
+        {
+            name: "state"
+        },
+        {
+            name: "county"
+        },
+        {
+            name: "city"
+        }
+    ];
+
+    interface responseObj {
+        success: string;
+        error: string;
+        status: number | null
+    };
+
+	let responseItem: responseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        setTimeout(() => {
+            responseItem.success = "";
+            responseItem.error = "";
+            status: null;
+        }, 4000)
+    };
 
     const submitCandidateEndoresementHandler = () => {
 
+    };
+
+    let pending: boolean = false;
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        pending = false;
     };
 
 </script>
@@ -18,7 +110,7 @@
         class="form_container"
         on:submit|preventDefault={submitCandidateEndoresementHandler}
     >
-        <h2>campaign images</h2>
+        <h2>campaign image</h2>
         <h3>select an image to represent the campaign*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 5MB</p>
@@ -40,11 +132,306 @@
                 <img src={image} alt="test"/>
             </div>
         {/if}
+        <TextInput 
+            inputLabel={true}
+            bind:textInputValue={imageAltTextInputValue}
+            bind:isValid={imageAltTextIsValid}
+            placeholder="profile of candidate"
+            inputName="image_alt_text"
+            inputID="image_alt_text"
+            required={true}
+            textInputErrorMessage="image alt text required"
+        >
+            image alt text
+        </TextInput>
+        <h2>campaign information</h2>
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={campaignNameInputValue}
+            bind:isValid={campaignNameIsValid}
+            placeholder="candidate for X office"
+            inputName="campaign_name"
+            inputID="campaign_name"
+            required={true}
+            textInputErrorMessage="campaign name required"
+        >
+            campaign name
+        </TextInput>
+        <NumberInput
+            inputLabel={true}
+            bind:numberInputValue={yearOfficeSoughtInputValue}
+            bind:isValid={yearOfficeSoughtIsValid}
+            placeholder="2024"
+            inputName="year_office_sought_to_begin"
+            inputID="year_office_sought_to_begin"
+            required={true}
+            numberInputErrorMessage="starting year required for office sought"
+        >
+            starting year for office sought
+        </NumberInput>
+        <div class="two_columns">
+            <DateInput
+                inputLabel={true}
+                bind:dateInputValue={electionDatePrimaryInputValue}
+                bind:isValid={electionDatePrimaryIsValid}
+                inputName="election_date_primary"
+                inputID="election_date_primary"
+                required={true}
+                dateInputErrorMessage="primary election date required"
+            >
+                primary election date
+            </DateInput>
+            <DateInput
+                inputLabel={true}
+                bind:dateInputValue={electionDateGeneralInputValue}
+                bind:isValid={electionDateGeneralIsValid}
+                inputName="election_date_general"
+                inputID="election_date_genearl"
+                required={true}
+                dateInputErrorMessage="general election date required"
+            >
+                general election date
+            </DateInput>
+            
+        </div>
+        <SelectInput 
+            options={governmentLevelOptions}
+            bind:selectInputValue={governmentLevelInputValue}
+            isValid={governmentLevelIsValid}
+            required={false}
+            inputID="government_level"
+            inputName="government_level"
+            selectInputErrorMessage=""
+            inputLabel={true}
+        >
+            government level
+        </SelectInput>
+        <p class="country">
+            United States
+        </p>
+        <SelectInput 
+            isValid={stateIsValid}
+            inputID="state"
+            inputName="state"
+            options={States}
+            bind:selectInputValue={stateInputValue}
+            inputLabel={true}
+            required={true}
+            selectInputErrorMessage="state required"
+        >
+            state
+        </SelectInput>
         
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={countyInputValue}
+            bind:isValid={countyIsValid}
+            placeholder="Oakland"
+            inputName="county"
+            inputID="county"
+            required={true}
+            textInputErrorMessage="county required"
+        >
+            county
+        </TextInput>
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={cityInputValue}
+            bind:isValid={cityIsValid}
+            placeholder="Detroit"
+            inputName="city"
+            inputID="city"
+            required={true}
+            textInputErrorMessage="city required"
+        >
+            city
+        </TextInput>
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={partyInputValue}
+            bind:isValid={partyIsValid}
+            placeholder="Democracy Party"
+            inputName="party"
+            inputID="party"
+            required={true}
+            textInputErrorMessage="party required"
+        >
+            party
+        </TextInput>
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={websiteURLInputValue}
+            bind:isValid={websiteURLIsValid}
+            placeholder="https://candidateforxoffice.com"
+            inputName="website_URL"
+            inputID="websiteURL"
+            required={false}
+            textInputErrorMessage=""
+        >
+            website URL
+        </TextInput>
+        <h2>campaign status</h2>
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox>
+                    running in the primary
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox>
+                    not elected in the primary, proceeding to the general
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox>
+                    elected in the primary, proceeding to the general
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox>
+                    elected in the primary and elected in the general            
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <h2>campaign contact informations</h2>
+        <AnimatedCheckbox>
+            no contact information
+        </AnimatedCheckbox>
+        <div class="two_columns">
+            <TextInput 
+                isValid={nameFirstContactIsValid}
+                placeholder="Marco"
+                inputID="name_first"
+                inputName="name_first"
+                bind:textInputValue={nameFirstContactInputValue}
+                inputLabel={true}
+                required={true}
+                textInputErrorMessage="first name required"
+            >
+                first name*
+            </TextInput>
+            <TextInput 
+                isValid={nameLastContactIsValid}
+                placeholder="Polo"
+                inputID="name_last"
+                inputName="name_last"
+                bind:textInputValue={nameLastContactInputValue}
+                inputLabel={true}
+                required={true}
+                textInputErrorMessage="last name required"
+            >
+                last name*
+            </TextInput>
+        </div>
+        <div class="two_columns">
+            <EmailInput 
+                isValid={emailContactIsValid}
+                placeholder="marcopolo@domain.com"
+                inputID="email"
+                inputName="email"
+                bind:emailInputValue={emailContactInputValue}
+                inputLabel={true}
+                required={true}
+            >
+                email*
+            </EmailInput>
+            <PhoneInput 
+                isValid={phoneContactIsValid}
+                inputID="phone"
+                inputName="phone"
+                bind:phoneInputValue={phoneContactInputValue}
+                inputLabel={true}
+                required={true}
+            >
+                phone number*
+            </PhoneInput>
+        </div>
+        <div class="two_columns">
+            <TextInput 
+                isValid={streetAddressContactIsValid}
+                placeholder="1111 State Street"
+                inputID="street_address"
+                inputName="street_address"
+                bind:textInputValue={streetAddressContactInputValue}
+                inputLabel={true}
+                required={true}
+                textInputErrorMessage="street address required"
+            >
+                street address*
+            </TextInput>
+            <TextInput 
+                isValid={streetAddress02ContactIsValid}
+                placeholder="Suite 2"
+                inputID="street_address_02"
+                inputName="street_address_02"
+                bind:textInputValue={streetAddress02ContactInputValue}
+                inputLabel={true}
+                required={false}
+            >
+                street address 2
+            </TextInput>
+        </div>
+        <div class="two_columns">
+            <TextInput 
+                isValid={cityContactIsValid}
+                placeholder="Democracy City"
+                inputID="city"
+                inputName="city"
+                bind:textInputValue={cityContactInputValue}
+                inputLabel={true}
+                required={true}
+                textInputErrorMessage="city required"
+            >
+                city*
+            </TextInput>
+            <SelectInput 
+                isValid={stateContactIsValid}
+                inputID="state"
+                inputName="state"
+                options={States}
+                bind:selectInputValue={stateContactInputValue}
+                inputLabel={true}
+                required={true}
+                selectInputErrorMessage="state required"
+            >
+                state*
+            </SelectInput>
+        </div>
+        <NumberInput 
+                isValid={zipCodeContactIsValid}
+                placeholder=11111
+                inputID="zip_code"
+                inputName="zip_code"
+                bind:numberInputValue={zipCodeContactInputValue}
+                inputLabel={true}
+                required={true}
+                numberInputErrorMessage="zip code required"
+            >
+                zip code*
+            </NumberInput>
+        <ActionButton>
+            add candidate endorsement
+        </ActionButton>
+        {#if (pending)}
+            <PendingFlashMessage >
+                please wait while we validate your data
+            </PendingFlashMessage>
+        {:else if (responseItem.error)}
+            <ErrorFlashMessage >
+                {responseItem.error}
+            </ErrorFlashMessage>
+        {:else if (responseItem.success)}
+            <SuccessFlashMessage>
+                {responseItem.success}
+            </SuccessFlashMessage>
+        {/if}
     </form>
 </div>
 
 <style>
+
     .add_candidate_endorsement_container {
         display: flex;
         flex-direction: column;
@@ -55,6 +442,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+        max-width: 40rem;
+        width: 100%;
+        padding: 0 1rem;
     }
 
     .constraints {
@@ -66,6 +457,45 @@
         padding: 1rem;
         max-width: 20rem;
         width: 100%;
+    }
+
+    .two_columns {
+        display: flex;
+        justify-content: space-evenly;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .two_columns_checkbox {
+        display: flex;
+        width: 100%;
+    }
+
+    .checkbox_column {
+        width: 50%;
+        display:  flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .country {
+        width: 100%;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1.4rem;
+    }
+
+    @media (max-width: 1440px) {
+        .country {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (max-width: 720px) {
+        .country {
+            font-size: 1rem;
+        }
     }
 </style>
 

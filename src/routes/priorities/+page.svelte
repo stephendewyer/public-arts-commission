@@ -17,27 +17,191 @@
     let educationPrioritiesElement: HTMLElement;
     let healthPrioritiesElement: HTMLElement;
 
-    let intersecting: string;
+    let governmentSectionInView: boolean = false;
+    let climateSectionInView: boolean = false;
+    let economySectionInView: boolean = false;
+    let educationSectionInView: boolean = false;
+    let healthSectionInView: boolean = false;
 
-    let activeIntersection: string;
+    // create a variable for when a section is in view
+
+    let intersecting: string = "";
+
+    let activeIntersection: string = "";
+
+    // create the variable for when a user clicks on a tab
 
     let selectedPrioritiesSection: string = "";
 
-    const scrollToElement = ( tabLink: HTMLElement ) => {
+    // when user clicks on a tab, activate the tab and scroll to the corresponding section
+
+    let tabClicked: boolean = false;
+
+    const scrollToElement = ( tabLink: HTMLElement, activeIntersection: string ) => {
+
+        tabClicked = true;
+
+        selectedPrioritiesSection = activeIntersection;
+
         let linkedElementId: string | null;
+
         linkedElementId = tabLink.getAttribute('href');
+
         let linkedElement: HTMLElement | null;
+
         if (linkedElementId !== null) {
+
             linkedElement = document.getElementById(linkedElementId);
+
             // set the intersecting element to the linkedElementId
+
             intersecting = linkedElementId;
+
             linkedElement?.scrollIntoView({
+
                 behavior: 'smooth'
+
             });
+
         } else {
-            return
-        }
-    }
+
+            return;
+
+        };
+
+    };
+
+    // keep tab active until corresponding section is no longer in view or until user clicks on a different tab
+
+    $: if ((tabClicked) && (selectedPrioritiesSection)) {
+
+        if (governmentSectionInView && (selectedPrioritiesSection === "governmentPriorities")) {
+
+            activeIntersection = "governmentPriorities";
+
+        };
+
+        if ((!governmentSectionInView) && (selectedPrioritiesSection === "governmentPriorities")) {
+
+            tabClicked = false;
+
+        };
+
+        if (climateSectionInView && (selectedPrioritiesSection === "climatePriorities")) {
+
+            activeIntersection = "climatePriorities";
+
+        };
+
+        if ((!climateSectionInView) && (selectedPrioritiesSection === "climatePriorities")) {
+
+            tabClicked = false;
+
+        };
+
+        if (economySectionInView && (selectedPrioritiesSection === "economicPriorities")) {
+
+            activeIntersection = "economicPriorities";
+
+        };
+
+        if ((!economySectionInView) && (selectedPrioritiesSection === "economicPriorities")) {
+
+            tabClicked = false;
+
+        };
+        
+        if (educationSectionInView && (selectedPrioritiesSection === "educationPriorities")) {
+
+            activeIntersection = "educationPriorities";
+
+        };
+
+        if ((!educationSectionInView) && (selectedPrioritiesSection === "educationPriorities")) {
+
+            tabClicked = false;
+
+        };
+        
+        if (healthSectionInView && (selectedPrioritiesSection === "healthPriorities")) {
+
+            activeIntersection = "healthPriorities";
+
+        };
+
+        if ((!healthSectionInView) && (selectedPrioritiesSection === "healthPriorities")) {
+
+            tabClicked = false;
+
+        };
+
+    } else if ((!tabClicked) && selectedPrioritiesSection === "" ) {
+        
+        if (healthSectionInView) {
+
+            activeIntersection = "healthPriorities";
+
+        } else if (educationSectionInView) {
+
+            activeIntersection = "educationPriorities";
+
+        } else if (economySectionInView) {
+
+            activeIntersection = "economicPriorities";
+
+        } else if (climateSectionInView) {
+
+            activeIntersection = "climatePriorities";
+
+        } else if (governmentSectionInView) {
+
+            activeIntersection = "governmentPriorities";
+
+        } else {
+
+            activeIntersection = "governmentPriorities";
+
+        };
+
+    };
+
+    const elementInView = (elementID: string, isIntersecting: boolean) => {
+
+        intersecting = elementID;
+
+        if (elementID === "governmentPriorities") {
+
+            governmentSectionInView = isIntersecting;
+
+        };
+
+        if (elementID === "climatePriorities") {
+
+            climateSectionInView = isIntersecting;
+
+        };
+
+        if (elementID === "economicPriorities") {
+
+            economySectionInView = isIntersecting;
+
+        };
+
+        if (elementID === "educationPriorities") {
+
+            educationSectionInView = isIntersecting;
+
+        };
+
+        if (elementID === "healthPriorities") {
+
+            healthSectionInView = isIntersecting;
+
+        };
+
+    };
+
+    // if no clicked active tab, active tab is last element in view
 
     let y: number;
 
@@ -70,21 +234,21 @@
                 role="tab"
                 href="governmentPriorities"
                 on:click|preventDefault={() => {
-                    scrollToElement(governmentTabLink);
-                    activeIntersection = "prioritiesIntersectedGovernment";
-                    selectedPrioritiesSection = "prioritiesSelectedGovernment";
+                    activeIntersection = "governmentPriorities";
+                    scrollToElement(governmentTabLink, activeIntersection);
+                    
 
                 }}
                 on:keyup|preventDefault={() => {
-                    scrollToElement(governmentTabLink);
-                    activeIntersection = "prioritiesIntersectedGovernment";
-                    selectedPrioritiesSection = "prioritiesSelectedGovernment";
+                    activeIntersection = "governmentPriorities";
+                    scrollToElement(governmentTabLink, activeIntersection);
+                    
                 }}
                 bind:this={governmentTabLink}
             >
                 <li
                     id="government_priorities"
-                    class={ activeIntersection === "prioritiesIntersectedGovernment" ? "priorities_category_tab_active" : "priorities_category_tab"}
+                    class={ activeIntersection === "governmentPriorities" ? "priorities_category_tab_active" : "priorities_category_tab"}
                 >
                     <h2>
                         government
@@ -96,20 +260,19 @@
                 role="tab"
                 href="climatePriorities"
                 on:click|preventDefault={() => {
-                    scrollToElement(climateTabLink);
-                    activeIntersection = "prioritiesIntersectedClimate";
-                    selectedPrioritiesSection = "prioritiesSelectedClimate";
+                    activeIntersection = "climatePriorities";
+                    scrollToElement(climateTabLink, activeIntersection);
+                    
                 }}
                 on:keyup|preventDefault={() => {
-                    scrollToElement(climateTabLink);
-                    activeIntersection = "prioritiesIntersectedClimate";
-                    selectedPrioritiesSection = "prioritiesSelectedClimate";
+                    activeIntersection = "climatePriorities";
+                    scrollToElement(climateTabLink, activeIntersection);
                 }}
                 bind:this={climateTabLink}
             >
                 <li
                     id="climate_priorities"
-                    class={ activeIntersection === "prioritiesIntersectedClimate" ? "priorities_category_tab_active" : "priorities_category_tab" }
+                    class={ activeIntersection === "climatePriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         climate
@@ -121,20 +284,18 @@
                 role="tab"
                 href="economicPriorities"
                 on:click|preventDefault={() => {
-                    scrollToElement(economyTabLink);
-                    activeIntersection = "prioritiesIntersectedEconomic";
-                    selectedPrioritiesSection = "prioritiesSelectedEconomic";
+                    activeIntersection = "economicPriorities";
+                    scrollToElement(economyTabLink, activeIntersection);
                 }}
                 on:keyup|preventDefault={() => {
-                    scrollToElement(economyTabLink);
-                    activeIntersection = "prioritiesIntersectedEconomic";
-                    selectedPrioritiesSection = "prioritiesSelectedEconomic";
+                    activeIntersection = "economicPriorities";
+                    scrollToElement(economyTabLink, activeIntersection);
                 }}
                 bind:this={economyTabLink}
             >
                 <li
                     id="economic_priorities"
-                    class={ activeIntersection === "prioritiesIntersectedEconomic" ? "priorities_category_tab_active" : "priorities_category_tab" }
+                    class={ activeIntersection === "economicPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         economy
@@ -146,20 +307,18 @@
                 role="tab"
                 href="educationPriorities"
                 on:click|preventDefault={() => {
-                    scrollToElement(educationTabLink);
-                    activeIntersection = "prioritiesIntersectedEducation";
-                    selectedPrioritiesSection = "prioritiesSelectedEducation";
+                    activeIntersection = "educationPriorities";
+                    scrollToElement(educationTabLink, activeIntersection);
                 }}
                 on:keyup|preventDefault={() => {
-                    scrollToElement(educationTabLink);
-                    activeIntersection = "prioritiesIntersectedEducation";
-                    selectedPrioritiesSection = "prioritiesSelectedEducation";
+                    activeIntersection = "educationPriorities";
+                    scrollToElement(educationTabLink, activeIntersection);
                 }}
                 bind:this={educationTabLink}
             >
                 <li
                     id="education_priorities"
-                    class={ activeIntersection === "prioritiesIntersectedEducation" ? "priorities_category_tab_active" : "priorities_category_tab" }
+                    class={ activeIntersection === "educationPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         education
@@ -171,20 +330,18 @@
                 role="tab"
                 href="healthPriorities"
                 on:click|preventDefault={() => {
-                    scrollToElement(healthTabLink);
-                    activeIntersection = "prioritiesIntersectedHealth";
-                    selectedPrioritiesSection = "prioritiesSelectedHealth";
+                    activeIntersection = "healthPriorities";
+                    scrollToElement(healthTabLink, activeIntersection);
                 }}
                 on:keyup|preventDefault={() => {
-                    scrollToElement(healthTabLink);
-                    activeIntersection = "prioritiesIntersectedHealth";
-                    selectedPrioritiesSection = "prioritiesSelectedHealth";
+                    activeIntersection = "healthPriorities";
+                    scrollToElement(healthTabLink, activeIntersection);
                 }}
                 bind:this={healthTabLink}
             >
                 <li
                     id="health_priorities"
-                    class={ activeIntersection === "prioritiesIntersectedHealth" ? "priorities_category_tab_active" : "priorities_category_tab" }
+                    class={ activeIntersection === "healthPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
                 >
                     <h2>
                         health
@@ -193,23 +350,11 @@
             </a>
         </ul>
         <IntersectionObserver
+            threshold={0.5}
             element={governmentPrioritiesElement}
-            on:intersect={() => {
-                // if government tab is clicked, active intersection is government section and return an empty string as selectedPrioritiesSection
-                if (selectedPrioritiesSection === "prioritiesSelectedGovernment") {
-                    activeIntersection = "prioritiesIntersectedGovernment";
-                    return (
-                        selectedPrioritiesSection = ""
-                    );
-                // if selectedPrioritiesSection is not an empty string is not "prioritiesSelectedGovernment", return the activeIntersection as activeIntersection
-                } else if (selectedPrioritiesSection !== "" && selectedPrioritiesSection !== "prioritiesSelectedGovernment") {
-                    return (
-                        activeIntersection = activeIntersection
-                    );
-                // if selectedPrioritiesSection is an empty string, return the activeIntersection as "prioritiesIntersectedGovernment"
-                } else {
-                    activeIntersection = "prioritiesIntersectedGovernment";
-                };
+            on:observe={(e) => {
+                let governmentPrioritiesIsIntersecting = e.detail.isIntersecting;
+                elementInView("governmentPriorities", governmentPrioritiesIsIntersecting);
             }}
         >
             <div 
@@ -395,20 +540,11 @@
             </div>
         </IntersectionObserver>
         <IntersectionObserver
+            threshold={0.5}
             element={climatePrioritiesElement}
-            on:intersect={() => {
-                if (selectedPrioritiesSection === "prioritiesSelectedClimate") {
-                    activeIntersection = "prioritiesIntersectedClimate";
-                    return (
-                        selectedPrioritiesSection = ""
-                    );
-                } else if (selectedPrioritiesSection !== "" && selectedPrioritiesSection !== "prioritiesSelectedClimate") {
-                    return (
-                        activeIntersection = activeIntersection
-                    );
-                } else {
-                    activeIntersection = "prioritiesIntersectedClimate";
-                };
+            on:observe={(e) => {
+                let climatePrioritiesIsIntersecting = e.detail.isIntersecting;
+                elementInView("climatePriorities", climatePrioritiesIsIntersecting);
             }}
         >
             <div 
@@ -442,21 +578,11 @@
             </div> 
         </IntersectionObserver>
         <IntersectionObserver
+            threshold={0.5}
             element={economicPrioritiesElement}
-            on:intersect={() => {
-                if (selectedPrioritiesSection === "prioritiesSelectedEconomic") {
-                    activeIntersection = "prioritiesIntersectedEconomic";
-                    return (
-                        selectedPrioritiesSection = ""
-                    );
-                } else if (selectedPrioritiesSection !== "" && selectedPrioritiesSection !== "prioritiesSelectedEconomic") {
-                    return (
-                        activeIntersection = activeIntersection
-                    );
-                } else {
-                    activeIntersection = "prioritiesIntersectedEconomic";
-                };
-            
+            on:observe={(e) => {
+                let economicPrioritiesIsIntersecting = e.detail.isIntersecting;
+                elementInView("economicPriorities", economicPrioritiesIsIntersecting);       
             }}
         >
             <div 
@@ -603,20 +729,11 @@
             </div>
         </IntersectionObserver>
         <IntersectionObserver
+            threshold={0.5}
             element={educationPrioritiesElement}
-            on:intersect={() => {
-                if (selectedPrioritiesSection === "prioritiesSelectedEducation") {
-                    activeIntersection = "prioritiesIntersectedEducation";
-                    return (
-                        selectedPrioritiesSection = ""
-                    );
-                } else if (selectedPrioritiesSection !== "" && selectedPrioritiesSection !== "prioritiesSelectedEducation") {
-                    return (
-                        activeIntersection = activeIntersection
-                    );
-                } else {
-                    activeIntersection = "prioritiesIntersectedEducation";
-                };
+            on:observe={(e) => {
+                let educationPrioritiesIsIntersecting = e.detail.isIntersecting;
+                elementInView("educationPrioritiesElement", educationPrioritiesIsIntersecting);       
             }}
         >
             <div 
@@ -645,20 +762,11 @@
             </div>
         </IntersectionObserver>
         <IntersectionObserver
+            threshold={0.5}
             element={healthPrioritiesElement}
-            on:intersect={() => {
-                if (selectedPrioritiesSection === "prioritiesSelectedHealth") {
-                    activeIntersection = "prioritiesIntersectedHealth";
-                    return (
-                        selectedPrioritiesSection = ""
-                    );
-                } else if (selectedPrioritiesSection !== "" && selectedPrioritiesSection !== "prioritiesSelectedHealth") {
-                    return (
-                        activeIntersection = activeIntersection
-                    );
-                } else {
-                    activeIntersection = "prioritiesIntersectedHealth";
-                };
+            on:observe={(e) => {
+                let healthPrioritiesIsIntersecting = e.detail.isIntersecting;
+                elementInView("healthPriorities", healthPrioritiesIsIntersecting);    
             }}
         >
             <div 
