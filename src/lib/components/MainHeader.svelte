@@ -9,13 +9,20 @@
 	$: user = $page.data.user;
 
 	let callbackURL: string = "";
+	let logoURL: string = "/";
 
 	$: if (user?.name === "voter") {
 		callbackURL = "/login-voter";
+		logoURL = "/authenticated-voter/voter";
 	} else if (user?.name === "administrator") {
 		callbackURL = "/login-administrator";
+		logoURL = "/authenticated-administrator/admin";
 	} else if (user?.name === "campaign") {
 		callbackURL = "/login-campaign";
+		logoURL = "/authenticated-campaign/campaign";
+	} else {
+		callbackURL = "/";
+		logoURL = "/";
 	};
 
 	export let sideDrawer: boolean = false;
@@ -84,11 +91,18 @@
 		<ul id="nav_center">
 			<li 
 				class="logo"
-				aria-current={$page.url.pathname === '/' ? 'page' : undefined} 
+				aria-current={
+					(
+						$page.url.pathname === '/' || 
+						$page.url.pathname === "/authenticated-campaign/campaign" ||
+						$page.url.pathname === "/authenticated-administrator/admin" ||
+						$page.url.pathname === "/authenticated-voter/voter"
+					)
+				? 'page' : undefined} 
 			>
 				<a 
 					id="logo_svg"
-					href="/"
+					href={logoURL}
 				>
 					{@html Logo}
 				</a>

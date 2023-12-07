@@ -6,15 +6,15 @@
     import SuccessFlashMessage from "$lib/components/flashMessages/SuccessFlashMessage.svelte";
     import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
     import NumberInput from "$lib/components/inputs/NumberInput.svelte";
-    import AddItemButton from "$lib/components/buttons/AddItemButton.svelte";
+    import AddItemToArrayButton from "$lib/components/buttons/AddItemToArrayButton.svelte";
     import SelectInput from "$lib/components/inputs/SelectInput.svelte";
     import States from '$lib/data/states.titlecase.json';
     import EmailInput from "$lib/components/inputs/EmailInput.svelte";
     import PhoneInput from "$lib/components/inputs/PhoneInput.svelte";
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
-    import SearchInput from "$lib/components/inputs/SearchInput.svelte";
-  import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import SubtractItemButton from "$lib/components/buttons/SubtractItemButton.svelte";
 
     const sessionOptions = [
         {session: "2029-2030"},
@@ -31,6 +31,102 @@
         {session: "2018-2019"},
         {session: "2017-2018"},
     ];
+    
+    let addHouseSponsor: boolean = false;
+    let addSenateSponsor: boolean = false;
+
+    interface SponsorInputValue {
+
+        sponsor: string;
+        isValid: boolean;
+
+    };
+
+    let sponsorsHouseValues: SponsorInputValue[] = [
+        {
+            sponsor: "",
+            isValid: true
+        }
+    ];
+
+    let sponsorsSenateValues: SponsorInputValue[] = [
+        {
+            sponsor: "",
+            isValid: true
+        }
+    ];
+
+    $: if (addHouseSponsor) {
+
+        sponsorsHouseValues = [...sponsorsHouseValues, {sponsor: "", isValid: true}];
+
+        addHouseSponsor = false;
+
+    };
+
+    $: if (addSenateSponsor) {
+
+        sponsorsSenateValues = [...sponsorsSenateValues, {sponsor: "", isValid: true}];
+
+        addSenateSponsor = false;
+
+    };
+
+    // begin remove Senate sponsor
+
+    let sponsorSenateFieldIndexRemoved: null | number = null;
+
+    let subtractSponsorSenateClicked: boolean = false;
+
+    let sponsorSenateFieldForRemovalNotNull: number;
+
+    $: if (sponsorSenateFieldIndexRemoved !== null) {
+
+        sponsorSenateFieldForRemovalNotNull = sponsorSenateFieldIndexRemoved;
+
+    };
+
+    $: if (subtractSponsorSenateClicked) {
+
+        subtractSponsorSenateClicked = false;
+
+        if (sponsorsSenateValues.length > 1) {
+
+            sponsorsSenateValues.splice(sponsorSenateFieldForRemovalNotNull, sponsorSenateFieldForRemovalNotNull);
+
+        };
+
+    };
+
+    // end remove Senate sponsor
+
+    // begin remove House sponsor
+
+    let sponsorHouseFieldIndexRemoved: null | number = null;
+
+    let subtractSponsorHouseClicked: boolean = false;
+
+    let sponsorHouseFieldForRemovalNotNull: number;
+
+    $: if (sponsorHouseFieldIndexRemoved !== null) {
+
+        sponsorHouseFieldForRemovalNotNull = sponsorHouseFieldIndexRemoved;
+
+    };
+
+    $: if (subtractSponsorHouseClicked) {
+
+        subtractSponsorHouseClicked = false;
+
+        if (sponsorsHouseValues.length > 1) {
+
+            sponsorsHouseValues.splice(sponsorHouseFieldForRemovalNotNull, sponsorHouseFieldForRemovalNotNull);
+
+        };
+
+    };
+
+    // end remove House sponsor
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
@@ -45,8 +141,7 @@
     let introducedInSenateChecked: boolean = false;
     let houseSessionInputValue: string = "";
     let senateSessionInputValue: string = "";
-    let houseSponsorsInputValue: string = "";
-    let senateSponsorsInputValue: string = "";
+
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
 
@@ -228,23 +323,35 @@
                     >
                         House session
                     </SelectInput>
-                    <TextInput
-                        inputLabel={true}
-                        bind:textInputValue={houseSponsorsInputValue}
-                        bind:isValid={houseSponsorsIsValid}
-                        placeholder="Alexandria Ocasio-Cortez"
-                        inputName="sponsor_1"
-                        inputID="sponsor_1"
-                        required={true}
-                        textInputErrorMessage="sponsor required"
-                    >
-                        House sponsor(s)
-                    </TextInput>
-                    <AddItemButton
-                        bind:addItemClicked={addSponsorClicked}
+                    <p style={"font-weight: 600"}>House sponsor(s)</p>
+                    {#each sponsorsHouseValues as sponsor, i}
+                        <div class="sponsor_row">
+                            <TextInput
+                                inputLabel={false}
+                                bind:textInputValue={sponsorsHouseValues[i].sponsor}
+                                bind:isValid={sponsorsHouseValues[i].isValid}
+                                placeholder="Alexandria Ocasio-Cortez"
+                                inputName={`sponsor_${i}`}
+                                inputID={`sponsor_${i}`}
+                                required={true}
+                                textInputErrorMessage="sponsor required"
+                            />
+                            {#if (sponsorsHouseValues.length > 1)}
+                                <SubtractItemButton 
+                                    index={i}
+                                    bind:subtractedItemIndex={sponsorHouseFieldIndexRemoved}
+                                    bind:subtractItemsClicked={subtractSponsorHouseClicked}
+                                >
+                                    subtract
+                                </SubtractItemButton>
+                            {/if}
+                        </div>
+                    {/each}
+                    <AddItemToArrayButton
+                        bind:addItemsClicked={addHouseSponsor}
                     >
                         sponsor
-                    </AddItemButton>
+                    </AddItemToArrayButton>
                 {/if}
             </div>
             <div class="checkbox_column">
@@ -264,23 +371,35 @@
                     >
                         Senate session
                     </SelectInput>
-                    <TextInput
-                        inputLabel={true}
-                        bind:textInputValue={senateSponsorsInputValue}
-                        bind:isValid={senateSponsorsIsValid}
-                        placeholder="Bernie Sanders"
-                        inputName="sponsor"
-                        inputID="sponsor"
-                        required={true}
-                        textInputErrorMessage="sponsor required"
-                    >
-                        Senate sponsor(s)
-                    </TextInput>
-                    <AddItemButton
-                        bind:addItemClicked={addSponsorClicked}
+                    <p style={"font-weight: 600"}>Senate sponsor(s)</p>
+                    {#each sponsorsSenateValues as sponsor, i}
+                        <div class="sponsor_row">
+                            <TextInput
+                                inputLabel={false}
+                                bind:textInputValue={sponsorsSenateValues[i].sponsor}
+                                bind:isValid={sponsorsSenateValues[i].isValid}
+                                placeholder="Bernie Sanders"
+                                inputName={`sponsor_${i}`}
+                                inputID={`sponsor_${i}`}
+                                required={true}
+                                textInputErrorMessage="sponsor required"
+                            />
+                            {#if (sponsorsSenateValues.length > 1)}
+                                <SubtractItemButton 
+                                    index={i}
+                                    bind:subtractedItemIndex={sponsorSenateFieldIndexRemoved}
+                                    bind:subtractItemsClicked={subtractSponsorSenateClicked}
+                                >
+                                    subtract
+                                </SubtractItemButton>
+                            {/if}
+                        </div>
+                    {/each}
+                    <AddItemToArrayButton
+                        bind:addItemsClicked={addSenateSponsor}
                     >
                         sponsor
-                    </AddItemButton>
+                    </AddItemToArrayButton>
                 {/if}
             </div>
         </div>
@@ -628,6 +747,11 @@
 
     .cell {
         width: 15rem;
+    }
+
+    .sponsor_row {
+        display: flex;
+        gap: 0.5rem;
     }
 
     @media (max-width: 1440px) {

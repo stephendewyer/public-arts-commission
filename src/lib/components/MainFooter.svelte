@@ -7,14 +7,21 @@
     $: user = $page.data.user;
 
     let callbackURL: string = "";
+    let logoURL: string = "/";
 
     $: if (user?.name === "voter") {
-        callbackURL = "/login-voter";
-    } else if (user?.name === "administrator") {
-        callbackURL = "/login-administrator";
-    } else if (user?.name === "campaign") {
-        callbackURL = "/login-campaign";
-    };
+		callbackURL = "/login-voter";
+		logoURL = "/authenticated-voter/voter";
+	} else if (user?.name === "administrator") {
+		callbackURL = "/login-administrator";
+		logoURL = "/authenticated-administrator/admin";
+	} else if (user?.name === "campaign") {
+		callbackURL = "/login-campaign";
+		logoURL = "/authenticated-campaign/campaign";
+	} else {
+		callbackURL = "/";
+		logoURL = "/";
+	};
     
     const today = new Date();
     const year = today.getFullYear();
@@ -32,9 +39,16 @@
             <nav class="footer_nav">
                 <div class="logo_container_footer">
                     <a 
-                        aria-current={$page.url.pathname === '/' ? 'page' : undefined}
+                        aria-current={
+                            (
+                                $page.url.pathname === '/' || 
+                                $page.url.pathname === "/authenticated-campaign/campaign" ||
+                                $page.url.pathname === "/authenticated-administrator/admin" ||
+                                $page.url.pathname === "/authenticated-voter/voter"
+                            )
+                        ? 'page' : undefined}
                         class="logo"
-                        href="/"
+                        href={logoURL}
                         aria-label="link to index page"
                     >
                         {@html LogoSecondary}

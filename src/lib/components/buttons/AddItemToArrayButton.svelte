@@ -1,10 +1,10 @@
 <script lang="ts">
 
-    export let addItemClicked: boolean = false;
+    export let addItemsClicked: boolean = false;
 
     const addItemClickedHandler = () => {
 
-        addItemClicked = !addItemClicked;
+        addItemsClicked = true;
 
     };
 
