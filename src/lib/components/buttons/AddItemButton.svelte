@@ -13,8 +13,8 @@
 <button 
     tabindex={1}
     class="add_button"
-    on:click|preventDefault={addItemClickedHandler}
-    on:keyup|preventDefault={addItemClickedHandler}
+    on:click={addItemClickedHandler}
+    on:keyup={addItemClickedHandler}
 >
     <div class="plus_sign">
         +

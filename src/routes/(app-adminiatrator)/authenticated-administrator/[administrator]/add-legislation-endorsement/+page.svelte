@@ -170,8 +170,6 @@
     let yearReleasedIsValid: boolean = true;
     let houseSessionIsValid: boolean = true;
     let senateSessionIsValid: boolean = true;
-    let houseSponsorsIsValid: boolean = true;
-    let senateSponsorsIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
     let countryIsValid: boolean = true;
     let stateIsValid: boolean = true;
@@ -234,10 +232,6 @@
     $: if((responseItem.success) || (responseItem.error)) {
         pending = false;
     };
-
-    let addSponsorClicked: boolean;
-
-    $: console.log(addSponsorClicked);
 
 </script>
 <div class="add_legislation_endorsement_container">
@@ -336,7 +330,7 @@
                                 required={true}
                                 textInputErrorMessage="sponsor required"
                             />
-                            {#if (sponsorsHouseValues.length > 1)}
+                            {#if (sponsorsHouseValues.length > 1 && i !== 0)}
                                 <SubtractItemButton 
                                     index={i}
                                     bind:subtractedItemIndex={sponsorHouseFieldIndexRemoved}
@@ -384,7 +378,7 @@
                                 required={true}
                                 textInputErrorMessage="sponsor required"
                             />
-                            {#if (sponsorsSenateValues.length > 1)}
+                            {#if (sponsorsSenateValues.length > 1 && i !== 0)}
                                 <SubtractItemButton 
                                     index={i}
                                     bind:subtractedItemIndex={sponsorSenateFieldIndexRemoved}
