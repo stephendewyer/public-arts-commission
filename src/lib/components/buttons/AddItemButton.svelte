@@ -1,22 +1,29 @@
 <script lang="ts">
-    export let disable: boolean = false;
+
+    export let addItemClicked: boolean = false;
+
+    const addItemClickedHandler = () => {
+
+        addItemClicked = !addItemClicked;
+
+    };
+
 </script>
 
-<button 
-    class={(disable) ? "add_button_disabled" : "add_button"}
-    disabled={disable}
+<div 
+    tabindex={1}
+    role="button"
+    class="add_button"
+    on:click={addItemClickedHandler}
+    on:keyup={addItemClickedHandler}
 >
     <div class="plus_sign">
         +
     </div>
     <slot />
-</button>
+</div>
 
 <style>
-
-    .add_button_disabled {
-        display: none;
-    }
 
     .add_button {
         margin: 0;

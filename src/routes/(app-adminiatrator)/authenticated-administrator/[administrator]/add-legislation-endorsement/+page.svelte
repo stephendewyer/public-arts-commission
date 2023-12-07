@@ -6,27 +6,57 @@
     import SuccessFlashMessage from "$lib/components/flashMessages/SuccessFlashMessage.svelte";
     import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
     import NumberInput from "$lib/components/inputs/NumberInput.svelte";
-    import DateInput from "$lib/components/inputs/DateInput.svelte";
+    import AddItemButton from "$lib/components/buttons/AddItemButton.svelte";
     import SelectInput from "$lib/components/inputs/SelectInput.svelte";
     import States from '$lib/data/states.titlecase.json';
     import EmailInput from "$lib/components/inputs/EmailInput.svelte";
     import PhoneInput from "$lib/components/inputs/PhoneInput.svelte";
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
+    import SearchInput from "$lib/components/inputs/SearchInput.svelte";
+  import TextArea from "$lib/components/inputs/TextArea.svelte";
+
+    const sessionOptions = [
+        {session: "2029-2030"},
+        {session: "2028-2029"},
+        {session: "2027-2028"},
+        {session: "2026-2027"},
+        {session: "2025-2026"},
+        {session: "2024-2025"},
+        {session: "2023-2024"},
+        {session: "2022-2023"},
+        {session: "2021-2022"},
+        {session: "2020-2021"},
+        {session: "2019-2020"},
+        {session: "2018-2019"},
+        {session: "2017-2018"},
+    ];
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
     let image: any;
-    let campaignNameInputValue: string = "";
-    let yearOfficeSoughtInputValue: number | null = null;
-    let electionDatePrimaryInputValue: string = "";
-    let electionDateGeneralInputValue: string = "";
+    let legislationTitleInputValue: string = "";
+    let yearReleasedInputValue: number | null = null;
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
     let countyInputValue: string = "";
     let cityInputValue: string = "";
-    let partyInputValue: string = "";
+    let introducedInHouseChecked: boolean = false;
+    let introducedInSenateChecked: boolean = false;
+    let houseSessionInputValue: string = "";
+    let senateSessionInputValue: string = "";
+    let houseSponsorsInputValue: string = "";
+    let senateSponsorsInputValue: string = "";
     let websiteURLInputValue: string = "";
+    let detailsInputValue: string = "";
+
+    let passedInHouseChecked: boolean = false;
+    let passedInSenateChecked: boolean = false;
+    let rejectedByHouseChecked: boolean = false;
+    let rejectedBySenateChecked: boolean = false;
+    let vetoedByExecutiveChecked: boolean = false;
+    let ExecutiveSignedIntoLawChecked: boolean = false;
+    
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -41,17 +71,20 @@
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
-    let campaignNameIsValid: boolean = true;
-    let yearOfficeSoughtIsValid: boolean = true;
-    let electionDatePrimaryIsValid: boolean = true;
-    let electionDateGeneralIsValid: boolean = true;
+    let legislationTitleIsValid: boolean = true;
+    let yearReleasedIsValid: boolean = true;
+    let houseSessionIsValid: boolean = true;
+    let senateSessionIsValid: boolean = true;
+    let houseSponsorsIsValid: boolean = true;
+    let senateSponsorsIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
     let countryIsValid: boolean = true;
     let stateIsValid: boolean = true;
     let countyIsValid: boolean = true;
     let cityIsValid: boolean = true;
-    let partyIsValid: boolean = true;
     let websiteURLIsValid: boolean = true;
+    let detailsIsValid: boolean = true;
+
     let nameFirstContactIsValid: boolean = true;
     let nameLastContactIsValid: boolean = true;
     let phoneContactIsValid: boolean = true;
@@ -97,7 +130,7 @@
         }, 4000)
     };
 
-    const submitCandidateEndoresementHandler = () => {
+    const submitLegislationEndoresementHandler = () => {
 
     };
 
@@ -107,15 +140,19 @@
         pending = false;
     };
 
+    let addSponsorClicked: boolean;
+
+    $: console.log(addSponsorClicked);
+
 </script>
-<div class="add_candidate_endorsement_container">
-    <h1>add referendum endorsement</h1>
+<div class="add_legislation_endorsement_container">
+    <h1>add legislation endorsement</h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitCandidateEndoresementHandler}
+        on:submit|preventDefault={submitLegislationEndoresementHandler}
     >
-        <h2>campaign image</h2>
-        <h3>select an image to represent the campaign*</h3>
+        <h2>legislation image</h2>
+        <h3>select an image to represent the legislation*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 5MB</p>
         <ImageFileInput
@@ -123,8 +160,8 @@
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="campaign_name_or_action"
-            inputID="campaign_name_or_action"
+            inputName="legislation_image"
+            inputID="legislation_image"
             bind:isValid={imageFileIsValid}
             required={true}
             imageFileInputErrorMessage="image file required"
@@ -132,7 +169,7 @@
             image file
         </ImageFileInput>
         {#if (image)}
-            <div class="campaign_image_container">
+            <div class="image_container">
                 <img src={image} alt="test"/>
             </div>
         {/if}
@@ -140,7 +177,7 @@
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
             bind:isValid={imageAltTextIsValid}
-            placeholder="profile of candidate"
+            placeholder="legislation_banner_image.jpg"
             inputName="image_alt_text"
             inputID="image_alt_text"
             required={true}
@@ -148,55 +185,104 @@
         >
             image alt text
         </TextInput>
-        <h2>campaign information</h2>
+        <h2>legislation information</h2>
         <TextInput
             inputLabel={true}
-            bind:textInputValue={campaignNameInputValue}
-            bind:isValid={campaignNameIsValid}
-            placeholder="candidate for X office"
-            inputName="campaign_name"
-            inputID="campaign_name"
+            bind:textInputValue={legislationTitleInputValue}
+            bind:isValid={legislationTitleIsValid}
+            placeholder="Creative Economy Revitalization Act (CERA)"
+            inputName="legislation_title"
+            inputID="legislation title"
             required={true}
-            textInputErrorMessage="campaign name required"
+            textInputErrorMessage="legislation title required"
         >
-            campaign name
+            legislation title
         </TextInput>
         <NumberInput
             inputLabel={true}
-            bind:numberInputValue={yearOfficeSoughtInputValue}
-            bind:isValid={yearOfficeSoughtIsValid}
+            bind:numberInputValue={yearReleasedInputValue}
+            bind:isValid={yearReleasedIsValid}
             placeholder="2024"
-            inputName="year_office_sought_to_begin"
-            inputID="year_office_sought_to_begin"
+            inputName="year_released"
+            inputID="year_released"
             required={true}
-            numberInputErrorMessage="starting year required for office sought"
+            numberInputErrorMessage="year released required"
         >
-            starting year for office sought
+            year released
         </NumberInput>
         <div class="two_columns">
-            <DateInput
-                inputLabel={true}
-                bind:dateInputValue={electionDatePrimaryInputValue}
-                bind:isValid={electionDatePrimaryIsValid}
-                inputName="election_date_primary"
-                inputID="election_date_primary"
-                required={true}
-                dateInputErrorMessage="primary election date required"
-            >
-                primary election date
-            </DateInput>
-            <DateInput
-                inputLabel={true}
-                bind:dateInputValue={electionDateGeneralInputValue}
-                bind:isValid={electionDateGeneralIsValid}
-                inputName="election_date_general"
-                inputID="election_date_genearl"
-                required={true}
-                dateInputErrorMessage="general election date required"
-            >
-                general election date
-            </DateInput>
-            
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={introducedInHouseChecked}>
+                    introduced in the House
+                </AnimatedCheckbox>
+                {#if (introducedInHouseChecked)}
+                    <SelectInput
+                        options={sessionOptions}
+                        bind:selectInputValue={houseSessionInputValue}
+                        isValid={houseSessionIsValid}
+                        required={false}
+                        inputID="House_session"
+                        inputName="House_session"
+                        selectInputErrorMessage=""
+                        inputLabel={true}
+                    >
+                        House session
+                    </SelectInput>
+                    <TextInput
+                        inputLabel={true}
+                        bind:textInputValue={houseSponsorsInputValue}
+                        bind:isValid={houseSponsorsIsValid}
+                        placeholder="Alexandria Ocasio-Cortez"
+                        inputName="sponsor_1"
+                        inputID="sponsor_1"
+                        required={true}
+                        textInputErrorMessage="sponsor required"
+                    >
+                        House sponsor(s)
+                    </TextInput>
+                    <AddItemButton
+                        bind:addItemClicked={addSponsorClicked}
+                    >
+                        sponsor
+                    </AddItemButton>
+                {/if}
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={introducedInSenateChecked}>
+                    introduced in the Senate
+                </AnimatedCheckbox>
+                {#if (introducedInSenateChecked)}
+                    <SelectInput
+                        options={sessionOptions}
+                        bind:selectInputValue={senateSessionInputValue}
+                        isValid={senateSessionIsValid}
+                        required={false}
+                        inputID="Senate_session"
+                        inputName="Senate_session"
+                        selectInputErrorMessage=""
+                        inputLabel={true}
+                    >
+                        Senate session
+                    </SelectInput>
+                    <TextInput
+                        inputLabel={true}
+                        bind:textInputValue={senateSponsorsInputValue}
+                        bind:isValid={senateSponsorsIsValid}
+                        placeholder="Bernie Sanders"
+                        inputName="sponsor"
+                        inputID="sponsor"
+                        required={true}
+                        textInputErrorMessage="sponsor required"
+                    >
+                        Senate sponsor(s)
+                    </TextInput>
+                    <AddItemButton
+                        bind:addItemClicked={addSponsorClicked}
+                    >
+                        sponsor
+                    </AddItemButton>
+                {/if}
+            </div>
         </div>
         <SelectInput 
             options={governmentLevelOptions}
@@ -287,18 +373,6 @@
         {/if}
         <TextInput
             inputLabel={true}
-            bind:textInputValue={partyInputValue}
-            bind:isValid={partyIsValid}
-            placeholder="Democracy Party"
-            inputName="party"
-            inputID="party"
-            required={true}
-            textInputErrorMessage="party required"
-        >
-            party
-        </TextInput>
-        <TextInput
-            inputLabel={true}
             bind:textInputValue={websiteURLInputValue}
             bind:isValid={websiteURLIsValid}
             placeholder="https://candidateforxoffice.com"
@@ -309,28 +383,52 @@
         >
             website URL
         </TextInput>
+        <TextArea
+            inputLabel={true}
+            bind:textareaInputValue={detailsInputValue}
+            bind:isValid={detailsIsValid}
+            placeholder="The legisation would..."
+            inputName="legislation_details"
+            inputID="legislation_details"
+            required={true}
+            textAreaInputErrorMessage="details required"
+        >
+            details
+        </TextArea>
         <h2>campaign status</h2>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    running in the primary
+                <AnimatedCheckbox bind:checked={passedInHouseChecked}>
+                    passed in the House
                 </AnimatedCheckbox>
             </div>
-            <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    not elected in the primary, proceeding to the general
+            <div class="checkbox_column" >
+                <AnimatedCheckbox bind:checked={passedInSenateChecked}>
+                    passed in the Senate
                 </AnimatedCheckbox>
             </div>
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    elected in the primary, proceeding to the general
+                <AnimatedCheckbox bind:checked={rejectedByHouseChecked}>
+                    rejected by House
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    elected in the primary and elected in the general            
+                <AnimatedCheckbox bind:checked={rejectedBySenateChecked}>
+                    rejected by Senate          
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={ExecutiveSignedIntoLawChecked}>
+                    Executive signed into law
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={vetoedByExecutiveChecked}>
+                    votoed by Executive           
                 </AnimatedCheckbox>
             </div>
         </div>
@@ -453,7 +551,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            add candidate endorsement
+            add legislation endorsement
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >
@@ -473,7 +571,7 @@
 
 <style>
 
-    .add_candidate_endorsement_container {
+    .add_legislation_endorsement_container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -494,7 +592,7 @@
         font-weight: 600;
     }
 
-    .campaign_image_container {
+    .image_container {
         padding: 1rem;
         max-width: 20rem;
         width: 100%;
