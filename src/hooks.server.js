@@ -15,7 +15,7 @@ const authorization = async ({ event, resolve }) => {
 
     // protect any routes under /authenticated-administrator
 
-    if (event.url.pathname.startsWith("/authenticated-administrator" || "/(app-administrator)")) {        
+    if (event.url.pathname.startsWith("/authenticated-administrator")) {        
 
         if (session?.user?.name !== "administrator") {
 
