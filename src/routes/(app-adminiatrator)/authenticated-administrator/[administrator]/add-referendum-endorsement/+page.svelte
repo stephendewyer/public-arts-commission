@@ -294,7 +294,7 @@
         >
             details
         </TextArea>
-        <h2>campaign status</h2>
+        <h2>referendum status</h2>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
                 <AnimatedCheckbox bind:checked={electedChecked}>
@@ -314,7 +314,7 @@
                 </AnimatedCheckbox>
             </div>
         </div>
-        <h2>campaign contact informations</h2>
+        <h2>referendum contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
         </AnimatedCheckbox>

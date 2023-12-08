@@ -197,7 +197,7 @@
                 required={true}
                 timeInputErrorMessage="start time required"
             >
-                start time
+                action start time
             </TimeInput>
             <TimeInput
                 inputLabel={true}
@@ -208,7 +208,7 @@
                 required={true}
                 timeInputErrorMessage="end time required"
             >
-                end time
+                action end time
             </TimeInput> 
         </div>
         <div class="two_columns">
@@ -222,7 +222,7 @@
                 selectInputErrorMessage="time zone required"
                 inputLabel={true}
             >
-                time zone
+                action time zone
             </SelectInput>
             <SelectInput 
                 options={governmentLevelOptions}
@@ -234,7 +234,7 @@
                 selectInputErrorMessage="government level required"
                 inputLabel={true}
             >
-                government level
+                action government level
             </SelectInput>
         </div>
         <div class="two_columns">
@@ -249,7 +249,7 @@
                     required={true}
                     textInputErrorMessage="country required"
                 >
-                    country
+                    action country
                 </TextInputReadonly>
             {/if}
             <TextInput
@@ -262,7 +262,7 @@
                 required={false}
                 textInputErrorMessage="action street address required"
             >
-                street address
+                action street address
             </TextInput>
         </div>
         <div class="two_columns">
@@ -276,7 +276,7 @@
                 required={false}
                 textInputErrorMessage=""
             >
-                street address 2
+                action street address 2
             </TextInput>
             <TextInput
                 inputLabel={true}
@@ -288,7 +288,7 @@
                 required={false}
                 textInputErrorMessage="city"
             >
-                city
+                action city
             </TextInput>
         </div>
         <div class="two_columns">
@@ -299,9 +299,10 @@
                 inputName="action_street_address"
                 inputID="action_street_address"
                 required={false}
-                textInputErrorMessage=""
+                selectInputErrorMessage=""
+                inputLabel={true}
             >
-                state
+                action state
             </SelectInput>
             <NumberInput
                 inputLabel={true}
@@ -313,7 +314,7 @@
                 required={false}
                 numberInputErrorMessage=""
             >
-                zip code
+                action zip code
             </NumberInput>
         </div>
         <TextInput
@@ -326,7 +327,7 @@
             required={false}
             textInputErrorMessage=""
         >
-            website URL
+            action website URL
         </TextInput>
         <TextArea
             inputLabel={true}
@@ -338,9 +339,9 @@
             required={true}
             textAreaInputErrorMessage="details required"
         >
-            details
+            action details
         </TextArea>
-        <h2>campaign contact informations</h2>
+        <h2>action contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
         </AnimatedCheckbox>

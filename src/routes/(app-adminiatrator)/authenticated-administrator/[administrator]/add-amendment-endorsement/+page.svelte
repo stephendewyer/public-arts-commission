@@ -211,13 +211,13 @@
 
 </script>
 <div class="add_candidate_endorsement_container">
-    <h1>add referendum endorsement</h1>
+    <h1>add amendment endorsement</h1>
     <form 
         class="form_container"
         on:submit|preventDefault={submitCandidateEndoresementHandler}
     >
-        <h2>campaign image</h2>
-        <h3>select an image to represent the campaign*</h3>
+        <h2>amendment image</h2>
+        <h3>select an image to represent the amendment*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 5MB</p>
         <ImageFileInput
@@ -225,8 +225,8 @@
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="campaign_name_or_action"
-            inputID="campaign_name_or_action"
+            inputName="amendment_image_file"
+            inputID="amendment_image_file"
             bind:isValid={imageFileIsValid}
             required={true}
             imageFileInputErrorMessage="image file required"
@@ -242,7 +242,7 @@
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
             bind:isValid={imageAltTextIsValid}
-            placeholder="profile of candidate"
+            placeholder="amendment banner image"
             inputName="image_alt_text"
             inputID="image_alt_text"
             required={true}
@@ -509,7 +509,7 @@
         >
             details
         </TextArea>
-        <h2>campaign status</h2>
+        <h2>amendment status</h2>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
                 <AnimatedCheckbox bind:checked={twoThirdsHouseAndSenatePassedChecked}>
@@ -541,7 +541,7 @@
                 </AnimatedCheckbox>
             </div>
         </div>
-        <h2>campaign contact informations</h2>
+        <h2>amendment contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
         </AnimatedCheckbox>
