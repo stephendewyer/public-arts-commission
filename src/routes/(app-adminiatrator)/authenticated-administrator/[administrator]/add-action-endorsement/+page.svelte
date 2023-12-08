@@ -13,20 +13,29 @@
     import PhoneInput from "$lib/components/inputs/PhoneInput.svelte";
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
+    import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import TimeInput from "$lib/components/inputs/TimeInput.svelte";
+    import GovernmentLevel from "$lib/data/governmentLevel.json";
+    import TimeZones from "$lib/data/timeZones.json";
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
     let image: any;
-    let campaignNameInputValue: string = "";
-    let yearOfficeSoughtInputValue: number | null = null;
-    let electionDatePrimaryInputValue: string = "";
-    let electionDateGeneralInputValue: string = "";
+    let actionNameInputValue: string = "";
+    let actionStartDateInputValue: string = "";
+    let actionEndDateInputValue: string = "";
+    let startTimeInputValue: string = "";
+    let endTimeInputValue: string = "";
+    let timeZoneInputValue: string = "";
+    let actionStreetAddressInputValue: string = "";
+    let actionStreetAddress02InputValue: string = "";
+    let actionCityInputValue: string = "";
+    let actionStateInputValue: string = "";
+    let actionZipCodeInputValue: number | null = null;
     let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
-    let partyInputValue: string = "";
     let websiteURLInputValue: string = "";
+    let detailsInputValue: string = "";
+
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -41,16 +50,20 @@
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
-    let campaignNameIsValid: boolean = true;
-    let yearOfficeSoughtIsValid: boolean = true;
-    let electionDatePrimaryIsValid: boolean = true;
-    let electionDateGeneralIsValid: boolean = true;
+    let actionNameIsValid: boolean = true;
+    let actionStartDateIsValid: boolean = true;
+    let actionEndDateIsValid: boolean = true;
+    let startTimeIsValid: boolean = true;
+    let endTimeIsValid: boolean = true;
+    let timeZoneIsValid: boolean = true;
+    let actionStreetAddressIsValid: boolean = true;
+    let actionStreetAddress02IsValid: boolean = true;
+    let actionCityIsValid: boolean = true;
+    let actionStateIsValid: boolean = true;
+    let actionZipCodeIsValid: boolean = true;
+    let detailsIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
     let countryIsValid: boolean = true;
-    let stateIsValid: boolean = true;
-    let countyIsValid: boolean = true;
-    let cityIsValid: boolean = true;
-    let partyIsValid: boolean = true;
     let websiteURLIsValid: boolean = true;
     let nameFirstContactIsValid: boolean = true;
     let nameLastContactIsValid: boolean = true;
@@ -62,20 +75,9 @@
     let zipCodeContactIsValid: boolean = true;
     let emailContactIsValid: boolean = true;
 
-    const governmentLevelOptions: GovernmentLevel[] = [
-        {
-            name: "federal"
-        },
-        {
-            name: "state"
-        },
-        {
-            name: "county"
-        },
-        {
-            name: "city"
-        }
-    ];
+    const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
+
+    const timeZoneOptions: TimeZone[] = TimeZones;
 
     interface responseObj {
         success: string;
@@ -109,13 +111,13 @@
 
 </script>
 <div class="add_candidate_endorsement_container">
-    <h1>add referendum endorsement</h1>
+    <h1>add action endorsement</h1>
     <form 
         class="form_container"
         on:submit|preventDefault={submitCandidateEndoresementHandler}
     >
-        <h2>campaign image</h2>
-        <h3>select an image to represent the campaign*</h3>
+        <h2>action image</h2>
+        <h3>select an image to represent the action*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 5MB</p>
         <ImageFileInput
@@ -123,8 +125,8 @@
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="campaign_name_or_action"
-            inputID="campaign_name_or_action"
+            inputName="action_image_file"
+            inputID="action_image_file"
             bind:isValid={imageFileIsValid}
             required={true}
             imageFileInputErrorMessage="image file required"
@@ -140,7 +142,7 @@
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
             bind:isValid={imageAltTextIsValid}
-            placeholder="profile of candidate"
+            placeholder="image of action"
             inputName="image_alt_text"
             inputID="image_alt_text"
             required={true}
@@ -148,155 +150,172 @@
         >
             image alt text
         </TextInput>
-        <h2>campaign information</h2>
+        <h2>action information</h2>
         <TextInput
             inputLabel={true}
-            bind:textInputValue={campaignNameInputValue}
-            bind:isValid={campaignNameIsValid}
-            placeholder="candidate for X office"
-            inputName="campaign_name"
-            inputID="campaign_name"
+            bind:textInputValue={actionNameInputValue}
+            bind:isValid={actionNameIsValid}
+            placeholder="rally for democracy"
+            inputName="action_name"
+            inputID="action_name"
             required={true}
-            textInputErrorMessage="campaign name required"
+            textInputErrorMessage="action name required"
         >
-            campaign name
+            action name
         </TextInput>
-        <NumberInput
-            inputLabel={true}
-            bind:numberInputValue={yearOfficeSoughtInputValue}
-            bind:isValid={yearOfficeSoughtIsValid}
-            placeholder="2024"
-            inputName="year_office_sought_to_begin"
-            inputID="year_office_sought_to_begin"
-            required={true}
-            numberInputErrorMessage="starting year required for office sought"
-        >
-            starting year for office sought
-        </NumberInput>
         <div class="two_columns">
             <DateInput
                 inputLabel={true}
-                bind:dateInputValue={electionDatePrimaryInputValue}
-                bind:isValid={electionDatePrimaryIsValid}
-                inputName="election_date_primary"
-                inputID="election_date_primary"
+                bind:dateInputValue={actionStartDateInputValue}
+                bind:isValid={actionStartDateIsValid}
+                inputName="action_start_date"
+                inputID="action_start_date"
                 required={true}
-                dateInputErrorMessage="primary election date required"
+                dateInputErrorMessage="action start date required"
             >
-                primary election date
+                action start date
             </DateInput>
             <DateInput
                 inputLabel={true}
-                bind:dateInputValue={electionDateGeneralInputValue}
-                bind:isValid={electionDateGeneralIsValid}
-                inputName="election_date_general"
-                inputID="election_date_genearl"
+                bind:dateInputValue={actionEndDateInputValue}
+                bind:isValid={actionEndDateIsValid}
+                inputName="action_end_date"
+                inputID="action_end_date"
                 required={true}
-                dateInputErrorMessage="general election date required"
+                dateInputErrorMessage="action end date required"
             >
-                general election date
+                action end date
             </DateInput>
-            
         </div>
-        <SelectInput 
-            options={governmentLevelOptions}
-            bind:selectInputValue={governmentLevelInputValue}
-            isValid={governmentLevelIsValid}
-            required={false}
-            inputID="government_level"
-            inputName="government_level"
-            selectInputErrorMessage=""
-            inputLabel={true}
-        >
-            government level
-        </SelectInput>
-        {#if (governmentLevelInputValue !== "")}
-            <div class="expandable_cells">
-                <div class="cell">
-                    <TextInputReadonly
-                        inputLabel={true}
-                        textInputValue={"United States"}
-                        bind:isValid={countryIsValid}
-                        placeholder="United States"
-                        inputName="country"
-                        inputID="country"
-                        required={true}
-                        textInputErrorMessage="country required"
-                    >
-                        country
-                    </TextInputReadonly>
-                </div>
-                
-                {#if (
-                    (governmentLevelInputValue === "state") ||
-                    (governmentLevelInputValue === "county") ||
-                    (governmentLevelInputValue === "city")
-                )}
-                    <div class="cell">
-                        <SelectInput 
-                            isValid={stateIsValid}
-                            inputID="state"
-                            inputName="state"
-                            options={States}
-                            bind:selectInputValue={stateInputValue}
-                            inputLabel={true}
-                            required={true}
-                            selectInputErrorMessage="state required"
-                        >
-                            state
-                        </SelectInput>
-                    </div>
-                    {#if (
-                        (governmentLevelInputValue === "county") ||
-                        (governmentLevelInputValue === "city")
-                    )}
-                        <div class="cell">
-                            <TextInput
-                                inputLabel={true}
-                                bind:textInputValue={countyInputValue}
-                                bind:isValid={countyIsValid}
-                                placeholder="Oakland"
-                                inputName="county"
-                                inputID="county"
-                                required={true}
-                                textInputErrorMessage="county required"
-                            >
-                                county
-                            </TextInput>
-                        </div>
-                        
-                        {#if (governmentLevelInputValue === "city")}
-                            <div class="cell">
-                                <TextInput
-                                    inputLabel={true}
-                                    bind:textInputValue={cityInputValue}
-                                    bind:isValid={cityIsValid}
-                                    placeholder="Detroit"
-                                    inputName="city"
-                                    inputID="city"
-                                    required={true}
-                                    textInputErrorMessage="city required"
-                                >
-                                    city
-                                </TextInput>
-                            </div>
-                        {/if}
-                    {/if}
-                {/if}
-            </div>
-        {/if}
-        <TextInput
-            inputLabel={true}
-            bind:textInputValue={partyInputValue}
-            bind:isValid={partyIsValid}
-            placeholder="Democracy Party"
-            inputName="party"
-            inputID="party"
-            required={true}
-            textInputErrorMessage="party required"
-        >
-            party
-        </TextInput>
+        <div class="two_columns">
+            <TimeInput
+                inputLabel={true}
+                bind:timeInputValue={startTimeInputValue}
+                bind:isValid={startTimeIsValid}
+                inputName="start_time"
+                inputID="start_time"
+                required={true}
+                timeInputErrorMessage="start time required"
+            >
+                start time
+            </TimeInput>
+            <TimeInput
+                inputLabel={true}
+                bind:timeInputValue={endTimeInputValue}
+                bind:isValid={endTimeIsValid}
+                inputName="end_time"
+                inputID="end_time"
+                required={true}
+                timeInputErrorMessage="end time required"
+            >
+                end time
+            </TimeInput> 
+        </div>
+        <div class="two_columns">
+            <SelectInput 
+                options={timeZoneOptions}
+                bind:selectInputValue={timeZoneInputValue}
+                isValid={timeZoneIsValid}
+                required={false}
+                inputID="time_zone"
+                inputName="time_zone"
+                selectInputErrorMessage="time zone required"
+                inputLabel={true}
+            >
+                time zone
+            </SelectInput>
+            <SelectInput 
+                options={governmentLevelOptions}
+                bind:selectInputValue={governmentLevelInputValue}
+                isValid={governmentLevelIsValid}
+                required={true}
+                inputID="government_level"
+                inputName="government_level"
+                selectInputErrorMessage="government level required"
+                inputLabel={true}
+            >
+                government level
+            </SelectInput>
+        </div>
+        <div class="two_columns">
+            {#if (governmentLevelInputValue !== "")}
+                <TextInputReadonly
+                    inputLabel={true}
+                    textInputValue={"United States"}
+                    bind:isValid={countryIsValid}
+                    placeholder="United States"
+                    inputName="country"
+                    inputID="country"
+                    required={true}
+                    textInputErrorMessage="country required"
+                >
+                    country
+                </TextInputReadonly>
+            {/if}
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={actionStreetAddressInputValue}
+                bind:isValid={actionStreetAddressIsValid}
+                placeholder="1000 Democracy Way"
+                inputName="action_street_address"
+                inputID="action_street_address"
+                required={false}
+                textInputErrorMessage="action street address required"
+            >
+                street address
+            </TextInput>
+        </div>
+        <div class="two_columns">
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={actionStreetAddress02InputValue}
+                bind:isValid={actionStreetAddress02IsValid}
+                placeholder="Suite 300"
+                inputName="action_street_address"
+                inputID="action_street_address"
+                required={false}
+                textInputErrorMessage=""
+            >
+                street address 2
+            </TextInput>
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={actionCityInputValue}
+                bind:isValid={actionCityIsValid}
+                placeholder="Democracy City"
+                inputName="action_city"
+                inputID="action_city"
+                required={false}
+                textInputErrorMessage="city"
+            >
+                city
+            </TextInput>
+        </div>
+        <div class="two_columns">
+            <SelectInput 
+                options={States}
+                bind:selectInputValue={timeZoneInputValue}
+                bind:isValid={actionStreetAddress02IsValid}
+                inputName="action_street_address"
+                inputID="action_street_address"
+                required={false}
+                textInputErrorMessage=""
+            >
+                state
+            </SelectInput>
+            <NumberInput
+                inputLabel={true}
+                bind:numberInputValue={actionZipCodeInputValue}
+                bind:isValid={actionZipCodeIsValid}
+                placeholder="11111"
+                inputName="action_zip_code"
+                inputID="action_zip_code"
+                required={false}
+                numberInputErrorMessage=""
+            >
+                zip code
+            </NumberInput>
+        </div>
         <TextInput
             inputLabel={true}
             bind:textInputValue={websiteURLInputValue}
@@ -309,31 +328,18 @@
         >
             website URL
         </TextInput>
-        <h2>campaign status</h2>
-        <div class="two_columns_checkbox">
-            <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    running in the primary
-                </AnimatedCheckbox>
-            </div>
-            <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    not elected in the primary, proceeding to the general
-                </AnimatedCheckbox>
-            </div>
-        </div>
-        <div class="two_columns_checkbox">
-            <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    elected in the primary, proceeding to the general
-                </AnimatedCheckbox>
-            </div>
-            <div class="checkbox_column">
-                <AnimatedCheckbox>
-                    elected in the primary and elected in the general            
-                </AnimatedCheckbox>
-            </div>
-        </div>
+        <TextArea
+            inputLabel={true}
+            bind:textareaInputValue={detailsInputValue}
+            bind:isValid={detailsIsValid}
+            placeholder="The referendum is on a measure to..."
+            inputName="referendum_details"
+            inputID="referendum_details"
+            required={true}
+            textAreaInputErrorMessage="details required"
+        >
+            details
+        </TextArea>
         <h2>campaign contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
@@ -453,7 +459,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            add candidate endorsement
+            add action endorsement
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >

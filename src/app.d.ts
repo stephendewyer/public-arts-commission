@@ -10,6 +10,16 @@ declare global {
 		// interface Platform {}
 	}
 
+	interface TimeZone {
+		name: string;
+		GMT: string;
+		city: string;
+	};
+
+	interface SessionCongress {
+		session: string;
+	}
+
 	interface GovernmentLevel {
         name: string;
     };

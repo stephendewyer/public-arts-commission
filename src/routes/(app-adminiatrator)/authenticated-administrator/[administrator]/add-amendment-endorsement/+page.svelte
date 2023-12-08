@@ -15,23 +15,10 @@
     import AddItemToArrayButton from "$lib/components/buttons/AddItemToArrayButton.svelte";
     import SubtractItemButton from "$lib/components/buttons/SubtractItemButton.svelte";
     import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import GovernmentLevel from "$lib/data/governmentLevel.json";
+    import SessionsCongress from "$lib/data/sessionsCongress.json"
 
-    const sessionOptions = [
-        {session: ""},
-        {session: "2029-2030"},
-        {session: "2028-2029"},
-        {session: "2027-2028"},
-        {session: "2026-2027"},
-        {session: "2025-2026"},
-        {session: "2024-2025"},
-        {session: "2023-2024"},
-        {session: "2022-2023"},
-        {session: "2021-2022"},
-        {session: "2020-2021"},
-        {session: "2019-2020"},
-        {session: "2018-2019"},
-        {session: "2017-2018"},
-    ];
+    const sessionOptions: SessionCongress[] = SessionsCongress;
     
     let addHouseSponsor: boolean = false;
     let addSenateSponsor: boolean = false;
@@ -190,20 +177,7 @@
     let zipCodeContactIsValid: boolean = true;
     let emailContactIsValid: boolean = true;
 
-    const governmentLevelOptions: GovernmentLevel[] = [
-        {
-            name: "federal"
-        },
-        {
-            name: "state"
-        },
-        {
-            name: "county"
-        },
-        {
-            name: "city"
-        }
-    ];
+    const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
 
     interface responseObj {
         success: string;

@@ -1,0 +1,36 @@
+[
+    {
+        "name": "Eastern Standard Time",
+        "GMT": "GMT-5",
+        "city": "Washington, DC"
+    },
+    {
+        "name": "Central Standard Time",
+        "GMT": "GMT-6",
+        "city": "Chicago"
+    }
+    ,
+    {
+        "name": "Mountain Standard Time",
+        "GMT": "GMT-7",
+        "city": "Phoenix"
+    }
+    ,
+    {
+        "name": "Pacific Standard Time",
+        "GMT": "GMT-8",
+        "city": "Los Angeles"
+    }
+    ,
+    {
+        "name": "Alaska Standard Time",
+        "GMT": "GMT-9",
+        "city": "Anchorage"
+    }
+    ,
+    {
+        "name": "Hawaii-Aleutian Standard Time",
+        "GMT": "GMT-10",
+        "city": "Honolulu"
+    }
+]

@@ -15,22 +15,10 @@
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import TextArea from "$lib/components/inputs/TextArea.svelte";
     import SubtractItemButton from "$lib/components/buttons/SubtractItemButton.svelte";
+    import SessionsCongress from "$lib/data/sessionsCongress.json";
+    import GovernmentLevel from "$lib/data/governmentLevel.json";
 
-    const sessionOptions = [
-        {session: "2029-2030"},
-        {session: "2028-2029"},
-        {session: "2027-2028"},
-        {session: "2026-2027"},
-        {session: "2025-2026"},
-        {session: "2024-2025"},
-        {session: "2023-2024"},
-        {session: "2022-2023"},
-        {session: "2021-2022"},
-        {session: "2020-2021"},
-        {session: "2019-2020"},
-        {session: "2018-2019"},
-        {session: "2017-2018"},
-    ];
+    const sessionOptions: SessionCongress[] = SessionsCongress;
     
     let addHouseSponsor: boolean = false;
     let addSenateSponsor: boolean = false;
@@ -133,6 +121,8 @@
     let image: any;
     let legislationTitleInputValue: string = "";
     let yearReleasedInputValue: number | null = null;
+    let yearIntroducedInHouseInputValue: number | null = null;
+    let yearIntroducedInSenateInputValue: number | null = null;
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
     let countyInputValue: string = "";
@@ -168,6 +158,8 @@
     let imageAltTextIsValid: boolean = true;
     let legislationTitleIsValid: boolean = true;
     let yearReleasedIsValid: boolean = true;
+    let yearIntroducedInHouseIsValid: boolean = true;
+    let yearIntroducedInSenateIsValid: boolean = true;
     let houseSessionIsValid: boolean = true;
     let senateSessionIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
@@ -188,20 +180,7 @@
     let zipCodeContactIsValid: boolean = true;
     let emailContactIsValid: boolean = true;
 
-    const governmentLevelOptions: GovernmentLevel[] = [
-        {
-            name: "federal"
-        },
-        {
-            name: "state"
-        },
-        {
-            name: "county"
-        },
-        {
-            name: "city"
-        }
-    ];
+    const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
 
     interface responseObj {
         success: string;
@@ -305,6 +284,18 @@
                     introduced in the House
                 </AnimatedCheckbox>
                 {#if (introducedInHouseChecked)}
+                    <NumberInput
+                        inputLabel={true}
+                        bind:numberInputValue={yearIntroducedInHouseInputValue}
+                        bind:isValid={yearIntroducedInHouseIsValid}
+                        placeholder="2024"
+                        inputName="year_introduced_in_House"
+                        inputID="year_introduced_in_House"
+                        required={true}
+                        numberInputErrorMessage="year introduced in House required"
+                    >
+                        year released
+                    </NumberInput>
                     <SelectInput
                         options={sessionOptions}
                         bind:selectInputValue={houseSessionInputValue}
@@ -353,6 +344,18 @@
                     introduced in the Senate
                 </AnimatedCheckbox>
                 {#if (introducedInSenateChecked)}
+                    <NumberInput
+                        inputLabel={true}
+                        bind:numberInputValue={yearIntroducedInSenateInputValue}
+                        bind:isValid={yearIntroducedInSenateIsValid}
+                        placeholder="2024"
+                        inputName="year_introduced_in_Senate"
+                        inputID="year_introduced_in_Senate"
+                        required={true}
+                        numberInputErrorMessage="year introduced in Senate required"
+                    >
+                        year released
+                    </NumberInput>
                     <SelectInput
                         options={sessionOptions}
                         bind:selectInputValue={senateSessionInputValue}

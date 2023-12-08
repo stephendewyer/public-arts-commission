@@ -14,6 +14,7 @@
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import GovernmentLevel from "$lib/data/governmentLevel.json";
 
     // referendum information variables
 
@@ -71,20 +72,7 @@
     let zipCodeContactIsValid: boolean = true;
     let emailContactIsValid: boolean = true;
 
-    const governmentLevelOptions: GovernmentLevel[] = [
-        {
-            name: "federal"
-        },
-        {
-            name: "state"
-        },
-        {
-            name: "county"
-        },
-        {
-            name: "city"
-        }
-    ];
+    const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
 
     interface responseObj {
         success: string;
@@ -431,7 +419,7 @@
                     state*
                 </SelectInput>
             </div>
-            <NumberInput 
+                <NumberInput 
                     isValid={zipCodeContactIsValid}
                     placeholder=11111
                     inputID="zip_code"

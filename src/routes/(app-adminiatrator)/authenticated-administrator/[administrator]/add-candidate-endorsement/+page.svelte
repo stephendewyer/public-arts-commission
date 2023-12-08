@@ -13,6 +13,7 @@
     import PhoneInput from "$lib/components/inputs/PhoneInput.svelte";
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
+    import GovernmentLevel from "$lib/data/governmentLevel.json";
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
@@ -68,20 +69,7 @@
     let zipCodeContactIsValid: boolean = true;
     let emailContactIsValid: boolean = true;
 
-    const governmentLevelOptions: GovernmentLevel[] = [
-        {
-            name: "federal"
-        },
-        {
-            name: "state"
-        },
-        {
-            name: "county"
-        },
-        {
-            name: "city"
-        }
-    ];
+    const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
 
     interface responseObj {
         success: string;
