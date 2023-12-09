@@ -97,7 +97,7 @@
     const createReferendumEndorsement = async (
         test: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/api/createEndorsements/createReferendumEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 test
