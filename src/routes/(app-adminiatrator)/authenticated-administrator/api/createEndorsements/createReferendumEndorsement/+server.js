@@ -1,5 +1,16 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
 import { ImageFileExtensionTest } from "$lib/utils/ImageFileExtensionTest.js";
+import { v2 as cloudinary } from 'cloudinary';
+import { CLOUDINARYCLOUDNAME } from "$env/static/private";
+import { CLOUDINARYSECRETKEY } from "$env/static/private";
+import { CLOUDINARYAPIKEY } from "$env/static/private";
+
+cloudinary.config({ 
+  cloud_name: CLOUDINARYCLOUDNAME, 
+  api_key: CLOUDINARYAPIKEY, 
+  api_secret: CLOUDINARYSECRETKEY
+});
+
 
 export const POST = async ({request}) => {
 
@@ -17,7 +28,7 @@ export const POST = async ({request}) => {
 
   const { 
     userEmail,
-    uploadedImageURL,
+    image,
     imageFileName,
     imageAltText,
     referendumName,
@@ -105,9 +116,9 @@ export const POST = async ({request}) => {
 
   };
 
-  if (!uploadedImageURL) {
+  if (!image) {
 
-    return new Response(JSON.stringify({error: "missing uploaded image URL!"}), {status: 422});
+    return new Response(JSON.stringify({error: "missing image!"}), {status: 422});
 
   };
 
@@ -128,6 +139,28 @@ export const POST = async ({request}) => {
     rejectedINT = 1;
 
   };
+
+  // upload image to Cloudinary
+
+  let uploadedImageURL;
+
+  try {
+
+    const uploadImageResponse = await cloudinary.uploader.upload(image, {});
+
+    uploadedImageURL = uploadImageResponse.secure_url;
+
+  } catch (err) {
+
+    console.log(err);
+
+    return new Response(JSON.stringify({error: "problem with the image upload to Cloudinary"}), {status: 500});
+
+  };
+
+  
+
+  // connect to the database
   
   let res = await mysqlConnection();
 

@@ -99,7 +99,7 @@
     
     const createReferendumEndorsement = async (
         userEmail: string | null | undefined,
-        uploadedImageURL: string,
+        image: string,
         imageFileName: string,
         imageAltText: string,
         referendumName: string,
@@ -128,7 +128,7 @@
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
-                uploadedImageURL,
+                image,
                 imageFileName,
                 imageAltText,
                 referendumName,
@@ -168,42 +168,13 @@
 
         pending = true;
 
-        // upload the file to Cloudinary and get image URL
-
-        let uploadedImageURL: string = "";
-
-        try {
-
-            let uploadedImageResponse: any;
-            
-            uploadedImageResponse = await fetch("/authenticated-administrator/api/uploadImageToCloudinary", {
-            
-                method: "POST",
-                body: JSON.stringify({image}),
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-
-            });
-
-            uploadedImageResponse = await uploadedImageResponse.json();
-
-            uploadedImageURL = uploadedImageResponse.secure_url;
-            
-
-        } catch (error) {
-
-            console.log(error);
-
-        };
-
         // add the submitted form data to and image URL from Cloudinary to the database
 
         try {
             
             await createReferendumEndorsement(
                 userEmail,
-                uploadedImageURL,
+                image,
                 imageFileInputValue,
                 imageAltTextInputValue,
                 referendumNameInputValue,
