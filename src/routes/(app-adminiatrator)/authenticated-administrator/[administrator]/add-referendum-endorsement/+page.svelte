@@ -15,6 +15,7 @@
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import TextArea from "$lib/components/inputs/TextArea.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
+    import { goto } from '$app/navigation';
 
     export let data;
 
@@ -223,7 +224,7 @@
                 stateContactInputValue = "",
                 zipCodeContactInputValue = null,
                 emailContactInputValue = ""
-                // goto("/login-campaign");
+                goto("/authenticated-administratror/admin");
             };
 
             if (responseItem.error) {

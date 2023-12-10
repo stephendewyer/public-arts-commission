@@ -14,6 +14,11 @@
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
+    import { goto } from '$app/navigation';
+
+    export let data;
+
+    $: userEmail = data.user?.email;  
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
@@ -28,7 +33,6 @@
     let cityInputValue: string = "";
     let partyInputValue: string = "";
     let websiteURLInputValue: string = "";
-
     let runningInPrimaryChecked: boolean = false;
     let electedPrimaryElectedGeneral: boolean = false;
     let electedPrimaryProceedingGeneral: boolean = false;
@@ -91,8 +95,161 @@
         }, 4000)
     };
 
-    const submitCandidateEndoresementHandler = () => {
+    const createCandidateEndorsement = async (
+        userEmail: string | null | undefined,
+        imageFile: string,
+        imageAltText: string,
+        image: any,
+        campaignName: string,
+        yearOfficeSought: number | null,
+        electionDatePrimary: string,
+        electionDateGeneral: string,
+        governmentLevel: string,
+        state: string,
+        county: string,
+        city: string,
+        party: string,
+        websiteURL: string,
+        runningInPrimary: boolean,
+        electedPrimaryElectedGeneral: boolean,
+        electedPrimaryProceedingGeneral: boolean,
+        rejectedPrimaryProceedingGeneral: boolean,
+        nameFirstContact: string,
+        nameLastContact: string,
+        phoneContact: string,
+        streetAddressContact: string,
+        streetAddress02Contact: string,
+        cityContact: string,
+        stateContact: string,
+        zipCodeContact: number | null,
+        emailContact: string
+    ) => {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+            method: 'POST',
+            body: JSON.stringify({
+                userEmail,
+                imageFile,
+                imageAltText,
+                image,
+                campaignName,
+                yearOfficeSought,
+                electionDatePrimary,
+                electionDateGeneral,
+                governmentLevel,
+                state,
+                county,
+                city,
+                party,
+                websiteURL,
+                runningInPrimary,
+                electedPrimaryElectedGeneral,
+                electedPrimaryProceedingGeneral,
+                rejectedPrimaryProceedingGeneral,
+                nameFirstContact,
+                nameLastContact,
+                phoneContact,
+                streetAddressContact,
+                streetAddress02Contact,
+                cityContact,
+                stateContact,
+                zipCodeContact,
+                emailContact
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
+        responseItem = await response.json();
+
+        return responseItem;
+
+    }
+
+    const submitCandidateEndoresementHandler = async () => {
+
+        pending = true;
+
+        // add the submitted form data to and image URL from Cloudinary to the database
+
+        try {
+            
+            await createCandidateEndorsement(
+                userEmail,
+                imageFileInputValue,
+                imageAltTextInputValue,
+                image,
+                campaignNameInputValue,
+                yearOfficeSoughtInputValue,
+                electionDatePrimaryInputValue,
+                electionDateGeneralInputValue,
+                governmentLevelInputValue,
+                stateInputValue,
+                countyInputValue,
+                cityInputValue,
+                partyInputValue,
+                websiteURLInputValue,
+                runningInPrimaryChecked,
+                electedPrimaryElectedGeneral,
+                electedPrimaryProceedingGeneral,
+                rejectedPrimaryProceedingGeneral,
+                nameFirstContactInputValue,
+                nameLastContactInputValue,
+                phoneContactInputValue,
+                streetAddressContactInputValue,
+                streetAddress02ContactInputValue,
+                cityContactInputValue,
+                stateContactInputValue,
+                zipCodeContactInputValue,
+                emailContactInputValue
+            );
+            if (responseItem.success) {
+                imageFileInputValue = "",
+                imageAltTextInputValue = "",
+                image = "",
+                campaignNameInputValue = "",
+                yearOfficeSoughtInputValue = null,
+                electionDatePrimaryInputValue = "",
+                electionDateGeneralInputValue = "",
+                governmentLevelInputValue = "",
+                stateInputValue = "",
+                countyInputValue = "",
+                cityInputValue = "",
+                partyInputValue = "",
+                websiteURLInputValue = "",
+                runningInPrimaryChecked = false,
+                electedPrimaryElectedGeneral = false,
+                electedPrimaryProceedingGeneral = false,
+                rejectedPrimaryProceedingGeneral = false,
+                nameFirstContactInputValue = "",
+                nameLastContactInputValue = "",
+                phoneContactInputValue = "",
+                streetAddressContactInputValue = "",
+                streetAddress02ContactInputValue = "",
+                cityContactInputValue = "",
+                stateContactInputValue = "",
+                zipCodeContactInputValue = null,
+                emailContactInputValue = ""
+                // goto("/authenticated-administratror/admin");
+            };
+
+            if (responseItem.error) {
+
+                if (imageAltTextInputValue === "") {
+                    imageAltTextIsValid = false;
+                };
+                if (imageFileInputValue === "") {
+                    imageFileIsValid = false;
+                };
+
+                if (governmentLevelInputValue === "") {
+                    governmentLevelIsValid = false;
+                };
+
+            };
+        } catch (error) {
+            console.log(error);
+        };
     };
 
     let pending: boolean = false;
@@ -107,6 +264,7 @@
     <form 
         class="form_container"
         on:submit|preventDefault={submitCandidateEndoresementHandler}
+        enctype="multipart/form-data"
     >
         <h2>campaign image</h2>
         <h3>select an image to represent the campaign*</h3>

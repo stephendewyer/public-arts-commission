@@ -17,6 +17,11 @@
     import TimeInput from "$lib/components/inputs/TimeInput.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import TimeZones from "$lib/data/timeZones.json";
+    import { goto } from '$app/navigation';
+
+    export let data;
+
+    $: userEmail = data.user?.email;  
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
@@ -99,8 +104,163 @@
         }, 4000)
     };
 
-    const submitCandidateEndoresementHandler = () => {
+    const createActionEndorsement = async (
+        userEmail: string | null | undefined,
+        imageFileInputValue: string,
+        imageAltTextInputValue: string,
+        image: any,
+        actionNameInputValue: string,
+        actionStartDateInputValue: string,
+        actionEndDateInputValue: string,
+        startTimeInputValue: string,
+        endTimeInputValue: string,
+        timeZoneInputValue: string,
+        actionStreetAddressInputValue: string,
+        actionStreetAddress02InputValue: string,
+        actionCityInputValue: string,
+        actionStateInputValue: string,
+        actionZipCodeInputValue: number | null,
+        governmentLevelInputValue: string,
+        websiteURLInputValue: string,
+        detailsInputValue: string,
+        nameFirstContactInputValue: string,
+        nameLastContactInputValue: string,
+        phoneContactInputValue: string,
+        streetAddressContactInputValue: string,
+        streetAddress02ContactInputValue: string,
+        cityContactInputValue: string,
+        stateContactInputValue: string,
+        zipCodeContactInputValue: number | null,
+        emailContactInputValue: string
+    ) => {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+            method: 'POST',
+            body: JSON.stringify({
+                userEmail,
+                imageFileInputValue,
+                imageAltTextInputValue,
+                image,
+                actionNameInputValue,
+                actionStartDateInputValue,
+                actionEndDateInputValue,
+                startTimeInputValue,
+                endTimeInputValue,
+                timeZoneInputValue,
+                actionStreetAddressInputValue,
+                actionStreetAddress02InputValue,
+                actionCityInputValue,
+                actionStateInputValue,
+                actionZipCodeInputValue,
+                governmentLevelInputValue,
+                websiteURLInputValue,
+                detailsInputValue,
+                nameFirstContactInputValue,
+                nameLastContactInputValue,
+                phoneContactInputValue,
+                streetAddressContactInputValue,
+                streetAddress02ContactInputValue,
+                cityContactInputValue,
+                stateContactInputValue,
+                zipCodeContactInputValue,
+                emailContactInputValue
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
+        responseItem = await response.json();
+
+        return responseItem;
+
+    }
+
+    const submitActionEndoresementHandler = async () => {
+
+        pending = true;
+
+        // add the submitted form data to and image URL from Cloudinary to the database
+
+        try {
+            
+            await createActionEndorsement(
+                userEmail,
+                imageFileInputValue,
+                imageAltTextInputValue,
+                image,
+                actionNameInputValue,
+                actionStartDateInputValue,
+                actionEndDateInputValue,
+                startTimeInputValue,
+                endTimeInputValue,
+                timeZoneInputValue,
+                actionStreetAddressInputValue,
+                actionStreetAddress02InputValue,
+                actionCityInputValue,
+                actionStateInputValue,
+                actionZipCodeInputValue,
+                governmentLevelInputValue,
+                websiteURLInputValue,
+                detailsInputValue,
+                nameFirstContactInputValue,
+                nameLastContactInputValue,
+                phoneContactInputValue,
+                streetAddressContactInputValue,
+                streetAddress02ContactInputValue,
+                cityContactInputValue,
+                stateContactInputValue,
+                zipCodeContactInputValue,
+                emailContactInputValue
+            );
+            if (responseItem.success) {
+                imageFileInputValue = "",
+                imageAltTextInputValue = "",
+                image = "",
+                actionNameInputValue = "",
+                actionStartDateInputValue = "",
+                actionEndDateInputValue = "",
+                startTimeInputValue = "",
+                endTimeInputValue = "",
+                timeZoneInputValue = "",
+                actionStreetAddressInputValue = "",
+                actionStreetAddress02InputValue = "",
+                actionCityInputValue = "",
+                actionStateInputValue = "",
+                actionZipCodeInputValue = null,
+                governmentLevelInputValue = "",
+                websiteURLInputValue = "",
+                detailsInputValue = "",
+                nameFirstContactInputValue = "",
+                nameLastContactInputValue = "",
+                phoneContactInputValue = "",
+                streetAddressContactInputValue = "",
+                streetAddress02ContactInputValue = "",
+                cityContactInputValue = "",
+                stateContactInputValue = "",
+                zipCodeContactInputValue = null,
+                emailContactInputValue = ""
+                // goto("/authenticated-administratror/admin");
+            };
+
+            if (responseItem.error) {
+
+                if (imageAltTextInputValue === "") {
+                    imageAltTextIsValid = false;
+                };
+                if (imageFileInputValue === "") {
+                    imageFileIsValid = false;
+                };
+                if (governmentLevelInputValue === "") {
+                    governmentLevelIsValid = false;
+                };
+                if (detailsInputValue === "") {
+                    detailsIsValid = false;
+                };
+
+            };
+        } catch (error) {
+            console.log(error);
+        };
     };
 
     let pending: boolean = false;
@@ -114,7 +274,8 @@
     <h1>add action endorsement</h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitCandidateEndoresementHandler}
+        on:submit|preventDefault={submitActionEndoresementHandler}
+        enctype="multipart/form-data"
     >
         <h2>action image</h2>
         <h3>select an image to represent the action*</h3>

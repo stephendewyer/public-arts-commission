@@ -17,6 +17,11 @@
     import SubtractItemButton from "$lib/components/buttons/SubtractItemButton.svelte";
     import SessionsCongress from "$lib/data/sessionsCongress.json";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
+    import { goto } from '$app/navigation';
+
+    export let data;
+
+    $: userEmail = data.user?.email;  
 
     const sessionOptions: SessionCongress[] = SessionsCongress;
     
@@ -203,8 +208,196 @@
         }, 4000)
     };
 
-    const submitLegislationEndoresementHandler = () => {
+    const createLegislationEndorsement = async (
+        userEmail: string | null | undefined,
+        imageFile: string,
+        imageAltText: string,
+        image: any,
+        legislationTitle: string,
+        yearReleased: number | null,
+        yearIntroducedInHouse: number | null,
+        yearIntroducedInSenate: number | null,
+        governmentLevel: string,
+        state: string,
+        county: string,
+        city: string,
+        websiteURL: string,
+        details: string,
+        introducedInHouse: boolean,
+        introducedInSenate: boolean,
+        sponsorsHouse: SponsorInputValue[],
+        sponsorsSenate: SponsorInputValue[],
+        houseSession: string,
+        senateSession: string,
+        passedInHouse: boolean,
+        passedInSenate: boolean,
+        rejectedByHouse: boolean,
+        rejectedBySenate: boolean,
+        vetoedByExecutive: boolean,
+        ExecutiveSignedIntoLaw: boolean,
+        nameFirstContact: string,
+        nameLastContact: string,
+        phoneContact: string,
+        streetAddressContact: string,
+        streetAddress02Contact: string,
+        cityContact: string,
+        stateContact: string,
+        zipCodeContact: number | null,
+        emailContact: string
+    ) => {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+            method: 'POST',
+            body: JSON.stringify({
+                userEmail,
+                imageFile,
+                imageAltText,
+                image,
+                legislationTitle,
+                yearReleased,
+                yearIntroducedInHouse,
+                yearIntroducedInSenate,
+                governmentLevel,
+                state,
+                county,
+                city,
+                websiteURL,
+                details,
+                introducedInHouse,
+                introducedInSenate,
+                sponsorsHouse,
+                sponsorsSenate,
+                houseSession,
+                senateSession,
+                passedInHouse,
+                passedInSenate,
+                rejectedByHouse,
+                rejectedBySenate,
+                vetoedByExecutive,
+                ExecutiveSignedIntoLaw,
+                nameFirstContact,
+                nameLastContact,
+                phoneContact,
+                streetAddressContact,
+                streetAddress02Contact,
+                cityContact,
+                stateContact,
+                zipCodeContact,
+                emailContact
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
+        responseItem = await response.json();
+
+        return responseItem;
+
+    }
+
+    const submitLegislationEndoresementHandler = async () => {
+
+        pending = true;
+
+        // add the submitted form data to and image URL from Cloudinary to the database
+
+        try {
+            
+            await createLegislationEndorsement(
+                userEmail,
+                imageFileInputValue,
+                imageAltTextInputValue,
+                image,
+                legislationTitleInputValue,
+                yearReleasedInputValue,
+                yearIntroducedInHouseInputValue,
+                yearIntroducedInSenateInputValue,
+                governmentLevelInputValue,
+                stateInputValue,
+                countyInputValue,
+                cityInputValue,
+                websiteURLInputValue,
+                detailsInputValue,
+                introducedInHouseChecked,
+                introducedInSenateChecked,
+                sponsorsHouseValues,
+                sponsorsSenateValues,
+                houseSessionInputValue,
+                senateSessionInputValue,
+                passedInHouseChecked,
+                passedInSenateChecked,
+                rejectedByHouseChecked,
+                rejectedBySenateChecked,
+                vetoedByExecutiveChecked,
+                ExecutiveSignedIntoLawChecked,
+                nameFirstContactInputValue,
+                nameLastContactInputValue,
+                phoneContactInputValue,
+                streetAddressContactInputValue,
+                streetAddress02ContactInputValue,
+                cityContactInputValue,
+                stateContactInputValue,
+                zipCodeContactInputValue,
+                emailContactInputValue
+            );
+            if (responseItem.success) {
+                imageAltTextInputValue = "",
+                imageFileInputValue = "",
+                imageAltTextInputValue = "",
+                image = "",
+                legislationTitleInputValue = "",
+                yearReleasedInputValue = null,
+                yearIntroducedInHouseInputValue = null,
+                yearIntroducedInSenateInputValue = null,
+                governmentLevelInputValue = "",
+                stateInputValue = "",
+                countyInputValue = "",
+                cityInputValue = "",
+                websiteURLInputValue = "",
+                detailsInputValue = "",
+                introducedInHouseChecked = false,
+                introducedInSenateChecked = false,
+                sponsorsHouseValues = [],
+                sponsorsSenateValues = [],
+                houseSessionInputValue = "",
+                senateSessionInputValue = "",
+                passedInHouseChecked = false,
+                passedInSenateChecked = false,
+                rejectedByHouseChecked = false,
+                rejectedBySenateChecked = false,
+                vetoedByExecutiveChecked = false,
+                ExecutiveSignedIntoLawChecked = false,
+                nameFirstContactInputValue = "",
+                nameLastContactInputValue = "",
+                phoneContactInputValue = "",
+                streetAddressContactInputValue = "",
+                streetAddress02ContactInputValue = "",
+                cityContactInputValue = "",
+                stateContactInputValue = "",
+                zipCodeContactInputValue = null,
+                emailContactInputValue = ""
+                // goto("/authenticated-administratror/admin");
+            };
+
+            if (responseItem.error) {
+
+                if (imageAltTextInputValue === "") {
+                    imageAltTextIsValid = false;
+                };
+                if (imageFileInputValue === "") {
+                    imageFileIsValid = false;
+                };
+                if (governmentLevelInputValue === "") {
+                    governmentLevelIsValid = false;
+                };
+                if (detailsInputValue === "") {
+                    detailsIsValid = false;
+                };
+
+            };
+        } catch (error) {
+            console.log(error);
+        };
     };
 
     let pending: boolean = false;
@@ -219,6 +412,7 @@
     <form 
         class="form_container"
         on:submit|preventDefault={submitLegislationEndoresementHandler}
+        enctype="multipart/form-data"
     >
         <h2>legislation image</h2>
         <h3>select an image to represent the legislation*</h3>

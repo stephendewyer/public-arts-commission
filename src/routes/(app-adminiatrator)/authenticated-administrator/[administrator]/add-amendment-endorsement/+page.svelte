@@ -18,6 +18,11 @@
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import SessionsCongress from "$lib/data/sessionsCongress.json"
     import DateInput from "$lib/components/inputs/DateInput.svelte";
+    import { goto } from '$app/navigation';
+
+    export let data;
+
+    $: userEmail = data.user?.email;  
 
     const sessionOptions: SessionCongress[] = SessionsCongress;
     
@@ -135,7 +140,6 @@
     let senateSessionInputValue: string = "";
     let detailsInputValue: string = "";
     let websiteURLInputValue: string = "";
-
     let twoThirdsHouseAndSenatePassedChecked: boolean = false;
     let simpleMajorityHouseAndSenatePassed: boolean = false;
     let simpleMajorityVotersPassedChecked: boolean = false;
@@ -202,8 +206,195 @@
         }, 4000)
     };
 
-    const submitCandidateEndoresementHandler = () => {
+    const createAmendmentEndorsement = async (
+        userEmail: string | null | undefined,
+        imageFile: string,
+        imageAltText: string,
+        image: any,
+        amendmentName: string,
+        yearReleased: number | null,
+        yearIntroducedInHouse: number | null,
+        yearIntroducedInSenate: number | null,
+        electionDate: string,
+        governmentLevel: string,
+        state: string,
+        county: string,
+        city: string,
+        introducedInHouse: boolean,
+        introducedInSenate: boolean,
+        sponsorsHouse: SponsorInputValue[],
+        sponsorsSenate: SponsorInputValue[],
+        houseSession: string,
+        senateSession: string,
+        details: string,
+        websiteURL: string,
+        twoThirdsHouseAndSenatePassed: boolean,
+        simpleMajorityHouseAndSenatePassed: boolean,
+        simpleMajorityVotersPassed: boolean,
+        ratifiedByStateLegislatures: boolean,
+        ratifiedByStateConventions: boolean,
+        nameFirstContact: string,
+        nameLastContact: string,
+        phoneContact: string,
+        streetAddressContact: string,
+        streetAddress02Contact: string,
+        cityContact: string,
+        stateContact: string,
+        zipCodeContact: number | null,
+        emailContact: string
+    ) => {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+            method: 'POST',
+            body: JSON.stringify({
+                userEmail,
+                imageFile,
+                imageAltText,
+                image,
+                amendmentName,
+                yearReleased,
+                yearIntroducedInHouse,
+                yearIntroducedInSenate,
+                electionDate,
+                governmentLevel,
+                state,
+                county,
+                city,
+                introducedInHouse,
+                introducedInSenate,
+                houseSession,
+                senateSession,
+                sponsorsHouse,
+                sponsorsSenate,
+                details,
+                websiteURL,
+                twoThirdsHouseAndSenatePassed,
+                simpleMajorityHouseAndSenatePassed,
+                simpleMajorityVotersPassed,
+                ratifiedByStateLegislatures,
+                ratifiedByStateConventions,
+                nameFirstContact,
+                nameLastContact,
+                phoneContact,
+                streetAddressContact,
+                streetAddress02Contact,
+                cityContact,
+                stateContact,
+                zipCodeContact,
+                emailContact
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
 
+        responseItem = await response.json();
+
+        return responseItem;
+
+    }
+
+    const submitAmendmentEndoresementHandler = async () => {
+
+        pending = true;
+
+        // add the submitted form data to and image URL from Cloudinary to the database
+
+        try {
+            
+            await createAmendmentEndorsement(
+                userEmail,
+                imageFileInputValue,
+                imageAltTextInputValue,
+                image,
+                amendmentNameInputValue,
+                yearReleasedInputValue,
+                yearIntroducedInHouseInputValue,
+                yearIntroducedInSenateInputValue,
+                electionDateInputValue,
+                governmentLevelInputValue,
+                stateInputValue,
+                countyInputValue,
+                cityInputValue,
+                introducedInHouseChecked,
+                introducedInSenateChecked,
+                sponsorsHouseValues,
+                sponsorsSenateValues,
+                houseSessionInputValue,
+                senateSessionInputValue,
+                detailsInputValue,
+                websiteURLInputValue,
+                twoThirdsHouseAndSenatePassedChecked,
+                simpleMajorityHouseAndSenatePassed,
+                simpleMajorityVotersPassedChecked,
+                ratifiedByStateLegislaturesChecked,
+                ratifiedByStateConventionsChecked,
+                nameFirstContactInputValue,
+                nameLastContactInputValue,
+                phoneContactInputValue,
+                streetAddressContactInputValue,
+                streetAddress02ContactInputValue,
+                cityContactInputValue,
+                stateContactInputValue,
+                zipCodeContactInputValue,
+                emailContactInputValue
+            );
+            if (responseItem.success) {
+                imageFileInputValue = "",
+                imageAltTextInputValue = "",
+                image = "",
+                amendmentNameInputValue = "",
+                yearReleasedInputValue = null,
+                yearIntroducedInHouseInputValue = null,
+                yearIntroducedInSenateInputValue = null,
+                electionDateInputValue = "",
+                governmentLevelInputValue = "",
+                stateInputValue = "",
+                countyInputValue = "",
+                cityInputValue = "",
+                introducedInHouseChecked = false,
+                introducedInSenateChecked = false,
+                houseSessionInputValue = "",
+                senateSessionInputValue = "",
+                sponsorsHouseValues = [],
+                sponsorsSenateValues = [],
+                detailsInputValue = "",
+                websiteURLInputValue = "",
+                twoThirdsHouseAndSenatePassedChecked = false,
+                simpleMajorityHouseAndSenatePassed = false,
+                simpleMajorityVotersPassedChecked = false,
+                ratifiedByStateLegislaturesChecked = false,
+                ratifiedByStateConventionsChecked = false,
+                nameFirstContactInputValue = "",
+                nameLastContactInputValue = "",
+                phoneContactInputValue = "",
+                streetAddressContactInputValue = "",
+                streetAddress02ContactInputValue = "",
+                cityContactInputValue = "",
+                stateContactInputValue = "",
+                zipCodeContactInputValue = null,
+                emailContactInputValue = ""
+                // goto("/authenticated-administratror/admin");
+            };
+
+            if (responseItem.error) {
+
+                if (imageAltTextInputValue === "") {
+                    imageAltTextIsValid = false;
+                };
+                if (imageFileInputValue === "") {
+                    imageFileIsValid = false;
+                };
+                if (governmentLevelInputValue === "") {
+                    governmentLevelIsValid = false;
+                };
+                if (detailsInputValue === "") {
+                    detailsIsValid = false;
+                };
+
+            };
+        } catch (error) {
+            console.log(error);
+        };
     };
 
     let pending: boolean = false;
@@ -213,11 +404,12 @@
     };
 
 </script>
-<div class="add_candidate_endorsement_container">
+<div class="add_endorsement_container">
     <h1>add amendment endorsement</h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitCandidateEndoresementHandler}
+        on:submit|preventDefault={submitAmendmentEndoresementHandler}
+        enctype="multipart/form-data"
     >
         <h2>amendment image</h2>
         <h3>select an image to represent the amendment*</h3>
@@ -695,7 +887,7 @@
 
 <style>
 
-    .add_candidate_endorsement_container {
+    .add_endorsement_container {
         display: flex;
         flex-direction: column;
         align-items: center;

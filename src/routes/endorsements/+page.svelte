@@ -12,6 +12,7 @@
 	import CountyEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/CountyEndorsementsPanel.svelte';
 	import StateEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/StateEndorsementsPanel.svelte';
 	import FederalEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/FederalEndorsementsPanel.svelte';
+	import AllEndorsementPanel from '$lib/components/endorsements/endorsementPanels/AllEndorsementPanel.svelte';
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 
     let searchValue: string;
@@ -138,27 +139,34 @@
 		{
 			id: uuidv4(),
 			index: 0,
+			label: "all",
+			hasCapitol: true,
+			panel: AllEndorsementPanel
+		},
+		{
+			id: uuidv4(),
+			index: 1,
 			label: "federal",
 			hasCapitol: true,
 			panel: FederalEndorsementsPanel
 		},
 		{
 			id: uuidv4(),
-			index: 1,
+			index: 2,
 			label: "state",
 			hasCapitol: true,
 			panel: StateEndorsementsPanel
 		},
 		{
 			id: uuidv4(),
-			index: 2,
+			index: 3,
 			label: "county",
 			hasCapitol: true,
 			panel: CountyEndorsementsPanel
 		},
 		{
 			id: uuidv4(),
-			index: 3,
+			index: 4,
 			label: "city",
 			hasCapitol: true,
 			panel: CityEndorsementsPanel
