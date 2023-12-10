@@ -16,6 +16,10 @@
     import TextArea from "$lib/components/inputs/TextArea.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
 
+    export let data;
+
+    $: userEmail = data.user?.email;  
+
     // referendum information variables
 
     let imageFileInputValue: string = "";
@@ -30,7 +34,6 @@
     let cityInputValue: string = "";
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
-
     let electedChecked: boolean = false;
     let rejectedChecked: boolean = false;
     let pendingElectionChecked: boolean = false;
@@ -93,37 +96,200 @@
             status: null;
         }, 4000)
     };
-    let testValue: string = "testValue";
+
+    let secureURLObh: any;
+
+    const uploadImageToCloudinary = async ( image: string, uploadedImageURL: string ) => {
+
+        let response = await fetch("/authenticated-administrator/api/uploadImageToCloudinary", {
+            
+            method: "POST",
+            body: JSON.stringify({image}),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+
+        });
+
+        secureURLObh = await response.json();
+
+        uploadedImageURL = secureURLObh.secure_url;
+
+        console.log(uploadedImageURL);
+
+    };
+    
     const createReferendumEndorsement = async (
-        test: string
+        userEmail: string | null | undefined,
+        uploadedImageURL: string,
+        imageFileName: string,
+        imageAltText: string,
+        referendumName: string,
+        startingYearIfEnacted: number | null,
+        electionDate: string,
+        governmentLevel: string,
+        state: string,
+        county: string,
+        city: string,
+        websiteURL: string,
+        details: string,
+        elected: boolean,
+        rejected: boolean,
+        pendingElection: boolean,
+        nameFirstContact: string,
+        nameLastContact: string,
+        phoneContact: string,
+        streetAddressContact: string,
+        streetAddress02Contact: string,
+        cityContact: string,
+        stateContact: string,
+        zipCodeContact: number | null,
+        emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
             method: 'POST',
             body: JSON.stringify({
-                test
+                userEmail,
+                uploadedImageURL,
+                imageFileName,
+                imageAltText,
+                referendumName,
+                startingYearIfEnacted,
+                electionDate,
+                governmentLevel,
+                state,
+                county,
+                city,
+                websiteURL,
+                details,
+                elected,
+                rejected,
+                pendingElection,
+                nameFirstContact,
+                nameLastContact,
+                phoneContact,
+                streetAddressContact,
+                streetAddress02Contact,
+                cityContact,
+                stateContact,
+                zipCodeContact,
+                emailContact
             }),
             headers: {
                 'Content-Type': 'application/json',
             }
         });
+
         responseItem = await response.json();
+
         console.log(responseItem);
+
         return responseItem;
+
     }
 
     const submitReferendumEndoresementHandler = async () => {
+
         pending = true;
 
+        // upload the file to Cloudinary and get image URL
+
+        let uploadedImageURL: string = "";
+        let newuploadedImageURl: string = "";
+
         try {
+
+            await uploadImageToCloudinary(image, uploadedImageURL)
+            if (secureURLObh.secure_url) {
+                console.log("url is ", secureURLObh.secure_url)
+            };
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+        // add the submitted form data to and image URL from Cloudinary to the database
+
+        console.log(uploadedImageURL)
+
+        try {
+            
             await createReferendumEndorsement(
-                testValue
+                userEmail,
+                uploadedImageURL,
+                imageFileInputValue,
+                imageAltTextInputValue,
+                referendumNameInputValue,
+                startingYearIfEnactedInputValue,
+                electionDateInputValue,
+                governmentLevelInputValue,
+                stateInputValue,
+                countyInputValue,
+                cityInputValue,
+                websiteURLInputValue,
+                detailsInputValue,
+                electedChecked,
+                rejectedChecked,
+                pendingElectionChecked,
+                nameFirstContactInputValue,
+                nameLastContactInputValue,
+                phoneContactInputValue,
+                streetAddressContactInputValue,
+                streetAddress02ContactInputValue,
+                cityContactInputValue,
+                stateContactInputValue,
+                zipCodeContactInputValue,
+                emailContactInputValue
             );
             if (responseItem.success) {
-
+                imageAltTextInputValue = "",
+                image = "",
+                referendumNameInputValue = "",
+                startingYearIfEnactedInputValue = null,
+                electionDateInputValue = "",
+                governmentLevelInputValue = "",
+                stateInputValue = "",
+                countyInputValue = "",
+                cityInputValue = "",
+                websiteURLInputValue = "",
+                detailsInputValue = "",
+                electedChecked = false,
+                rejectedChecked= false,
+                pendingElectionChecked= false,
+                nameFirstContactInputValue = "",
+                nameLastContactInputValue = "",
+                phoneContactInputValue = "",
+                streetAddressContactInputValue = "",
+                streetAddress02ContactInputValue = "",
+                cityContactInputValue = "",
+                stateContactInputValue = "",
+                zipCodeContactInputValue = null,
+                emailContactInputValue = ""
                 // goto("/login-campaign");
             };
 
             if (responseItem.error) {
+
+                if (imageAltTextInputValue === "") {
+                    imageAltTextIsValid = false;
+                };
+                if (imageFileInputValue === "") {
+                    imageFileIsValid = false;
+                };
+                if (referendumNameInputValue === "") {
+                    referendumNameIsValid = false;
+                };
+                if (startingYearIfEnactedInputValue === null) {
+                    startingYearIfEnactedIsValid = false;
+                };
+                if (governmentLevelInputValue === "") {
+                    governmentLevelIsValid = false;
+                };
+                if (detailsInputValue === "") {
+                    detailsIsValid = false;
+                };
 
             };
         } catch (error) {
@@ -143,11 +309,12 @@
     <form 
         class="form_container"
         on:submit|preventDefault={submitReferendumEndoresementHandler}
+        enctype="multipart/form-data"
     >
         <h2>referendum image</h2>
         <h3>select an image to represent the referendum*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 5MB</p>
+        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
@@ -159,7 +326,7 @@
             required={true}
             imageFileInputErrorMessage="image file required"
         >
-            image file
+            image file*
         </ImageFileInput>
         {#if (image)}
             <div class="image_container">
@@ -176,7 +343,7 @@
             required={true}
             textInputErrorMessage="image alt text required"
         >
-            image alt text
+            image alt text*
         </TextInput>
         <h2>referendum information</h2>
         <TextInput
@@ -189,7 +356,7 @@
             required={true}
             textInputErrorMessage="referendum name required"
         >
-            referendum name
+            referendum name*
         </TextInput>
         <NumberInput
             inputLabel={true}
@@ -201,7 +368,7 @@
             required={true}
             numberInputErrorMessage="starting year if enacted required"
         >
-            starting year if enacted
+            starting year if enacted*
         </NumberInput>
         <div class="two_columns">
             <DateInput
@@ -213,7 +380,7 @@
                 required={true}
                 dateInputErrorMessage="election date required"
             >
-                election date
+                election date*
             </DateInput>            
         </div>
         <SelectInput 
@@ -226,7 +393,7 @@
             selectInputErrorMessage=""
             inputLabel={true}
         >
-            government level
+            government level*
         </SelectInput>
         {#if (governmentLevelInputValue !== "")}
             <div class="expandable_cells">
@@ -325,7 +492,7 @@
             required={true}
             textAreaInputErrorMessage="details required"
         >
-            details
+            details*
         </TextArea>
         <h2>referendum status</h2>
         <div class="two_columns_checkbox">
@@ -363,7 +530,7 @@
                     required={true}
                     textInputErrorMessage="first name required"
                 >
-                    first name*
+                    first name
                 </TextInput>
                 <TextInput 
                     isValid={nameLastContactIsValid}
@@ -375,7 +542,7 @@
                     required={true}
                     textInputErrorMessage="last name required"
                 >
-                    last name*
+                    last name
                 </TextInput>
             </div>
             <div class="two_columns">
@@ -388,7 +555,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    email*
+                    email
                 </EmailInput>
                 <PhoneInput 
                     isValid={phoneContactIsValid}
@@ -398,7 +565,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    phone number*
+                    phone number
                 </PhoneInput>
             </div>
             <div class="two_columns">
@@ -412,7 +579,7 @@
                     required={true}
                     textInputErrorMessage="street address required"
                 >
-                    street address*
+                    street address
                 </TextInput>
                 <TextInput 
                     isValid={streetAddress02ContactIsValid}
@@ -437,7 +604,7 @@
                     required={true}
                     textInputErrorMessage="city required"
                 >
-                    city*
+                    city
                 </TextInput>
                 <SelectInput 
                     isValid={stateContactIsValid}
@@ -449,7 +616,7 @@
                     required={true}
                     selectInputErrorMessage="state required"
                 >
-                    state*
+                    state
                 </SelectInput>
             </div>
                 <NumberInput 
@@ -462,7 +629,7 @@
                     required={true}
                     numberInputErrorMessage="zip code required"
                 >
-                    zip code*
+                    zip code
                 </NumberInput>
             {/if}
         <ActionButton disable={false}>

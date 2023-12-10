@@ -5,7 +5,7 @@
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let imageFileInputValue: string;  
+    export let imageFileInputValue: string; 
     export let image: any;
     export let isValid: boolean;
     export let imageFileInputErrorMessage: string = "";
@@ -31,11 +31,11 @@
 
         };
 
-        if (imageFile?.size >  5000000) {
+        if (imageFile?.size >  2000000) {
 
             isValid = false;
 
-            imageFileInputErrorMessage = "images cannot exceed 5MB in size!";
+            imageFileInputErrorMessage = "images cannot exceed 2MB in size!";
 
             return;
 

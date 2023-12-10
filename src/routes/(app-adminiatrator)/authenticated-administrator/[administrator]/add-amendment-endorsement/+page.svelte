@@ -17,6 +17,7 @@
     import TextArea from "$lib/components/inputs/TextArea.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import SessionsCongress from "$lib/data/sessionsCongress.json"
+    import DateInput from "$lib/components/inputs/DateInput.svelte";
 
     const sessionOptions: SessionCongress[] = SessionsCongress;
     
@@ -123,6 +124,7 @@
     let yearReleasedInputValue: number | null = null;
     let yearIntroducedInHouseInputValue: number | null = null;
     let yearIntroducedInSenateInputValue: number | null = null;
+    let electionDateInputValue: string = "";
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
     let countyInputValue: string = "";
@@ -132,6 +134,7 @@
     let houseSessionInputValue: string = "";
     let senateSessionInputValue: string = "";
     let detailsInputValue: string = "";
+    let websiteURLInputValue: string = "";
 
     let twoThirdsHouseAndSenatePassedChecked: boolean = false;
     let simpleMajorityHouseAndSenatePassed: boolean = false;
@@ -139,7 +142,6 @@
     let ratifiedByStateLegislaturesChecked: boolean = false;
     let ratifiedByStateConventionsChecked: boolean = false;
 
-    let websiteURLInputValue: string = "";
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -158,6 +160,7 @@
     let yearReleasedIsValid: boolean = true;
     let yearIntroducedInHouseIsValid: boolean = true;
     let yearIntroducedInSenateIsValid: boolean = true;
+    let electionDateIsValid: boolean = true;
     let houseSessionIsValid: boolean = true;
     let senateSessionIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
@@ -219,7 +222,7 @@
         <h2>amendment image</h2>
         <h3>select an image to represent the amendment*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 5MB</p>
+        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
@@ -263,19 +266,31 @@
         >
             amendment name
         </TextInput>
-        <NumberInput
-            inputLabel={true}
-            bind:numberInputValue={yearReleasedInputValue}
-            bind:isValid={yearReleasedIsValid}
-            placeholder="2024"
-            inputName="year_released"
-            inputID="year_released"
-            required={true}
-            numberInputErrorMessage="year released required"
-        >
-            year released
-        </NumberInput>
-        
+        <div class="two_columns">
+            <NumberInput
+                inputLabel={true}
+                bind:numberInputValue={yearReleasedInputValue}
+                bind:isValid={yearReleasedIsValid}
+                placeholder="2024"
+                inputName="year_released"
+                inputID="year_released"
+                required={true}
+                numberInputErrorMessage="year released required"
+            >
+                year released
+            </NumberInput>
+            <DateInput 
+                inputLabel={true}
+                bind:dateInputValue={electionDateInputValue}
+                bind:isValid={electionDateIsValid}
+                inputName="election_date"
+                inputID="election_date"
+                required={false}
+                dateInputErrorMessage=""
+            >
+                election date
+            </DateInput>
+        </div>
         <SelectInput 
             options={governmentLevelOptions}
             bind:selectInputValue={governmentLevelInputValue}

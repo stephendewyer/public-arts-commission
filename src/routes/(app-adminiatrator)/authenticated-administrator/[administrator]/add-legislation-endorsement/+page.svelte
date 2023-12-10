@@ -127,13 +127,14 @@
     let stateInputValue: string = "";
     let countyInputValue: string = "";
     let cityInputValue: string = "";
-    let introducedInHouseChecked: boolean = false;
-    let introducedInSenateChecked: boolean = false;
-    let houseSessionInputValue: string = "";
-    let senateSessionInputValue: string = "";
-
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
+
+    let introducedInHouseChecked: boolean = false;
+    let introducedInSenateChecked: boolean = false;
+
+    let houseSessionInputValue: string = "";
+    let senateSessionInputValue: string = "";
 
     let passedInHouseChecked: boolean = false;
     let passedInSenateChecked: boolean = false;
@@ -222,7 +223,7 @@
         <h2>legislation image</h2>
         <h3>select an image to represent the legislation*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 5MB</p>
+        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}

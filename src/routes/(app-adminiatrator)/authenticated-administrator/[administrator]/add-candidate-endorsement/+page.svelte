@@ -111,7 +111,7 @@
         <h2>campaign image</h2>
         <h3>select an image to represent the campaign*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 5MB</p>
+        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}

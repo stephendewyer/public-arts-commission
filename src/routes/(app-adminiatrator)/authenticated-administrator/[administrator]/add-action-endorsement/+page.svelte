@@ -119,7 +119,7 @@
         <h2>action image</h2>
         <h3>select an image to represent the action*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 5MB</p>
+        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
@@ -294,8 +294,8 @@
         <div class="two_columns">
             <SelectInput 
                 options={States}
-                bind:selectInputValue={timeZoneInputValue}
-                bind:isValid={actionStreetAddress02IsValid}
+                bind:selectInputValue={actionStateInputValue}
+                bind:isValid={actionStateIsValid}
                 inputName="action_street_address"
                 inputID="action_street_address"
                 required={false}
