@@ -96,28 +96,6 @@
             status: null;
         }, 4000)
     };
-
-    let secureURLObh: any;
-
-    const uploadImageToCloudinary = async ( image: string, uploadedImageURL: string ) => {
-
-        let response = await fetch("/authenticated-administrator/api/uploadImageToCloudinary", {
-            
-            method: "POST",
-            body: JSON.stringify({image}),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-
-        });
-
-        secureURLObh = await response.json();
-
-        uploadedImageURL = secureURLObh.secure_url;
-
-        console.log(uploadedImageURL);
-
-    };
     
     const createReferendumEndorsement = async (
         userEmail: string | null | undefined,
@@ -182,8 +160,6 @@
 
         responseItem = await response.json();
 
-        console.log(responseItem);
-
         return responseItem;
 
     }
@@ -195,14 +171,25 @@
         // upload the file to Cloudinary and get image URL
 
         let uploadedImageURL: string = "";
-        let newuploadedImageURl: string = "";
 
         try {
 
-            await uploadImageToCloudinary(image, uploadedImageURL)
-            if (secureURLObh.secure_url) {
-                console.log("url is ", secureURLObh.secure_url)
-            };
+            let uploadedImageResponse: any;
+            
+            uploadedImageResponse = await fetch("/authenticated-administrator/api/uploadImageToCloudinary", {
+            
+                method: "POST",
+                body: JSON.stringify({image}),
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+
+            });
+
+            uploadedImageResponse = await uploadedImageResponse.json();
+
+            uploadedImageURL = uploadedImageResponse.secure_url;
+            
 
         } catch (error) {
 
@@ -211,8 +198,6 @@
         };
 
         // add the submitted form data to and image URL from Cloudinary to the database
-
-        console.log(uploadedImageURL)
 
         try {
             

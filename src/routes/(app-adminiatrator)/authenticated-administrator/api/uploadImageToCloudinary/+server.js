@@ -21,14 +21,11 @@ export async function POST({request}) {
 
   const { image } = data;
 
-  console.log(image);
-
   let uploadResponse;
 
   try {
 
     uploadResponse = await cloudinary.uploader.upload(image, {});
-    console.log(uploadResponse);
 
   } catch (err) {
 

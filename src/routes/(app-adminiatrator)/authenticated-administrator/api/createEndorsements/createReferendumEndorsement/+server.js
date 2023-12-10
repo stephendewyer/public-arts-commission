@@ -15,8 +15,6 @@ export const POST = async ({request}) => {
 
   const data = await request.json();
 
-  console.log(data);
-
   const { 
     userEmail,
     uploadedImageURL,
@@ -164,7 +162,7 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${adminID}", 
     "${uploadedImageURL}",
-    "${imageAltText}",
+    "${imageAltText}"
   )`;
 
   let imageID;
@@ -203,7 +201,7 @@ export const POST = async ({request}) => {
     contact_city,
     contact_state,
     contact_zip_code,
-    contact_email,
+    contact_email
   ) VALUES (
     "${imageID}",
     "${referendumName}",
@@ -231,7 +229,7 @@ export const POST = async ({request}) => {
 
   await res.query(insertEndorsedReferendumInformationStatement)
   .then(() => {
-    console.log(`campaign information for ${referendumName} created`);
+    console.log(`referendum endorsement information for ${referendumName} created`);
   })
   .catch(error => {
     throw error;
