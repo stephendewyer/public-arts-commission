@@ -21,9 +21,7 @@
 
     export let data;
 
-    $: userEmail = data.user?.email;  
-
-    const sessionOptions: SessionCongress[] = SessionsCongress;
+    $: userEmail = data.user?.email;
     
     let addHouseSponsor: boolean = false;
     let addSenateSponsor: boolean = false;
@@ -134,13 +132,10 @@
     let cityInputValue: string = "";
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
-
     let introducedInHouseChecked: boolean = false;
     let introducedInSenateChecked: boolean = false;
-
     let houseSessionInputValue: string = "";
     let senateSessionInputValue: string = "";
-
     let passedInHouseChecked: boolean = false;
     let passedInSenateChecked: boolean = false;
     let rejectedByHouseChecked: boolean = false;
@@ -245,7 +240,7 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createLegislationEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
@@ -489,10 +484,10 @@
                         required={true}
                         numberInputErrorMessage="year introduced in House required"
                     >
-                        year released
+                        year introduced in the House
                     </NumberInput>
                     <SelectInput
-                        options={sessionOptions}
+                        options={SessionsCongress}
                         bind:selectInputValue={houseSessionInputValue}
                         isValid={houseSessionIsValid}
                         required={false}
@@ -549,10 +544,10 @@
                         required={true}
                         numberInputErrorMessage="year introduced in Senate required"
                     >
-                        year released
+                        year introduced in the Senate
                     </NumberInput>
                     <SelectInput
-                        options={sessionOptions}
+                        options={SessionsCongress}
                         bind:selectInputValue={senateSessionInputValue}
                         isValid={senateSessionIsValid}
                         required={false}

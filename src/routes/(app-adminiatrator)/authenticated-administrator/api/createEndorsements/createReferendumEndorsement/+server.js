@@ -188,7 +188,7 @@ export const POST = async ({request}) => {
 
   const adminID = userInAdministrators[0].ID;
 
-  const insertReferendumImageStatement = `INSERT INTO image_collection (
+  const insertImageStatement = `INSERT INTO image_collection (
     admin_ID, 
     image_URL,
     alt_text
@@ -200,8 +200,8 @@ export const POST = async ({request}) => {
 
   let imageID;
 
-  // insert the user into users_campaigns table and get the user_ID
-  await res.query(insertReferendumImageStatement)
+  // insert the image_URL and adminID into the image_collection table and get the image_ID
+  await res.query(insertImageStatement)
   .then(([ rows ]) => {
     const rowsJSON = JSON.parse(JSON.stringify(rows));
     imageID = rowsJSON.insertId;
@@ -210,7 +210,7 @@ export const POST = async ({request}) => {
     throw error;
   });
 
-  // insert the campaign information in the campaign_information table
+  // insert the referendum information into the endorsed_referendums table
 
   const insertEndorsedReferendumInformationStatement = `INSERT INTO endorsed_referendums (
     image_ID,

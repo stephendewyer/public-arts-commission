@@ -22,10 +22,8 @@
 
     export let data;
 
-    $: userEmail = data.user?.email;  
+    $: userEmail = data.user?.email;
 
-    const sessionOptions: SessionCongress[] = SessionsCongress;
-    
     let addHouseSponsor: boolean = false;
     let addSenateSponsor: boolean = false;
 
@@ -589,7 +587,7 @@
                         year released
                     </NumberInput>
                     <SelectInput
-                        options={sessionOptions}
+                        options={SessionsCongress}
                         bind:selectInputValue={houseSessionInputValue}
                         isValid={houseSessionIsValid}
                         required={false}
@@ -649,7 +647,7 @@
                         year released
                     </NumberInput>
                     <SelectInput
-                        options={sessionOptions}
+                        options={SessionsCongress}
                         bind:selectInputValue={senateSessionInputValue}
                         isValid={senateSessionIsValid}
                         required={false}
