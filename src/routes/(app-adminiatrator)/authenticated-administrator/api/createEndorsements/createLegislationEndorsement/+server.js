@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -29,8 +30,6 @@ export const POST = async ({request}) => {
 
   const data = await request.json();
 
-  console.log(data);
-
   const { 
     userEmail,
     imageFile,
@@ -48,8 +47,10 @@ export const POST = async ({request}) => {
     details,
     introducedInHouse,
     introducedInSenate,
-    sponsorsHouse,
-    sponsorsSenate,
+    sponsorHouse,
+    sponsorSenate,
+    coSponsorsHouse,
+    coSponsorsSenate,
     houseSession,
     senateSession,
     passedInHouse,
@@ -81,49 +82,9 @@ export const POST = async ({request}) => {
     return new Response(JSON.stringify({error: "missing form data!"}), {status: 422});
 
   };
-  
-  if (governmentLevel === "state" && state === "") {
 
-    return new Response(JSON.stringify({error: "state value missing for government level of state!"}), {status: 422});
-
-  } else if (governmentLevel === "county" && county === "" && state !== "") {
-
-    return new Response(JSON.stringify({error: "county value missing for government level of county!"}), {status: 422});
-
-  } else if (governmentLevel === "county" && county === "" && state === "") {
-
-    return new Response(JSON.stringify({error: "county and state values missing for government level of county!"}), {status: 422});
-
-  } else if (governmentLevel === "county" && county !== "" && state === "") {
-
-    return new Response(JSON.stringify({error: "state value missing for government level of county!"}), {status: 422});
-
-  } else if (governmentLevel === "city" && city !== "" && county !== "" && state === "") {
-
-    return new Response(JSON.stringify({error: "state value missing for government level of city!"}), {status: 422});
-    
-  } else if (governmentLevel === "city" && city !== "" && county === "" && state === "") {
-
-    return new Response(JSON.stringify({error: "state and county values missing for government level of city!"}), {status: 422});
-    
-  } else if (governmentLevel === "city" && city === "" && county === "" && state === "") {
-
-    return new Response(JSON.stringify({error: "state, county and city values missing for government level of city!"}), {status: 422});
-    
-  } else if (governmentLevel === "city" && city === "" && county === "" && state !== "") {
-
-    return new Response(JSON.stringify({error: "county and city values missing for government level of city!"}), {status: 422});
-    
-  } else if (governmentLevel === "city" && city === "" && county !== "" && state !== "") {
-
-    return new Response(JSON.stringify({error: "city value missing for government level of city!"}), {status: 422});
-    
-  } else if (governmentLevel === "city" && city !== "" && county === "" && state !== "") {
-
-    return new Response(JSON.stringify({error: "county value missing for government level of city!"}), {status: 422});
-    
-  };
-
+  GovernmentLevelValidation(governmentLevel, state, county, city);
+ 
   if ((ImageFileExtensionTest(imageFile) === "false") ) {
 
     return new Response(JSON.stringify({error: "invalid image file!"}), {status: 422});
@@ -240,14 +201,14 @@ export const POST = async ({request}) => {
     throw error;
   });
 
-  // insert the campaign information in the endorsed_legislation table
+  // insert the legislation information in the endorsed_legislation table
 
   /**
      * @type {any}
      */
   let legislationID;
 
-  const insertEndorsedRLegislationInformationStatement = `INSERT INTO endorsed_legislation (
+  const insertEndorsedLegislationInformationStatement = `INSERT INTO endorsed_legislation (
     image_ID,
 	legislation_name,
 	year_released,
@@ -307,7 +268,7 @@ export const POST = async ({request}) => {
     "${emailContact}"
   )`;
 
-  await res.query(insertEndorsedRLegislationInformationStatement)
+  await res.query(insertEndorsedLegislationInformationStatement)
   .then(([ rows ]) => {
     const rowsJSON = JSON.parse(JSON.stringify(rows));
     legislationID = rowsJSON.insertId;
@@ -317,51 +278,97 @@ export const POST = async ({request}) => {
     throw error;
   });
 
-    // insert the House sponsors into the sponsors_House table
+  // insert the House sponsor into the sponsors_House table
 
-    let sponsorsHouseValues = "";
+  if (sponsorHouse) {
 
-    sponsorsHouse.forEach((/** @type {any} */ sponsorObj) => {
+    const insertHouseSponsorStatement = `INSERT INTO sponsors_House (
+      sponsored_legislation_ID, 
+      sponsor_name
+    ) VALUES ("${legislationID}", "${sponsorHouse}")`;
 
-        sponsorsHouseValues = (sponsorsHouseValues.concat(`("${legislationID}", "${sponsorObj.sponsor}"),`))
-
-    });
-
-    const insertHouseSponsorsStatement = `INSERT INTO sponsors_House (
-        sponsored_legislation_ID, 
-        sponsor_name
-    ) VALUES ${sponsorsHouseValues.slice(0, -1)}`;
-
-    await res.query(insertHouseSponsorsStatement)
+    await res.query(insertHouseSponsorStatement)
     .then(() => {
-        console.log(`added legislation House sponsors`);
+        console.log(`added legislation House sponsor`);
     })
     .catch(error => {
         throw error;
     });
+
+  };
+
+  // insert the Senate sponsor into the sponsors_Senate table
+
+  if (sponsorSenate) {
+
+    const insertSenateSponsorStatement = `INSERT INTO sponsors_Senate (
+      sponsored_legislation_ID, 
+      sponsor_name
+    ) VALUES ("${legislationID}", "${sponsorSenate}")`;
+
+    await res.query(insertSenateSponsorStatement)
+    .then(() => {
+        console.log(`added legislation Senate sponsor`);
+    })
+    .catch(error => {
+        throw error;
+    });
+
+  };
+
+    // insert the House co-sponsors into the co_sponsors_House table
+
+    if (coSponsorsHouse[0].co_sponsor) {
+
+      let coSponsorsHouseValues = "";
+
+      coSponsorsHouse.forEach((/** @type {any} */ coSponsorObj) => {
+
+        coSponsorsHouseValues = (coSponsorsHouseValues.concat(`("${legislationID}", "${coSponsorObj.co_sponsor}"),`))
+
+      });
+
+      const insertHouseCoSponsorsStatement = `INSERT INTO co_sponsors_House (
+          co_sponsored_legislation_ID, 
+          co_sponsor_name
+      ) VALUES ${coSponsorsHouseValues.slice(0, -1)}`;
+
+      await res.query(insertHouseCoSponsorsStatement)
+      .then(() => {
+          console.log(`added legislation House co-sponsors`);
+      })
+      .catch(error => {
+          throw error;
+      });
+
+    };
 
     // insert the Senate sponsors into the sponsors_Senate table
 
-    let sponsorsSenateValues = "";
+    if (coSponsorsSenate[0].co_sponsor) {
 
-    sponsorsSenate.forEach((/** @type {any} */ sponsorObj) => {
+      let coSponsorsSenateValues = "";
 
-        sponsorsSenateValues = (sponsorsSenateValues.concat(`("${legislationID}", "${sponsorObj.sponsor}"),`))
+      coSponsorsSenate.forEach((/** @type {any} */ coSponsorObj) => {
 
-    });
+          coSponsorsSenateValues = (coSponsorsSenateValues.concat(`("${legislationID}", "${coSponsorObj.co_sponsor}"),`))
 
-    const insertSenateSponsorsStatement = `INSERT INTO sponsors_Senate (
-        sponsored_legislation_ID, 
-        sponsor_name
-    ) VALUES ${sponsorsSenateValues.slice(0, -1)}`;
+      });
 
-    await res.query(insertSenateSponsorsStatement)
-    .then(() => {
-        console.log(`added legislation Senate sponsors`);
-    })
-    .catch(error => {
-        throw error;
-    });
+      const insertSenateCoSponsorsStatement = `INSERT INTO co_sponsors_Senate (
+          co_sponsored_legislation_ID, 
+          co_sponsor_name
+      ) VALUES ${coSponsorsSenateValues.slice(0, -1)}`;
+
+      await res.query(insertSenateCoSponsorsStatement)
+      .then(() => {
+          console.log(`added legislation Senate co-sponsors`);
+      })
+      .catch(error => {
+          throw error;
+      });
+
+    };
 
     return new Response(JSON.stringify({success: `legislation endorsement created!`}), {status: 200});
 

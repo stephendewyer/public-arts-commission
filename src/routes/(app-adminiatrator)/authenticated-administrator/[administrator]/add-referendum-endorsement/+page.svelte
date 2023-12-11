@@ -224,7 +224,7 @@
                 stateContactInputValue = "",
                 zipCodeContactInputValue = null,
                 emailContactInputValue = ""
-                goto("/authenticated-administratror/admin");
+                goto("/authenticated-administrator/admin");
             };
 
             if (responseItem.error) {

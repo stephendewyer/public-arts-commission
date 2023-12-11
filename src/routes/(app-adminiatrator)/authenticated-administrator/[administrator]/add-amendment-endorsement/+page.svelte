@@ -24,67 +24,67 @@
 
     $: userEmail = data.user?.email;
 
-    let addHouseSponsor: boolean = false;
-    let addSenateSponsor: boolean = false;
+    let addHouseCoSponsor: boolean = false;
+    let addSenateCoSponsor: boolean = false;
 
-    interface SponsorInputValue {
+    interface CoSponsorInputValue {
 
-        sponsor: string;
+        co_sponsor: string;
         isValid: boolean;
 
     };
 
-    let sponsorsHouseValues: SponsorInputValue[] = [
+    let coSponsorsHouseValues: CoSponsorInputValue[] = [
         {
-            sponsor: "",
+            co_sponsor: "",
             isValid: true
         }
     ];
 
-    let sponsorsSenateValues: SponsorInputValue[] = [
+    let coSponsorsSenateValues: CoSponsorInputValue[] = [
         {
-            sponsor: "",
+            co_sponsor: "",
             isValid: true
         }
     ];
 
-    $: if (addHouseSponsor) {
+    $: if (addHouseCoSponsor) {
 
-        sponsorsHouseValues = [...sponsorsHouseValues, {sponsor: "", isValid: true}];
+        coSponsorsHouseValues = [...coSponsorsHouseValues, {co_sponsor: "", isValid: true}];
 
-        addHouseSponsor = false;
+        addHouseCoSponsor = false;
 
     };
 
-    $: if (addSenateSponsor) {
+    $: if (addSenateCoSponsor) {
 
-        sponsorsSenateValues = [...sponsorsSenateValues, {sponsor: "", isValid: true}];
+        coSponsorsSenateValues = [...coSponsorsSenateValues, {co_sponsor: "", isValid: true}];
 
-        addSenateSponsor = false;
+        addSenateCoSponsor = false;
 
     };
 
     // begin remove Senate sponsor
 
-    let sponsorSenateFieldIndexRemoved: null | number = null;
+    let coSponsorSenateFieldIndexRemoved: null | number = null;
 
-    let subtractSponsorSenateClicked: boolean = false;
+    let subtractCoSponsorSenateClicked: boolean = false;
 
-    let sponsorSenateFieldForRemovalNotNull: number;
+    let coSponsorSenateFieldForRemovalNotNull: number;
 
-    $: if (sponsorSenateFieldIndexRemoved !== null) {
+    $: if (coSponsorSenateFieldIndexRemoved !== null) {
 
-        sponsorSenateFieldForRemovalNotNull = sponsorSenateFieldIndexRemoved;
+        coSponsorSenateFieldForRemovalNotNull = coSponsorSenateFieldIndexRemoved;
 
     };
 
-    $: if (subtractSponsorSenateClicked) {
+    $: if (subtractCoSponsorSenateClicked) {
 
-        subtractSponsorSenateClicked = false;
+        subtractCoSponsorSenateClicked = false;
 
-        if (sponsorsSenateValues.length > 1) {
+        if (coSponsorsSenateValues.length > 1) {
 
-            sponsorsSenateValues.splice(sponsorSenateFieldForRemovalNotNull, sponsorSenateFieldForRemovalNotNull);
+            coSponsorsSenateValues.splice(coSponsorSenateFieldForRemovalNotNull, coSponsorSenateFieldForRemovalNotNull);
 
         };
 
@@ -94,25 +94,25 @@
 
     // begin remove House sponsor
 
-    let sponsorHouseFieldIndexRemoved: null | number = null;
+    let coSponsorHouseFieldIndexRemoved: null | number = null;
 
-    let subtractSponsorHouseClicked: boolean = false;
+    let subtractCoSponsorHouseClicked: boolean = false;
 
-    let sponsorHouseFieldForRemovalNotNull: number;
+    let coSponsorHouseFieldForRemovalNotNull: number;
 
-    $: if (sponsorHouseFieldIndexRemoved !== null) {
+    $: if (coSponsorHouseFieldIndexRemoved !== null) {
 
-        sponsorHouseFieldForRemovalNotNull = sponsorHouseFieldIndexRemoved;
+        coSponsorHouseFieldForRemovalNotNull = coSponsorHouseFieldIndexRemoved;
 
     };
 
-    $: if (subtractSponsorHouseClicked) {
+    $: if (subtractCoSponsorHouseClicked) {
 
-        subtractSponsorHouseClicked = false;
+        subtractCoSponsorHouseClicked = false;
 
-        if (sponsorsHouseValues.length > 1) {
+        if (coSponsorsHouseValues.length > 1) {
 
-            sponsorsHouseValues.splice(sponsorHouseFieldForRemovalNotNull, sponsorHouseFieldForRemovalNotNull);
+            coSponsorsHouseValues.splice(coSponsorHouseFieldForRemovalNotNull, coSponsorHouseFieldForRemovalNotNull);
 
         };
 
@@ -134,16 +134,17 @@
     let cityInputValue: string = "";
     let introducedInHouseChecked: boolean = false;
     let introducedInSenateChecked: boolean = false;
+    let sponsorHouseInputValue: string = "";
+    let sponsorSenateInputValue: string = "";
     let houseSessionInputValue: string = "";
     let senateSessionInputValue: string = "";
     let detailsInputValue: string = "";
     let websiteURLInputValue: string = "";
     let twoThirdsHouseAndSenatePassedChecked: boolean = false;
-    let simpleMajorityHouseAndSenatePassed: boolean = false;
+    let simpleMajorityHouseAndSenatePassedChecked: boolean = false;
     let simpleMajorityVotersPassedChecked: boolean = false;
     let ratifiedByStateLegislaturesChecked: boolean = false;
     let ratifiedByStateConventionsChecked: boolean = false;
-
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -163,6 +164,8 @@
     let yearIntroducedInHouseIsValid: boolean = true;
     let yearIntroducedInSenateIsValid: boolean = true;
     let electionDateIsValid: boolean = true;
+    let sponsorHouseIsValid: boolean = true;
+    let sponsorSenateIsValid: boolean = true;
     let houseSessionIsValid: boolean = true;
     let senateSessionIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
@@ -220,8 +223,10 @@
         city: string,
         introducedInHouse: boolean,
         introducedInSenate: boolean,
-        sponsorsHouse: SponsorInputValue[],
-        sponsorsSenate: SponsorInputValue[],
+        sponsorHouse: string,
+        sponsorSenate: string,
+        coSponsorsHouse: CoSponsorInputValue[],
+        coSponsorsSenate: CoSponsorInputValue[],
         houseSession: string,
         senateSession: string,
         details: string,
@@ -241,7 +246,7 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createAmendmentEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
@@ -261,8 +266,10 @@
                 introducedInSenate,
                 houseSession,
                 senateSession,
-                sponsorsHouse,
-                sponsorsSenate,
+                sponsorHouse,
+                sponsorSenate,
+                coSponsorsHouse,
+                coSponsorsSenate,
                 details,
                 websiteURL,
                 twoThirdsHouseAndSenatePassed,
@@ -315,14 +322,16 @@
                 cityInputValue,
                 introducedInHouseChecked,
                 introducedInSenateChecked,
-                sponsorsHouseValues,
-                sponsorsSenateValues,
+                sponsorHouseInputValue,
+                sponsorSenateInputValue,
+                coSponsorsHouseValues,
+                coSponsorsSenateValues,
                 houseSessionInputValue,
                 senateSessionInputValue,
                 detailsInputValue,
                 websiteURLInputValue,
                 twoThirdsHouseAndSenatePassedChecked,
-                simpleMajorityHouseAndSenatePassed,
+                simpleMajorityHouseAndSenatePassedChecked,
                 simpleMajorityVotersPassedChecked,
                 ratifiedByStateLegislaturesChecked,
                 ratifiedByStateConventionsChecked,
@@ -353,12 +362,14 @@
                 introducedInSenateChecked = false,
                 houseSessionInputValue = "",
                 senateSessionInputValue = "",
-                sponsorsHouseValues = [],
-                sponsorsSenateValues = [],
+                sponsorHouseInputValue = "",
+                sponsorSenateInputValue = "",
+                coSponsorsHouseValues = [],
+                coSponsorsSenateValues = [],
                 detailsInputValue = "",
                 websiteURLInputValue = "",
                 twoThirdsHouseAndSenatePassedChecked = false,
-                simpleMajorityHouseAndSenatePassed = false,
+                simpleMajorityHouseAndSenatePassedChecked = false,
                 simpleMajorityVotersPassedChecked = false,
                 ratifiedByStateLegislaturesChecked = false,
                 ratifiedByStateConventionsChecked = false,
@@ -371,17 +382,46 @@
                 stateContactInputValue = "",
                 zipCodeContactInputValue = null,
                 emailContactInputValue = ""
-                // goto("/authenticated-administratror/admin");
+                goto("/authenticated-administrator/admin");
             };
 
             if (responseItem.error) {
-
+                if (introducedInHouseChecked && !yearIntroducedInHouseInputValue) {
+                    yearIntroducedInHouseIsValid = false;
+                };
+                if (introducedInSenateChecked && !yearIntroducedInSenateInputValue) {
+                    yearIntroducedInSenateIsValid = false;
+                };
+                if (introducedInHouseChecked && !sponsorHouseInputValue) {
+                    sponsorHouseIsValid = false;
+                };
+                if (introducedInHouseChecked && !houseSessionInputValue) {
+                    houseSessionIsValid = false;
+                };
+                if (introducedInSenateChecked && !sponsorSenateInputValue) {
+                    sponsorSenateIsValid = false;
+                };
+                if (introducedInSenateChecked && !senateSessionInputValue) {
+                    senateSessionIsValid = false;
+                };
                 if (imageAltTextInputValue === "") {
                     imageAltTextIsValid = false;
                 };
                 if (imageFileInputValue === "") {
                     imageFileIsValid = false;
                 };
+                if (imageAltTextInputValue === "") {
+                    imageAltTextIsValid = false;
+                };
+                if (imageFileInputValue === "") {
+                    imageFileIsValid = false;
+                };
+                if (amendmentNameInputValue === "") {
+                    amendmentNameIsValid = false;
+                };
+                if (yearReleasedInputValue === null) {
+                    yearReleasedIsValid = false;
+                }
                 if (governmentLevelInputValue === "") {
                     governmentLevelIsValid = false;
                 };
@@ -584,7 +624,7 @@
                         required={true}
                         numberInputErrorMessage="year introduced in House required"
                     >
-                        year released
+                        year introduced in the House
                     </NumberInput>
                     <SelectInput
                         options={SessionsCongress}
@@ -598,24 +638,36 @@
                     >
                         House session
                     </SelectInput>
-                    <p style={"font-weight: 600"}>House sponsor(s)</p>
-                    {#each sponsorsHouseValues as sponsor, i}
+                    <TextInput
+                        inputLabel={true}
+                        bind:textInputValue={sponsorHouseInputValue}
+                        bind:isValid={sponsorHouseIsValid}
+                        placeholder="Alexandria Ocasio-Cortez"
+                        inputName="House_sponsor"
+                        inputID="House_sponsor"
+                        required={true}
+                        textInputErrorMessage="House sponsor required"
+                    >
+                        House sponsor
+                    </TextInput>
+                    <p style={"font-weight: 600"}>House co-sponsor(s)</p>
+                    {#each coSponsorsHouseValues as coSponsor, i}
                         <div class="sponsor_row">
                             <TextInput
                                 inputLabel={false}
-                                bind:textInputValue={sponsorsHouseValues[i].sponsor}
-                                bind:isValid={sponsorsHouseValues[i].isValid}
+                                bind:textInputValue={coSponsorsHouseValues[i].co_sponsor}
+                                bind:isValid={coSponsorsHouseValues[i].isValid}
                                 placeholder="Alexandria Ocasio-Cortez"
-                                inputName={`sponsor_${i}`}
-                                inputID={`sponsor_${i}`}
+                                inputName={`co-sponsor_House_${i}`}
+                                inputID={`co-sponsor_House_${i}`}
                                 required={true}
                                 textInputErrorMessage="sponsor required"
                             />
-                            {#if (sponsorsHouseValues.length > 1 && i !== 0)}
+                            {#if (coSponsorsHouseValues.length > 1 && i !== 0)}
                                 <SubtractItemButton 
                                     index={i}
-                                    bind:subtractedItemIndex={sponsorHouseFieldIndexRemoved}
-                                    bind:subtractItemsClicked={subtractSponsorHouseClicked}
+                                    bind:subtractedItemIndex={coSponsorHouseFieldIndexRemoved}
+                                    bind:subtractItemsClicked={subtractCoSponsorHouseClicked}
                                 >
                                     subtract
                                 </SubtractItemButton>
@@ -623,9 +675,9 @@
                         </div>
                     {/each}
                     <AddItemToArrayButton
-                        bind:addItemsClicked={addHouseSponsor}
+                        bind:addItemsClicked={addHouseCoSponsor}
                     >
-                        sponsor
+                        co-sponsor
                     </AddItemToArrayButton>
                 {/if}
             </div>
@@ -644,7 +696,7 @@
                         required={true}
                         numberInputErrorMessage="year introduced in Senate required"
                     >
-                        year released
+                        year introduced in the Senate
                     </NumberInput>
                     <SelectInput
                         options={SessionsCongress}
@@ -658,24 +710,36 @@
                     >
                         Senate session
                     </SelectInput>
-                    <p style={"font-weight: 600"}>Senate sponsor(s)</p>
-                    {#each sponsorsSenateValues as sponsor, i}
+                    <TextInput
+                        inputLabel={true}
+                        bind:textInputValue={sponsorSenateInputValue}
+                        bind:isValid={sponsorSenateIsValid}
+                        placeholder="Bernie Sanders"
+                        inputName="Senate_sponsor"
+                        inputID="Senate_sponsor"
+                        required={true}
+                        textInputErrorMessage="Senate sponsor required"
+                    >
+                        Senate sponsor
+                    </TextInput>
+                    <p style={"font-weight: 600"}>Senate co-sponsor(s)</p>
+                    {#each coSponsorsSenateValues as coSponsor, i}
                         <div class="sponsor_row">
                             <TextInput
                                 inputLabel={false}
-                                bind:textInputValue={sponsorsSenateValues[i].sponsor}
-                                bind:isValid={sponsorsSenateValues[i].isValid}
+                                bind:textInputValue={coSponsorsSenateValues[i].co_sponsor}
+                                bind:isValid={coSponsorsSenateValues[i].isValid}
                                 placeholder="Bernie Sanders"
-                                inputName={`sponsor_${i}`}
-                                inputID={`sponsor_${i}`}
+                                inputName={`co-sponsor_Senate_${i}`}
+                                inputID={`co-sponsor_Senate_${i}`}
                                 required={true}
-                                textInputErrorMessage="sponsor required"
+                                textInputErrorMessage="co-sponsor required"
                             />
-                            {#if (sponsorsSenateValues.length > 1 && i !== 0)}
+                            {#if (coSponsorsSenateValues.length > 1 && i !== 0)}
                                 <SubtractItemButton 
                                     index={i}
-                                    bind:subtractedItemIndex={sponsorSenateFieldIndexRemoved}
-                                    bind:subtractItemsClicked={subtractSponsorSenateClicked}
+                                    bind:subtractedItemIndex={coSponsorSenateFieldIndexRemoved}
+                                    bind:subtractItemsClicked={subtractCoSponsorSenateClicked}
                                 >
                                     subtract
                                 </SubtractItemButton>
@@ -683,9 +747,9 @@
                         </div>
                     {/each}
                     <AddItemToArrayButton
-                        bind:addItemsClicked={addSenateSponsor}
+                        bind:addItemsClicked={addSenateCoSponsor}
                     >
-                        sponsor
+                        co-sponsor
                     </AddItemToArrayButton>
                 {/if}
             </div>
@@ -694,7 +758,7 @@
             inputLabel={true}
             bind:textInputValue={websiteURLInputValue}
             bind:isValid={websiteURLIsValid}
-            placeholder="https://candidateforxoffice.com"
+            placeholder="https://democracyforallamendment.com"
             inputName="website_URL"
             inputID="websiteURL"
             required={false}
@@ -741,7 +805,7 @@
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={simpleMajorityHouseAndSenatePassed}>
+                <AnimatedCheckbox bind:checked={simpleMajorityHouseAndSenatePassedChecked}>
                     approved by simple majority in House and Senate
                 </AnimatedCheckbox>
             </div>
