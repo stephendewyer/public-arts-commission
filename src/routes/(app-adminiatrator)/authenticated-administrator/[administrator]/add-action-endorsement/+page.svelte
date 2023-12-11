@@ -106,63 +106,63 @@
 
     const createActionEndorsement = async (
         userEmail: string | null | undefined,
-        imageFileInputValue: string,
-        imageAltTextInputValue: string,
+        imageFile: string,
+        imageAltText: string,
         image: any,
-        actionNameInputValue: string,
-        actionStartDateInputValue: string,
-        actionEndDateInputValue: string,
-        startTimeInputValue: string,
-        endTimeInputValue: string,
-        timeZoneInputValue: string,
-        actionStreetAddressInputValue: string,
-        actionStreetAddress02InputValue: string,
-        actionCityInputValue: string,
-        actionStateInputValue: string,
-        actionZipCodeInputValue: number | null,
-        governmentLevelInputValue: string,
-        websiteURLInputValue: string,
-        detailsInputValue: string,
-        nameFirstContactInputValue: string,
-        nameLastContactInputValue: string,
-        phoneContactInputValue: string,
-        streetAddressContactInputValue: string,
-        streetAddress02ContactInputValue: string,
-        cityContactInputValue: string,
-        stateContactInputValue: string,
-        zipCodeContactInputValue: number | null,
-        emailContactInputValue: string
+        actionName: string,
+        actionStartDate: string,
+        actionEndDate: string,
+        startTime: string,
+        endTime: string,
+        timeZone: string,
+        actionStreetAddress: string,
+        actionStreetAddress02: string,
+        actionCity: string,
+        actionState: string,
+        actionZipCode: number | null,
+        governmentLevel: string,
+        websiteURL: string,
+        details: string,
+        nameFirstContact: string,
+        nameLastContact: string,
+        phoneContact: string,
+        streetAddressContact: string,
+        streetAddress02Contact: string,
+        cityContact: string,
+        stateContact: string,
+        zipCodeContact: number | null,
+        emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createActionEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
-                imageFileInputValue,
-                imageAltTextInputValue,
+                imageFile,
+                imageAltText,
                 image,
-                actionNameInputValue,
-                actionStartDateInputValue,
-                actionEndDateInputValue,
-                startTimeInputValue,
-                endTimeInputValue,
-                timeZoneInputValue,
-                actionStreetAddressInputValue,
-                actionStreetAddress02InputValue,
-                actionCityInputValue,
-                actionStateInputValue,
-                actionZipCodeInputValue,
-                governmentLevelInputValue,
-                websiteURLInputValue,
-                detailsInputValue,
-                nameFirstContactInputValue,
-                nameLastContactInputValue,
-                phoneContactInputValue,
-                streetAddressContactInputValue,
-                streetAddress02ContactInputValue,
-                cityContactInputValue,
-                stateContactInputValue,
-                zipCodeContactInputValue,
-                emailContactInputValue
+                actionName,
+                actionStartDate,
+                actionEndDate,
+                startTime,
+                endTime,
+                timeZone,
+                actionStreetAddress,
+                actionStreetAddress02,
+                actionCity,
+                actionState,
+                actionZipCode,
+                governmentLevel,
+                websiteURL,
+                details,
+                nameFirstContact,
+                nameLastContact,
+                phoneContact,
+                streetAddressContact,
+                streetAddress02Contact,
+                cityContact,
+                stateContact,
+                zipCodeContact,
+                emailContact
             }),
             headers: {
                 'Content-Type': 'application/json',
@@ -239,7 +239,7 @@
                 stateContactInputValue = "",
                 zipCodeContactInputValue = null,
                 emailContactInputValue = ""
-                // goto("/authenticated-administratror/admin");
+                goto("/authenticated-administrator/admin");
             };
 
             if (responseItem.error) {
@@ -249,6 +249,15 @@
                 };
                 if (imageFileInputValue === "") {
                     imageFileIsValid = false;
+                };
+                if (actionNameInputValue === "") {
+                    actionNameIsValid = false;
+                };
+                if (actionStartDateInputValue === "") {
+                    actionStartDateIsValid = false;
+                };
+                if (actionEndDateInputValue === "") {
+                    actionEndDateIsValid = false;
                 };
                 if (governmentLevelInputValue === "") {
                     governmentLevelIsValid = false;
@@ -518,7 +527,7 @@
                     required={true}
                     textInputErrorMessage="first name required"
                 >
-                    first name*
+                    first name
                 </TextInput>
                 <TextInput 
                     isValid={nameLastContactIsValid}
@@ -530,7 +539,7 @@
                     required={true}
                     textInputErrorMessage="last name required"
                 >
-                    last name*
+                    last name
                 </TextInput>
             </div>
             <div class="two_columns">
@@ -543,7 +552,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    email*
+                    email
                 </EmailInput>
                 <PhoneInput 
                     isValid={phoneContactIsValid}
@@ -553,7 +562,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    phone number*
+                    phone number
                 </PhoneInput>
             </div>
             <div class="two_columns">
@@ -567,7 +576,7 @@
                     required={true}
                     textInputErrorMessage="street address required"
                 >
-                    street address*
+                    street address
                 </TextInput>
                 <TextInput 
                     isValid={streetAddress02ContactIsValid}
@@ -592,7 +601,7 @@
                     required={true}
                     textInputErrorMessage="city required"
                 >
-                    city*
+                    city
                 </TextInput>
                 <SelectInput 
                     isValid={stateContactIsValid}
@@ -604,7 +613,7 @@
                     required={true}
                     selectInputErrorMessage="state required"
                 >
-                    state*
+                    state
                 </SelectInput>
             </div>
             <NumberInput 
@@ -617,7 +626,7 @@
                     required={true}
                     numberInputErrorMessage="zip code required"
                 >
-                    zip code*
+                    zip code
                 </NumberInput>
             {/if}
         <ActionButton>
@@ -675,42 +684,11 @@
         gap: 1rem;
     }
 
-    .two_columns_checkbox {
-        display: flex;
-        width: 100%;
-        gap: 1rem;
-    }
-
-    .checkbox_column {
-        width: 50%;
-        display:  flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .expandable_cells {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .cell {
-        width: 15rem;
-    }
-
     @media (max-width: 1440px) {
 
     }
 
     @media (max-width: 720px) {
-
-        .two_columns_checkbox {
-            display: flex;
-            width: 100%;
-            gap: 0.5rem;
-        }
 
     }
 </style>

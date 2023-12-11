@@ -33,10 +33,13 @@
     let cityInputValue: string = "";
     let partyInputValue: string = "";
     let websiteURLInputValue: string = "";
+    let rejectedPrimaryProceedingGeneralChecked: boolean = false;
     let runningInPrimaryChecked: boolean = false;
-    let electedPrimaryElectedGeneral: boolean = false;
-    let electedPrimaryProceedingGeneral: boolean = false;
-    let rejectedPrimaryProceedingGeneral: boolean = false;
+    let electedPrimaryElectedGeneralChecked: boolean = false;
+    let electedPrimaryProceedingGeneralChecked: boolean = false;
+    let electedInPrimaryRejectedInGeneralChecked: boolean = false;
+    let rejectedInPrimaryCampaignEndedChecked: boolean = false;
+    let rejectedInPrimaryRejectedInGeneralChecked: boolean = false;
 
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
@@ -110,10 +113,13 @@
         city: string,
         party: string,
         websiteURL: string,
+        rejectedPrimaryProceedingGeneral: boolean,
         runningInPrimary: boolean,
         electedPrimaryElectedGeneral: boolean,
         electedPrimaryProceedingGeneral: boolean,
-        rejectedPrimaryProceedingGeneral: boolean,
+        electedInPrimaryRejectedInGeneral: boolean,
+        rejectedInPrimaryCampaignEnded: boolean,
+        rejectedInPrimaryRejectedInGeneral: boolean,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: string,
@@ -124,7 +130,7 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createCandidateEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
@@ -141,10 +147,13 @@
                 city,
                 party,
                 websiteURL,
+                rejectedPrimaryProceedingGeneral,
                 runningInPrimary,
                 electedPrimaryElectedGeneral,
                 electedPrimaryProceedingGeneral,
-                rejectedPrimaryProceedingGeneral,
+                electedInPrimaryRejectedInGeneral,
+                rejectedInPrimaryCampaignEnded,
+                rejectedInPrimaryRejectedInGeneral,
                 nameFirstContact,
                 nameLastContact,
                 phoneContact,
@@ -189,10 +198,13 @@
                 cityInputValue,
                 partyInputValue,
                 websiteURLInputValue,
+                rejectedPrimaryProceedingGeneralChecked,
                 runningInPrimaryChecked,
-                electedPrimaryElectedGeneral,
-                electedPrimaryProceedingGeneral,
-                rejectedPrimaryProceedingGeneral,
+                electedPrimaryElectedGeneralChecked,
+                electedPrimaryProceedingGeneralChecked,
+                electedInPrimaryRejectedInGeneralChecked,
+                rejectedInPrimaryCampaignEndedChecked,
+                rejectedInPrimaryRejectedInGeneralChecked,
                 nameFirstContactInputValue,
                 nameLastContactInputValue,
                 phoneContactInputValue,
@@ -217,10 +229,13 @@
                 cityInputValue = "",
                 partyInputValue = "",
                 websiteURLInputValue = "",
+                rejectedPrimaryProceedingGeneralChecked = false,
                 runningInPrimaryChecked = false,
-                electedPrimaryElectedGeneral = false,
-                electedPrimaryProceedingGeneral = false,
-                rejectedPrimaryProceedingGeneral = false,
+                electedPrimaryElectedGeneralChecked = false,
+                electedPrimaryProceedingGeneralChecked = false,
+                electedInPrimaryRejectedInGeneralChecked = false,
+                rejectedInPrimaryCampaignEndedChecked = false,
+                rejectedInPrimaryRejectedInGeneralChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
                 phoneContactInputValue = "",
@@ -230,7 +245,7 @@
                 stateContactInputValue = "",
                 zipCodeContactInputValue = null,
                 emailContactInputValue = ""
-                // goto("/authenticated-administratror/admin");
+                // goto("/authenticated-administrator/admin");
             };
 
             if (responseItem.error) {
@@ -469,20 +484,40 @@
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedPrimaryProceedingGeneral}>
+                <AnimatedCheckbox bind:checked={rejectedPrimaryProceedingGeneralChecked}>
                     not elected in the primary, proceeding to the general
                 </AnimatedCheckbox>
             </div>
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedPrimaryProceedingGeneral}>
+                <AnimatedCheckbox bind:checked={rejectedInPrimaryCampaignEndedChecked}>
+                    rejected in the primary, campaign ended
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={electedInPrimaryRejectedInGeneralChecked}>
+                    elected in the primary, rejected in the general
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={electedPrimaryProceedingGeneralChecked}>
                     elected in the primary, proceeding to the general
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedPrimaryElectedGeneral}>
+                <AnimatedCheckbox bind:checked={electedPrimaryElectedGeneralChecked}>
                     elected in the primary and elected in the general            
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={rejectedInPrimaryRejectedInGeneralChecked}>
+                    rejected in the primary, rejected in the general
                 </AnimatedCheckbox>
             </div>
         </div>
@@ -502,7 +537,7 @@
                     required={true}
                     textInputErrorMessage="first name required"
                 >
-                    first name*
+                    first name
                 </TextInput>
                 <TextInput 
                     isValid={nameLastContactIsValid}
@@ -514,7 +549,7 @@
                     required={true}
                     textInputErrorMessage="last name required"
                 >
-                    last name*
+                    last name
                 </TextInput>
             </div>
             <div class="two_columns">
@@ -527,7 +562,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    email*
+                    email
                 </EmailInput>
                 <PhoneInput 
                     isValid={phoneContactIsValid}
@@ -537,7 +572,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    phone number*
+                    phone number
                 </PhoneInput>
             </div>
             <div class="two_columns">
@@ -551,7 +586,7 @@
                     required={true}
                     textInputErrorMessage="street address required"
                 >
-                    street address*
+                    street address
                 </TextInput>
                 <TextInput 
                     isValid={streetAddress02ContactIsValid}
@@ -576,7 +611,7 @@
                     required={true}
                     textInputErrorMessage="city required"
                 >
-                    city*
+                    city
                 </TextInput>
                 <SelectInput 
                     isValid={stateContactIsValid}
@@ -588,7 +623,7 @@
                     required={true}
                     selectInputErrorMessage="state required"
                 >
-                    state*
+                    state
                 </SelectInput>
             </div>
             <NumberInput 
@@ -601,7 +636,7 @@
                     required={true}
                     numberInputErrorMessage="zip code required"
                 >
-                    zip code*
+                    zip code
                 </NumberInput>
             {/if}
         <ActionButton>

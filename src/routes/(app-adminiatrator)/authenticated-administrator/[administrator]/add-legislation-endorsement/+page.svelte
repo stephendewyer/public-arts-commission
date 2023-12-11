@@ -813,7 +813,7 @@
                     required={true}
                     textInputErrorMessage="first name required"
                 >
-                    first name*
+                    first name
                 </TextInput>
                 <TextInput 
                     isValid={nameLastContactIsValid}
@@ -825,7 +825,7 @@
                     required={true}
                     textInputErrorMessage="last name required"
                 >
-                    last name*
+                    last name
                 </TextInput>
             </div>
             <div class="two_columns">
@@ -838,7 +838,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    email*
+                    email
                 </EmailInput>
                 <PhoneInput 
                     isValid={phoneContactIsValid}
@@ -848,7 +848,7 @@
                     inputLabel={true}
                     required={true}
                 >
-                    phone number*
+                    phone number
                 </PhoneInput>
             </div>
             <div class="two_columns">
@@ -862,7 +862,7 @@
                     required={true}
                     textInputErrorMessage="street address required"
                 >
-                    street address*
+                    street address
                 </TextInput>
                 <TextInput 
                     isValid={streetAddress02ContactIsValid}
@@ -887,7 +887,7 @@
                     required={true}
                     textInputErrorMessage="city required"
                 >
-                    city*
+                    city
                 </TextInput>
                 <SelectInput 
                     isValid={stateContactIsValid}
@@ -899,7 +899,7 @@
                     required={true}
                     selectInputErrorMessage="state required"
                 >
-                    state*
+                    state
                 </SelectInput>
             </div>
             <NumberInput 
@@ -912,7 +912,7 @@
                     required={true}
                     numberInputErrorMessage="zip code required"
                 >
-                    zip code*
+                    zip code
                 </NumberInput>
             {/if}
         <ActionButton>
