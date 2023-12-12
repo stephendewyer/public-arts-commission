@@ -24,7 +24,7 @@
 	let actionsCounty: Action[] = [];
 	let actionsCity: Action[] = [];
 
-	data.endorsed_actions.forEach((action) => {
+	data.streamed.endorsed_actions.forEach((action) => {
 		if (action.government_level === "federal") {
 			actionsFederal.push(action);
 		} else if (action.government_level === "state") {
@@ -41,7 +41,7 @@
 	let candidatesCounty: Candidate[] = [];
 	let candidatesCity: Candidate[] = [];
 
-	data.endorsed_candidates.forEach((candidate) => {
+	data.streamed.endorsed_candidates.forEach((candidate) => {
 		if (candidate.government_level === "federal") {
 			candidatesFederal.push(candidate);
 		} else if (candidate.government_level === "state") {
@@ -58,7 +58,7 @@
 	let legislationCounty: Legislation[] = [];
 	let legislationCity: Legislation[] = [];
 
-	data.endorsed_legislation.forEach((legislation) => {
+	data.streamed.endorsed_legislation.forEach((legislation) => {
 		if (legislation.government_level === "federal") {
 			legislationFederal.push(legislation);
 		} else if (legislation.government_level === "state") {
@@ -75,7 +75,7 @@
 	let amendmentsCounty: Amendment[] = [];
 	let amendmentsCity: Amendment[] = [];
 
-	data.endorsed_amendments.forEach((amendment) => {
+	data.streamed.endorsed_amendments.forEach((amendment) => {
 		if (amendment.government_level === "federal") {
 			amendmentsFederal.push(amendment);
 		} else if (amendment.government_level === "state") {
@@ -92,7 +92,7 @@
 	let referendumsCounty: Referendum[] = [];
 	let referendumsCity: Referendum[] = [];
 
-	data.endorsed_referendums.forEach((referendum) => {
+	data.streamed.endorsed_referendums.forEach((referendum) => {
 		if (referendum.government_level === "federal") {
 			referendumsFederal.push(referendum);
 		} else if (referendum.government_level === "state") {
@@ -234,11 +234,11 @@
 			hasCapitol: true,
 			panel: AllEndorsementPanel,
 			data: [ 
-				data.endorsed_actions, 
-				data.endorsed_amendments, 
-				data.endorsed_candidates, 
-				data.endorsed_legislation,
-				data.endorsed_referendums
+				data.streamed.endorsed_actions, 
+				data.streamed.endorsed_amendments, 
+				data.streamed.endorsed_candidates, 
+				data.streamed.endorsed_legislation,
+				data.streamed.endorsed_referendums
 			]
 		},
 		{
