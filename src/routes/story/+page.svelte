@@ -18,28 +18,32 @@
 			index: 0,
 			label: "platforming",
 			hasCapitol: false,
-			panel: PlatformingPanel
+			panel: PlatformingPanel,
+            data: []
 		},
 		{
 			id: uuidv4(),
 			index: 1,
 			label: "connecting",
 			hasCapitol: false,
-			panel: ConnectingPanel
+			panel: ConnectingPanel,
+            data: []
 		},
 		{
 			id: uuidv4(),
 			index: 2,
 			label: "lobbying",
 			hasCapitol: false,
-			panel: LobbyingPanel
+			panel: LobbyingPanel,
+            data: []
 		},
 		{
 			id: uuidv4(),
 			index: 3,
 			label: "exhibiting",
 			hasCapitol: false,
-			panel: ExhibitingPanel
+			panel: ExhibitingPanel,
+            data: []
 		}
 	]
 

@@ -25,7 +25,7 @@
 	let actionsCounty: Action[] = [];
 	let actionsCity: Action[] = [];
 
-	$page.data.streamed.endorsed_actions.forEach((action: Action) => {
+	data.streamed.endorsed_actions.forEach((action) => {
 		if (action.government_level === "federal") {
 			actionsFederal.push(action);
 		} else if (action.government_level === "state") {
@@ -335,18 +335,20 @@
 				/>
 			</div>
 		</div>
-		<SelectInput 
-			options={Years}
-			bind:selectInputValue={yearInputValue}
-			isValid={true}
-			required={false}
-			inputID="election_year"
-			inputName="election_year"
-			selectInputErrorMessage=""
-			inputLabel={true}
-		>
-			election year
-		</SelectInput>
+		<div class="election_year_field">
+			<SelectInput 
+				options={Years}
+				bind:selectInputValue={yearInputValue}
+				isValid={true}
+				required={false}
+				inputID="election_year"
+				inputName="election_year"
+				selectInputErrorMessage=""
+				inputLabel={true}
+			>
+				election year
+			</SelectInput>
+		</div>
 		<ActionButton
 			bind:disable={disableButton}
 		>
@@ -398,6 +400,11 @@
 	.endorsements_tabs_container {
 		display: flex;
 		justify-content: center;
+	}
+
+	.election_year_field {
+		width: 100%;
+		max-width: 10rem;
 	}
 
     @media (max-width: 1140px) {

@@ -63,21 +63,24 @@
 			index: 0,
 			label: "all",
 			hasCapitol: false,
-			panel: AllTeam
+			panel: AllTeam,
+            data: []
 		},
 		{
 			id: uuidv4(),
 			index: 1,
 			label: "staff",
 			hasCapitol: false,
-			panel: Staff
+			panel: Staff,
+            data: []
 		},
 		{
 			id: uuidv4(),
 			index: 2,
 			label: "board of directors",
 			hasCapitol: false,
-			panel: BoardOfDirectors
+			panel: BoardOfDirectors,
+            data: []
 		}
 	]
 
