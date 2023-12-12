@@ -334,27 +334,27 @@
 					searchInputValueChange={() => searchInputValueChangeHandler()}
 				/>
 			</div>
-		</div>
-		<div class="election_year_field">
-			<SelectInput 
-				options={Years}
-				bind:selectInputValue={yearInputValue}
-				isValid={true}
-				required={false}
-				inputID="election_year"
-				inputName="election_year"
-				selectInputErrorMessage=""
-				inputLabel={true}
-			>
-				election year
-			</SelectInput>
-		</div>
+		</div>	
 		<ActionButton
 			bind:disable={disableButton}
 		>
 			search endorsements
 		</ActionButton>
 	</form>
+	<div class="election_year_field">
+		<SelectInput 
+			options={Years}
+			bind:selectInputValue={yearInputValue}
+			isValid={true}
+			required={false}
+			inputID="election_year"
+			inputName="election_year"
+			selectInputErrorMessage=""
+			inputLabel={true}
+		>
+			election year
+		</SelectInput>
+	</div>
 	<div class="endorsements_tabs_container">
 		<Tabs
 			tabPanels={endorsementTabPanels} 
@@ -375,7 +375,7 @@
 		flex-direction: column;
 		align-items: center;
         justify-content: center;
-		padding: 0 1rem 1rem 1rem;
+		padding: 0 1rem 0 1rem;
 	}
 
 	.search_endorsement_fields {
@@ -383,7 +383,7 @@
 		flex-direction: row;
 		width: 100%;
         justify-content: center;
-        padding: 2rem 0;
+        padding: 1rem 0;
 	}
 
 	.use_current_location_checkbox {
@@ -405,6 +405,7 @@
 	.election_year_field {
 		width: 100%;
 		max-width: 10rem;
+		margin: 0 auto 1rem auto;
 	}
 
     @media (max-width: 1140px) {
@@ -415,11 +416,11 @@
 			align-items: center;
 			gap: 1rem;
 			width: 100%;
-			
+			padding: 0.5rem 0;
 		}
 
 		.use_current_location_checkbox {
-			width:20rem;
+			width: 20rem;
 			display: block;
 			margin: 0;
 		}

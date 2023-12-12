@@ -1,6 +1,12 @@
 <script lang="ts">
     import NominateButton from '$lib/components/buttons/NominateButton.svelte';
+    import EndorsedCandidateCard from '$lib/components/cards/endorsementCards/CandidateEndorsementCard.svelte';
+    import EndorsedAmendmentCard from '$lib/components/cards/endorsementCards/AmendmentEndorsementCard.svelte';
+    import EndorsedLegislationCard from '$lib/components/cards/endorsementCards/LegislationEndorsementCard.svelte';
+    import EndorsedReferendumCard from '$lib/components/cards/endorsementCards/ReferendumEndorsementCard.svelte';
+
     export let categories_data: any[];
+
     const endorsedAmendments = categories_data[1];
     const endorsedCandidates = categories_data[2];
     const endorsedLegislation = categories_data[3];
@@ -14,9 +20,7 @@
             candidates
         </h3>
         {#each endorsedCandidates as candidate, i}
-            <div class="endorsement_card">
-                {candidate.campaign_name}
-            </div>
+            <EndorsedCandidateCard endorsedCandidateData={candidate}/>
         {/each}
         <NominateButton>
             nominate a candidate
@@ -27,9 +31,7 @@
             referendums
         </h3>
         {#each endorsedReferendums as referendum, i}
-            <div class="endorsement_card">
-                {referendum.referendum_name}
-            </div>
+            <EndorsedReferendumCard endorsedReferendumData={referendum} />
         {/each}
         <NominateButton>
             nominate an initiative
@@ -40,9 +42,7 @@
             legislation
         </h3>
         {#each endorsedLegislation as legislation, i}
-            <div class="endorsement_card">
-                {legislation.legislation_name}
-            </div>
+            <EndorsedLegislationCard endorsedLegislationData={legislation} />
         {/each}
         <NominateButton>
             nominate a bill
@@ -53,9 +53,7 @@
             amendments
         </h3>
         {#each endorsedAmendments as amendment, i}
-            <div class="endorsement_card">
-                {amendment.amendment_name}
-            </div>
+            <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
         {/each}
         <NominateButton>
             nominate an amendment

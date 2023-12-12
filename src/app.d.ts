@@ -191,6 +191,7 @@ declare global {
 	interface Amendment {
 		amendment_ID: number;
 		image_ID: number;
+		amendment_name: string;
 		year_released: number;
 		year_introduced_House: number;
 		year_introduced_Senate: number;
