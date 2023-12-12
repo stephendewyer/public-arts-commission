@@ -15,6 +15,95 @@
 	import AllEndorsementPanel from '$lib/components/endorsements/endorsementPanels/AllEndorsementPanel.svelte';
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 
+	export let data;
+
+	$: data;
+
+	let actionsFederal: Action[] = [];
+	let actionsState: Action[] = [];
+	let actionsCounty: Action[] = [];
+	let actionsCity: Action[] = [];
+
+	data.endorsed_actions.forEach((action) => {
+		if (action.government_level === "federal") {
+			actionsFederal.push(action);
+		} else if (action.government_level === "state") {
+			actionsState.push(action);
+		} else if (action.government_level === "county") {
+			actionsCounty.push(action);
+		} else if (action.government_level === "city") {
+			actionsCity.push(action);
+		};
+	});
+
+	let candidatesFederal: Candidate[] = [];
+	let candidatesState: Candidate[] = [];
+	let candidatesCounty: Candidate[] = [];
+	let candidatesCity: Candidate[] = [];
+
+	data.endorsed_candidates.forEach((candidate) => {
+		if (candidate.government_level === "federal") {
+			candidatesFederal.push(candidate);
+		} else if (candidate.government_level === "state") {
+			candidatesState.push(candidate);
+		} else if (candidate.government_level === "county") {
+			candidatesCounty.push(candidate);
+		} else if (candidate.government_level === "city") {
+			candidatesCity.push(candidate);
+		};
+	});
+
+	let legislationFederal: Legislation[] = [];
+	let legislationState: Legislation[] = [];
+	let legislationCounty: Legislation[] = [];
+	let legislationCity: Legislation[] = [];
+
+	data.endorsed_legislation.forEach((legislation) => {
+		if (legislation.government_level === "federal") {
+			legislationFederal.push(legislation);
+		} else if (legislation.government_level === "state") {
+			legislationState.push(legislation);
+		} else if (legislation.government_level === "county") {
+			legislationCounty.push(legislation);
+		} else if (legislation.government_level === "city") {
+			legislationCity.push(legislation);
+		};
+	});
+
+	let amendmentsFederal: Amendment[] = [];
+	let amendmentsState: Amendment[] = [];
+	let amendmentsCounty: Amendment[] = [];
+	let amendmentsCity: Amendment[] = [];
+
+	data.endorsed_amendments.forEach((amendment) => {
+		if (amendment.government_level === "federal") {
+			amendmentsFederal.push(amendment);
+		} else if (amendment.government_level === "state") {
+			amendmentsState.push(amendment);
+		} else if (amendment.government_level === "county") {
+			amendmentsCounty.push(amendment);
+		} else if (amendment.government_level === "city") {
+			amendmentsCity.push(amendment);
+		};
+	});
+
+	let referendumsFederal: Referendum[] = [];
+	let referendumsState: Referendum[] = [];
+	let referendumsCounty: Referendum[] = [];
+	let referendumsCity: Referendum[] = [];
+
+	data.endorsed_referendums.forEach((referendum) => {
+		if (referendum.government_level === "federal") {
+			referendumsFederal.push(referendum);
+		} else if (referendum.government_level === "state") {
+			referendumsState.push(referendum);
+		} else if (referendum.government_level === "county") {
+			referendumsCounty.push(referendum);
+		} else if (referendum.government_level === "city") {
+			referendumsCity.push(referendum);
+		};
+	});
+
     let searchValue: string;
 
     let useCurrentLocationChecked: boolean;
@@ -43,10 +132,10 @@
                 searchValue = searchQueries[2].replace(/_/g, ' ');
                 if (searchValue !== "") {
                     disableButton = false;
-                }
-            }    
-        }
-    })
+                };
+            };
+        };
+    });
     
     // once user clicks "use my current location" checkbox, 
 
@@ -81,7 +170,7 @@
 
 		return searchValue;
 
-	}
+	};
 
 	const success = (position: GeoLocationPosition) => {
 
@@ -92,25 +181,25 @@
 
 		reverseGeocode(latitude, longitude);
 
-	}
+	};
 
 	// log an error if getCurrentPosition fails
 
 	const error = (error: any) => {
 		console.log("Unable to retrieve your location!" + error);
-	}
+	};
 
 	// get user's location using JavaScript geolocation
 
 	const findUserLocation = () => {
 
-		navigator.geolocation.getCurrentPosition(success, error)
+		navigator.geolocation.getCurrentPosition(success, error);
 
-	}
+	};
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
-	$: if (useCurrentLocationChecked) { findUserLocation() } 
+	$: if (useCurrentLocationChecked) { findUserLocation() };
 
 	const searchInputValueChangeHandler = () => {
 
@@ -118,7 +207,7 @@
 			disableButton = false;
 		} else if (searchValue == "") {
 			disableButton = true;
-		}
+		};
 
 		if (useCurrentLocationChecked && (reversedGeolocation.addresses[0].address.freeformAddress !== searchValue)) {
 
@@ -126,52 +215,89 @@
 
 			return useCurrentLocationChecked;
 
-		}
-	}
+		};
+	};
 
 	// console.log(data);
 
 	const searchSubmitHandler = () => {
 
-	}
+	};
 
-	const endorsementTabPanels: tabPanels[] = [
+	let endorsementTabPanels: tabPanels[] = [];
+
+	$: endorsementTabPanels = [
 		{
 			id: uuidv4(),
 			index: 0,
 			label: "all",
 			hasCapitol: true,
-			panel: AllEndorsementPanel
+			panel: AllEndorsementPanel,
+			data: [ 
+				data.endorsed_actions, 
+				data.endorsed_amendments, 
+				data.endorsed_candidates, 
+				data.endorsed_legislation,
+				data.endorsed_referendums
+			]
 		},
 		{
 			id: uuidv4(),
 			index: 1,
 			label: "federal",
 			hasCapitol: true,
-			panel: FederalEndorsementsPanel
+			panel: FederalEndorsementsPanel,
+			data: [
+				amendmentsFederal,
+				actionsFederal,
+				candidatesFederal,
+				legislationFederal,
+				referendumsFederal
+			]
 		},
 		{
 			id: uuidv4(),
 			index: 2,
 			label: "state",
 			hasCapitol: true,
-			panel: StateEndorsementsPanel
+			panel: StateEndorsementsPanel,
+			data: [
+				amendmentsState,
+				actionsState,
+				candidatesState,
+				legislationState,
+				referendumsState
+			]
 		},
 		{
 			id: uuidv4(),
 			index: 3,
 			label: "county",
 			hasCapitol: true,
-			panel: CountyEndorsementsPanel
+			panel: CountyEndorsementsPanel,
+			data: [
+				amendmentsCounty,
+				actionsCounty,
+				candidatesCounty,
+				legislationCounty,
+				referendumsCounty
+			]
 		},
 		{
 			id: uuidv4(),
 			index: 4,
 			label: "city",
 			hasCapitol: true,
-			panel: CityEndorsementsPanel
+			panel: CityEndorsementsPanel,
+			data: [
+				amendmentsCity,
+				actionsCity,
+				candidatesCity,
+				legislationCity,
+				referendumsCity
+			]
 		}
-	]
+	];
 
 </script>
 

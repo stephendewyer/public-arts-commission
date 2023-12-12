@@ -75,4 +75,4 @@ export async function load({ url }) {
 
     return { paymentIntent, message, nameFirst, nameLast, customerEmail };
     
-}
+};

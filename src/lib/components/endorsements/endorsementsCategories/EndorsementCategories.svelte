@@ -1,5 +1,11 @@
 <script lang="ts">
     import NominateButton from '$lib/components/buttons/NominateButton.svelte';
+    export let categories_data: any[];
+    const endorsedAmendments = categories_data[1];
+    const endorsedCandidates = categories_data[2];
+    const endorsedLegislation = categories_data[3];
+    const endorsedReferendums = categories_data[4];
+
 </script>
 
 <ul class="endorsement_categories_container">
@@ -7,6 +13,11 @@
         <h3>
             candidates
         </h3>
+        {#each endorsedCandidates as candidate, i}
+            <div class="endorsement_card">
+                {candidate.campaign_name}
+            </div>
+        {/each}
         <NominateButton>
             nominate a candidate
         </NominateButton>
@@ -15,6 +26,11 @@
         <h3>
             referendums
         </h3>
+        {#each endorsedReferendums as referendum, i}
+            <div class="endorsement_card">
+                {referendum.referendum_name}
+            </div>
+        {/each}
         <NominateButton>
             nominate an initiative
         </NominateButton>
@@ -23,6 +39,11 @@
         <h3>
             legislation
         </h3>
+        {#each endorsedLegislation as legislation, i}
+            <div class="endorsement_card">
+                {legislation.legislation_name}
+            </div>
+        {/each}
         <NominateButton>
             nominate a bill
         </NominateButton>
@@ -31,6 +52,11 @@
         <h3>
             amendments
         </h3>
+        {#each endorsedAmendments as amendment, i}
+            <div class="endorsement_card">
+                {amendment.amendment_name}
+            </div>
+        {/each}
         <NominateButton>
             nominate an amendment
         </NominateButton>

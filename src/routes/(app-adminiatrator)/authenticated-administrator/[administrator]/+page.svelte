@@ -105,12 +105,9 @@
         }
     ];
 
-    $: console.log(campaignAndActionsTabPanels)
-
-
     const filterHandler = async () => {
 
-    }
+    };
 
 </script>
 
