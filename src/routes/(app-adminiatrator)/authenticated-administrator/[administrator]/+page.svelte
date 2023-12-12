@@ -16,6 +16,7 @@
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
     import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
     import { page } from '$app/stores';
+    import GovernmentLevels from '$lib/data/governmentLevel.json';
 
     const slug: string = $page.url.pathname;
 
@@ -45,20 +46,7 @@
 
     let searchInputValueChange: string = "";
 
-    const governmentLevelOptions: GovernmentLevel[] = [
-        {
-            name: "federal"
-        },
-        {
-            name: "state"
-        },
-        {
-            name: "county"
-        },
-        {
-            name: "city"
-        }
-    ];
+    const governmentLevelOptions = GovernmentLevels;
 
     let campaignAndActionsTabPanels: tabPanels[];
 

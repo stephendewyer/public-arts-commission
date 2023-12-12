@@ -120,14 +120,16 @@
 			index: 0,
 			label: "voter",
 			hasCapitol: false,
-			panel: LoginVoter
+			panel: LoginVoter,
+			data: []
 		},
 		{
 			id: uuidv4(),
 			index: 1,
 			label: "campaign",
 			hasCapitol: false,
-			panel: LoginCampaign
+			panel: LoginCampaign,
+			data: []
 		}
 	]
 
@@ -140,13 +142,6 @@
 </svelte:head>
 
 <section>
-	{#if $page.data?.session?.user}
-		<p>
-		
-			session is active
-
-		</p>
-	{/if}
 	<picture class="banner">
 		<img src={PublicArtsCommissionBanner} alt="public arts commission banner" />
 	</picture>

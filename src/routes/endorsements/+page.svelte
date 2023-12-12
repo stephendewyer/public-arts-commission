@@ -2,7 +2,6 @@
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
-    import YearSelection from '$lib/components/selections/YearSelection.svelte';
     import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
@@ -14,6 +13,8 @@
 	import FederalEndorsementsPanel from '$lib/components/endorsements/endorsementPanels/FederalEndorsementsPanel.svelte';
 	import AllEndorsementPanel from '$lib/components/endorsements/endorsementPanels/AllEndorsementPanel.svelte';
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
+	import Years from '$lib/data/years.json';
+	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
 
 	export let data;
 
@@ -24,7 +25,7 @@
 	let actionsCounty: Action[] = [];
 	let actionsCity: Action[] = [];
 
-	data.streamed.endorsed_actions.forEach((action) => {
+	$page.data.streamed.endorsed_actions.forEach((action: Action) => {
 		if (action.government_level === "federal") {
 			actionsFederal.push(action);
 		} else if (action.government_level === "state") {
@@ -334,10 +335,18 @@
 				/>
 			</div>
 		</div>
-        <YearSelection bind:yearInputValue={yearInputValue}>
-            select election year
-        </YearSelection>
-        
+		<SelectInput 
+			options={Years}
+			bind:selectInputValue={yearInputValue}
+			isValid={true}
+			required={false}
+			inputID="election_year"
+			inputName="election_year"
+			selectInputErrorMessage=""
+			inputLabel={true}
+		>
+			election year
+		</SelectInput>
 		<ActionButton
 			bind:disable={disableButton}
 		>

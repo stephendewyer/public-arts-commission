@@ -3,7 +3,7 @@
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let selectInputValue: string;
+    export let selectInputValue: string | number;
     export let selectInputErrorMessage: string;
     export let isValid: boolean;
     export let options: any;
