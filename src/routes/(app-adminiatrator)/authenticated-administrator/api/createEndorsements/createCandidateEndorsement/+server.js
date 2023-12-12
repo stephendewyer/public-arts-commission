@@ -23,14 +23,13 @@ export const POST = async ({request}) => {
 
   const data = await request.json();
 
-  console.log(data);
-
   const { 
     userEmail,
     imageFile,
     imageAltText,
     image,
     campaignName,
+    electorate,
     yearOfficeSought,
     electionDatePrimary,
     electionDateGeneral,
@@ -62,6 +61,7 @@ export const POST = async ({request}) => {
     !imageFile ||
     !imageAltText ||
     !campaignName ||
+    !electorate ||
     !yearOfficeSought ||
     !electionDateGeneral ||
     !governmentLevel
@@ -233,9 +233,10 @@ export const POST = async ({request}) => {
 	contact_state,
 	contact_zip_code,
 	contact_email,
-    elected_in_primary_rejected_in_general,
+	elected_in_primary_rejected_in_general,
     rejected_in_primary_campaign_ended,
-    rejected_in_primary_rejected_in_general
+    rejected_in_primary_rejected_in_general,
+	electorate
   ) VALUES (
     "${imageID}",
     "${campaignName}",
@@ -263,7 +264,8 @@ export const POST = async ({request}) => {
     "${emailContact}",
     "${electedInPrimaryRejectedInGeneralINT}",
     "${rejectedInPrimaryCampaignEndedINT}",
-    "${rejectedInPrimaryRejectedInGeneralINT}"
+    "${rejectedInPrimaryRejectedInGeneralINT}",
+    "${electorate}"    
   )`;
 
   await res.query(insertEndorsedCandidateInformationStatement)

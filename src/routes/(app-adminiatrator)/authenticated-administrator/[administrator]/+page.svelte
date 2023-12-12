@@ -21,7 +21,15 @@
 
     export let data;
 
-    $: username = data.username;  
+    $: data;
+
+    let username = data.username;
+
+    let endorsedLegislation = data.endorsed_legislation;
+    let endorsedReferendums = data.endorsed_referendums;
+    let endorsedActions = data.endorsed_actions;
+    let endorsedCandidates = data.endorsed_candidates;
+    let endorsedAmendments = data.endorsed_amendments;
 
     let openFilters: boolean;
 
@@ -52,44 +60,52 @@
         }
     ];
 
-    const campaignAndActionsTabPanels: tabPanels[] = [
-		{
-			id: uuidv4(),
-			index: 0,
-			label: "candidates",
-			hasCapitol: false,
-			panel: PanelCandidates
-		},
-		{
-			id: uuidv4(),
-			index: 1,
-			label: "referendums",
-			hasCapitol: false,
-			panel: PanelReferendums
-		},
-		{
-			id: uuidv4(),
-			index: 2,
-			label: "legislation",
-			hasCapitol: false,
-			panel: PanelLegislation
-		},
-		{
-			id: uuidv4(),
-			index: 3,
-			label: "amendments",
-			hasCapitol: false,
-			panel: PanelAmendments
-		}
-        ,
-		{
-			id: uuidv4(),
-			index: 4,
-			label: "actions",
-			hasCapitol: false,
-			panel: PanelActions
-		}
-	];
+    let campaignAndActionsTabPanels: tabPanels[];
+
+    $: campaignAndActionsTabPanels = [
+        {
+            id: uuidv4(),
+            index: 0,
+            label: "candidates",
+            hasCapitol: false,
+            panel: PanelCandidates,
+            data: endorsedCandidates
+        },
+        {
+            id: uuidv4(),
+            index: 1,
+            label: "referendums",
+            hasCapitol: false,
+            panel: PanelReferendums,
+            data: endorsedReferendums
+        },
+        {
+            id: uuidv4(),
+            index: 2,
+            label: "legislation",
+            hasCapitol: false,
+            panel: PanelLegislation,
+            data: endorsedLegislation
+        },
+        {
+            id: uuidv4(),
+            index: 3,
+            label: "amendments",
+            hasCapitol: false,
+            panel: PanelAmendments,
+            data: endorsedAmendments
+        },
+        {
+            id: uuidv4(),
+            index: 4,
+            label: "actions",
+            hasCapitol: false,
+            panel: PanelActions,
+            data: endorsedActions
+        }
+    ];
+
+    $: console.log(campaignAndActionsTabPanels)
 
 
     const filterHandler = async () => {

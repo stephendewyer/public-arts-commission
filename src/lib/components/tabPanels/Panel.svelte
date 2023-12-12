@@ -2,6 +2,8 @@
     export let tabPanels: tabPanels[];
     export let activeTab: number;
 
+    // $: console.log(tabPanels);
+
 </script>
 
 {#each tabPanels as tabPanel, i}
@@ -12,6 +14,7 @@
             role="tabpanel"
             tabindex={-i}
             aria-labelledby="tabpanel_header_{tabPanel.label}"
+            panel_data={tabPanel.data}
         />
     {/if}
 {/each}

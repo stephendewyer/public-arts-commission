@@ -1,8 +1,9 @@
 <script lang="ts">
 
     let activeTab: number = 0;
+    export let panel_data: any[];
 
-    $: activeTab;
+    // $: console.log(panel_data[0].election_date_general.getFullYear());
 
 </script>
 <div class="tabpanel_container">
@@ -34,10 +35,28 @@
             </h3>
         </a>
     </div>
-    
-
     {#if (activeTab === 0)}
-        endorsed candidates
+        <table>
+            <tr>
+                <th>campaign name</th>
+                <th>election year</th>
+                <th>electorate</th>
+                <th>more info</th>
+            </tr>
+            {#each panel_data as campaign, i}
+                <tr>
+                    <td>
+                        {campaign.campaign_name}
+                    </td>
+                    <td>
+                        {campaign.election_date_general.slice(0, 4)}
+                    </td>
+                    <td>
+                        {campaign.electorate}
+                    </td>
+                </tr>
+            {/each}
+        </table>
     {:else if (activeTab === 1)}
         nominated candidates
     {/if}

@@ -24,6 +24,7 @@
     let imageAltTextInputValue: string = "";
     let image: any;
     let campaignNameInputValue: string = "";
+    let electorateInputValue: string = "";
     let yearOfficeSoughtInputValue: number | null = null;
     let electionDatePrimaryInputValue: string = "";
     let electionDateGeneralInputValue: string = "";
@@ -40,7 +41,6 @@
     let electedInPrimaryRejectedInGeneralChecked: boolean = false;
     let rejectedInPrimaryCampaignEndedChecked: boolean = false;
     let rejectedInPrimaryRejectedInGeneralChecked: boolean = false;
-
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -66,6 +66,7 @@
     let cityIsValid: boolean = true;
     let partyIsValid: boolean = true;
     let websiteURLIsValid: boolean = true;
+    let electorateIsValid: boolean = true;
     let nameFirstContactIsValid: boolean = true;
     let nameLastContactIsValid: boolean = true;
     let phoneContactIsValid: boolean = true;
@@ -104,6 +105,7 @@
         imageAltText: string,
         image: any,
         campaignName: string,
+        electorate: string,
         yearOfficeSought: number | null,
         electionDatePrimary: string,
         electionDateGeneral: string,
@@ -138,6 +140,7 @@
                 imageAltText,
                 image,
                 campaignName,
+                electorate,
                 yearOfficeSought,
                 electionDatePrimary,
                 electionDateGeneral,
@@ -189,6 +192,7 @@
                 imageAltTextInputValue,
                 image,
                 campaignNameInputValue,
+                electorateInputValue,
                 yearOfficeSoughtInputValue,
                 electionDatePrimaryInputValue,
                 electionDateGeneralInputValue,
@@ -245,7 +249,7 @@
                 stateContactInputValue = "",
                 zipCodeContactInputValue = null,
                 emailContactInputValue = ""
-                // goto("/authenticated-administrator/admin");
+                goto("/authenticated-administrator/admin");
             };
 
             if (responseItem.error) {
@@ -296,7 +300,7 @@
             required={true}
             imageFileInputErrorMessage="image file required"
         >
-            image file
+            image file*
         </ImageFileInput>
         {#if (image)}
             <div class="campaign_image_container">
@@ -313,7 +317,7 @@
             required={true}
             textInputErrorMessage="image alt text required"
         >
-            image alt text
+            image alt text*
         </TextInput>
         <h2>campaign information</h2>
         <TextInput
@@ -326,7 +330,19 @@
             required={true}
             textInputErrorMessage="campaign name required"
         >
-            campaign name
+            campaign name*
+        </TextInput>
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={electorateInputValue}
+            bind:isValid={electorateIsValid}
+            placeholder="Michigan Congressional District 13"
+            inputName="electorate"
+            inputID="electorate"
+            required={true}
+            textInputErrorMessage="electorat required"
+        >
+            electorate*
         </TextInput>
         <NumberInput
             inputLabel={true}
@@ -375,7 +391,7 @@
             selectInputErrorMessage=""
             inputLabel={true}
         >
-            government level
+            government level*
         </SelectInput>
         {#if (governmentLevelInputValue !== "")}
             <div class="expandable_cells">
