@@ -80,6 +80,8 @@ export async function PATCH({request}) {
 
     });
 
+    res.end();
+
     // begin send email verification
 
     sgMail.setApiKey(SENDGRIDAPIKey)

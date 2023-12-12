@@ -209,6 +209,8 @@ export const POST = async ({request}) => {
     throw error;
   });
 
+  res.end();
+
   return new Response(JSON.stringify({success: `action endorsement created!`}), {status: 200});
 
-}
+};

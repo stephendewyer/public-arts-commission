@@ -130,8 +130,8 @@ declare global {
 		image_ID: number;
 		campaign_name: string;
 		office_sought_starting_year: number;
-		election_date_primary: Date;
-		election_date_general: Date;
+		election_date_primary: any;
+		election_date_general: any;
 		government_level: string;
 		state: string;
 		county: string;
@@ -225,8 +225,8 @@ declare global {
 		action_ID: number;
 		image_ID: number;
 		action_name: string;
-		date_start: Date;
-		date_end: Date;
+		date_start: any;
+		date_end: any;
 		time_start: Date;
 		time_end: Date;
 		time_zone: string;

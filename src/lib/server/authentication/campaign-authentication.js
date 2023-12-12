@@ -23,6 +23,8 @@ export const campaignAuthentication = async (/** @type {{ email: string; passwor
 
     const [campaignRows, campaignFields] = await res.query(checkCampaignsEmailQuery);
 
+    res.end();
+
     const campaignExists = JSON.parse(JSON.stringify(campaignRows));
 
     if (campaignExists?.length <= 0) {

@@ -79,7 +79,8 @@ export async function POST({request}) {
         throw error;
 
     });
-    
+
+    res.end();    
     
     // begin send email verification
 

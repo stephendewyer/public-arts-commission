@@ -23,7 +23,9 @@ export const adminAuthentication = async (/** @type {{ email: string; password: 
 
     const [adminRows, adminFields] = await res.query(checkAdminsEmailQuery);
 
-    const adminExists = JSON.parse(JSON.stringify(adminRows));
+    res.end();
+
+    const adminExists = JSON.parse(JSON.stringify(adminRows));    
 
     if (adminExists?.length <= 0) {
 

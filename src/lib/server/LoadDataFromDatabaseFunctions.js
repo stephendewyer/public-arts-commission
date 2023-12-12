@@ -25,6 +25,8 @@ export const LoadAllEndorsedCandidates = async () => {
 
     });
 
+    res.end();
+
     return candidates;
 
     // end load candidates
@@ -54,6 +56,8 @@ export const LoadAllEndorsedLegislation = async () => {
         throw error;
 
     });
+
+    res.end();
 
     return legislation;
 
@@ -87,6 +91,8 @@ export const LoadAllEndorsedReferendums = async () => {
 
     });
 
+    res.end();
+
     return referendums;
 
     // end load referendums
@@ -118,6 +124,8 @@ export const LoadAllEndorsedAmendments = async () => {
 
     });
 
+    res.end();
+
     return amendments;
 
     // end load amendments
@@ -148,6 +156,8 @@ export const LoadAllEndorsedActions = async () => {
         throw error;
 
     });
+
+    res.end();
 
     return actions;
 

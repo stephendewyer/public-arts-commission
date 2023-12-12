@@ -1,9 +1,10 @@
 <script lang="ts">
+    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    export let panel_data: Candidate[];
 
     let activeTab: number = 0;
-    export let panel_data: any[];
 
-    // $: console.log(panel_data[0].election_date_general.getFullYear());
+    $: activeTab;
 
 </script>
 <div class="tabpanel_container">
@@ -37,36 +38,81 @@
     </div>
     {#if (activeTab === 0)}
         <table>
-            <tr>
-                <th>campaign name</th>
-                <th>election year</th>
-                <th>electorate</th>
-                <th>more info</th>
-            </tr>
-            {#each panel_data as campaign, i}
+            <tbody>
                 <tr>
-                    <td>
-                        {campaign.campaign_name}
-                    </td>
-                    <td>
-                        {campaign.election_date_general.slice(0, 4)}
-                    </td>
-                    <td>
-                        {campaign.electorate}
-                    </td>
+                    <th>
+                        <h5>
+                            campaign name
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            election year
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            electorate
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            more info
+                        </h5>
+                    </th>
                 </tr>
-            {/each}
+                {#each panel_data as campaign, i}
+                    <tr>
+                        <td>
+                            <p>
+                                {campaign.campaign_name}
+                            </p>
+                            
+                        </td>
+                        <td>
+                            <p>
+                                {campaign.election_date_general.slice(0, 4)}
+                            </p>
+                            
+                        </td>
+                        <td>
+                            <p>
+                                {campaign.electorate}
+                            </p>
+                            
+                        </td>
+                        <td>
+                            <div class="meatballs_container">
+                                {@html MeatballsIcon}
+                            </div>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
         </table>
     {:else if (activeTab === 1)}
         nominated candidates
     {/if}
 </div>
 <style>
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #FBF4F9;
+    }
+
+    tbody > tr > td {
+        padding: 1rem;
+    }
 
     .tabpanel_container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
     .tabs_container {
@@ -142,6 +188,10 @@
 		border-top: 6px solid #4C4239;
 		overflow: visible;
 	}
+
+    .meatballs_container {
+        width: 2rem;
+    }
 
     @media (max-width: 1440px) {
 

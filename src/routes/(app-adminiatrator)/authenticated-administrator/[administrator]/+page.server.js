@@ -34,6 +34,8 @@ export const load = async (event) => {
 
     });
 
+    res.end();
+
     const username = userInAdministrators[0].username;
 
     // load all the endorsed candidates from the database

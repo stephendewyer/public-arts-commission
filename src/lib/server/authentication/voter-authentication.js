@@ -23,6 +23,8 @@ export const voterAuthentication = async (/** @type {{ email: string; password: 
 
     const [voterRows, voterFields] = await res.query(checkVoterEmailQuery);
 
+    res.end();
+
     const voterExists = JSON.parse(JSON.stringify(voterRows));
 
     if (voterExists?.length <= 0) {

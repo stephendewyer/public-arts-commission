@@ -1,4 +1,6 @@
 <script lang="ts">
+    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    export let panel_data: Legislation[];
 
     let activeTab: number = 0;
 

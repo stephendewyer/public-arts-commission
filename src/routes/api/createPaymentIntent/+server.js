@@ -7,7 +7,7 @@ export const POST = async ({request}) => {
 
       return new Response(JSON.stringify({error: "method is not POST"}), {status: 422});
 
-    }
+    };
   
     const data = await request.json();
   
@@ -60,7 +60,9 @@ export const POST = async ({request}) => {
 
         success = false;
 
-    }
+    };
+
+    res.end();
 
     if (success) {
 
@@ -70,5 +72,5 @@ export const POST = async ({request}) => {
 
         return new Response(JSON.stringify({error: "failed to enter user checkout registration data into database"}), {status: 422});
 
-    }
-}
+    };
+};

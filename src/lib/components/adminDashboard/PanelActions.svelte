@@ -1,4 +1,6 @@
 <script lang="ts">
+    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    export let panel_data: Action[];
 
     let activeTab: number = 0;
 
@@ -37,7 +39,66 @@
     
 
     {#if (activeTab === 0)}
-        endorsed candidates
+    <table>
+        <tbody>
+            <tr>
+                <th>
+                    <h5>
+                        action name
+                    </h5>
+                </th>
+                <th>
+                    <h5>
+                        start date
+                    </h5>
+                </th>
+                <th>
+                    <h5>
+                        end date
+                    </h5>
+                </th>
+                <th>
+                    <h5>
+                        government level
+                    </h5>
+                </th>
+                <th>
+                    <h5>
+                        more info
+                    </h5>
+                </th>
+            </tr>
+            {#each panel_data as action, i}
+                <tr>
+                    <td>
+                        <p>
+                            {action.action_name}
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            {action.date_start.slice(0, 4)}
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            {action.date_end.slice(0, 4)}
+                        </p>
+                    </td>
+                    <td>
+                        <p>
+                            {action.government_level}
+                        </p>
+                    </td>
+                    <td>
+                        <div class="meatballs_container">
+                            {@html MeatballsIcon}
+                        </div>
+                    </td>
+                </tr>
+            {/each}
+        </tbody>
+    </table>
     {:else if (activeTab === 1)}
         nominated candidates
     {/if}

@@ -23,13 +23,13 @@ export async function POST({request}) {
     !message 
   ) {
     return new Response(JSON.stringify({error: "missing form data"}), {status: 422});
-  }
+  };
 
   if (
     !email.includes('@')
   ) {
     return new Response(JSON.stringify({error: "missing an @ symbol in email address"}), {status: 422});
-  }
+  };
 
   // begin sending the message
 
@@ -58,8 +58,8 @@ export async function POST({request}) {
     return new Response(JSON.stringify({success: "data sent"}), {status: 200})
   } catch (error) {
     return new Response(JSON.stringify({error: "message not sent due to a problem with the API"}), {status: 422});
-  }
+  };
 
   // end sending the message
 
-}
+};

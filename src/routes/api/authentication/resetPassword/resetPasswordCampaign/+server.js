@@ -80,6 +80,7 @@ export async function POST({request}) {
 
     });
     
+    res.end();
     
     // begin send email verification
 

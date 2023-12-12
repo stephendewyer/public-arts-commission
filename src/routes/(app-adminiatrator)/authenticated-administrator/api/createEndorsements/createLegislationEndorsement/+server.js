@@ -370,6 +370,8 @@ export const POST = async ({request}) => {
 
     };
 
+    res.end();
+
     return new Response(JSON.stringify({success: `legislation endorsement created!`}), {status: 200});
 
-}
+};

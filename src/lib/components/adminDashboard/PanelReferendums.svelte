@@ -1,4 +1,6 @@
 <script lang="ts">
+    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    export let panel_data: Referendum[];
 
     let activeTab: number = 0;
 

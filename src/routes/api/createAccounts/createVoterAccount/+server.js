@@ -130,6 +130,8 @@ export async function POST({request}) {
     throw error;
   });
 
+  res.end();
+
   // begin sending the message
 
   sgMail.setApiKey(SENDGRIDAPIKey);
