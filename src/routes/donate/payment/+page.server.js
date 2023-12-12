@@ -40,6 +40,8 @@ export const load = async ({ url }) => {
 
     const [rows, fields] = await res.query(customerIdQuery);
 
+    res.end();
+
     // convert the rows into valid json to avoid OKPacket type
 
     const rowsJson = JSON.parse(JSON.stringify(rows));
