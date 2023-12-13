@@ -19,23 +19,36 @@ export const adminAuthentication = async (/** @type {{ email: string; password: 
 
     // load query to check if row with same voter first name and voter last name exists
 
+    /**
+     * @type {string | any[]}
+     */
+    let adminRows = [];
+
     const checkAdminsEmailQuery = `SELECT * FROM administrators WHERE email = '${credentials.email}'`;
 
-    const [adminRows, adminFields] = await res.query(checkAdminsEmailQuery);
+    await res.query(checkAdminsEmailQuery)
+    .then(([ rows ]) => {
+
+        adminRows = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
 
     res.end();
 
-    const adminExists = JSON.parse(JSON.stringify(adminRows));    
-
-    if (adminExists?.length <= 0) {
+    if (adminRows?.length <= 0) {
 
         return null;
     
     };
 
-    const adminExistsEmail = adminExists[0].email;
+    const adminExistsEmail = adminRows[0].email;
 
-    const adminExistsPassword = adminExists[0].password;
+    const adminExistsPassword = adminRows[0].password;
 
     const isValidPassword = await verifyPassword(credentials.password, adminExistsPassword);
         

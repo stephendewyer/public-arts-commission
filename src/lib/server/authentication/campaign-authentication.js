@@ -19,23 +19,36 @@ export const campaignAuthentication = async (/** @type {{ email: string; passwor
 
     // load query to check if row with same voter first name and voter last name exists
 
+    /**
+     * @type {string | any[]}
+     */
+    let campaignRows = [];
+
     const checkCampaignsEmailQuery = `SELECT * FROM users_campaigns WHERE email = '${credentials.email}'`;
 
-    const [campaignRows, campaignFields] = await res.query(checkCampaignsEmailQuery);
+    await res.query(checkCampaignsEmailQuery)
+    .then(([ rows ]) => {
+
+        campaignRows = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
 
     res.end();
 
-    const campaignExists = JSON.parse(JSON.stringify(campaignRows));
-
-    if (campaignExists?.length <= 0) {
+    if (campaignRows?.length <= 0) {
 
         return null;
     
     };
 
-    const campaignExistsEmail = campaignExists[0].email;
+    const campaignExistsEmail = campaignRows[0].email;
 
-    const campaignExistsPassword = campaignExists[0].password;
+    const campaignExistsPassword = campaignRows[0].password;
 
     const isValidPassword = await verifyPassword(credentials.password, campaignExistsPassword);
         

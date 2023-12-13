@@ -43,24 +43,20 @@ export const POST = async ({request}) => {
     const insertQuery = `INSERT INTO users_in_checkout (NameFirst, NameLast, Email, stripe_id) VALUES ("${nameFirst}", "${nameLast}", "${email}", "${customer.id}")`;
 
     let success = false;
-
-    try {
-
-        // add the user data to users_in_checkout database table
-
-        res.query(insertQuery);
-
-        // redirect to collect payment
+    // add the user data to users_in_checkout database table
+    await res.query(insertQuery)
+    .then(() => {
 
         success = true;
-
-        // return {success: "data entered into user checkout registration database"};
-
-    } catch (error) {
+        
+    })
+    .catch(error => {
 
         success = false;
 
-    };
+        throw error;
+
+    });
 
     res.end();
 
@@ -73,4 +69,5 @@ export const POST = async ({request}) => {
         return new Response(JSON.stringify({error: "failed to enter user checkout registration data into database"}), {status: 422});
 
     };
+
 };

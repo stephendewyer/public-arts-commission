@@ -19,23 +19,36 @@ export const voterAuthentication = async (/** @type {{ email: string; password: 
 
     // load query to check if row with same voter first name and voter last name exists
 
+    /**
+     * @type {string | any[]}
+     */
+    let voterRows = [];
+
     const checkVoterEmailQuery = `SELECT * FROM users_voters WHERE email = '${credentials.email}'`;
 
-    const [voterRows, voterFields] = await res.query(checkVoterEmailQuery);
+    await res.query(checkVoterEmailQuery)
+    .then(([ rows ]) => {
+
+        voterRows = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
 
     res.end();
 
-    const voterExists = JSON.parse(JSON.stringify(voterRows));
-
-    if (voterExists?.length <= 0) {
+    if (voterRows?.length <= 0) {
 
         return null;
     
     };
 
-    const voterExistsEmail = voterExists[0].email;
+    const voterExistsEmail = voterRows[0].email;
 
-    const voterExistsPassword = voterExists[0].password;
+    const voterExistsPassword = voterRows[0].password;
 
     const isValidPassword = await verifyPassword(credentials.password, voterExistsPassword);
         

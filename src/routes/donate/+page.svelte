@@ -261,8 +261,8 @@
             <EmailInput 
                 isValid={emailIsValid}
                 placeholder="marco.polo@marcopolo.com"
-                inputID="checkout_user_nameFirst"
-                inputName="checkout_user_nameFirst"
+                inputID="checkout_user_email"
+                inputName="checkout_user_email"
                 bind:emailInputValue={emailInputValue}
                 inputLabel={true}
                 required={true}
@@ -274,18 +274,18 @@
             </ActionButton>
         </form>
         {#if (pending)}
-                <PendingFlashMessage >
-                    please wait while we validate your data
-                </PendingFlashMessage>
-            {:else if (item.error)}
-                <ErrorFlashMessage >
-                    {item.error}
-                </ErrorFlashMessage>
-            {:else if (item.success)}
-                <SuccessFlashMessage>
-                    {item.success}
-                </SuccessFlashMessage>
-            {/if}
+            <PendingFlashMessage >
+                please wait while we validate your data
+            </PendingFlashMessage>
+        {:else if (item.error)}
+            <ErrorFlashMessage >
+                {item.error}
+            </ErrorFlashMessage>
+        {:else if (item.success)}
+            <SuccessFlashMessage>
+                {item.success}
+            </SuccessFlashMessage>
+        {/if}
     </div>
     
 </section>
