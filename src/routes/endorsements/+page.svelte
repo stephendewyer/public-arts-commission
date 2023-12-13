@@ -217,12 +217,16 @@
 			label: "all",
 			hasCapitol: true,
 			panel: AllEndorsementPanel,
-			data: [ 
-				data.streamed.endorsed_amendments, 
-				data.streamed.endorsed_candidates, 
-				data.streamed.endorsed_legislation,
-				data.streamed.endorsed_referendums
-			]
+			data: {
+				endorsed_amendments: data.streamed.endorsed_amendments, 
+				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_candidates: data.streamed.endorsed_candidates,
+				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
+				endorsed_legislation: data.streamed.endorsed_legislation,
+				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
+				endorsed_referendums: data.streamed.endorsed_referendums,
+				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+			}
 		},
 		{
 			id: uuidv4(),
@@ -230,12 +234,16 @@
 			label: "federal",
 			hasCapitol: true,
 			panel: FederalEndorsementsPanel,
-			data: [
-				amendmentsFederal,
-				candidatesFederal,
-				legislationFederal,
-				referendumsFederal
-			]
+			data: {
+				endorsed_amendments: amendmentsFederal, 
+				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_candidates: candidatesFederal,
+				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
+				endorsed_legislation: legislationFederal,
+				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
+				endorsed_referendums: referendumsFederal,
+				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+			}
 		},
 		{
 			id: uuidv4(),
@@ -243,12 +251,16 @@
 			label: "state",
 			hasCapitol: true,
 			panel: StateEndorsementsPanel,
-			data: [
-				amendmentsState,
-				candidatesState,
-				legislationState,
-				referendumsState
-			]
+			data: {
+				endorsed_amendments: amendmentsState, 
+				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_candidates: candidatesState,
+				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
+				endorsed_legislation: legislationState,
+				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
+				endorsed_referendums: referendumsState,
+				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+			}
 		},
 		{
 			id: uuidv4(),
@@ -256,12 +268,16 @@
 			label: "county",
 			hasCapitol: true,
 			panel: CountyEndorsementsPanel,
-			data: [
-				amendmentsCounty,
-				candidatesCounty,
-				legislationCounty,
-				referendumsCounty
-			]
+			data: {
+				endorsed_amendments: amendmentsCounty, 
+				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_candidates: candidatesCounty,
+				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
+				endorsed_legislation: legislationCounty,
+				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
+				endorsed_referendums: referendumsCounty,
+				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+			}
 		},
 		{
 			id: uuidv4(),
@@ -269,12 +285,16 @@
 			label: "city",
 			hasCapitol: true,
 			panel: CityEndorsementsPanel,
-			data: [
-				amendmentsCity,
-				candidatesCity,
-				legislationCity,
-				referendumsCity
-			]
+			data: {
+				endorsed_amendments: amendmentsCity, 
+				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_candidates: candidatesCity,
+				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
+				endorsed_legislation: legislationCity,
+				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
+				endorsed_referendums: referendumsCity,
+				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+			}
 		}
 	];
 

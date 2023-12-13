@@ -5,12 +5,30 @@
     import EndorsedLegislationCard from '$lib/components/cards/endorsementCards/LegislationEndorsementCard.svelte';
     import EndorsedReferendumCard from '$lib/components/cards/endorsementCards/ReferendumEndorsementCard.svelte';
 
-    export let categories_data: any[];
+    export let categories_data: any;
 
-    const endorsedAmendments = categories_data[0];
-    const endorsedCandidates = categories_data[1];
-    const endorsedLegislation = categories_data[2];
-    const endorsedReferendums = categories_data[3];
+    const endorsedAmendments = categories_data.endorsed_amendments;
+    const endorsedAmendmentsImages = categories_data.endorsed_amendments_images;
+    const endorsedCandidates = categories_data.endorsed_candidates;
+    const endorsedCandidatesImages = categories_data.endorsed_candidates_images;
+    const endorsedLegislation = categories_data.endorsed_legislation;
+    const endorsedLegislationImages = categories_data.endorsed_legislation_images;
+    const endorsedReferendums = categories_data.endorsed_referendums;
+    const endorsedReferendumsImages = categories_data.endorsed_referendums_images;
+
+    // combine the image row that matches candidate row
+
+    let endorsedAmendmentsWithImages: any[] = [];
+
+    endorsedAmendments.forEach((amendment: Amendment) => {
+        let amendmentImageId = amendment.image_ID;
+        // if amendment matches image, merge the image with the amendment
+        endorsedAmendmentsImages.forEach((imageRow: Image) => {
+            if (amendmentImageId === imageRow.image_ID) {
+                endorsedAmendmentsWithImages.push({...amendment, ...imageRow});
+            };
+        });
+    });
 
 </script>
 
@@ -52,7 +70,7 @@
         <h3>
             amendments
         </h3>
-        {#each endorsedAmendments as amendment, i}
+        {#each endorsedAmendmentsWithImages as amendment, i}
             <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
         {/each}
         <NominateButton>

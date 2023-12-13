@@ -44,7 +44,7 @@ declare global {
         label: string;
 		hasCapitol: boolean;
 		panel: typeof SvelteComponent<any>;
-		data: any[];
+		data: any;
     }
 
 	interface GeolocationCoordinates {

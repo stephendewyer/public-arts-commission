@@ -16,7 +16,7 @@
 
 	let open: boolean = false;
 
-	$: console.log(user);
+	// $: console.log(user);
 	
 	let footerElHeight: number = 0;
 
