@@ -24,13 +24,13 @@
 
     $: data;
 
-    let username = data.username;
+    let username = data.streamed.username;
 
-    let endorsedLegislation = data.endorsed_legislation;
-    let endorsedReferendums = data.endorsed_referendums;
-    let endorsedActions = data.endorsed_actions;
-    let endorsedCandidates = data.endorsed_candidates;
-    let endorsedAmendments = data.endorsed_amendments;
+    let endorsedLegislation = data.streamed.endorsed_legislation;
+    let endorsedReferendums = data.streamed.endorsed_referendums;
+    let endorsedActions = data.streamed.endorsed_actions;
+    let endorsedCandidates = data.streamed.endorsed_candidates;
+    let endorsedAmendments = data.streamed.endorsed_amendments;
 
     let openFilters: boolean;
 

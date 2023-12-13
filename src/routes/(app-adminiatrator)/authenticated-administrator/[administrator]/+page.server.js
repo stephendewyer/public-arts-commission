@@ -52,13 +52,15 @@ export const load = async (event) => {
 
     return { 
 
-        username: username,
-        user: session?.user,
-        endorsed_candidates: endorsedCandidates,
-        endorsed_legislation: endorsedLegislation,
-        endorsed_actions: endorsedActions,
-        endorsed_referendums: endorsedReferendums,
-        endorsed_amendments: endorsedAmendments
+        streamed: {
+            username: username,
+            user: session?.user,
+            endorsed_candidates: endorsedCandidates,
+            endorsed_legislation: endorsedLegislation,
+            endorsed_actions: endorsedActions,
+            endorsed_referendums: endorsedReferendums,
+            endorsed_amendments: endorsedAmendments
+        }
 
     };
 

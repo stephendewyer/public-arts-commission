@@ -77,9 +77,9 @@ export const load = async (event) => {
     const endorsedActionsImages = await LoadAllEndorsedActionsImages(endorsedActionsImageIds);
 
     return { 
-
-        user: session?.user,
+        
         streamed: {
+            user: session?.user,
             endorsed_candidates: endorsedCandidates,
             endorsed_candidates_images: endorsedCandidatesImages,
             endorsed_legislation: endorsedLegislation,

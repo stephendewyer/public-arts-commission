@@ -6,7 +6,9 @@
 	import LoginIcon from "$lib/images/icons/login_icon.svg?raw";
 	import LogoutButton from '$lib/components/buttons/LogoutButton.svelte';
 
-	$: user = $page.data.user;
+	// IMPORTANT!  update user on page change using $page store
+
+	$: user = $page.data.streamed.user;
 
 	let callbackURL: string = "";
 	let logoURL: string = "/";

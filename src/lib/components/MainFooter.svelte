@@ -4,7 +4,9 @@
     import LogoSecondary from "$lib/images/logo/public_arts_commission_logo_secondary.svg?raw";
     import LogoutButtonSecondary from '$lib/components/buttons/LogoutButtonSecondary.svelte';
 
-    $: user = $page.data.user;
+    // IMPORTANT!  update user on page change using $page store
+
+    $: user = $page.data.streamed.user;
 
     let callbackURL: string = "";
     let logoURL: string = "/";
