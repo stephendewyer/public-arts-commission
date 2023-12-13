@@ -16,16 +16,50 @@
     const endorsedReferendums = categories_data.endorsed_referendums;
     const endorsedReferendumsImages = categories_data.endorsed_referendums_images;
 
-    // combine the image row that matches candidate row
-
-    let endorsedAmendmentsWithImages: any[] = [];
+    let endorsedAmendmentsWithImages: AmendmentWithImage[] = [];
 
     endorsedAmendments.forEach((amendment: Amendment) => {
         let amendmentImageId = amendment.image_ID;
-        // if amendment matches image, merge the image with the amendment
+
         endorsedAmendmentsImages.forEach((imageRow: Image) => {
             if (amendmentImageId === imageRow.image_ID) {
                 endorsedAmendmentsWithImages.push({...amendment, ...imageRow});
+            };
+        });
+    });
+
+    let endorsedCandidatesWithImages: CandidateWithImage[] = [];
+
+    endorsedCandidates.forEach((candidate: Candidate) => {
+        let candidateImageId = candidate.image_ID;
+
+        endorsedCandidatesImages.forEach((imageRow: Image) => {
+            if (candidateImageId === imageRow.image_ID) {
+                endorsedCandidatesWithImages.push({...candidate, ...imageRow});
+            };
+        });
+    });
+
+    let endorsedLegislationWithImages: LegislationWithImage[] = [];
+
+    endorsedLegislation.forEach((legislation: Legislation) => {
+        let legislationImageId = legislation.image_ID;
+
+        endorsedLegislationImages.forEach((imageRow: Image) => {
+            if (legislationImageId = imageRow.image_ID) {
+                endorsedLegislationWithImages.push({...legislation, ...imageRow});
+            };
+        });
+    });
+
+    let endorsedReferendumsWithImages: ReferendumWithImage[] = [];
+
+    endorsedReferendums.forEach((referendum: Referendum) => {
+        let referendumImageId = referendum.image_ID;
+
+        endorsedReferendumsImages.forEach((imageRow: Image) => {
+            if (referendumImageId = imageRow.image_ID) {
+                endorsedReferendumsWithImages.push({...referendum, ...imageRow});
             };
         });
     });
@@ -37,7 +71,7 @@
         <h3>
             candidates
         </h3>
-        {#each endorsedCandidates as candidate, i}
+        {#each endorsedCandidatesWithImages as candidate, i}
             <EndorsedCandidateCard endorsedCandidateData={candidate}/>
         {/each}
         <NominateButton>
@@ -48,7 +82,7 @@
         <h3>
             referendums
         </h3>
-        {#each endorsedReferendums as referendum, i}
+        {#each endorsedReferendumsWithImages as referendum, i}
             <EndorsedReferendumCard endorsedReferendumData={referendum} />
         {/each}
         <NominateButton>
@@ -59,7 +93,7 @@
         <h3>
             legislation
         </h3>
-        {#each endorsedLegislation as legislation, i}
+        {#each endorsedLegislationWithImages as legislation, i}
             <EndorsedLegislationCard endorsedLegislationData={legislation} />
         {/each}
         <NominateButton>
