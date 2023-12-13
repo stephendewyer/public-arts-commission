@@ -165,6 +165,159 @@ export const LoadAllEndorsedActions = async () => {
 
 };
 
+export const LoadAllEndorsedCandidatesImages = async (/** @type {number[]} */ image_IDs) => {
+    // select images from image_collection table where image_ID == image_ID
+    //image ids comma separated list
+    const listImageIds = image_IDs.join(", ");
+
+    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
+
+    /**
+     * @type {Image[]}
+     */
+    let candidatesImages = [];
+
+    let res = await mysqlConnection();
+
+    await res.query(loadImagesStatement)
+    .then(([ rows ]) => {
+
+        candidatesImages = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    res.end();
+
+    return candidatesImages;
+
+};
+
+export const LoadAllEndorsedActionsImages = async (/** @type {number[]} */ image_IDs) => {
+    const listImageIds = image_IDs.join(", ");
+
+    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
+
+    /**
+     * @type {Image[]}
+     */
+    let actionsImages = [];
+
+    let res = await mysqlConnection();
+
+    await res.query(loadImagesStatement)
+    .then(([ rows ]) => {
+
+        actionsImages = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    res.end();
+
+    return actionsImages;
+    
+};
+
+export const LoadAllEndorsedReferendumsImages = async (/** @type {number[]} */ image_IDs) => {
+
+    const listImageIds = image_IDs.join(", ");
+
+    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
+
+    /**
+     * @type {Image[]}
+     */
+    let referendumsImages = [];
+
+    let res = await mysqlConnection();
+
+    await res.query(loadImagesStatement)
+    .then(([ rows ]) => {
+
+        referendumsImages = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    res.end();
+
+    return referendumsImages;
+
+};
+
+export const LoadAllEndorsedLegislationImages = async (/** @type {number[]} */ image_IDs) => {
+    const listImageIds = image_IDs.join(", ");
+
+    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
+
+    /**
+     * @type {Image[]}
+     */
+    let legislationImages = [];
+
+    let res = await mysqlConnection();
+
+    await res.query(loadImagesStatement)
+    .then(([ rows ]) => {
+
+        legislationImages = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    res.end();
+
+    return legislationImages;
+    
+};
+
+export const LoadAllEndorsedAmendmentsImages = async (/** @type {number[]} */ image_IDs) => {
+    const listImageIds = image_IDs.join(", ");
+
+    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
+
+    /**
+     * @type {Image[]}
+     */
+    let amendmentsImages = [];
+
+    let res = await mysqlConnection();
+
+    await res.query(loadImagesStatement)
+    .then(([ rows ]) => {
+
+        amendmentsImages = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    res.end();
+
+    return amendmentsImages;
+    
+};
+
 
 
 

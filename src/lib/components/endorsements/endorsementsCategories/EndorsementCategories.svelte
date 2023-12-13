@@ -7,10 +7,10 @@
 
     export let categories_data: any[];
 
-    const endorsedAmendments = categories_data[1];
-    const endorsedCandidates = categories_data[2];
-    const endorsedLegislation = categories_data[3];
-    const endorsedReferendums = categories_data[4];
+    const endorsedAmendments = categories_data[0];
+    const endorsedCandidates = categories_data[1];
+    const endorsedLegislation = categories_data[2];
+    const endorsedReferendums = categories_data[3];
 
 </script>
 

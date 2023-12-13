@@ -20,23 +20,6 @@
 
 	$: data;
 
-	let actionsFederal: Action[] = [];
-	let actionsState: Action[] = [];
-	let actionsCounty: Action[] = [];
-	let actionsCity: Action[] = [];
-
-	data.streamed.endorsed_actions.forEach((action) => {
-		if (action.government_level === "federal") {
-			actionsFederal.push(action);
-		} else if (action.government_level === "state") {
-			actionsState.push(action);
-		} else if (action.government_level === "county") {
-			actionsCounty.push(action);
-		} else if (action.government_level === "city") {
-			actionsCity.push(action);
-		};
-	});
-
 	let candidatesFederal: Candidate[] = [];
 	let candidatesState: Candidate[] = [];
 	let candidatesCounty: Candidate[] = [];
@@ -235,7 +218,6 @@
 			hasCapitol: true,
 			panel: AllEndorsementPanel,
 			data: [ 
-				data.streamed.endorsed_actions, 
 				data.streamed.endorsed_amendments, 
 				data.streamed.endorsed_candidates, 
 				data.streamed.endorsed_legislation,
@@ -250,7 +232,6 @@
 			panel: FederalEndorsementsPanel,
 			data: [
 				amendmentsFederal,
-				actionsFederal,
 				candidatesFederal,
 				legislationFederal,
 				referendumsFederal
@@ -264,7 +245,6 @@
 			panel: StateEndorsementsPanel,
 			data: [
 				amendmentsState,
-				actionsState,
 				candidatesState,
 				legislationState,
 				referendumsState
@@ -278,7 +258,6 @@
 			panel: CountyEndorsementsPanel,
 			data: [
 				amendmentsCounty,
-				actionsCounty,
 				candidatesCounty,
 				legislationCounty,
 				referendumsCounty
@@ -292,7 +271,6 @@
 			panel: CityEndorsementsPanel,
 			data: [
 				amendmentsCity,
-				actionsCity,
 				candidatesCity,
 				legislationCity,
 				referendumsCity

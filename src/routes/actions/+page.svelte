@@ -3,6 +3,26 @@
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
+    export let data;
+
+    $: data;
+
+    let actionsFederal: Action[] = [];
+    let actionsState: Action[] = [];
+    let actionsCounty: Action[] = [];
+    let actionsCity: Action[] = [];
+
+    data.streamed.endorsed_actions.forEach((action) => {
+        if (action.government_level === "federal") {
+            actionsFederal.push(action);
+        } else if (action.government_level === "state") {
+            actionsState.push(action);
+        } else if (action.government_level === "county") {
+            actionsCounty.push(action);
+        } else if (action.government_level === "city") {
+            actionsCity.push(action);
+        };
+    });
 
     let searchValue: string;
 
