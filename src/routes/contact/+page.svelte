@@ -25,14 +25,7 @@
     let sendMessageButtonDisabled: boolean = false;
 
     // after submit
-
-    interface responseObj {
-        success: string;
-        error: string;
-        status: number | null
-    };
-
-	let item: responseObj = {
+	let item: ResponseObj = {
         success: "",
         error: "",
         status: null

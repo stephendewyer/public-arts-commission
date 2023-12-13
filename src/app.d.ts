@@ -10,6 +10,12 @@ declare global {
 		// interface Platform {}
 	}
 
+	interface ResponseObj {
+        success: string;
+        error: string;
+        status: number | null
+    };
+
 	interface TimeZone {
 		name: string;
 		GMT: string;

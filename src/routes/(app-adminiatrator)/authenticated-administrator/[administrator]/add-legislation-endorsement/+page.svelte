@@ -187,13 +187,7 @@
 
     const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
 
-    interface responseObj {
-        success: string;
-        error: string;
-        status: number | null
-    };
-
-	let responseItem: responseObj = {
+	let responseItem: ResponseObj = {
         success: "",
         error: "",
         status: null
