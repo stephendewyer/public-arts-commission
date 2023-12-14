@@ -34,6 +34,7 @@
 </script>
 
 <dialog open={modalOpen}
+    class={(modalOpen) ? "dialog_open" : "dialog_closed"}
     aria-hidden={ (modalOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
@@ -102,7 +103,16 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        display: flex;
         flex-direction: column;
+    }
+
+    .dialog_open {
+        display: flex;
+    }
+
+    .dialog_closed {
+        display: none;
     }
 
     .close_button_container {
