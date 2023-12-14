@@ -7,7 +7,7 @@
 	import TeamMemberSideDrawer from '$lib/components/team/teamMemberSidedrawer/TeamMemberSidedrawer.svelte'
 	import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
 	import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
-  	import { SvelteComponent, onDestroy } from 'svelte';
+  	import { onDestroy } from 'svelte';
 	import './styles.css';
   	import CreateVoterAccountPromptModal from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptModal.svelte';
   	import { CreateVoterAccountPromptStore } from '$lib/stores/CreateVoterAccountPromptStore';
@@ -51,16 +51,6 @@
 		unsubscribeModalOpenStore();
 	});
 
-	// set the modal component variable
-
-	let Modal: typeof SvelteComponent<any>;
-
-	$: if (sideDrawerOpen) {
-		Modal = TeamMemberSideDrawer;
-	} else if (modalOpen) {
-		Modal = CreateVoterAccountPromptModal;
-	};
-
 </script>
 
 <div class="app">
@@ -84,10 +74,8 @@
 	{:else if (modalOpen)}
 		<CreateVoterAccountPromptBackdrop />
 	{/if}
-	<svelte:component 
-		this={Modal} 
-	/>
-
+	<TeamMemberSideDrawer />
+	<CreateVoterAccountPromptModal />
 </div>
 
 <style>

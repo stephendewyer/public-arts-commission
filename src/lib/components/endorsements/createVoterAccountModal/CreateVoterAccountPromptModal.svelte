@@ -99,10 +99,14 @@
         background-color: #F4F5FB;
         width: 100%;
         max-width: 40rem;
+        margin: 0;
         padding: 1rem;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
         display: flex;
         flex-direction: column;
     }
@@ -136,7 +140,6 @@
         width: 3rem;
         margin: 1rem;
         cursor: pointer;
-        
     }
 
     .close_button:hover {
@@ -160,10 +163,6 @@
     }
     
     @media (max-width: 1140px) {
-
-        dialog {
-
-        }
 
         .close_button {
             width: 2rem;
