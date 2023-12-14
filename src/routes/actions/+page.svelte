@@ -1,27 +1,30 @@
 <script lang="ts">
-
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
+    import type { User } from '@auth/core/types.js';
+    import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
+
     export let data;
 
     $: data;
 
-    let actionsFederal: Action[] = [];
-    let actionsState: Action[] = [];
-    let actionsCounty: Action[] = [];
-    let actionsCity: Action[] = [];
+    const user: User | undefined = data.streamed.user;
 
-    data.streamed.endorsed_actions.forEach((action) => {
-        if (action.government_level === "federal") {
-            actionsFederal.push(action);
-        } else if (action.government_level === "state") {
-            actionsState.push(action);
-        } else if (action.government_level === "county") {
-            actionsCounty.push(action);
-        } else if (action.government_level === "city") {
-            actionsCity.push(action);
-        };
+    const endorsedActions = data.streamed.endorsed_actions;
+
+    const endorsedActionsImages = data.streamed.endorsed_actions_images;
+
+    let endorsedActionsWithImages: ActionWithImage[] = [];
+
+    endorsedActions.forEach((action: Action) => {
+        let actionImageId = action.image_ID;
+
+        endorsedActionsImages.forEach((imageRow: Image) => {
+            if (actionImageId === imageRow.image_ID) {
+                endorsedActionsWithImages.push({...action, ...imageRow});
+            };
+        });
     });
 
     let searchValue: string;
@@ -72,7 +75,14 @@
             <h3>
                 forthcoming actions
             </h3>
-            <ProposeActionButton>
+            {#each endorsedActionsWithImages as endorsedAction, i}
+                <ActionEndorsementCard endorsedActionData={endorsedAction} />
+            {/each}
+            
+            <ProposeActionButton
+                category="actions" 
+                authorized_user={user}
+            >
                 propose an action
             </ProposeActionButton>
         </li>

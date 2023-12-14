@@ -2,10 +2,11 @@
   import MegaphoneIcon from "$lib/images/icons/megaphone_icon.svg?raw";
   import { CreateVoterAccountPromptStore } from "$lib/stores/CreateVoterAccountPromptStore";
   import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
+  import type { User } from '@auth/core/types.js';
 
   export let category: string = "";
 
-  export let authorized_user: SessionUser;
+  export let authorized_user: User | undefined;
 
   const nominateButtonClickHandler = () => {
 

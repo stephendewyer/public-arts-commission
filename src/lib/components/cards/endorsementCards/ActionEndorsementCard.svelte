@@ -1,8 +1,12 @@
 <script lang="ts">
     export let endorsedActionData: ActionWithImage;
+
+    console.log(endorsedActionData)
+    const actionYear = endorsedActionData.date_end.substring(0, 4);
     
 </script>
 <div class="endorsement_card_container">
+    <h4>{actionYear}</h4>
     <div class="image_container">
         <img src={endorsedActionData.image_URL} alt={endorsedActionData.alt_text} />
     </div>

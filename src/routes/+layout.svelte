@@ -32,7 +32,6 @@
 
 	const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe((value) => {
 		nominationCategory = value;
-		console.log("nomination category is",nominationCategory)
 	})
 
 	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
@@ -41,7 +40,6 @@
 
 	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
 		modalOpen = value;
-		console.log(modalOpen);
 	});
 
 	onDestroy(() => {

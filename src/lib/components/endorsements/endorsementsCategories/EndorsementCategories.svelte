@@ -4,7 +4,8 @@
     import EndorsedAmendmentCard from '$lib/components/cards/endorsementCards/AmendmentEndorsementCard.svelte';
     import EndorsedLegislationCard from '$lib/components/cards/endorsementCards/LegislationEndorsementCard.svelte';
     import EndorsedReferendumCard from '$lib/components/cards/endorsementCards/ReferendumEndorsementCard.svelte';
-
+    import type { User } from '@auth/core/types.js';
+    
     export let categories_data: any;
 
     const endorsedAmendments = categories_data.endorsed_amendments;
@@ -16,7 +17,7 @@
     const endorsedReferendums = categories_data.endorsed_referendums;
     const endorsedReferendumsImages = categories_data.endorsed_referendums_images;
 
-    const user: SessionUser = categories_data.user;
+    const user: User | undefined = categories_data.user;
 
     let endorsedAmendmentsWithImages: AmendmentWithImage[] = [];
 

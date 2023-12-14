@@ -4,10 +4,10 @@
     import { onDestroy } from 'svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 
-    let nomainationCategory: string = "";
+    let nominationCategory: string = "";
 
     const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe(n => {
-		nomainationCategory = n;
+		nominationCategory = n;
     });
 
     // set the value for the sidedrawer open value from store
@@ -29,6 +29,21 @@
         modalOpen = false;
         ModalOpenStore.update((value) => value = modalOpen);
         CreateVoterAccountPromptStore.update((value) => value = "");
+    };
+
+    let action: string = "";
+
+    $: if (nominationCategory === "actions") {
+
+        action = "propose an action";
+
+    } else if (
+        nominationCategory === "candidate" ||
+        nominationCategory === "legislation" ||
+        nominationCategory === "referendum" ||
+        nominationCategory === "amendment"
+    ) {
+        action = "make a nomination";
     };
 
 </script>
@@ -62,7 +77,7 @@
         </button>
     </div>
     <div class="info_container">
-        <h1 class="modal_heading">must have a voter account to make a nomination.</h1>
+        <h1 class="modal_heading">must have a voter account to {action}.</h1>
         <h2 class="modal_heading_02">already have an account?</h2>
         <a 
             href="/login-voter"
