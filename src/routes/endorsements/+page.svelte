@@ -218,6 +218,7 @@
 			hasCapitol: true,
 			panel: AllEndorsementPanel,
 			data: {
+				user: data.streamed.user,
 				endorsed_amendments: data.streamed.endorsed_amendments, 
 				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
 				endorsed_candidates: data.streamed.endorsed_candidates,
@@ -235,6 +236,7 @@
 			hasCapitol: true,
 			panel: FederalEndorsementsPanel,
 			data: {
+				user: data.streamed.user,
 				endorsed_amendments: amendmentsFederal, 
 				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
 				endorsed_candidates: candidatesFederal,
@@ -252,6 +254,7 @@
 			hasCapitol: true,
 			panel: StateEndorsementsPanel,
 			data: {
+				user: data.streamed.user,
 				endorsed_amendments: amendmentsState, 
 				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
 				endorsed_candidates: candidatesState,
@@ -269,6 +272,7 @@
 			hasCapitol: true,
 			panel: CountyEndorsementsPanel,
 			data: {
+				user: data.streamed.user,
 				endorsed_amendments: amendmentsCounty, 
 				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
 				endorsed_candidates: candidatesCounty,
@@ -286,6 +290,7 @@
 			hasCapitol: true,
 			panel: CityEndorsementsPanel,
 			data: {
+				user: data.streamed.user,
 				endorsed_amendments: amendmentsCity, 
 				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
 				endorsed_candidates: candidatesCity,

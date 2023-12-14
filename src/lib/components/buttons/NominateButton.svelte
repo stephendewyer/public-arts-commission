@@ -1,9 +1,33 @@
-<script type="ts">
+<script lang="ts">
   import MegaphoneIcon from "$lib/images/icons/megaphone_icon.svg?raw";
+  import { CreateVoterAccountPromptStore } from "$lib/stores/CreateVoterAccountPromptStore";
+  import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
+
+  export let category: string = "";
+
+  export let authorized_user: SessionUser;
+
+  const nominateButtonClickHandler = () => {
+
+    // console.log(authorized_user)
+
+    if (!authorized_user?.name) {
+
+        CreateVoterAccountPromptStore.update((value) => value = category);
+
+        ModalOpenStore.update((value) => value = !value);
+
+    };
+
+  };
 
 </script>
 
-<button class="nominate_button">
+<button 
+    on:click={nominateButtonClickHandler}
+    on:keydown={nominateButtonClickHandler}
+    class="nominate_button"
+>
     <div class="megaphone_icon">
         {@html MegaphoneIcon}
     </div>

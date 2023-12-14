@@ -16,6 +16,8 @@
     const endorsedReferendums = categories_data.endorsed_referendums;
     const endorsedReferendumsImages = categories_data.endorsed_referendums_images;
 
+    const user: SessionUser = categories_data.user;
+
     let endorsedAmendmentsWithImages: AmendmentWithImage[] = [];
 
     endorsedAmendments.forEach((amendment: Amendment) => {
@@ -74,7 +76,10 @@
         {#each endorsedCandidatesWithImages as candidate, i}
             <EndorsedCandidateCard endorsedCandidateData={candidate}/>
         {/each}
-        <NominateButton>
+        <NominateButton 
+            category="candidate" 
+            authorized_user={user}
+        >
             nominate a candidate
         </NominateButton>
     </li>
@@ -85,7 +90,10 @@
         {#each endorsedReferendumsWithImages as referendum, i}
             <EndorsedReferendumCard endorsedReferendumData={referendum} />
         {/each}
-        <NominateButton>
+        <NominateButton 
+            category="referendum"
+            authorized_user={user}
+        >
             nominate an initiative
         </NominateButton>
     </li>
@@ -96,7 +104,10 @@
         {#each endorsedLegislationWithImages as legislation, i}
             <EndorsedLegislationCard endorsedLegislationData={legislation} />
         {/each}
-        <NominateButton>
+        <NominateButton 
+            category="legislation"
+            authorized_user={user}
+        >
             nominate a bill
         </NominateButton>
     </li>
@@ -107,7 +118,10 @@
         {#each endorsedAmendmentsWithImages as amendment, i}
             <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
         {/each}
-        <NominateButton>
+        <NominateButton 
+            category="amendment"
+            authorized_user={user}
+        >
             nominate an amendment
         </NominateButton>
     </li>

@@ -10,6 +10,11 @@ declare global {
 		// interface Platform {}
 	}
 
+	interface SessionUser {
+		email: string,
+		name: string,
+	}
+
 	interface ResponseObj {
         success: string;
         error: string;

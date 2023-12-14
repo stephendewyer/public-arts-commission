@@ -5,4 +5,4 @@ import { STRIPESECRETAPIKey } from '$env/static/private';
 export const stripe = new Stripe(STRIPESECRETAPIKey, {
     // pin the api version
     apiVersion: '2023-10-16'
-})
+});

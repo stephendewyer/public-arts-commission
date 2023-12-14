@@ -62,4 +62,4 @@ export const campaignAuthentication = async (/** @type {{ email: string; passwor
 
     return result;
 
-}
+};

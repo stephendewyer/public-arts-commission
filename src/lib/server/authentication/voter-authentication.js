@@ -62,4 +62,4 @@ export const voterAuthentication = async (/** @type {{ email: string; password: 
 
     return result;
 
-}
+};

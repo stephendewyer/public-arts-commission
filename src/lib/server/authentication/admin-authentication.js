@@ -62,4 +62,4 @@ export const adminAuthentication = async (/** @type {{ email: string; password: 
 
     return result;
 
-}
+};

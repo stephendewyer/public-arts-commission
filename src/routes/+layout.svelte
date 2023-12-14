@@ -7,35 +7,59 @@
 	import TeamMemberSideDrawer from '$lib/components/team/teamMemberSidedrawer/TeamMemberSidedrawer.svelte'
 	import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
 	import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
-  	import { onDestroy } from 'svelte';
+  	import { SvelteComponent, onDestroy } from 'svelte';
 	import './styles.css';
-
-	export let data;
-
-	$: user = data;
+  	import CreateVoterAccountPromptModal from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptModal.svelte';
+  	import { CreateVoterAccountPromptStore } from '$lib/stores/CreateVoterAccountPromptStore';
+	import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
+	import CreateVoterAccountPromptBackdrop from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptBackdrop.svelte';
 
 	let open: boolean = false;
-
-	// $: console.log(user);
 	
 	let footerElHeight: number = 0;
 
 	let selectedTeamMemberId: number | null = null;
 
+	let nominationCategory: string = "";
+
+	let sideDrawerOpen: boolean = false;
+
+	let modalOpen: boolean = false;
+
 	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
 		selectedTeamMemberId = value;
 	});
 
-	let sideDrawerOpen: boolean = false;
+	const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe((value) => {
+		nominationCategory = value;
+		console.log("nomination category is",nominationCategory)
+	})
 
 	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
 		sideDrawerOpen = value;
 	});
 
+	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
+		modalOpen = value;
+		console.log(modalOpen);
+	});
+
 	onDestroy(() => {
 		unsubscribeTeamMemberSelectedStore();
+		unsubscribeCreateVoterAccountPromptStore();
 		unsubscribeSidedrawerOpenStore();
+		unsubscribeModalOpenStore();
 	});
+
+	// set the modal component variable
+
+	let Modal: typeof SvelteComponent<any>;
+
+	$: if (sideDrawerOpen) {
+		Modal = TeamMemberSideDrawer;
+	} else if (modalOpen) {
+		Modal = CreateVoterAccountPromptModal;
+	};
 
 </script>
 
@@ -57,9 +81,11 @@
 	<SideDrawer bind:open />
 	{#if (sideDrawerOpen)}
 		<TeamMemberBackdrop />
+	{:else if (modalOpen)}
+		<CreateVoterAccountPromptBackdrop />
 	{/if}
 	<svelte:component 
-		this={TeamMemberSideDrawer} 
+		this={Modal} 
 	/>
 
 </div>
