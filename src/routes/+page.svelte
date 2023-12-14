@@ -10,10 +10,49 @@
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import ForthcomingActionCarousel from '$lib/components/sliders/ForthcomingActionCarousel.svelte';
 
-	// console.log($page.data?.session)
-    // export let data;
+	export let data;
+
+	$: data;
+
+	const currentDate = new Date();
+
+	// load all the endorsed actions
+
+	const endorsedActions = data.streamed.endorsed_actions;
+
+	// load all the future actions
+
+	let futureEndorsedActions: Action[] = [];
+
+	endorsedActions.forEach((action) => {
+
+		const actionDate = new Date(action.date_end);
+
+		if (actionDate >= currentDate) {
+
+			futureEndorsedActions.push(action);
+
+		};
+
+	});
+
+	// combine endorsed action row with corresponding image row	
+
+    const endorsedActionsImages = data.streamed.endorsed_actions_images;
+
+    let futureEndorsedActionsWithImages: ActionWithImage[] = [];
+
+    futureEndorsedActions.forEach((action: Action) => {
+        let actionImageId = action.image_ID;
+
+        endorsedActionsImages.forEach((imageRow: Image) => {
+            if (actionImageId === imageRow.image_ID) {
+                futureEndorsedActionsWithImages.push({...action, ...imageRow});
+            };
+        });
+    });
 
 	let activeLoginTab: number;
 
@@ -203,9 +242,11 @@
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
-		<h2>
-			forthcoming actions
-		</h2>
+		{#if (futureEndorsedActionsWithImages.length > 0)}
+			<ForthcomingActionCarousel 
+				forthcoming_actions={futureEndorsedActionsWithImages} 
+			/>
+		{/if}
 	</div>
 </section>
 
