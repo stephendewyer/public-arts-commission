@@ -1,95 +1,22 @@
-import { 
-    LoadAllEndorsedCandidates, 
-    LoadAllEndorsedActions, 
-    LoadAllEndorsedAmendments,
-    LoadAllEndorsedLegislation,
-    LoadAllEndorsedReferendums,
-    LoadAllEndorsedAmendmentsImages,
-    LoadAllEndorsedActionsImages,
-    LoadAllEndorsedCandidatesImages,
-    LoadAllEndorsedLegislationImages,
-    LoadAllEndorsedReferendumsImages
- } from "$lib/server/LoadDataFromDatabaseFunctions.js";
+import { LoadAllEndorsedActions } from '$lib/server/loadDataFromDatabase/LoadEndorsedActions.js';
+import { LoadAllEndorsedAmendments } from '$lib/server/loadDataFromDatabase/LoadEndorsedAmendments.js';
+import { LoadAllEndorsedCandidates } from '$lib/server/loadDataFromDatabase/LoadEndorsedCandidates.js';
+import { LoadAllEndorsedLegislation } from '$lib/server/loadDataFromDatabase/LoadEndorsedLegislation.js';
+import { LoadAllEndorsedReferendums } from '$lib/server/loadDataFromDatabase/LoadEndorsedReferendums.js';
 
 export const load = async (event) => {
 
     const session = await event.locals.getSession();
 
-    // load all the endorsed candidates from the database
-
-    const endorsedCandidates = await LoadAllEndorsedCandidates();
-
-    /**
-     * @type {number[]}
-     */
-    let endorsedCandidatesImageIds = [];
-
-    endorsedCandidates.forEach((candidate) => {
-        endorsedCandidatesImageIds.push(candidate.image_ID);
-    });
-
-    const endorsedAmendments = await LoadAllEndorsedAmendments();
-    /**
-     * @type {number[]}
-     */
-    let endorsedAmendmentsImageIds = [];
-
-    endorsedAmendments.forEach((amendment) => {
-        endorsedAmendmentsImageIds.push(amendment.image_ID);
-    });
-
-    const endorsedActions = await LoadAllEndorsedActions();
-    /**
-     * @type {number[]}
-     */
-    let endorsedActionsImageIds = [];
-
-    endorsedActions.forEach((action) => {
-        endorsedActionsImageIds.push(action.image_ID);
-    });
-
-    const endorsedLegislation = await LoadAllEndorsedLegislation();
-    /**
-     * @type {number[]}
-     */
-    let endorsedLegislationImageIds = [];
-
-    endorsedLegislation.forEach((legislation) => {
-        endorsedLegislationImageIds.push(legislation.image_ID);
-    });
-
-    const endorsedReferendums = await LoadAllEndorsedReferendums();
-    /**
-     * @type {number[]}
-     */
-    let endorsedReferendumsImageIds = [];
-
-    endorsedReferendums.forEach((referendum) => {
-        endorsedReferendumsImageIds.push(referendum.image_ID);
-    });
-
-    // get the image URLS from image_IDs in endorsements
-
-    // const endorsedCandidatesImages = await LoadAllEndorsedCandidatesImages(endorsedCandidatesImageIds);
-    // const endorsedAmendmentsImages = await LoadAllEndorsedAmendmentsImages(endorsedAmendmentsImageIds);
-    // const endorsedReferendumsImages = await LoadAllEndorsedReferendumsImages(endorsedReferendumsImageIds);
-    // const endorsedLegislationImages = await LoadAllEndorsedLegislationImages(endorsedLegislationImageIds);
-    // const endorsedActionsImages = await LoadAllEndorsedActionsImages(endorsedActionsImageIds);
-
     return { 
         
         streamed: {
             user: session?.user,
-            endorsed_candidates: endorsedCandidates,
-            endorsed_candidates_images: await LoadAllEndorsedCandidatesImages(endorsedCandidatesImageIds),
-            endorsed_legislation: endorsedLegislation,
-            endorsed_legislation_images: await LoadAllEndorsedLegislationImages(endorsedLegislationImageIds),
-            endorsed_actions: endorsedActions,
-            endorsed_actions_images: await LoadAllEndorsedActionsImages(endorsedActionsImageIds),
-            endorsed_referendums: endorsedReferendums,
-            endorsed_referendums_images: await LoadAllEndorsedReferendumsImages(endorsedReferendumsImageIds),
-            endorsed_amendments: endorsedAmendments,
-            endorsed_amendments_images: await LoadAllEndorsedAmendmentsImages(endorsedAmendmentsImageIds)
+            endorsed_candidates: await LoadAllEndorsedCandidates(),
+            endorsed_legislation: await LoadAllEndorsedLegislation(),
+            endorsed_actions: await LoadAllEndorsedActions(),
+            endorsed_referendums: await LoadAllEndorsedReferendums(),
+            endorsed_amendments: await LoadAllEndorsedAmendments()
         }
 
     };

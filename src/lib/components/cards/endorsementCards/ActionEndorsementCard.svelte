@@ -2,7 +2,11 @@
     export let endorsedActionData: ActionWithImage;
 
     console.log(endorsedActionData)
-    const actionYear = endorsedActionData.date_end.substring(0, 4);
+
+    const actionRawStartDate = new Date(endorsedActionData.date_start);
+    const actionStartDate = actionRawStartDate.toUTCString();
+    const actionRawEndDate = new Date(endorsedActionData.date_end);
+    const actionEndDate = actionRawEndDate.toUTCString();
     
 </script>
 <div class="endorsement_card_container">
@@ -11,7 +15,7 @@
     </div>
     <div class="endorsement_card_overlay" />
     <div class="action_info">
-        <h4>{actionYear}</h4>
+        <h4>{actionStartDate} - {actionEndDate}</h4>
         <h4>{endorsedActionData.action_name}</h4>
     </div>
 </div>

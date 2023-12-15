@@ -20,11 +20,11 @@
 
 	// load all the endorsed actions
 
-	const endorsedActions = data.streamed.endorsed_actions;
+	const endorsedActions: ActionWithImage[] = data.streamed.endorsed_actions;
 
 	// load all the future actions
 
-	let futureEndorsedActions: Action[] = [];
+	let futureEndorsedActions: ActionWithImage[] = [];
 
 	endorsedActions.forEach((action) => {
 
@@ -37,22 +37,6 @@
 		};
 
 	});
-
-	// combine endorsed action row with corresponding image row	
-
-    const endorsedActionsImages = data.streamed.endorsed_actions_images;
-
-    let futureEndorsedActionsWithImages: ActionWithImage[] = [];
-
-    futureEndorsedActions.forEach((action: Action) => {
-        let actionImageId = action.image_ID;
-
-        endorsedActionsImages.forEach((imageRow: Image) => {
-            if (actionImageId === imageRow.image_ID) {
-                futureEndorsedActionsWithImages.push({...action, ...imageRow});
-            };
-        });
-    });
 
 	let activeLoginTab: number;
 
@@ -99,7 +83,7 @@
 
 		return searchValue;
 
-	}
+	};
 
 	const success = (position: GeoLocationPosition) => {
 
@@ -110,13 +94,15 @@
 
 		reverseGeocode(latitude, longitude);
 
-	}
+	};
 
 	// log an error if getCurrentPosition fails
 
 	const error = (error: any) => {
+
 		console.log("Unable to retrieve your location!" + error);
-	}
+
+	};
 
 	// get user's location using JavaScript geolocation
 
@@ -124,7 +110,7 @@
 
 		navigator.geolocation.getCurrentPosition(success, error)
 
-	}
+	};
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
@@ -136,7 +122,7 @@
 			disableButton = false;
 		} else if (searchValue == "") {
 			disableButton = true;
-		}
+		};
 
 		if (useCurrentLocationChecked && (reversedGeolocation.addresses[0].address.freeformAddress !== searchValue)) {
 
@@ -144,14 +130,17 @@
 
 			return useCurrentLocationChecked;
 
-		}
-	}
+		};
+
+	};
 
 	const searchSubmitHandler = () => {
 
 		const addressSlug = searchValue.replace(/ /g,"_");
+
 		goto(`/endorsements?current_address_checked=${useCurrentLocationChecked}?${addressSlug}`);
-	}
+
+	};
 
 	const loginTabPanels: tabPanels[] = [
 		{
@@ -170,7 +159,7 @@
 			panel: LoginCampaign,
 			data: []
 		}
-	]
+	];
 
 </script>
 
@@ -242,9 +231,9 @@
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
-		{#if (futureEndorsedActionsWithImages.length > 0)}
+		{#if (futureEndorsedActions.length > 0)}
 			<ForthcomingActionCarousel 
-				forthcoming_actions={futureEndorsedActionsWithImages} 
+				forthcoming_actions={futureEndorsedActions} 
 			/>
 		{/if}
 	</div>

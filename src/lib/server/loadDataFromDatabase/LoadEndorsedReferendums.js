@@ -1,0 +1,75 @@
+import { mysqlConnection } from "$lib/server/db/mysql";
+
+export const LoadAllEndorsedReferendums = async () => {
+
+    const loadEndorsedReferendumsStatement = "SELECT * FROM endorsed_referendums";
+
+    /**
+     * @type {Referendum[]}
+     */
+    let endorsedReferendums = [];
+
+    let res = await mysqlConnection();
+
+    await res.query(loadEndorsedReferendumsStatement)
+    .then(([ rows ]) => {
+
+        endorsedReferendums = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    /**
+     * @type {number[]}
+     */
+    let endorsedReferendumsImageIds = [];
+
+    endorsedReferendums.forEach((referendum) => {
+        endorsedReferendumsImageIds.push(referendum.image_ID);
+    });
+
+    const listImageIds = endorsedReferendumsImageIds.join(", ");
+
+    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
+
+    /**
+     * @type {Image[]}
+     */
+    let endorsedReferendumsImages = [];
+
+    await res.query(loadImagesStatement)
+    .then(([ rows ]) => {
+
+        endorsedReferendumsImages = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    /**
+     * @type {ReferendumWithImage[]}
+     */
+    let endorsedReferendumsWithImages = [];
+
+    endorsedReferendums.forEach((referendum) => {
+        let referendumImageId = referendum.image_ID;
+
+        endorsedReferendumsImages.forEach((imageRow) => {
+            if (referendumImageId = imageRow.image_ID) {
+                endorsedReferendumsWithImages.push({...referendum, ...imageRow});
+            };
+        });
+    });
+
+    res.end();
+
+    return endorsedReferendumsWithImages;
+
+};

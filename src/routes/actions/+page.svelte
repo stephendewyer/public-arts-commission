@@ -11,21 +11,7 @@
 
     const user: User | undefined = data.streamed.user;
 
-    const endorsedActions = data.streamed.endorsed_actions;
-
-    const endorsedActionsImages = data.streamed.endorsed_actions_images;
-
-    let endorsedActionsWithImages: ActionWithImage[] = [];
-
-    endorsedActions.forEach((action: Action) => {
-        let actionImageId = action.image_ID;
-
-        endorsedActionsImages.forEach((imageRow: Image) => {
-            if (actionImageId === imageRow.image_ID) {
-                endorsedActionsWithImages.push({...action, ...imageRow});
-            };
-        });
-    });
+    const endorsedActions: ActionWithImage[] = data.streamed.endorsed_actions;    
 
     let searchValue: string;
 
@@ -34,15 +20,18 @@
     const searchInputValueChangeHandler = () => {
 
         if (searchValue !== "" ) {
+
             disableButton = false;
+
         } else if (searchValue == "") {
+
             disableButton = true;
         }
     }
 
         const searchSubmitHandler = () => {
 
-    }
+    };
 
 </script>
 
@@ -75,7 +64,7 @@
             <h3>
                 forthcoming actions
             </h3>
-            {#each endorsedActionsWithImages as endorsedAction, i}
+            {#each endorsedActions as endorsedAction, i}
                 <ActionEndorsementCard endorsedActionData={endorsedAction} />
             {/each}
             

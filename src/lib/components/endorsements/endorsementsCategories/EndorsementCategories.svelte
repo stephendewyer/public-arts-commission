@@ -8,64 +8,12 @@
     
     export let categories_data: any;
 
-    const endorsedAmendments = categories_data.endorsed_amendments;
-    const endorsedAmendmentsImages = categories_data.endorsed_amendments_images;
-    const endorsedCandidates = categories_data.endorsed_candidates;
-    const endorsedCandidatesImages = categories_data.endorsed_candidates_images;
-    const endorsedLegislation = categories_data.endorsed_legislation;
-    const endorsedLegislationImages = categories_data.endorsed_legislation_images;
-    const endorsedReferendums = categories_data.endorsed_referendums;
-    const endorsedReferendumsImages = categories_data.endorsed_referendums_images;
+    const endorsedAmendments: AmendmentWithImage[] = categories_data.endorsed_amendments;
+    const endorsedCandidates: CandidateWithImage[] = categories_data.endorsed_candidates;
+    const endorsedLegislation: LegislationWithImage[] = categories_data.endorsed_legislation;
+    const endorsedReferendums: ReferendumWithImage[] = categories_data.endorsed_referendums;
 
     const user: User | undefined = categories_data.user;
-
-    let endorsedAmendmentsWithImages: AmendmentWithImage[] = [];
-
-    endorsedAmendments.forEach((amendment: Amendment) => {
-        let amendmentImageId = amendment.image_ID;
-
-        endorsedAmendmentsImages.forEach((imageRow: Image) => {
-            if (amendmentImageId === imageRow.image_ID) {
-                endorsedAmendmentsWithImages.push({...amendment, ...imageRow});
-            };
-        });
-    });
-
-    let endorsedCandidatesWithImages: CandidateWithImage[] = [];
-
-    endorsedCandidates.forEach((candidate: Candidate) => {
-        let candidateImageId = candidate.image_ID;
-
-        endorsedCandidatesImages.forEach((imageRow: Image) => {
-            if (candidateImageId === imageRow.image_ID) {
-                endorsedCandidatesWithImages.push({...candidate, ...imageRow});
-            };
-        });
-    });
-
-    let endorsedLegislationWithImages: LegislationWithImage[] = [];
-
-    endorsedLegislation.forEach((legislation: Legislation) => {
-        let legislationImageId = legislation.image_ID;
-
-        endorsedLegislationImages.forEach((imageRow: Image) => {
-            if (legislationImageId = imageRow.image_ID) {
-                endorsedLegislationWithImages.push({...legislation, ...imageRow});
-            };
-        });
-    });
-
-    let endorsedReferendumsWithImages: ReferendumWithImage[] = [];
-
-    endorsedReferendums.forEach((referendum: Referendum) => {
-        let referendumImageId = referendum.image_ID;
-
-        endorsedReferendumsImages.forEach((imageRow: Image) => {
-            if (referendumImageId = imageRow.image_ID) {
-                endorsedReferendumsWithImages.push({...referendum, ...imageRow});
-            };
-        });
-    });
 
 </script>
 
@@ -74,7 +22,7 @@
         <h3>
             candidates
         </h3>
-        {#each endorsedCandidatesWithImages as candidate, i}
+        {#each endorsedCandidates as candidate, i}
             <EndorsedCandidateCard endorsedCandidateData={candidate}/>
         {/each}
         <NominateButton 
@@ -88,7 +36,7 @@
         <h3>
             referendums
         </h3>
-        {#each endorsedReferendumsWithImages as referendum, i}
+        {#each endorsedReferendums as referendum, i}
             <EndorsedReferendumCard endorsedReferendumData={referendum} />
         {/each}
         <NominateButton 
@@ -102,7 +50,7 @@
         <h3>
             legislation
         </h3>
-        {#each endorsedLegislationWithImages as legislation, i}
+        {#each endorsedLegislation as legislation, i}
             <EndorsedLegislationCard endorsedLegislationData={legislation} />
         {/each}
         <NominateButton 
@@ -116,7 +64,7 @@
         <h3>
             amendments
         </h3>
-        {#each endorsedAmendmentsWithImages as amendment, i}
+        {#each endorsedAmendments as amendment, i}
             <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
         {/each}
         <NominateButton 
