@@ -70,26 +70,26 @@ export const load = async (event) => {
 
     // get the image URLS from image_IDs in endorsements
 
-    const endorsedCandidatesImages = await LoadAllEndorsedCandidatesImages(endorsedCandidatesImageIds);
-    const endorsedAmendmentsImages = await LoadAllEndorsedAmendmentsImages(endorsedAmendmentsImageIds);
-    const endorsedReferendumsImages = await LoadAllEndorsedReferendumsImages(endorsedReferendumsImageIds);
-    const endorsedLegislationImages = await LoadAllEndorsedLegislationImages(endorsedLegislationImageIds);
-    const endorsedActionsImages = await LoadAllEndorsedActionsImages(endorsedActionsImageIds);
+    // const endorsedCandidatesImages = await LoadAllEndorsedCandidatesImages(endorsedCandidatesImageIds);
+    // const endorsedAmendmentsImages = await LoadAllEndorsedAmendmentsImages(endorsedAmendmentsImageIds);
+    // const endorsedReferendumsImages = await LoadAllEndorsedReferendumsImages(endorsedReferendumsImageIds);
+    // const endorsedLegislationImages = await LoadAllEndorsedLegislationImages(endorsedLegislationImageIds);
+    // const endorsedActionsImages = await LoadAllEndorsedActionsImages(endorsedActionsImageIds);
 
     return { 
         
         streamed: {
             user: session?.user,
             endorsed_candidates: endorsedCandidates,
-            endorsed_candidates_images: endorsedCandidatesImages,
+            endorsed_candidates_images: await LoadAllEndorsedCandidatesImages(endorsedCandidatesImageIds),
             endorsed_legislation: endorsedLegislation,
-            endorsed_legislation_images: endorsedLegislationImages,
+            endorsed_legislation_images: await LoadAllEndorsedLegislationImages(endorsedLegislationImageIds),
             endorsed_actions: endorsedActions,
-            endorsed_actions_images: endorsedActionsImages,
+            endorsed_actions_images: await LoadAllEndorsedActionsImages(endorsedActionsImageIds),
             endorsed_referendums: endorsedReferendums,
-            endorsed_referendums_images: endorsedReferendumsImages,
+            endorsed_referendums_images: await LoadAllEndorsedReferendumsImages(endorsedReferendumsImageIds),
             endorsed_amendments: endorsedAmendments,
-            endorsed_amendments_images: endorsedAmendmentsImages
+            endorsed_amendments_images: await LoadAllEndorsedAmendmentsImages(endorsedAmendmentsImageIds)
         }
 
     };
