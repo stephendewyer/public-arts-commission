@@ -1,65 +1,24 @@
-import { mysqlConnection } from "$lib/server/db/mysql";
-import { 
-    LoadAllEndorsedCandidates, 
-    LoadAllEndorsedActions, 
-    LoadAllEndorsedAmendments,
-    LoadAllEndorsedLegislation,
-    LoadAllEndorsedReferendums
- } from "$lib/server/LoadDataFromDatabaseFunctions.js";
+import { LoadAdminByEmail } from '$lib/server/loadDataFromDatabase/LoadAdminByEmail.js';
+import { LoadAllEndorsedActions } from '$lib/server/loadDataFromDatabase/LoadEndorsedActions.js';
+import { LoadAllEndorsedAmendments } from '$lib/server/loadDataFromDatabase/LoadEndorsedAmendments.js';
+import { LoadAllEndorsedCandidates } from '$lib/server/loadDataFromDatabase/LoadEndorsedCandidates.js';
+import { LoadAllEndorsedLegislation } from '$lib/server/loadDataFromDatabase/LoadEndorsedLegislation.js';
+import { LoadAllEndorsedReferendums } from '$lib/server/loadDataFromDatabase/LoadEndorsedReferendums.js';
 
 export const load = async (event) => {
 
     const session = await event.locals.getSession();
 
-    let res = await mysqlConnection();
-
-    // load query to check if row with same voter first name and voter last name exists
-
-    const checkAdminsEmailQuery = `SELECT * FROM administrators WHERE email = '${session?.user?.email}'`;
-
-    /**
-     * @type {string | any[]}
-     */
-    let userInAdministrators = [];
-
-    await res.query(checkAdminsEmailQuery)
-    .then(([ rows ]) => {
-
-        userInAdministrators = JSON.parse(JSON.stringify(rows));
-
-    })
-    .catch(error => {
-
-        throw error;
-
-    });
-
-    res.end();
-
-    const username = userInAdministrators[0].username;
-
-    // load all the endorsed candidates from the database
-
-    const endorsedCandidates = await LoadAllEndorsedCandidates();
-
-    const endorsedAmendments = await LoadAllEndorsedAmendments();
-
-    const endorsedActions = await LoadAllEndorsedActions();
-
-    const endorsedLegislation = await LoadAllEndorsedLegislation();
-
-    const endorsedReferendums = await LoadAllEndorsedReferendums();
-
     return { 
 
         streamed: {
-            username: username,
+            username: await LoadAdminByEmail(session),
             user: session?.user,
-            endorsed_candidates: endorsedCandidates,
-            endorsed_legislation: endorsedLegislation,
-            endorsed_actions: endorsedActions,
-            endorsed_referendums: endorsedReferendums,
-            endorsed_amendments: endorsedAmendments
+            endorsed_candidates: await LoadAllEndorsedCandidates(),
+            endorsed_legislation: await LoadAllEndorsedLegislation(),
+            endorsed_actions: await LoadAllEndorsedActions(),
+            endorsed_referendums: await LoadAllEndorsedReferendums(),
+            endorsed_amendments: await LoadAllEndorsedAmendments()
         }
 
     };

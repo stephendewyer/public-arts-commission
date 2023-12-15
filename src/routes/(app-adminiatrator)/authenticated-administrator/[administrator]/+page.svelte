@@ -99,7 +99,9 @@
 
 </script>
 
-<h1>welcome, {username}!</h1>
+{#if (username)}
+    <h1>welcome, {username}!</h1>
+{/if}
 <div class="menu">
     <FilterToggleButton bind:openFilters={openFilters}>
         filters
