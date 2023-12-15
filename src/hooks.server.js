@@ -19,7 +19,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name !== "administrator") {
 
-            throw redirect(303, "/login-administrator");
+            redirect(303, "/login-administrator");
 
         };
 
@@ -31,7 +31,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name === "administrator") {
 
-            throw redirect(303, "/authenticated-administrator/administrator");
+            redirect(303, "/authenticated-administrator/administrator");
 
         };
 
@@ -43,7 +43,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name !== "campaign") {
 
-            throw redirect(303, "/login-campaign");
+            redirect(303, "/login-campaign");
 
         };
 
@@ -55,7 +55,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name === "campaign") {
 
-            throw redirect(303, "/authenticated-campaign/campaign");
+            redirect(303, "/authenticated-campaign/campaign");
 
         };
 
@@ -67,7 +67,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name !== "voter") {
 
-            throw redirect(303, "/login-voter");
+            redirect(303, "/login-voter");
         };
 
     };
@@ -78,7 +78,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name === "voter") {
 
-            throw redirect(303, "/authenticated-voter/voter");
+            redirect(303, "/authenticated-voter/voter");
 
         };
 

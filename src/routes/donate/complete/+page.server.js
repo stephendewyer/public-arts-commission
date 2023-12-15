@@ -46,7 +46,7 @@ export async function load({ url }) {
 
             // redirect the user back to payment page to re-attempt payment
 
-            throw redirect(303, '/donate/payment');
+            redirect(303, '/donate/payment');
 
         default:
 

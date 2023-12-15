@@ -6,7 +6,7 @@ export function load({ params }) {
 
     if (!tokenID) {
 
-        throw error(404, 'no token ID!');
+        error(404, 'no token ID!');
 
     } else {
 
