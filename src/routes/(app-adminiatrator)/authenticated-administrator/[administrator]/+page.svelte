@@ -20,6 +20,8 @@
 
     const slug: string = $page.url.pathname;
 
+    $: console.log($page.data.streamed.endorsed_actions)
+
     export let data;
 
     $: data;
