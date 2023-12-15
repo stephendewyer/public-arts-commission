@@ -4,7 +4,9 @@ export const load = async (event) => {
 
     return { 
 
-        user: session?.user
+        streamed: {
+            user: session?.user
+        }
         
     };
 
