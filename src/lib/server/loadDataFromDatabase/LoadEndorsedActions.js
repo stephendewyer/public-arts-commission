@@ -2,6 +2,11 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 
 export const LoadAllEndorsedActions = async () => {
 
+    /**
+     * @type {ActionWithImage[]}
+     */
+    let endorsedActionsWithImages = [];
+
     // begin load actions
     
     const loadEndorsedActionsStatement = "SELECT * FROM endorsed_actions";
@@ -24,6 +29,12 @@ export const LoadAllEndorsedActions = async () => {
         throw error;
 
     });
+
+    if (endorsedActions.length === 0) {
+
+        return endorsedActionsWithImages;
+
+    };
 
     /**
      * @type {number[]}
@@ -54,11 +65,6 @@ export const LoadAllEndorsedActions = async () => {
         throw error;
 
     });
-    
-    /**
-     * @type {ActionWithImage[]}
-     */
-    let endorsedActionsWithImages = [];
 
     endorsedActions.forEach((action) => {
         let actionImageId = action.image_ID;

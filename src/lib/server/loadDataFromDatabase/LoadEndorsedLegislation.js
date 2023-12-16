@@ -2,6 +2,11 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 
 export const LoadAllEndorsedLegislation = async () => {
 
+    /**
+     * @type {LegislationWithImage[]}
+     */
+    let endorsedLegislationWithImages = [];
+
     // begin load legislation
 
     const loadEndorsedLegislationStatement = "SELECT * FROM endorsed_legislation";
@@ -24,6 +29,12 @@ export const LoadAllEndorsedLegislation = async () => {
         throw error;
 
     });
+
+    if (endorsedLegislation.length === 0) {
+
+        return endorsedLegislationWithImages;
+
+    };
 
     /**
      * @type {number[]}
@@ -54,11 +65,6 @@ export const LoadAllEndorsedLegislation = async () => {
         throw error;
 
     });
-
-    /**
-     * @type {LegislationWithImage[]}
-     */
-    let endorsedLegislationWithImages = [];
 
     endorsedLegislation.forEach((legislation) => {
         let endorsedLegislationImageId = legislation.image_ID;

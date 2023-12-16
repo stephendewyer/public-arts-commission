@@ -2,6 +2,11 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 
 export const LoadAllEndorsedCandidates = async () => {
 
+    /**
+     * @type {CandidateWithImage[]}
+     */
+    let endorsedCandidatesWithImages = [];
+
     // begin load candidates
 
     const loadEndorsedCandidatesStatement = "SELECT * FROM endorsed_candidates";
@@ -24,6 +29,12 @@ export const LoadAllEndorsedCandidates = async () => {
         throw error;
 
     });
+
+    if (endorsedCandidates.length === 0) {
+
+        return endorsedCandidatesWithImages;
+
+    };
 
     /**
      * @type {number[]}
@@ -56,10 +67,6 @@ export const LoadAllEndorsedCandidates = async () => {
         throw error;
 
     });
-    /**
-     * @type {CandidateWithImage[]}
-     */
-    let endorsedCandidatesWithImages = [];
 
     endorsedCandidates.forEach((candidate) => {
         let candidateImageId = candidate.image_ID;

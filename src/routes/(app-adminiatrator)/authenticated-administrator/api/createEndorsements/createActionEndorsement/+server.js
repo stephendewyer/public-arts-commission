@@ -28,6 +28,8 @@ export const POST = async ({request}) => {
     imageAltText,
     image,
     actionName,
+    allDayAction,
+    allDayActionDate,
     actionStartDate,
     actionEndDate,
     startTime,
@@ -56,8 +58,6 @@ export const POST = async ({request}) => {
     !imageFile ||
     !imageAltText ||
     !actionName ||
-    !actionStartDate ||
-    !actionEndDate ||
     !governmentLevel||
     !details
   ) {
@@ -96,7 +96,6 @@ export const POST = async ({request}) => {
 
   };
   
-
   // connect to the database
   
   let res = await mysqlConnection();
@@ -152,6 +151,8 @@ export const POST = async ({request}) => {
   const insertEndorsedActionInformationStatement = `INSERT INTO endorsed_actions (
     image_ID,
 	action_name,
+  all_day_event,
+  all_day_event_date,
 	date_start,
 	date_end,
 	time_start,
@@ -177,6 +178,8 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${imageID}",
     "${actionName}",
+    "${allDayAction}",
+    "${allDayActionDate}",
     "${actionStartDate}",
     "${actionEndDate}",
     "${startTime}",

@@ -2,6 +2,11 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 
 export const LoadAllEndorsedReferendums = async () => {
 
+    /**
+     * @type {ReferendumWithImage[]}
+     */
+    let endorsedReferendumsWithImages = [];
+
     const loadEndorsedReferendumsStatement = "SELECT * FROM endorsed_referendums";
 
     /**
@@ -22,6 +27,12 @@ export const LoadAllEndorsedReferendums = async () => {
         throw error;
 
     });
+
+    if (endorsedReferendums.length === 0) {
+
+        return endorsedReferendumsWithImages;
+
+    };
 
     /**
      * @type {number[]}
@@ -52,11 +63,6 @@ export const LoadAllEndorsedReferendums = async () => {
         throw error;
 
     });
-
-    /**
-     * @type {ReferendumWithImage[]}
-     */
-    let endorsedReferendumsWithImages = [];
 
     endorsedReferendums.forEach((referendum) => {
         let referendumImageId = referendum.image_ID;

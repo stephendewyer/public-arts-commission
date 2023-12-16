@@ -21,12 +21,14 @@
 
     export let data;
 
-    $: userEmail = data.user?.email;  
+    $: userEmail = data.streamed.user?.email;  
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
     let image: any;
     let actionNameInputValue: string = "";
+    let allDayActionChecked: boolean = false;
+    let allDayActionDateInputValue: string = "";
     let actionStartDateInputValue: string = "";
     let actionEndDateInputValue: string = "";
     let startTimeInputValue: string = "";
@@ -56,6 +58,8 @@
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
     let actionNameIsValid: boolean = true;
+    let allDayActionIsValid: boolean = false;
+    let allDayActionDateIsValid: boolean = true;
     let actionStartDateIsValid: boolean = true;
     let actionEndDateIsValid: boolean = true;
     let startTimeIsValid: boolean = true;
@@ -104,6 +108,8 @@
         imageAltText: string,
         image: any,
         actionName: string,
+        allDayAction: boolean,
+        allDayActionDate: string,
         actionStartDate: string,
         actionEndDate: string,
         startTime: string,
@@ -135,6 +141,8 @@
                 imageAltText,
                 image,
                 actionName,
+                allDayAction,
+                allDayActionDate,
                 actionStartDate,
                 actionEndDate,
                 startTime,
@@ -183,6 +191,8 @@
                 imageAltTextInputValue,
                 image,
                 actionNameInputValue,
+                allDayActionChecked,
+                allDayActionDateInputValue,
                 actionStartDateInputValue,
                 actionEndDateInputValue,
                 startTimeInputValue,
@@ -211,6 +221,8 @@
                 imageAltTextInputValue = "",
                 image = "",
                 actionNameInputValue = "",
+                allDayActionChecked = false,
+                allDayActionDateInputValue = "",
                 actionStartDateInputValue = "",
                 actionEndDateInputValue = "",
                 startTimeInputValue = "",
@@ -247,10 +259,13 @@
                 if (actionNameInputValue === "") {
                     actionNameIsValid = false;
                 };
-                if (actionStartDateInputValue === "") {
+                if (allDayActionChecked && (allDayActionDateInputValue === "")) {
+                    allDayActionIsValid = false;
+                }
+                if (!allDayActionChecked && (actionStartDateInputValue === "")) {
                     actionStartDateIsValid = false;
                 };
-                if (actionEndDateInputValue === "") {
+                if (!allDayActionChecked && (actionEndDateInputValue === "")) {
                     actionEndDateIsValid = false;
                 };
                 if (governmentLevelInputValue === "") {
@@ -328,66 +343,88 @@
             action name
         </TextInput>
         <div class="two_columns">
-            <DateInput
-                inputLabel={true}
-                bind:dateInputValue={actionStartDateInputValue}
-                bind:isValid={actionStartDateIsValid}
-                inputName="action_start_date"
-                inputID="action_start_date"
-                required={true}
-                dateInputErrorMessage="action start date required"
-            >
-                action start date
-            </DateInput>
-            <DateInput
-                inputLabel={true}
-                bind:dateInputValue={actionEndDateInputValue}
-                bind:isValid={actionEndDateIsValid}
-                inputName="action_end_date"
-                inputID="action_end_date"
-                required={true}
-                dateInputErrorMessage="action end date required"
-            >
-                action end date
-            </DateInput>
+            <AnimatedCheckbox bind:checked={allDayActionChecked}>
+                all day action
+            </AnimatedCheckbox>
+            {#if (allDayActionChecked)}
+                <DateInput
+                    inputLabel={true}
+                    bind:dateInputValue={allDayActionDateInputValue}
+                    bind:isValid={allDayActionDateIsValid}
+                    inputName="all_day_action_date"
+                    inputID="all_day_action_date"
+                    required={true}
+                    dateInputErrorMessage="all day action date required"
+                >
+                    action date
+                </DateInput>
+            {/if}
         </div>
+        {#if (!allDayActionChecked)}
+            <div class="two_columns">
+                <DateInput
+                    inputLabel={true}
+                    bind:dateInputValue={actionStartDateInputValue}
+                    bind:isValid={actionStartDateIsValid}
+                    inputName="action_start_date"
+                    inputID="action_start_date"
+                    required={true}
+                    dateInputErrorMessage="action start date required"
+                >
+                    action start date
+                </DateInput>
+                <DateInput
+                    inputLabel={true}
+                    bind:dateInputValue={actionEndDateInputValue}
+                    bind:isValid={actionEndDateIsValid}
+                    inputName="action_end_date"
+                    inputID="action_end_date"
+                    required={true}
+                    dateInputErrorMessage="action end date required"
+                >
+                    action end date
+                </DateInput>
+            </div>
+            <div class="two_columns">
+                <TimeInput
+                    inputLabel={true}
+                    bind:timeInputValue={startTimeInputValue}
+                    bind:isValid={startTimeIsValid}
+                    inputName="start_time"
+                    inputID="start_time"
+                    required={true}
+                    timeInputErrorMessage="start time required"
+                >
+                    action start time
+                </TimeInput>
+                <TimeInput
+                    inputLabel={true}
+                    bind:timeInputValue={endTimeInputValue}
+                    bind:isValid={endTimeIsValid}
+                    inputName="end_time"
+                    inputID="end_time"
+                    required={true}
+                    timeInputErrorMessage="end time required"
+                >
+                    action end time
+                </TimeInput> 
+            </div>
+        {/if}
         <div class="two_columns">
-            <TimeInput
-                inputLabel={true}
-                bind:timeInputValue={startTimeInputValue}
-                bind:isValid={startTimeIsValid}
-                inputName="start_time"
-                inputID="start_time"
-                required={true}
-                timeInputErrorMessage="start time required"
-            >
-                action start time
-            </TimeInput>
-            <TimeInput
-                inputLabel={true}
-                bind:timeInputValue={endTimeInputValue}
-                bind:isValid={endTimeIsValid}
-                inputName="end_time"
-                inputID="end_time"
-                required={true}
-                timeInputErrorMessage="end time required"
-            >
-                action end time
-            </TimeInput> 
-        </div>
-        <div class="two_columns">
-            <SelectInput 
-                options={timeZoneOptions}
-                bind:selectInputValue={timeZoneInputValue}
-                isValid={timeZoneIsValid}
-                required={false}
-                inputID="time_zone"
-                inputName="time_zone"
-                selectInputErrorMessage="time zone required"
-                inputLabel={true}
-            >
-                action time zone
-            </SelectInput>
+            {#if (!allDayActionChecked)}
+                <SelectInput 
+                    options={timeZoneOptions}
+                    bind:selectInputValue={timeZoneInputValue}
+                    isValid={timeZoneIsValid}
+                    required={true}
+                    inputID="time_zone"
+                    inputName="time_zone"
+                    selectInputErrorMessage="time zone required"
+                    inputLabel={true}
+                >
+                    action time zone
+                </SelectInput>
+            {/if}
             <SelectInput 
                 options={governmentLevelOptions}
                 bind:selectInputValue={governmentLevelInputValue}
