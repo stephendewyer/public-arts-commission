@@ -349,6 +349,8 @@ declare global {
 		action_ID: number;
 		image_ID: number;
 		action_name: string;
+		all_day_event: boolean,
+		all_day_event_date: Date,
 		date_start: any;
 		date_end: any;
 		time_start: Date;
@@ -377,6 +379,8 @@ declare global {
 		action_ID: number;
 		image_ID: number;
 		action_name: string;
+		all_day_event: boolean,
+		all_day_event_date: Date,
 		date_start: any;
 		date_end: any;
 		time_start: Date;

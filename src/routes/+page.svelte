@@ -28,15 +28,18 @@
 
 	endorsedActions.forEach((action) => {
 
-		const actionDate = new Date(action.date_end);
+		const actionEndDate = new Date(action.date_end);
+		const actionAllDayDate = new Date(action.all_day_event_date);
 
-		if (actionDate >= currentDate) {
+		if ((actionEndDate >= currentDate) || (actionAllDayDate >= currentDate)) {
 
 			futureEndorsedActions.push(action);
 
 		};
 
 	});
+
+	console.log(futureEndorsedActions)
 
 	let activeLoginTab: number;
 
@@ -231,7 +234,7 @@
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
-		{#if (futureEndorsedActions.length > 0)}
+		{#if (futureEndorsedActions.length)}
 			<ForthcomingActionCarousel 
 				forthcoming_actions={futureEndorsedActions} 
 			/>
