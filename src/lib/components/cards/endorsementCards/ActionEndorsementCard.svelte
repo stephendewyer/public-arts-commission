@@ -1,5 +1,6 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
+    
     export let endorsedActionData: ActionWithImage;
 
     const actionIsAllDay = endorsedActionData.all_day_event;
@@ -62,13 +63,28 @@
         {@html MeatBalls}
     </div>
     <div class="card_info_container">
-        <h4 class="card_heading_02">
+        <h5 class="card_heading_02">
             {#if (actionIsAllDay)}
                 {allDayActionDate}
             {:else if (!actionIsAllDay)}
                 {actionStartDate} - {actionEndDate}
             {/if}
-        </h4>
+        </h5>
+        {#if (endorsedActionData.action_street_address)}
+            <h5 class="card_heading_02">{endorsedActionData.action_street_address}</h5>
+        {/if}
+        {#if (endorsedActionData.action_street_address_02)}
+            <h5 class="card_heading_02">{endorsedActionData.action_street_address_02}</h5>
+        {/if}
+        {#if (endorsedActionData.action_city)}
+            <h5 class="card_heading_02">{endorsedActionData.action_city}</h5>
+        {/if}
+        {#if (endorsedActionData.action_state)}
+            <h5 class="card_heading_02">{endorsedActionData.action_state}</h5>
+        {/if}
+        {#if (endorsedActionData.action_zip_code)}
+            <h5 class="card_heading_02">{endorsedActionData.action_zip_code}</h5>
+        {/if}
         <h4 class="card_heading_01">{endorsedActionData.action_name}</h4>
     </div>
 </div>
@@ -119,11 +135,7 @@
     }
 
     .image_container {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
+        position: relative;
         width: 100%;
         height: 100%;
     }
@@ -135,7 +147,11 @@
     }
 
     .card_info_container {
-        position: relative;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -158,16 +174,19 @@
     @media (max-width: 1440px) {
 
         .endorsement_card {
+            height: 22rem;
             max-width: 15rem;
         }
 
         .endorsement_card_hovered {
+            height: 22rem;
             max-width: 15rem;
         }
 
-        .image_container {
-            height: 15rem;
+        .image_container > img {
+            height: 22rem;
         }
+
 
         .card_heading_02 {
             margin: 0;
@@ -179,15 +198,18 @@
     @media (max-width: 720px) {
         .endorsement_card {
             max-width: 12rem;
+            height: 18rem;
         }
 
         .endorsement_card_hovered {
             max-width: 12rem;
+            height: 18rem;
         }
 
-        .image_container {
-            height: 12rem;
+        .image_container > img {
+            height: 18rem;
         }
+
 
         .card_heading_02 {
             margin: 0;

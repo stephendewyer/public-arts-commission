@@ -74,11 +74,9 @@
 
     $: rawGeneralElectionDate = new Date(endorsedCandidateData.election_date_general);
 
-    $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);;
+    $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
 
     let cardHovered: boolean = false;
-
-    // update the team member selected store with the value for the member Id of selected member card
 
     const cardHoverHandler = () => {
 
@@ -100,7 +98,8 @@
 
         // TeamMemberSelectedStore.update((value) => value = memberCardSelectedId);
 
-    }
+    };
+
 </script>
 <div 
     tabindex={endorsedCandidateData.campaign_ID}
