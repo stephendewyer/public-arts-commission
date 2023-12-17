@@ -10,11 +10,11 @@
 
     const memberCardActiveHandler = () => {
         memberCardHovered = true;
-    }
+    };
 
     const memberCardHandler = () => {
         memberCardHovered = false;
-    }
+    };
 
     let memberCardSelectedId: number | null = null;
 
@@ -24,7 +24,7 @@
 
         TeamMemberSelectedStore.update((value) => value = memberCardSelectedId);
 
-    }
+    };
 
 </script>
 

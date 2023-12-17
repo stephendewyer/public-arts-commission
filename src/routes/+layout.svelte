@@ -2,19 +2,21 @@
 	import MainHeader from '$lib/components/MainHeader.svelte';
 	import MainFooter from '$lib/components/MainFooter.svelte';
 	import SideDrawer from '$lib/components/navigation/sideDrawer/SideDrawer.svelte';
-	import Backdrop from '$lib/components/navigation/sideDrawer/Backdrop.svelte';
-	import TeamMemberBackdrop from '$lib/components/team/teamMemberSidedrawer/TeamMemberBackdrop.svelte'
+	import Backdrop from '$lib/components/overlays/Backdrop.svelte';
 	import TeamMemberSideDrawer from '$lib/components/team/teamMemberSidedrawer/TeamMemberSidedrawer.svelte'
+	import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
 	import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
-	import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
   	import { onDestroy } from 'svelte';
 	import './styles.css';
   	import CreateVoterAccountPromptModal from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptModal.svelte';
   	import { CreateVoterAccountPromptStore } from '$lib/stores/CreateVoterAccountPromptStore';
 	import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
-	import CreateVoterAccountPromptBackdrop from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptBackdrop.svelte';
+	
+	let openMobileNav: boolean = false;
 
-	let open: boolean = false;
+	let openCreateVoterAccountPrompt: boolean = false;
+
+	let teamMemberSideDrawerOpen: boolean = false;
 	
 	let footerElHeight: number = 0;
 
@@ -22,38 +24,71 @@
 
 	let nominationCategory: string = "";
 
-	let sideDrawerOpen: boolean = false;
+	let backdrop: boolean = false;
 
-	let modalOpen: boolean = false;
+	$: if (
+
+		openMobileNav || 
+
+		teamMemberSideDrawerOpen || 
+
+		openCreateVoterAccountPrompt
+
+	) {
+
+		backdrop = true;
+
+	} else {
+
+		backdrop = false;
+		
+	};
 
 	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
+		
 		selectedTeamMemberId = value;
+
 	});
 
 	const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe((value) => {
+		
 		nominationCategory = value;
-	})
 
-	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
-		sideDrawerOpen = value;
 	});
 
+	const unsubscribeTeamMemberSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
+		
+		teamMemberSideDrawerOpen = value;
+
+	});
+
+	$: console.log("team member sidedrawer open is ", teamMemberSideDrawerOpen)
+
 	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-		modalOpen = value;
+
+		openCreateVoterAccountPrompt = value;
+
 	});
 
 	onDestroy(() => {
+
 		unsubscribeTeamMemberSelectedStore();
+
 		unsubscribeCreateVoterAccountPromptStore();
-		unsubscribeSidedrawerOpenStore();
+
+		unsubscribeTeamMemberSidedrawerOpenStore();
+
 		unsubscribeModalOpenStore();
+
 	});
+
+
 
 </script>
 
 <div class="app">
 	<MainHeader 
-		bind:sideDrawer={open}
+		bind:sideDrawer={openMobileNav}
 	/>
 
 	<main style="padding-bottom: {footerElHeight}px">
@@ -63,15 +98,12 @@
 	<MainFooter 
 		bind:footerHeight={footerElHeight}
 	/>
-	{#if (open)}
-		<Backdrop bind:open />
+	{#if (backdrop)}
+		<Backdrop 
+			bind:openMobileNav 
+		/>
 	{/if}
-	<SideDrawer bind:open />
-	{#if (sideDrawerOpen)}
-		<TeamMemberBackdrop />
-	{:else if (modalOpen)}
-		<CreateVoterAccountPromptBackdrop />
-	{/if}
+	<SideDrawer bind:openMobileNav />
 	<TeamMemberSideDrawer />
 	<CreateVoterAccountPromptModal />
 </div>

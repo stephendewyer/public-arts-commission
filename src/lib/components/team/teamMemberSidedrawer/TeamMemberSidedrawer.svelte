@@ -1,6 +1,6 @@
 <script lang="ts">
     import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
-    import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
+    import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
     import { onDestroy } from 'svelte';
     import TeamMemberData from '$lib/data/teamMembers.json'
 
@@ -14,30 +14,30 @@
 
     // set the value for the sidedrawer open value from store
 
-    let sideDrawerOpen: boolean = false;
+    let teamMemberSidedrawerOpen: boolean = false;
 
     // get the value for the sidedrawer open value from store
 
-	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
-		sideDrawerOpen = value;
+	const unsubscribeTeamMemberSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
+		teamMemberSidedrawerOpen = value;
 	});
 
     onDestroy(() => {
         unsubscribeTeamMemberSelectedStore();
-        unsubscribeSidedrawerOpenStore();
+        unsubscribeTeamMemberSidedrawerOpenStore();
     });
 
     const closeClickHandler = () => {
-        sideDrawerOpen = false;
-        SidedrawerOpenStore.update((value) => value = sideDrawerOpen);
+        teamMemberSidedrawerOpen = false;
+        TeamMemberSidedrawerOpenStore.update((value) => value = teamMemberSidedrawerOpen);
         TeamMemberSelectedStore.update((value) => value = null);
     }
 
 </script>
 
 <aside 
-    class={ (sideDrawerOpen) ? "side_drawer_open" : "side_drawer_closed" }
-    aria-hidden={ (sideDrawerOpen) ? 'false' : 'true'}
+    class={ (teamMemberSidedrawerOpen) ? "side_drawer_open" : "side_drawer_closed" }
+    aria-hidden={ (teamMemberSidedrawerOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
         <button 

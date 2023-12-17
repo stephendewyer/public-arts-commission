@@ -3,7 +3,7 @@
     import LogoutButtonMobile from "$lib/components/buttons/LogoutButtonMobile.svelte";
     import Accordion from '$lib/components/accordions/MobileNavAccordion.svelte';
 
-    export let open = false;
+    export let openMobileNav = false;
 
     $: user = $page.data.streamed.user;
 
@@ -102,13 +102,13 @@
 </script>
 
 <aside 
-    class="{ (open) ? 'side_drawer_open' : 'side_drawer_closed' }"
-    aria-hidden="{ (open) ? 'false' : 'true'}"
+    class="{ (openMobileNav) ? 'side_drawer_open' : 'side_drawer_closed' }"
+    aria-hidden="{ (openMobileNav) ? 'false' : 'true'}"
 >
     <nav>
         {#if (user)}
             <LogoutButtonMobile 
-                bind:openState={open}
+                bind:openState={openMobileNav}
                 callbackUrl={callbackURL}
             >
                 logout
@@ -116,7 +116,7 @@
         {:else if (!user)}
             <Accordion 
                 mobileNavTabsData={mobileNavTabs}
-                bind:openState={open}
+                bind:openState={openMobileNav}
             />
         {/if}
     </nav>

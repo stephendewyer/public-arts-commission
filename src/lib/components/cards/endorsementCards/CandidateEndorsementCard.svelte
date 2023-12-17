@@ -55,8 +55,6 @@
     $: rawPrimaryElectionDate = new Date(endorsedCandidateData.election_date_primary);
 
     let blankDate = new Date("2016-01-01T06:00:00.000Z");
-
-    console.log(blankDate)
     
     $: if (rawPrimaryElectionDate < blankDate) {
 
@@ -132,12 +130,12 @@
     </div>
     <div class="card_info_container">
         <h4 class="card_heading_01">{endorsedCandidateData.campaign_name}</h4>
-        <h5 class="card_heading_02">electorate: {endorsedCandidateData.electorate}</h5>
+        <h5 class="card_heading_02"><span class="data_category">electorate: </span>{endorsedCandidateData.electorate}</h5>
         {#if (primaryIsValid)}
             <h5 class="card_heading_02">primary election date: {primaryElectionDate}</h5>
         {/if}
-        <h5 class="card_heading_02">general election date: {generalElectionDate}</h5>
-        <h5 class="card_heading_02">status:
+        <h5 class="card_heading_02"><span class="data_category">general election date: </span>{generalElectionDate}</h5>
+        <h5 class="card_heading_02"><span class="data_category">status:</span>
             {#each status as item, i}
                 {#if (i === status.length -1)}
                     {item}
@@ -213,6 +211,10 @@
         font-size: 1rem;
     }
 
+    .data_category {
+        color: #28387C;
+    }
+
     @media (max-width: 1440px) {
 
         .endorsement_card {
@@ -227,19 +229,29 @@
             height: 15rem;
         }
 
+        .card_heading_02 {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
     }
 
     @media (max-width: 720px) {
         .endorsement_card {
-            max-width: 10rem;
+            max-width: 12rem;
         }
 
         .endorsement_card_hovered {
-            max-width: 10rem;
+            max-width: 12rem;
         }
 
         .image_container {
-            height: 10rem;
+            height: 12rem;
+        }
+
+        .card_heading_02 {
+            margin: 0;
+            font-size: 0.8rem;
         }
     }
 

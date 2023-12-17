@@ -220,13 +220,9 @@
 			data: {
 				user: data.streamed.user,
 				endorsed_amendments: data.streamed.endorsed_amendments, 
-				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
 				endorsed_candidates: data.streamed.endorsed_candidates,
-				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
 				endorsed_legislation: data.streamed.endorsed_legislation,
-				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
-				endorsed_referendums: data.streamed.endorsed_referendums,
-				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+				endorsed_referendums: data.streamed.endorsed_referendums
 			}
 		},
 		{
@@ -237,14 +233,10 @@
 			panel: FederalEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
-				endorsed_amendments: amendmentsFederal, 
-				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_amendments: amendmentsFederal,
 				endorsed_candidates: candidatesFederal,
-				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
 				endorsed_legislation: legislationFederal,
-				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
-				endorsed_referendums: referendumsFederal,
-				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+				endorsed_referendums: referendumsFederal
 			}
 		},
 		{
@@ -255,14 +247,10 @@
 			panel: StateEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
-				endorsed_amendments: amendmentsState, 
-				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_amendments: amendmentsState,
 				endorsed_candidates: candidatesState,
-				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
 				endorsed_legislation: legislationState,
-				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
-				endorsed_referendums: referendumsState,
-				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+				endorsed_referendums: referendumsState
 			}
 		},
 		{
@@ -273,14 +261,10 @@
 			panel: CountyEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
-				endorsed_amendments: amendmentsCounty, 
-				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_amendments: amendmentsCounty,
 				endorsed_candidates: candidatesCounty,
-				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
 				endorsed_legislation: legislationCounty,
-				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
-				endorsed_referendums: referendumsCounty,
-				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+				endorsed_referendums: referendumsCounty
 			}
 		},
 		{
@@ -291,14 +275,10 @@
 			panel: CityEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
-				endorsed_amendments: amendmentsCity, 
-				endorsed_amendments_images: data.streamed.endorsed_amendments_images,
+				endorsed_amendments: amendmentsCity,
 				endorsed_candidates: candidatesCity,
-				endorsed_candidates_images: data.streamed.endorsed_candidates_images,
 				endorsed_legislation: legislationCity,
-				endorsed_legislation_images: data.streamed.endorsed_legislation_images,
-				endorsed_referendums: referendumsCity,
-				endorsed_referendums_images: data.streamed.endorsed_referendums_images
+				endorsed_referendums: referendumsCity
 			}
 		}
 	];

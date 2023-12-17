@@ -7,7 +7,7 @@
     import BoardOfDirectors from '$lib/components/team/BoardOfDirectors.svelte';
     import MemorialHallGalleryDoors from '$lib/images/backgrounds/Boston,_MA_30_October_2017_02.jpg';
     import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
-    import { SidedrawerOpenStore } from '$lib/stores/SidedrawerOpenStore';
+    import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
     import { onDestroy } from 'svelte';
 
     // set the value for the active panel
@@ -24,7 +24,7 @@
 
     // update the sidedrawer open store using sidedrawerIsOpen variable
 
-    $: SidedrawerOpenStore.update((value) => value = sidedrawerIsOpen);    
+    $: TeamMemberSidedrawerOpenStore.update((value) => value = sidedrawerIsOpen);    
 
     // set the value for the selected team member id from store
 
@@ -42,13 +42,13 @@
 
     // get the value for the sidedrawer open value from store
 
-	const unsubscribeSidedrawerOpenStore = SidedrawerOpenStore.subscribe((value) => {
+	const unsubscribeTeamMemberSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
 		sideDrawerOpen = value;
 	});
 
     onDestroy(() => {
         unsubscribeTeamMemberSelectedStore();
-        unsubscribeSidedrawerOpenStore();
+        unsubscribeTeamMemberSidedrawerOpenStore();
     })
 
     $: if ((selectedTeamMemberId) && (sidedrawerIsOpen == false)) {
