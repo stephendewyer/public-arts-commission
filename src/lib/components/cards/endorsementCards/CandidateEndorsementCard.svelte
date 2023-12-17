@@ -50,6 +50,8 @@
 
     let primaryElectionDate: string | null = endorsedCandidateData.election_date_primary;
 
+    $: primaryElectionDate;
+
     let primaryIsValid: boolean = true;
 
     $: if (primaryElectionDate === "1899-11-30T06:00:00.000Z") {
@@ -132,7 +134,7 @@
         <h4 class="card_heading_01">{endorsedCandidateData.campaign_name}</h4>
         <h5 class="card_heading_02">electorate: {endorsedCandidateData.electorate}</h5>
         {#if (primaryIsValid)}
-            <h5>primary election date: {primaryElectionDate}</h5>
+            <h5 class="card_heading_02">primary election date: {primaryElectionDate}</h5>
         {/if}
         <h5 class="card_heading_02">general election date: {generalElectionDate}</h5>
         <h5 class="card_heading_02">status:
