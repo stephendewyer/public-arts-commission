@@ -228,7 +228,7 @@
     }
 
     @media (max-width: 720px) {
-        .endorsement_card_container {
+        .endorsement_card {
             max-width: 10rem;
         }
 
