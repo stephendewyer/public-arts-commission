@@ -48,11 +48,17 @@
 
     };
 
-    let primaryElectionDate: string | null = endorsedCandidateData.election_date_primary;
-
     let primaryIsValid: boolean = true;
 
-    $: if (primaryElectionDate === "1899-11-30T06:00:00.000Z") {
+    let primaryElectionDate: Date | string;
+
+    $: rawPrimaryElectionDate = new Date(endorsedCandidateData.election_date_primary);
+
+    let blankDate = new Date("2016-01-01T06:00:00.000Z");
+
+    console.log(blankDate)
+    
+    $: if (rawPrimaryElectionDate < blankDate) {
 
         primaryElectionDate = "";
 
@@ -63,10 +69,6 @@
         primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
 
     };
-
-    let rawPrimaryElectionDate: Date;
-
-    $: rawPrimaryElectionDate = new Date(endorsedCandidateData.election_date_primary);
 
     let generalElectionDate: string = "";
 
