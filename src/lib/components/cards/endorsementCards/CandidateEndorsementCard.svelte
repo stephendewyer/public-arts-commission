@@ -145,7 +145,6 @@
             {/each}
         </h5>
     </div>
-    <div class="invisible_layer" />
 </div>
 
 <style>

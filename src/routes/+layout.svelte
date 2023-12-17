@@ -41,7 +41,7 @@
 	} else {
 
 		backdrop = false;
-		
+
 	};
 
 	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
@@ -62,8 +62,6 @@
 
 	});
 
-	$: console.log("team member sidedrawer open is ", teamMemberSideDrawerOpen)
-
 	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
 
 		openCreateVoterAccountPrompt = value;
@@ -81,8 +79,6 @@
 		unsubscribeModalOpenStore();
 
 	});
-
-
 
 </script>
 
