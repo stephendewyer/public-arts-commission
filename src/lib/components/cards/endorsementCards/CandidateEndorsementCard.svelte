@@ -50,8 +50,6 @@
 
     let primaryElectionDate: string | null = endorsedCandidateData.election_date_primary;
 
-    $: primaryElectionDate;
-
     let primaryIsValid: boolean = true;
 
     $: if (primaryElectionDate === "1899-11-30T06:00:00.000Z") {
