@@ -18,7 +18,7 @@
 
     export let data;
 
-    $: userEmail = data.user?.email;  
+    $: userEmail = data.streamed.user?.email;  
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
@@ -34,13 +34,13 @@
     let cityInputValue: string = "";
     let partyInputValue: string = "";
     let websiteURLInputValue: string = "";
-    let rejectedPrimaryProceedingGeneralChecked: boolean = false;
     let runningInPrimaryChecked: boolean = false;
-    let electedPrimaryElectedGeneralChecked: boolean = false;
-    let electedPrimaryProceedingGeneralChecked: boolean = false;
-    let electedInPrimaryRejectedInGeneralChecked: boolean = false;
-    let rejectedInPrimaryCampaignEndedChecked: boolean = false;
-    let rejectedInPrimaryRejectedInGeneralChecked: boolean = false;
+    let electedInPrimaryChecked: boolean = false;
+    let rejectedInPrimaryChecked: boolean = false;
+    let runnningInGeneralChecked: boolean = false;
+    let electedInGeneralChecked: boolean = false;
+    let rejectedInGeneralChecked: boolean = false;
+    let campaignEndedChecked: boolean = false;
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -90,7 +90,7 @@
             responseItem.success = "";
             responseItem.error = "";
             status: null;
-        }, 4000)
+        }, 4000);
     };
 
     const createCandidateEndorsement = async (
@@ -109,13 +109,13 @@
         city: string,
         party: string,
         websiteURL: string,
-        rejectedPrimaryProceedingGeneral: boolean,
         runningInPrimary: boolean,
-        electedPrimaryElectedGeneral: boolean,
-        electedPrimaryProceedingGeneral: boolean,
-        electedInPrimaryRejectedInGeneral: boolean,
-        rejectedInPrimaryCampaignEnded: boolean,
-        rejectedInPrimaryRejectedInGeneral: boolean,
+        electedInPrimary: boolean,
+        rejectedInPrimary: boolean,
+        runnningInGeneral: boolean,
+        electedInGeneral: boolean,
+        rejectedInGeneral: boolean,
+        campaignEnded: boolean,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: string,
@@ -144,13 +144,13 @@
                 city,
                 party,
                 websiteURL,
-                rejectedPrimaryProceedingGeneral,
                 runningInPrimary,
-                electedPrimaryElectedGeneral,
-                electedPrimaryProceedingGeneral,
-                electedInPrimaryRejectedInGeneral,
-                rejectedInPrimaryCampaignEnded,
-                rejectedInPrimaryRejectedInGeneral,
+                electedInPrimary,
+                rejectedInPrimary,
+                runnningInGeneral,
+                electedInGeneral,
+                rejectedInGeneral,
+                campaignEnded,
                 nameFirstContact,
                 nameLastContact,
                 phoneContact,
@@ -196,13 +196,13 @@
                 cityInputValue,
                 partyInputValue,
                 websiteURLInputValue,
-                rejectedPrimaryProceedingGeneralChecked,
                 runningInPrimaryChecked,
-                electedPrimaryElectedGeneralChecked,
-                electedPrimaryProceedingGeneralChecked,
-                electedInPrimaryRejectedInGeneralChecked,
-                rejectedInPrimaryCampaignEndedChecked,
-                rejectedInPrimaryRejectedInGeneralChecked,
+                electedInPrimaryChecked,
+                rejectedInPrimaryChecked,
+                runnningInGeneralChecked,
+                electedInGeneralChecked,
+                rejectedInGeneralChecked,
+                campaignEndedChecked,
                 nameFirstContactInputValue,
                 nameLastContactInputValue,
                 phoneContactInputValue,
@@ -227,13 +227,13 @@
                 cityInputValue = "",
                 partyInputValue = "",
                 websiteURLInputValue = "",
-                rejectedPrimaryProceedingGeneralChecked = false,
                 runningInPrimaryChecked = false,
-                electedPrimaryElectedGeneralChecked = false,
-                electedPrimaryProceedingGeneralChecked = false,
-                electedInPrimaryRejectedInGeneralChecked = false,
-                rejectedInPrimaryCampaignEndedChecked = false,
-                rejectedInPrimaryRejectedInGeneralChecked = false,
+                electedInPrimaryChecked = false,
+                rejectedInPrimaryChecked = false,
+                runnningInGeneralChecked = false,
+                electedInGeneralChecked = false,
+                rejectedInGeneralChecked = false,
+                campaignEndedChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
                 phoneContactInputValue = "",
@@ -494,40 +494,40 @@
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedPrimaryProceedingGeneralChecked}>
-                    not elected in the primary, proceeding to the general
+                <AnimatedCheckbox bind:checked={electedInPrimaryChecked}>
+                    elected in the primary
                 </AnimatedCheckbox>
             </div>
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedInPrimaryCampaignEndedChecked}>
-                    rejected in the primary, campaign ended
+                <AnimatedCheckbox bind:checked={rejectedInPrimaryChecked}>
+                    rejected in the primary
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedInPrimaryRejectedInGeneralChecked}>
-                    elected in the primary, rejected in the general
+                <AnimatedCheckbox bind:checked={rejectedInGeneralChecked}>
+                    running in the general
                 </AnimatedCheckbox>
             </div>
         </div>
         
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedPrimaryProceedingGeneralChecked}>
-                    elected in the primary, proceeding to the general
+                <AnimatedCheckbox bind:checked={electedInGeneralChecked}>
+                    elected in the general
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedPrimaryElectedGeneralChecked}>
-                    elected in the primary and elected in the general            
+                <AnimatedCheckbox bind:checked={rejectedInGeneralChecked}>
+                    rejected in the general        
                 </AnimatedCheckbox>
             </div>
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedInPrimaryRejectedInGeneralChecked}>
-                    rejected in the primary, rejected in the general
+                <AnimatedCheckbox bind:checked={campaignEndedChecked}>
+                    campaign ended
                 </AnimatedCheckbox>
             </div>
         </div>

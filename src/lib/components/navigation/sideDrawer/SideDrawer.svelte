@@ -5,7 +5,7 @@
 
     export let open = false;
 
-    $: user = $page.data.user;
+    $: user = $page.data.streamed.user;
 
 	let callbackURL: string = "";
 

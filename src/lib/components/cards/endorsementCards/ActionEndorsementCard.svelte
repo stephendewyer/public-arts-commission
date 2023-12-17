@@ -1,21 +1,29 @@
 <script lang="ts">
     export let endorsedActionData: ActionWithImage;
 
-    console.log(endorsedActionData)
-
+    const actionIsAllDay = endorsedActionData.all_day_event;
+    const rawAllDayActionDate = new Date(endorsedActionData.all_day_event_date);
+    const allDayActionDate = rawAllDayActionDate.toUTCString().substring(0, 16);
     const actionRawStartDate = new Date(endorsedActionData.date_start);
     const actionStartDate = actionRawStartDate.toUTCString();
     const actionRawEndDate = new Date(endorsedActionData.date_end);
     const actionEndDate = actionRawEndDate.toUTCString();
-    
+
 </script>
+
 <div class="endorsement_card_container">
     <div class="image_container">
         <img src={endorsedActionData.image_URL} alt={endorsedActionData.alt_text} />
     </div>
     <div class="endorsement_card_overlay" />
     <div class="action_info">
-        <h4>{actionStartDate} - {actionEndDate}</h4>
+        <h4>
+            {#if (actionIsAllDay)}
+                {allDayActionDate}
+            {:else if (!actionIsAllDay)}
+                {actionStartDate} - {actionEndDate}
+            {/if}
+        </h4>
         <h4>{endorsedActionData.action_name}</h4>
     </div>
 </div>

@@ -39,13 +39,13 @@ export const POST = async ({request}) => {
     city,
     party,
     websiteURL,
-    rejectedPrimaryProceedingGeneral,
     runningInPrimary,
-    electedPrimaryElectedGeneral,
-    electedPrimaryProceedingGeneral,
-    electedInPrimaryRejectedInGeneral,
-    rejectedInPrimaryCampaignEnded,
-    rejectedInPrimaryRejectedInGeneral,
+    electedInPrimary,
+    rejectedInPrimary,
+    runningInGeneral,
+    electedInGeneral,
+    rejectedInGeneral,
+    campaignEnded,
     nameFirstContact,
     nameLastContact,
     phoneContact,
@@ -85,32 +85,14 @@ export const POST = async ({request}) => {
 
   };
 
+
   let runningInPrimaryINT = 0;
-  let electedPrimaryElectedGeneralINT = 0;
-  let electedPrimaryProceedingGeneralINT = 0;
-  let rejectedPrimaryProceedingGeneralINT = 0;
-  let electedInPrimaryRejectedInGeneralINT = 0;
-  let rejectedInPrimaryCampaignEndedINT = 0;
-  let rejectedInPrimaryRejectedInGeneralINT = 0;
-
-  if (electedInPrimaryRejectedInGeneral) {
-
-    electedInPrimaryRejectedInGeneralINT = 1;
-
-  };
-
-  if (rejectedInPrimaryCampaignEnded) {
-
-    rejectedInPrimaryCampaignEndedINT = 1;
-
-  };
-
-
-  if (rejectedInPrimaryRejectedInGeneral) {
-
-    rejectedInPrimaryRejectedInGeneralINT = 1;
-
-  };
+  let electedInPrimaryINT = 0;
+  let rejectedInPrimaryINT = 0;
+  let runningInGeneralINT = 0;
+  let electedInGeneralINT = 0;
+  let rejectedInGeneralINT = 0;
+  let campaignEndedINT = 0;
 
   if (runningInPrimary) {
 
@@ -118,23 +100,42 @@ export const POST = async ({request}) => {
 
   };
 
-  if (electedPrimaryElectedGeneral) {
+  if (electedInPrimary) {
 
-    electedPrimaryElectedGeneralINT = 1;
-
-  };
-
-  if (electedPrimaryProceedingGeneral) {
-
-    electedPrimaryProceedingGeneralINT = 1;
+    electedInPrimaryINT = 1;
 
   };
 
-  if (rejectedPrimaryProceedingGeneral) {
+  if (rejectedInPrimary) {
 
-    rejectedPrimaryProceedingGeneralINT = 1;
+    rejectedInPrimaryINT = 1;
 
   };
+
+  if (runningInGeneral) {
+
+    runningInGeneralINT = 1;
+
+  };
+
+  if (electedInGeneral) {
+
+    electedInGeneralINT = 1;
+
+  };
+
+  if (rejectedInGeneral) {
+
+    rejectedInPrimaryINT = 1;
+
+  };
+
+  if (campaignEnded) {
+
+    campaignEndedINT = 1;
+
+  };
+
 
   // upload image to Cloudinary
 
@@ -221,9 +222,12 @@ export const POST = async ({request}) => {
 	party,
 	website_URL,
 	running_in_primary,
-	elected_in_primary_and_general,
-	elected_in_primary_proceeding_general,
-	rejected_in_primary_proceeding_general,
+	elected_in_primary,
+	rejected_in_primary,
+	running_in_general,
+	elected_in_general,
+	rejected_in_general,
+	campaign_ended,
 	contact_name_first,
 	contact_name_last,
 	contact_phone_number,
@@ -233,9 +237,6 @@ export const POST = async ({request}) => {
 	contact_state,
 	contact_zip_code,
 	contact_email,
-	elected_in_primary_rejected_in_general,
-    rejected_in_primary_campaign_ended,
-    rejected_in_primary_rejected_in_general,
 	electorate
   ) VALUES (
     "${imageID}",
@@ -250,9 +251,12 @@ export const POST = async ({request}) => {
     "${party}",
     "${websiteURL}",
     "${runningInPrimaryINT}",
-    "${electedPrimaryElectedGeneralINT}",
-    "${electedPrimaryProceedingGeneralINT}",
-    "${rejectedPrimaryProceedingGeneralINT}",
+    "${electedInPrimaryINT}",
+    "${rejectedInPrimaryINT}",
+    "${runningInGeneralINT}",
+    "${electedInGeneralINT}",
+    "${rejectedInGeneralINT}",
+    "${campaignEndedINT}",
     "${nameFirstContact}",
     "${nameLastContact}",
     "${phoneContact}",
@@ -262,9 +266,6 @@ export const POST = async ({request}) => {
     "${stateContact}",
     "${zipCodeContact}",
     "${emailContact}",
-    "${electedInPrimaryRejectedInGeneralINT}",
-    "${rejectedInPrimaryCampaignEndedINT}",
-    "${rejectedInPrimaryRejectedInGeneralINT}",
     "${electorate}"    
   )`;
 

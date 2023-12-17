@@ -67,13 +67,14 @@
             {#each endorsedActions as endorsedAction, i}
                 <ActionEndorsementCard endorsedActionData={endorsedAction} />
             {/each}
-            
-            <ProposeActionButton
-                category="actions" 
-                authorized_user={user}
-            >
-                propose an action
-            </ProposeActionButton>
+            <div class="propose_an_action_button_container">
+                <ProposeActionButton
+                    category="actions" 
+                    authorized_user={user}
+                >
+                    propose an action
+                </ProposeActionButton>
+            </div>
         </li>
         <li class="actions_history_container">
             <h3>
@@ -115,11 +116,26 @@
     .forthcoming_actions_container {
         background-color: #F4F5FB;
         padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
     }
 
     .actions_history_container {
         background-color: #CBC6C2;
         padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .propose_an_action_button_container{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        width: 100%;
     }
 
 </style>

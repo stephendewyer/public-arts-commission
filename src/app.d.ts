@@ -150,9 +150,12 @@ declare global {
 		party: string;
 		website_URL: string;
 		running_in_primary: number;
-		elected_in_primary_and_general: number;
-		elected_in_primary_proceeding_general: number;
-		rejected_in_primary_proceeding_general: number;
+		elected_in_primary: number;
+		rejected_in_primary: number;
+		running_in_general: number;
+		elected_in_general: number;
+		rejected_in_general: number;
+		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: number;
@@ -162,9 +165,6 @@ declare global {
 		contact_state: string;
 		contact_zip_code: number;
 		contact_email: string;
-		elected_in_primary_rejected_in_general: number;
-    	rejected_in_primary_campaign_ended: number;
-    	rejected_in_primary_rejected_in_general: number;
 		electorate: string;
 	}
 
@@ -182,12 +182,12 @@ declare global {
 		party: string;
 		website_URL: string;
 		running_in_primary: number;
-		elected_in_primary_and_general: number;
-		elected_in_primary_proceeding_general: number;
-		rejected_in_primary_proceeding_general: number;
-		elected_in_primary_rejected_in_general: number;
-    	rejected_in_primary_campaign_ended: number;
-    	rejected_in_primary_rejected_in_general: number;
+		elected_in_primary: number;
+		rejected_in_primary: number;
+		running_in_general: number;
+		elected_in_general: number;
+		rejected_in_general: number;
+		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: number;

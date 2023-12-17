@@ -11,7 +11,6 @@ cloudinary.config({
   api_secret: CLOUDINARYSECRETKEY
 });
 
-
 export const POST = async ({request}) => {
 
   if (request.method !== 'POST') {
@@ -75,6 +74,14 @@ export const POST = async ({request}) => {
   if (!image) {
 
     return new Response(JSON.stringify({error: "missing image!"}), {status: 422});
+
+  };
+
+  let allDayActionINT = 0;
+
+  if (allDayAction) {
+
+    allDayActionINT = 1;
 
   };
 
@@ -150,35 +157,35 @@ export const POST = async ({request}) => {
 
   const insertEndorsedActionInformationStatement = `INSERT INTO endorsed_actions (
     image_ID,
-	action_name,
-  all_day_event,
-  all_day_event_date,
-	date_start,
-	date_end,
-	time_start,
-	time_end,
-	time_zone,
-	action_street_address,
-	action_street_address_02,
-	action_city,
-	action_state,
-	action_zip_code,
-	government_level,
-	website_URL,
-	details,
-	contact_name_first,
-	contact_name_last,
-	contact_phone_number,
-	contact_street_address,
-	contact_street_address_02,
-	contact_city,
-	contact_state,
-	contact_zip_code,
-	contact_email
+    action_name,
+    all_day_event,
+    all_day_event_date,
+    date_start,
+    date_end,
+    time_start,
+    time_end,
+    time_zone,
+    action_street_address,
+    action_street_address_02,
+    action_city,
+    action_state,
+    action_zip_code,
+    government_level,
+    website_URL,
+    details,
+    contact_name_first,
+    contact_name_last,
+    contact_phone_number,
+    contact_street_address,
+    contact_street_address_02,
+    contact_city,
+    contact_state,
+    contact_zip_code,
+    contact_email
   ) VALUES (
     "${imageID}",
     "${actionName}",
-    "${allDayAction}",
+    "${allDayActionINT}",
     "${allDayActionDate}",
     "${actionStartDate}",
     "${actionEndDate}",
