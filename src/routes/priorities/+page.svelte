@@ -42,7 +42,6 @@
     
     <div class="priorities_container">
         {#if browser}
-            {#key $navigating}
                 <Scrollactive
                     bind:offset
                     bind:alwaysTrack
@@ -512,8 +511,6 @@
                     </li>
                 </ol>
             </section>
-
-            {/key}
         {/if}
     </div>
 </section>
