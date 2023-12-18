@@ -1,6 +1,8 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
-    
+    import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
+    import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
+
     export let endorsedActionData: ActionWithImage;
 
     const actionIsAllDay = endorsedActionData.all_day_event;
@@ -25,14 +27,11 @@
 
     };
 
-    let memberCardSelectedId: number | null = null;
+    const cardSelectedHandler = () => {
 
-    const cardSelectedHandler = (campign_ID: number) => {
-
-        memberCardSelectedId = campign_ID;
-
-        // TeamMemberSelectedStore.update((value) => value = memberCardSelectedId);
-
+        EndorsedActionSelectedStore.update((value) => value = endorsedActionData);
+        EndorsedActionOpenStore.update((value) => value = true);
+        
     };
 
 </script>
@@ -47,8 +46,8 @@
     on:mouseover={() => cardHoverHandler()}
     on:mouseleave={() => cardExitHandler()}
     on:mouseout={() => cardExitHandler()}
-    on:click={() => cardSelectedHandler(endorsedActionData.action_ID)}
-    on:keyup={() => cardSelectedHandler(endorsedActionData.action_ID)}
+    on:click={() => cardSelectedHandler()}
+    on:keyup={() => cardSelectedHandler()}
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     

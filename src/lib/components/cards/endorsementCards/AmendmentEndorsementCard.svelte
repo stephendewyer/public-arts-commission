@@ -1,5 +1,7 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
+    import { EndorsedAmendmentSelectedStore } from '$lib/stores/EndorsedAmendmentSelectedStore';
+    import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
 
     export let endorsedAmendmentData: AmendmentWithImage;
 
@@ -59,14 +61,11 @@
 
     };
 
-    let memberCardSelectedId: number | null = null;
+    const cardSelectedHandler = () => {
 
-    const cardSelectedHandler = (campign_ID: number) => {
-
-        memberCardSelectedId = campign_ID;
-
-        // TeamMemberSelectedStore.update((value) => value = memberCardSelectedId);
-
+        EndorsedAmendmentSelectedStore.update((value) => value = endorsedAmendmentData);
+        EndorsedAmendmentOpenStore.update((value) => value = true);
+        
     };
     
 </script>
@@ -81,8 +80,8 @@
     on:mouseover={() => cardHoverHandler()}
     on:mouseleave={() => cardExitHandler()}
     on:mouseout={() => cardExitHandler()}
-    on:click={() => cardSelectedHandler(endorsedAmendmentData.amendment_ID)}
-    on:keyup={() => cardSelectedHandler(endorsedAmendmentData.amendment_ID)}
+    on:click={() => cardSelectedHandler()}
+    on:keyup={() => cardSelectedHandler()}
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     <div class="image_container">

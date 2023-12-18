@@ -11,12 +11,32 @@
   	import CreateVoterAccountPromptModal from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptModal.svelte';
   	import { CreateVoterAccountPromptStore } from '$lib/stores/CreateVoterAccountPromptStore';
 	import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
-	
+	import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
+	import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
+	import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
+	import { EndorsedCandidateOpenStore } from '$lib/stores/EndorsedCandidateOpenStore';
+	import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
+  	import EndorsedActionSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedActionSidedrawer.svelte';
+  	import EndorsedAmendmentSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedAmendmentSidedrawer.svelte';
+  	import EndorsedCandidateSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedCandidateSidedrawer.svelte';
+  	import EndorsedLegislationSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
+  	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
+
 	let openMobileNav: boolean = false;
 
 	let openCreateVoterAccountPrompt: boolean = false;
 
 	let teamMemberSideDrawerOpen: boolean = false;
+
+	let endorsedCandidateSideDrawerOpen: boolean = false;
+
+	let endorsedAmendmentSideDrawerOpen: boolean = false;
+
+	let endorsedReferendumSideDrawerOpen: boolean = false;
+
+	let endorsedLegislationSideDrawerOpen: boolean = false;
+
+	let endorsedActionSideDrawerOpen: boolean = false;
 	
 	let footerElHeight: number = 0;
 
@@ -32,7 +52,17 @@
 
 		teamMemberSideDrawerOpen || 
 
-		openCreateVoterAccountPrompt
+		openCreateVoterAccountPrompt ||
+
+		endorsedActionSideDrawerOpen ||
+
+		endorsedAmendmentSideDrawerOpen ||
+
+		endorsedCandidateSideDrawerOpen ||
+
+		endorsedLegislationSideDrawerOpen ||
+
+		endorsedReferendumSideDrawerOpen
 
 	) {
 
@@ -68,15 +98,48 @@
 
 	});
 
+	const unsubscripeEndorsedCandidateOpenStore = EndorsedCandidateOpenStore.subscribe((value => {
+
+		endorsedCandidateSideDrawerOpen = value;
+
+	}));
+
+	const unsubscribeEndorsedLegislationOpenStore = EndorsedLegislationOpenStore.subscribe((value) => {
+
+		endorsedLegislationSideDrawerOpen = value;
+
+	});
+
+	const unsubscribeEndorsedReferendumOpenStore = EndorsedReferendumOpenStore.subscribe((value) => {
+
+		endorsedReferendumSideDrawerOpen = value;
+
+	});
+
+	const unsubscribeEndorsedAmendmentOpenStore = EndorsedAmendmentOpenStore.subscribe((value) => {
+
+		endorsedAmendmentSideDrawerOpen = value;
+
+	});
+
+	const unsubscribeEndorsedActionOpenStore = EndorsedActionOpenStore.subscribe((value) => {
+
+		endorsedActionSideDrawerOpen = value;
+
+	})
+
+
 	onDestroy(() => {
 
 		unsubscribeTeamMemberSelectedStore();
-
 		unsubscribeCreateVoterAccountPromptStore();
-
 		unsubscribeTeamMemberSidedrawerOpenStore();
-
 		unsubscribeModalOpenStore();
+		unsubscripeEndorsedCandidateOpenStore();
+		unsubscribeEndorsedLegislationOpenStore();
+		unsubscribeEndorsedReferendumOpenStore();
+		unsubscribeEndorsedAmendmentOpenStore();
+		unsubscribeEndorsedActionOpenStore();
 
 	});
 
@@ -102,6 +165,11 @@
 	<SideDrawer bind:openMobileNav />
 	<TeamMemberSideDrawer />
 	<CreateVoterAccountPromptModal />
+	<EndorsedActionSidedrawer />
+	<EndorsedAmendmentSidedrawer />
+	<EndorsedCandidateSidedrawer />
+	<EndorsedLegislationSidedrawer />
+	<EndorsedReferendumSidedrawer />
 </div>
 
 <style>
