@@ -1,205 +1,20 @@
 <script lang="ts">
     import PriorityAccordion from '$lib/components/accordions/PriorityAccordion.svelte';
-    import IntersectionObserver from 'svelte-intersection-observer';
     import { onMount } from 'svelte';
-
-    let PrioritiesNavTabs: HTMLElement;
-
-    let governmentTabLink: HTMLElement;
-    let climateTabLink: HTMLElement;
-    let economyTabLink: HTMLElement;
-    let educationTabLink: HTMLElement;
-    let healthTabLink: HTMLElement;
-
-    let governmentPrioritiesElement: HTMLElement;
-    let climatePrioritiesElement: HTMLElement;
-    let economicPrioritiesElement: HTMLElement;
-    let educationPrioritiesElement: HTMLElement;
-    let healthPrioritiesElement: HTMLElement;
-
-    let governmentSectionInView: boolean = false;
-    let climateSectionInView: boolean = false;
-    let economySectionInView: boolean = false;
-    let educationSectionInView: boolean = false;
-    let healthSectionInView: boolean = false;
-
-    // create a variable for when a section is in view
-
-    let intersecting: string = "";
+    import { Scrollactive } from 'svelte-scrollactive';
+    import { browser } from '$app/environment';
+    import { navigating } from '$app/stores';
 
     let activeIntersection: string = "";
 
-    // create the variable for when a user clicks on a tab
-
-    let selectedPrioritiesSection: string = "";
-
-    // when user clicks on a tab, activate the tab and scroll to the corresponding section
-
-    let tabClicked: boolean = false;
-
-    const scrollToElement = ( tabLink: HTMLElement, activeIntersection: string ) => {
-
-        tabClicked = true;
-
-        selectedPrioritiesSection = activeIntersection;
-
-        let linkedElementId: string | null;
-
-        linkedElementId = tabLink.getAttribute('href');
-
-        let linkedElement: HTMLElement | null;
-
-        if (linkedElementId !== null) {
-
-            linkedElement = document.getElementById(linkedElementId);
-
-            // set the intersecting element to the linkedElementId
-
-            intersecting = linkedElementId;
-
-            linkedElement?.scrollIntoView({
-
-                behavior: 'smooth'
-
-            });
-
-        } else {
-
-            return;
-
-        };
-
-    };
-
-    // keep tab active until corresponding section is no longer in view or until user clicks on a different tab
-
-    $: if ((tabClicked) && (selectedPrioritiesSection)) {
-
-        if (governmentSectionInView && (selectedPrioritiesSection === "governmentPriorities")) {
-
-            activeIntersection = "governmentPriorities";
-
-        };
-
-        if ((!governmentSectionInView) && (selectedPrioritiesSection === "governmentPriorities")) {
-
-            tabClicked = false;
-
-        };
-
-        if (climateSectionInView && (selectedPrioritiesSection === "climatePriorities")) {
-
-            activeIntersection = "climatePriorities";
-
-        };
-
-        if ((!climateSectionInView) && (selectedPrioritiesSection === "climatePriorities")) {
-
-            tabClicked = false;
-
-        };
-
-        if (economySectionInView && (selectedPrioritiesSection === "economicPriorities")) {
-
-            activeIntersection = "economicPriorities";
-
-        };
-
-        if ((!economySectionInView) && (selectedPrioritiesSection === "economicPriorities")) {
-
-            tabClicked = false;
-
-        };
-        
-        if (educationSectionInView && (selectedPrioritiesSection === "educationPriorities")) {
-
-            activeIntersection = "educationPriorities";
-
-        };
-
-        if ((!educationSectionInView) && (selectedPrioritiesSection === "educationPriorities")) {
-
-            tabClicked = false;
-
-        };
-        
-        if (healthSectionInView && (selectedPrioritiesSection === "healthPriorities")) {
-
-            activeIntersection = "healthPriorities";
-
-        };
-
-        if ((!healthSectionInView) && (selectedPrioritiesSection === "healthPriorities")) {
-
-            tabClicked = false;
-
-        };
-
-    } else if ((!tabClicked) && selectedPrioritiesSection === "" ) {
-        
-        if (healthSectionInView) {
-
-            activeIntersection = "healthPriorities";
-
-        } else if (educationSectionInView) {
-
-            activeIntersection = "educationPriorities";
-
-        } else if (economySectionInView) {
-
-            activeIntersection = "economicPriorities";
-
-        } else if (climateSectionInView) {
-
-            activeIntersection = "climatePriorities";
-
-        } else if (governmentSectionInView) {
-
-            activeIntersection = "governmentPriorities";
-
-        } else {
-
-            activeIntersection = "governmentPriorities";
-
-        };
-
-    };
-
-    const elementInView = (elementID: string, isIntersecting: boolean) => {
-
-        intersecting = elementID;
-
-        if (elementID === "governmentPriorities") {
-
-            governmentSectionInView = isIntersecting;
-
-        };
-
-        if (elementID === "climatePriorities") {
-
-            climateSectionInView = isIntersecting;
-
-        };
-
-        if (elementID === "economicPriorities") {
-
-            economySectionInView = isIntersecting;
-
-        };
-
-        if (elementID === "educationPriorities") {
-
-            educationSectionInView = isIntersecting;
-
-        };
-
-        if (elementID === "healthPriorities") {
-
-            healthSectionInView = isIntersecting;
-
-        };
-
-    };
+    let alwaysTrack: boolean = false;
+	let duration: number = 600;
+	let clickToScroll: boolean = true;
+	let offset: number = 52;
+	let easing: string = '.5,0,.35,1';
+    let scrollToElement: any;
+
+    let PrioritiesNavTabs: HTMLElement;
 
     // if no clicked active tab, active tab is last element in view
 
@@ -224,143 +39,98 @@
 <svelte:window bind:scrollY={y} />
 <section>
     <h1 class="priorities_heading">our priorities guide all our operations</h1>
+    
     <div class="priorities_container">
-        <ul
-            class={ NavTabsSticky ? "priorities_tabs_sticky" : "priorities_tabs" }
-            bind:this={PrioritiesNavTabs}
-        >
-            <a
-                tabindex={1}
-                role="tab"
-                href="governmentPriorities"
-                on:click|preventDefault={() => {
-                    activeIntersection = "governmentPriorities";
-                    scrollToElement(governmentTabLink, activeIntersection);
-                    
-
-                }}
-                on:keyup|preventDefault={() => {
-                    activeIntersection = "governmentPriorities";
-                    scrollToElement(governmentTabLink, activeIntersection);
-                    
-                }}
-                bind:this={governmentTabLink}
-            >
-                <li
-                    id="government_priorities"
-                    class={ activeIntersection === "governmentPriorities" ? "priorities_category_tab_active" : "priorities_category_tab"}
+        {#if browser}
+            {#key $navigating}
+                <Scrollactive
+                    bind:offset
+                    bind:alwaysTrack
+                    bind:duration
+                    bind:clickToScroll
+                    bind:bezierEasingValue={easing}
+                    on:itemchanged={(e) => console.log(e.detail)}
+                    bind:scrollToElement
                 >
-                    <h2>
-                        government
-                    </h2>
-                </li>
-            </a>
-            <a
-                tabindex={2}
-                role="tab"
-                href="climatePriorities"
-                on:click|preventDefault={() => {
-                    activeIntersection = "climatePriorities";
-                    scrollToElement(climateTabLink, activeIntersection);
-                    
-                }}
-                on:keyup|preventDefault={() => {
-                    activeIntersection = "climatePriorities";
-                    scrollToElement(climateTabLink, activeIntersection);
-                }}
-                bind:this={climateTabLink}
-            >
-                <li
-                    id="climate_priorities"
-                    class={ activeIntersection === "climatePriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
-                >
-                    <h2>
-                        climate
-                    </h2>
-                </li>
-            </a>
-            <a
-                tabindex={3}
-                role="tab"
-                href="economicPriorities"
-                on:click|preventDefault={() => {
-                    activeIntersection = "economicPriorities";
-                    scrollToElement(economyTabLink, activeIntersection);
-                }}
-                on:keyup|preventDefault={() => {
-                    activeIntersection = "economicPriorities";
-                    scrollToElement(economyTabLink, activeIntersection);
-                }}
-                bind:this={economyTabLink}
-            >
-                <li
-                    id="economic_priorities"
-                    class={ activeIntersection === "economicPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
-                >
-                    <h2>
-                        economy
-                    </h2>
-                </li>
-            </a>
-            <a
-                tabindex={4}
-                role="tab"
-                href="educationPriorities"
-                on:click|preventDefault={() => {
-                    activeIntersection = "educationPriorities";
-                    scrollToElement(educationTabLink, activeIntersection);
-                }}
-                on:keyup|preventDefault={() => {
-                    activeIntersection = "educationPriorities";
-                    scrollToElement(educationTabLink, activeIntersection);
-                }}
-                bind:this={educationTabLink}
-            >
-                <li
-                    id="education_priorities"
-                    class={ activeIntersection === "educationPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
-                >
-                    <h2>
-                        education
-                    </h2>
-                </li>
-            </a>
-            <a
-                tabindex={5}
-                role="tab"
-                href="healthPriorities"
-                on:click|preventDefault={() => {
-                    activeIntersection = "healthPriorities";
-                    scrollToElement(healthTabLink, activeIntersection);
-                }}
-                on:keyup|preventDefault={() => {
-                    activeIntersection = "healthPriorities";
-                    scrollToElement(healthTabLink, activeIntersection);
-                }}
-                bind:this={healthTabLink}
-            >
-                <li
-                    id="health_priorities"
-                    class={ activeIntersection === "healthPriorities" ? "priorities_category_tab_active" : "priorities_category_tab" }
-                >
-                    <h2>
-                        health
-                    </h2>
-                </li> 
-            </a>
-        </ul>
-        <IntersectionObserver
-            threshold={0.5}
-            element={governmentPrioritiesElement}
-            on:observe={(e) => {
-                let governmentPrioritiesIsIntersecting = e.detail.isIntersecting;
-                elementInView("governmentPriorities", governmentPrioritiesIsIntersecting);
-            }}
-        >
-            <div 
+                    <ul
+                        class={ NavTabsSticky ? "priorities_tabs_sticky" : "priorities_tabs" }
+                        bind:this={PrioritiesNavTabs}
+                    >
+                        <a
+                            tabindex={1}
+                            role="tab"
+                            href="#governmentPriorities"
+                        >
+                            <li
+                                id="government_priorities"
+                                class={"priorities_category_tab"}
+                            >
+                                <h2>
+                                    government
+                                </h2>
+                            </li>
+                        </a>
+                        <a
+                            tabindex={2}
+                            role="tab"
+                            href="#climatePriorities"
+                        >
+                            <li
+                                id="climate_priorities"
+                                class={"priorities_category_tab"}
+                            >
+                                <h2>
+                                    climate
+                                </h2>
+                            </li>
+                        </a>
+                        <a
+                            tabindex={3}
+                            role="tab"
+                            href="#economicPriorities"
+                        >
+                            <li
+                                id="economic_priorities"
+                                class={"priorities_category_tab"}
+                            >
+                                <h2>
+                                    economy
+                                </h2>
+                            </li>
+                        </a>
+                        <a
+                            tabindex={4}
+                            role="tab"
+                            href="#educationPriorities"
+                        >
+                            <li
+                                id="education_priorities"
+                                class={"priorities_category_tab"}
+                            >
+                                <h2>
+                                    education
+                                </h2>
+                            </li>
+                        </a>
+                        <a
+                            tabindex={5}
+                            role="tab"
+                            href="#healthPriorities"
+                        >
+                            <li
+                                id="health_priorities"
+                                class={"priorities_category_tab"}
+                            >
+                                <h2>
+                                    health
+                                </h2>
+                            </li> 
+                        </a>
+                    </ul>
+                </Scrollactive>
+            <section
                 id="governmentPriorities"
                 class="priorities_for_government_container"
-                bind:this={governmentPrioritiesElement}
             >
                 <ol class="category_priorities">
                     <li 
@@ -537,20 +307,10 @@
                         </h2>
                     </li>
                 </ol>
-            </div>
-        </IntersectionObserver>
-        <IntersectionObserver
-            threshold={0.5}
-            element={climatePrioritiesElement}
-            on:observe={(e) => {
-                let climatePrioritiesIsIntersecting = e.detail.isIntersecting;
-                elementInView("climatePriorities", climatePrioritiesIsIntersecting);
-            }}
-        >
-            <div 
+            </section>
+            <section 
                 id="climatePriorities"
                 class="priorities_for_climate_container"
-                bind:this={climatePrioritiesElement}
             >
                 <ol class="category_priorities">
                     <li class="priority_heading">
@@ -574,21 +334,10 @@
                         </PriorityAccordion>
                     </li>
                 </ol>
-                
-            </div> 
-        </IntersectionObserver>
-        <IntersectionObserver
-            threshold={0.5}
-            element={economicPrioritiesElement}
-            on:observe={(e) => {
-                let economicPrioritiesIsIntersecting = e.detail.isIntersecting;
-                elementInView("economicPriorities", economicPrioritiesIsIntersecting);       
-            }}
-        >
-            <div 
+            </section> 
+            <section 
                 id="economicPriorities"
                 class="priorities_for_economy_container"
-                bind:this={economicPrioritiesElement}
             >
                 <ol class="category_priorities">
                     <li class="priority_heading">
@@ -726,20 +475,10 @@
                         </PriorityAccordion>
                     </li>
                 </ol>
-            </div>
-        </IntersectionObserver>
-        <IntersectionObserver
-            threshold={0.5}
-            element={educationPrioritiesElement}
-            on:observe={(e) => {
-                let educationPrioritiesIsIntersecting = e.detail.isIntersecting;
-                elementInView("educationPrioritiesElement", educationPrioritiesIsIntersecting);       
-            }}
-        >
-            <div 
+            </section>
+            <section 
                 id="educationPriorities"
                 class="priorities_for_education_container"
-                bind:this={educationPrioritiesElement}
             >
                 <ol class="category_priorities">
                     <li class="priority_heading">
@@ -759,20 +498,10 @@
                         </PriorityAccordion>
                     </li>
                 </ol>
-            </div>
-        </IntersectionObserver>
-        <IntersectionObserver
-            threshold={0.5}
-            element={healthPrioritiesElement}
-            on:observe={(e) => {
-                let healthPrioritiesIsIntersecting = e.detail.isIntersecting;
-                elementInView("healthPriorities", healthPrioritiesIsIntersecting);    
-            }}
-        >
-            <div 
+            </section>
+            <section
                 id="healthPriorities"
                 class="priorities_for_health_container"
-                bind:this={healthPrioritiesElement}
             >
                 <ol class="category_priorities">
                     <li class="priority_heading">
@@ -782,8 +511,10 @@
                         
                     </li>
                 </ol>
-            </div>
-        </IntersectionObserver>
+            </section>
+
+            {/key}
+        {/if}
     </div>
 </section>
 
@@ -957,6 +688,12 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+        }
+
+        :global(.scrollactive-nav) {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
         }
 
         .priorities_tabs {

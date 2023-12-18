@@ -33,6 +33,7 @@
 		"cloudinary": "^1.41.0",
 		"mysql2": "^3.6.1",
 		"nanoid": "^5.0.3",
+		"svelte-scrollactive": "^0.0.9",
 		"svelte-tel-input": "^3.3.9",
 		"uuid": "^9.0.1"
 	}
