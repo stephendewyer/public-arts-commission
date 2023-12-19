@@ -28,8 +28,82 @@
         endorsedCandidateOpen = false;
         EndorsedCandidateOpenStore.update((value) => value = endorsedCandidateOpen);
         EndorsedCandidateSelectedStore.update((value) => value = null);
-    }
+    };
 
+    let primaryIsValid: boolean = true;
+
+    let primaryElectionDate: Date | string;
+
+    $: rawPrimaryElectionDate = new Date(endorsedCandidateData?.election_date_primary);
+
+    let blankDate = new Date("2016-01-01T06:00:00.000Z");
+    
+    $: if (rawPrimaryElectionDate < blankDate) {
+
+        primaryElectionDate = "";
+
+        primaryIsValid = false;
+
+    } else {
+
+        primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
+
+    };
+
+    let generalElectionDate: string = "";
+
+    let rawGeneralElectionDate: Date;
+
+    $: rawGeneralElectionDate = new Date(endorsedCandidateData?.election_date_general);
+
+    $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
+
+    let status: string[] = [];
+
+    $: status;
+
+    $: if (endorsedCandidateData?.running_in_primary === 1) {
+
+        status.push(" running in the primary");
+
+    };
+    
+    $: if (endorsedCandidateData?.elected_in_primary === 1) {
+
+        status.push(" elected in the primary");
+
+    };
+    
+    $: if (endorsedCandidateData?.rejected_in_primary === 1) {
+
+        status.push(" rejected in the primary");
+
+    };
+    
+    $: if (endorsedCandidateData?.running_in_general === 1) {
+
+        status.push(" running in the general");
+
+    };
+    
+    $: if (endorsedCandidateData?.rejected_in_general === 1) {
+
+        status.push(" rejected in the general");
+
+    };
+    
+    $: if (endorsedCandidateData?.elected_in_general === 1) {
+        
+        status.push(" elected in the general");
+
+    };
+
+    $: if (endorsedCandidateData?.campaign_ended === 1) {
+        
+        status.push(" campaign ended");
+
+    };
+    
 </script>
 
 <aside 
@@ -64,6 +138,101 @@
         <picture>
             <img src={endorsedCandidateData?.image_URL} alt={endorsedCandidateData?.alt_text} />
         </picture>
+        <h3>{endorsedCandidateData?.campaign_name}</h3>
+        <table>
+            <tr>
+                <td>
+                    primary election date:
+                </td>
+                <td>
+                    {primaryElectionDate}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    general election date:
+                </td>
+                <td>
+                    {generalElectionDate}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    starting year for office sought:
+                </td>
+                <td>
+                    {endorsedCandidateData?.office_sought_starting_year}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    electorate: 
+                </td>
+                <td>
+                    {endorsedCandidateData?.electorate}
+                </td>
+            </tr>
+            {#if (endorsedCandidateData?.state)}
+                <tr>
+                    <td>
+                        state: 
+                    </td>
+                    <td>
+                        {endorsedCandidateData?.state}
+                    </td>
+                </tr>
+            {/if}
+            {#if (endorsedCandidateData?.county)}
+                <tr>
+                    <td>
+                        county: 
+                    </td>
+                    <td>
+                        {endorsedCandidateData?.county}
+                    </td>
+                </tr>
+            {/if}
+            {#if (endorsedCandidateData?.city)}
+                <tr>
+                    <td>
+                        city: 
+                    </td>
+                    <td>
+                        {endorsedCandidateData?.city}
+                    </td>
+                </tr>
+            {/if}
+            <tr>
+                <td>
+                    party: 
+                </td>
+                <td>
+                    {endorsedCandidateData?.party}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    website: 
+                </td>
+                <td>
+                    {endorsedCandidateData?.website_URL}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    status: 
+                </td>
+                <td>
+                    {#each status as item, i}
+                        {#if (i === status.length -1)}
+                            {item}
+                        {:else}
+                            {item},
+                        {/if}
+                    {/each}
+                </td>
+            </tr>
+        </table>
     </div>
 </aside>
 

@@ -125,7 +125,17 @@
 
 	// define the latitude and longitude variables
 	let latitude: number | null = null;
-	let longitude: number | null = null;	
+	let longitude: number | null = null;
+
+	// define the location variables
+
+	let country: string = "";
+	let zipcode: string = "";
+	let state: string = "";
+	let county: string = "";
+	let city: string = "";
+	let street: string = "";
+	let streetNumber: string = "";
 
 	// set the latitude and longitude with user's position.coords
 
@@ -151,6 +161,14 @@
 		// show the user's address as the value in the searchEndorsements searchInput
 
 		searchValue = reversedGeolocation.addresses[0].address.freeformAddress;
+
+		country = reversedGeolocation.addresses[0].address.country;
+		zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
+		state = reversedGeolocation.addresses[0].address.countrySubdivision;
+		county = reversedGeolocation.addresses[0].address.countrySecondarySubdivision;
+		city = reversedGeolocation.addresses[0].address.municipality;
+		street= reversedGeolocation.addresses[0].address.street;
+		streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
 
 		return searchValue;
 
