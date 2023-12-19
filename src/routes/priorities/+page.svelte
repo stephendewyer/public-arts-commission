@@ -3,20 +3,17 @@
     import { onMount } from 'svelte';
     import { Scrollactive } from 'svelte-scrollactive';
     import { browser } from '$app/environment';
-    import { navigating } from '$app/stores';
-
-    let activeIntersection: string = "";
 
     let alwaysTrack: boolean = false;
 	let duration: number = 600;
 	let clickToScroll: boolean = true;
-	let offset: number = 52;
+	let offset: number = 20;
 	let easing: string = '.5,0,.35,1';
     let scrollToElement: any;
+    let scrollOffset: 20;
+    let highlightFirstItem: false;
 
     let PrioritiesNavTabs: HTMLElement;
-
-    // if no clicked active tab, active tab is last element in view
 
     let y: number;
 
@@ -26,14 +23,13 @@
 
     onMount(() => {
         currentStickyPosition = PrioritiesNavTabs?.getBoundingClientRect().top + window.scrollY;
-    })
+    });
 
     $: if (y > currentStickyPosition) {
         NavTabsSticky = true;
     } else {
         NavTabsSticky = false;
-    }
-
+    };
 
 </script>
 <svelte:window bind:scrollY={y} />
@@ -52,6 +48,8 @@
                     bind:bezierEasingValue={easing}
                     on:itemchanged={(e) => console.log(e.detail)}
                     bind:scrollToElement
+                    bind:scrollOffset
+                    bind:highlightFirstItem
                 >
                     <ul
                         class={ NavTabsSticky ? "priorities_tabs_sticky" : "priorities_tabs" }
@@ -557,22 +555,7 @@
         padding: 1rem 2rem;
     }
 
-    .priorities_category_tab_active {
-        position: relative;
-        margin: 0;
-        padding: 1rem 2rem;
-    }
-
-    .priorities_category_tab_active > h2 {
-        margin: 0;
-
-    }
-
-    .priorities_category_tab > h2 {
-        margin: 0;
-    }
-
-    .priorities_category_tab_active::before {
+    .priorities_category_tab :global(.active)::before {
 		--size: 6px;
 		content: '';
 		width: 0;
@@ -585,6 +568,15 @@
 		border-left: 6px solid #4C4239;
 		overflow: visible;
 	}
+
+    .priorities_category_tab > a {
+        margin: 0;
+        font-size: 1.25rem;
+        font-family: "Lato";
+        font-size: 1.8rem;
+        line-height: 1.35;
+        font-weight: 600;
+    }
 
     #government_priorities {
         background-color: #F4F5FB;
@@ -716,7 +708,7 @@
             ;
         }
 
-        .priorities_category_tab_active::before {
+        .priorities_category_tab :global(.active)::before {
             --size: 6px;
             content: '';
             width: auto;
@@ -735,20 +727,10 @@
             position: relative;
             margin: 0;
             padding: 1rem 2rem;
+
         }
 
-        .priorities_category_tab_active {
-            position: relative;
-            margin: 0;
-            padding: 1rem 2rem;
-        }
-
-        .priorities_category_tab_active > h2 {
-            margin: 0;
-            font-size: 1.25rem;
-        }
-
-        .priorities_category_tab > h2 {
+        .priorities_category_tab > a {
             margin: 0;
             font-size: 1.25rem;
         }
@@ -784,18 +766,7 @@
             padding: 0.75rem 0.5rem;
         }
 
-        .priorities_category_tab_active {
-            position: relative;
-            margin: 0;
-            padding: 0.75rem 0.5rem;
-        }
-
-        .priorities_category_tab_active > h2 {
-            margin: 0;
-            font-size: 0.75rem;
-        }
-
-        .priorities_category_tab > h2 {
+        .priorities_category_tab > a {
             margin: 0;
             font-size: 0.75rem;
         }
