@@ -2,6 +2,7 @@
     import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
     import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
     import { onDestroy } from 'svelte';
+    import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
     let endorsedActionData: ActionWithImage | null = null;
 
@@ -42,22 +43,7 @@
             on:click={() => closeClickHandler()}
             on:keyup={() => closeClickHandler()}
         >
-            <svg 
-                id="Layer_1" 
-                data-name="Layer 1" 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 442.55 442.56"
-            >
-                <defs>
-                <style>
-                    .cls-10 {
-                    fill: inherit;
-                    stroke-width: 0px;
-                    }
-                </style>
-                </defs>
-                <polygon class="cls-10" points="278.2 221.28 442.55 385.63 385.63 442.56 221.28 278.21 56.93 442.56 0 385.63 164.35 221.28 0 56.93 56.93 0 221.28 164.35 385.63 0 442.55 56.93 278.2 221.28"/>
-            </svg>
+            {@html CloseIcon}
         </button>
     </div>
     <div>

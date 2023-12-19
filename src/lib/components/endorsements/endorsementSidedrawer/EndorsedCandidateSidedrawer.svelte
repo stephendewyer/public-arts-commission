@@ -2,6 +2,9 @@
     import { EndorsedCandidateOpenStore } from '$lib/stores/EndorsedCandidateOpenStore';
     import { EndorsedCandidateSelectedStore } from '$lib/stores/EndorsedCandidateSelectedStore';
     import { onDestroy } from 'svelte';
+    import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
+    import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
+
 
     let endorsedCandidateData: CandidateWithImage | null = null;
 
@@ -116,122 +119,125 @@
             on:click={() => closeClickHandler()}
             on:keyup={() => closeClickHandler()}
         >
-            <svg 
-                id="Layer_1" 
-                data-name="Layer 1" 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 442.55 442.56"
-            >
-                <defs>
-                <style>
-                    .cls-10 {
-                    fill: inherit;
-                    stroke-width: 0px;
-                    }
-                </style>
-                </defs>
-                <polygon class="cls-10" points="278.2 221.28 442.55 385.63 385.63 442.56 221.28 278.21 56.93 442.56 0 385.63 164.35 221.28 0 56.93 56.93 0 221.28 164.35 385.63 0 442.55 56.93 278.2 221.28"/>
-            </svg>
+            {@html CloseIcon}
         </button>
     </div>
     <div>
         <picture>
             <img src={endorsedCandidateData?.image_URL} alt={endorsedCandidateData?.alt_text} />
         </picture>
-        <h3>{endorsedCandidateData?.campaign_name}</h3>
+        <h3 class="campaign_name">{endorsedCandidateData?.campaign_name}</h3>
         <table>
-            <tr>
-                <td>
-                    primary election date:
-                </td>
-                <td>
-                    {primaryElectionDate}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    general election date:
-                </td>
-                <td>
-                    {generalElectionDate}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    starting year for office sought:
-                </td>
-                <td>
-                    {endorsedCandidateData?.office_sought_starting_year}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    electorate: 
-                </td>
-                <td>
-                    {endorsedCandidateData?.electorate}
-                </td>
-            </tr>
-            {#if (endorsedCandidateData?.state)}
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:60%">
+            </colgroup>  
+            <tbody>
                 <tr>
                     <td>
-                        state: 
+                        primary election date:
                     </td>
                     <td>
-                        {endorsedCandidateData?.state}
+                        {primaryElectionDate}
                     </td>
                 </tr>
-            {/if}
-            {#if (endorsedCandidateData?.county)}
                 <tr>
                     <td>
-                        county: 
+                        general election date:
                     </td>
                     <td>
-                        {endorsedCandidateData?.county}
+                        {generalElectionDate}
                     </td>
                 </tr>
-            {/if}
-            {#if (endorsedCandidateData?.city)}
                 <tr>
                     <td>
-                        city: 
+                        starting year for office sought:
                     </td>
                     <td>
-                        {endorsedCandidateData?.city}
+                        {endorsedCandidateData?.office_sought_starting_year}
                     </td>
                 </tr>
-            {/if}
-            <tr>
-                <td>
-                    party: 
-                </td>
-                <td>
-                    {endorsedCandidateData?.party}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    website: 
-                </td>
-                <td>
-                    {endorsedCandidateData?.website_URL}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    status: 
-                </td>
-                <td>
-                    {#each status as item, i}
-                        {#if (i === status.length -1)}
-                            {item}
-                        {:else}
-                            {item},
-                        {/if}
-                    {/each}
-                </td>
-            </tr>
+                <tr>
+                    <td>
+                        electorate: 
+                    </td>
+                    <td>
+                        {endorsedCandidateData?.electorate}
+                    </td>
+                </tr>
+                {#if (endorsedCandidateData?.state)}
+                    <tr>
+                        <td>
+                            state: 
+                        </td>
+                        <td>
+                            {endorsedCandidateData?.state}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedCandidateData?.county)}
+                    <tr>
+                        <td>
+                            county: 
+                        </td>
+                        <td>
+                            {endorsedCandidateData?.county}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedCandidateData?.city)}
+                    <tr>
+                        <td>
+                            city: 
+                        </td>
+                        <td>
+                            {endorsedCandidateData?.city}
+                        </td>
+                    </tr>
+                {/if}
+                <tr>
+                    <td>
+                        party: 
+                    </td>
+                    <td>
+                        {endorsedCandidateData?.party}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        website: 
+                    </td>
+                    <td>
+                        <a 
+                            class="external_link_container"
+                            href={endorsedCandidateData?.website_URL} 
+                            target="_blank"
+                        >
+                            <div class="external_link_icon">
+                                {@html ExternalLinkIcon}
+                            </div>
+                            <div class="website_URL">
+                                {endorsedCandidateData?.website_URL} 
+                            </div>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        status: 
+                    </td>
+                    <td>
+                        {#each status as item, i}
+                            {#if (i === status.length -1)}
+                                {item}
+                            {:else}
+                                {item},
+                            {/if}
+                        {/each}
+                    </td>
+                </tr>
+            </tbody>
+            
         </table>
     </div>
 </aside>
@@ -295,21 +301,62 @@
         
     }
 
+    .campaign_name {
+        padding: 0 1rem;
+        text-align: center;
+    }
+
     .close_button:hover {
         fill: #CB6D44;
     }
 
-    .info_container {
-        padding: 1rem 2rem;
+    table {
+        border-spacing: 0;
+        width: 100%;
+        table-layout: fixed;
     }
 
-    .info_heading {
-        text-decoration: underline;
-        font-size: 1.5rem;
+    tbody tr:nth-child(odd) {
+        background-color: #CBC6C2;
     }
 
-    .urlAddress {
+    tbody > tr > td {
+        padding: 1rem;
         overflow-wrap: break-word;
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    tbody td:nth-child(odd) {
+        overflow-wrap: break-word;
+        hyphens: auto;
+        font-weight: 600;
+        color: #28387C;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+    }
+
+    .external_link_container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        margin-right: 2rem;
+    }
+
+    .external_link_icon {
+        width: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .website_URL {
+        overflow-wrap: break-word;
+        width: 100%;
+        font-size: 1.25rem;
     }
     
     @media (max-width: 1140px) {
@@ -327,16 +374,35 @@
             left: auto;
         }
 
-        .info_heading {
-            font-size: 1.3rem;
+        tbody > tr > td {
+            padding: 0.75rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            font-size: 1.125rem;
+        }
+
+        .website_URL {
+            font-size: 1.125rem;
         }
 
     }
 
     @media (max-width: 720px) {
 
-        .info_heading {
+        tbody > tr > td {
+            padding: 0.5rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
             font-size: 1rem;
+        }
+
+        .website_URL {
+            font-size: 1rem;
+        }
+
+        .external_link_icon {
+            width: 1rem;
+            min-width: 1rem;
         }
 
     }

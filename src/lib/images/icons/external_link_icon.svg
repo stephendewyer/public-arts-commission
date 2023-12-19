@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 466.38 464.69">
+  <defs>
+    <style>
+      .external_link {
+        fill: inherit;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <path class="external_link" d="m463.02,3.35l-66.56-3.35-14.47,14.47,36,1.82-196.33,196.33,32.09,32.09L450.09,48.35l1.82,36.03,14.47-14.47-3.35-66.56Zm-210.63,210.84l-.2-.02-.02-.2.22.22Z"/>
+  <path class="external_link" d="m383.8,167.99v251.7H45V80.89h257.67l45-45H0v428.8h428.8V122.99l-45,45Z"/>
+</svg>
