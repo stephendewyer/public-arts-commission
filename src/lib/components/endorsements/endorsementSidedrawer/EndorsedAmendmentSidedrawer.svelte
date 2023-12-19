@@ -3,6 +3,7 @@
     import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
     import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
+    import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
 
     let endorsedAmendmentData: AmendmentWithImage | null = null;
@@ -117,17 +118,53 @@
         fill: #CB6D44;
     }
 
-    .info_container {
-        padding: 1rem 2rem;
+    table {
+        border-spacing: 0;
+        width: 100%;
+        table-layout: fixed;
     }
 
-    .info_heading {
-        text-decoration: underline;
-        font-size: 1.5rem;
+    tbody tr:nth-child(odd) {
+        background-color: #CBC6C2;
     }
 
-    .urlAddress {
+    tbody > tr > td {
+        padding: 1rem;
         overflow-wrap: break-word;
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    tbody td:nth-child(odd) {
+        overflow-wrap: break-word;
+        hyphens: auto;
+        font-weight: 600;
+        color: #28387C;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+    }
+
+    .external_link_container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        margin-right: 2rem;
+    }
+
+    .external_link_icon {
+        width: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .website_URL {
+        overflow-wrap: break-word;
+        width: 100%;
+        font-size: 1.25rem;
     }
     
     @media (max-width: 1140px) {
@@ -145,16 +182,35 @@
             left: auto;
         }
 
-        .info_heading {
-            font-size: 1.3rem;
+        tbody > tr > td {
+            padding: 0.75rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            font-size: 1.125rem;
+        }
+
+        .website_URL {
+            font-size: 1.125rem;
         }
 
     }
 
     @media (max-width: 720px) {
 
-        .info_heading {
+        tbody > tr > td {
+            padding: 0.5rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
             font-size: 1rem;
+        }
+
+        .website_URL {
+            font-size: 1rem;
+        }
+
+        .external_link_icon {
+            width: 1rem;
+            min-width: 1rem;
         }
 
     }

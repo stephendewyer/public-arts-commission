@@ -5,8 +5,9 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
-
     let endorsedCandidateData: CandidateWithImage | null = null;
+
+    $: endorsedCandidateData;
 
     const unsubscribeEndorsedCandidateSelectedStore = EndorsedCandidateSelectedStore.subscribe(value => {
 		endorsedCandidateData = value;
@@ -33,8 +34,6 @@
         EndorsedCandidateSelectedStore.update((value) => value = null);
     };
 
-    let primaryIsValid: boolean = true;
-
     let primaryElectionDate: Date | string;
 
     $: rawPrimaryElectionDate = new Date(endorsedCandidateData?.election_date_primary);
@@ -44,8 +43,6 @@
     $: if (rawPrimaryElectionDate < blankDate) {
 
         primaryElectionDate = "";
-
-        primaryIsValid = false;
 
     } else {
 

@@ -3,8 +3,12 @@
     import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
     import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
+    import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
     let endorsedActionData: ActionWithImage | null = null;
+
+    $: endorsedActionData;
+
 
     const unsubscribeEndorsedActionSelectedStore = EndorsedActionSelectedStore.subscribe(value => {
 		endorsedActionData = value;
@@ -29,7 +33,34 @@
         endorsedActionOpen = false;
         EndorsedActionOpenStore.update((value) => value = endorsedActionOpen);
         EndorsedActionSelectedStore.update((value) => value = null);
-    }
+    };
+
+    let actionIsAllDay: boolean;
+    let rawAllDayActionDate: Date;
+    let allDayActionDate: string;
+    let actionRawStartDate: Date;
+    let actionStartDate: string;
+    let actionRawEndDate: Date;
+    let actionEndDate: string;
+
+    $: if (endorsedActionData?.all_day_event) {
+        actionIsAllDay = endorsedActionData?.all_day_event;
+    };
+
+    $: if (endorsedActionData?.all_day_event_date) {
+        rawAllDayActionDate = new Date(endorsedActionData?.all_day_event_date);
+        allDayActionDate = rawAllDayActionDate?.toUTCString().substring(0, 16);
+    };
+
+    $: if (endorsedActionData?.date_start) {
+        actionRawStartDate = new Date(endorsedActionData?.date_start);
+        actionStartDate = actionRawStartDate.toUTCString();
+    };
+
+    $: if (endorsedActionData?.date_end) {
+        actionRawEndDate = new Date(endorsedActionData?.date_end);
+        actionEndDate = actionRawEndDate.toUTCString();
+    };
 
 </script>
 
@@ -49,7 +80,139 @@
     <div>
         <picture>
             <img src={endorsedActionData?.image_URL} alt={endorsedActionData?.alt_text} />
-        </picture>                
+        </picture>
+        <h3 class="action_name">{endorsedActionData?.action_name}</h3>
+        <table>
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:60%">
+            </colgroup>  
+            <tbody>
+                <tr>
+                    <td>
+                        date(s):
+                    </td>
+                    <td>
+                        {#if (actionIsAllDay)}
+                            {allDayActionDate}
+                        {:else if (!actionIsAllDay)}
+                            {actionStartDate} - {actionEndDate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        time:
+                    </td>
+                    <td>
+                        {#if (actionIsAllDay)}
+                        all day
+                        {:else}
+                            {endorsedActionData?.time_start} - {endorsedActionData?.time_end}
+                        {/if}
+                    </td>
+                </tr>
+                {#if (endorsedActionData?.time_zone)}
+                    <tr>
+                        <td>
+                            time zone:
+                        </td>
+                        <td>
+                            
+                            {endorsedActionData?.time_zone}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedActionData?.action_street_address)}
+                    <tr>
+                        <td>
+                            street address: 
+                        </td>
+                        <td>
+                            {endorsedActionData?.action_street_address}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedActionData?.action_street_address_02)}
+                    <tr>
+                        <td>
+                            street address 02: 
+                        </td>
+                        <td>
+                            {endorsedActionData?.action_street_address_02}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedActionData?.action_city)}
+                    <tr>
+                        <td>
+                            city: 
+                        </td>
+                        <td>
+                            {endorsedActionData?.action_city}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedActionData?.action_state)}
+                    <tr>
+                        <td>
+                            state: 
+                        </td>
+                        <td>
+                            {endorsedActionData?.action_state}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedActionData?.action_zip_code)}
+                    <tr>
+                        <td>
+                            zip code: 
+                        </td>
+                        <td>
+                            {endorsedActionData?.action_zip_code}
+                        </td>
+                    </tr>
+                {/if}
+                <tr>
+                    <td>
+                        country:
+                    </td>
+                    <td>
+                        United States of America
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        website: 
+                    </td>
+                    <td>
+                        {#if (endorsedActionData?.website_URL)}
+                            <a 
+                                class="external_link_container"
+                                href={endorsedActionData?.website_URL} 
+                                target="_blank"
+                            >
+                                <div class="external_link_icon">
+                                    {@html ExternalLinkIcon}
+                                </div>
+                                <div class="website_URL">
+                                    {endorsedActionData?.website_URL} 
+                                </div>
+                            </a>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        details: 
+                    </td>
+                    <td>
+                        {endorsedActionData?.details} 
+                    </td>
+                </tr>
+            </tbody>
+            
+        </table>               
     </div>
 </aside>
 
@@ -116,17 +279,58 @@
         fill: #CB6D44;
     }
 
-    .info_container {
-        padding: 1rem 2rem;
+    .action_name {
+        padding: 0 1rem;
+        text-align: center;
     }
 
-    .info_heading {
-        text-decoration: underline;
-        font-size: 1.5rem;
+    table {
+        border-spacing: 0;
+        width: 100%;
+        table-layout: fixed;
     }
 
-    .urlAddress {
+    tbody tr:nth-child(odd) {
+        background-color: #CBC6C2;
+    }
+
+    tbody > tr > td {
+        padding: 1rem;
         overflow-wrap: break-word;
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    tbody td:nth-child(odd) {
+        overflow-wrap: break-word;
+        hyphens: auto;
+        font-weight: 600;
+        color: #28387C;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+    }
+
+    .external_link_container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        margin-right: 2rem;
+    }
+
+    .external_link_icon {
+        width: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .website_URL {
+        overflow-wrap: break-word;
+        width: 100%;
+        font-size: 1.25rem;
     }
     
     @media (max-width: 1140px) {
@@ -144,18 +348,38 @@
             left: auto;
         }
 
-        .info_heading {
-            font-size: 1.3rem;
+        tbody > tr > td {
+            padding: 0.75rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            font-size: 1.125rem;
+        }
+
+        .website_URL {
+            font-size: 1.125rem;
         }
 
     }
 
     @media (max-width: 720px) {
 
-        .info_heading {
+        tbody > tr > td {
+            padding: 0.5rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
             font-size: 1rem;
         }
 
+        .website_URL {
+            font-size: 1rem;
+        }
+
+        .external_link_icon {
+            width: 1rem;
+            min-width: 1rem;
+        }
+
     }
+    
 
 </style>

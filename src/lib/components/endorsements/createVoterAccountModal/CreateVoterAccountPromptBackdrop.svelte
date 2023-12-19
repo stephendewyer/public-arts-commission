@@ -11,8 +11,6 @@
     }
 
 	let selectedNominationCategory: string = "";
-
-    // $: console.log(selectedTeamMemberId);
 	
 	const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe((value) => {
 		selectedNominationCategory = value;
@@ -46,10 +44,6 @@
     }
 
     @media (min-width: 1140px) {
-
-        /* .backdrop {
-            display: none;
-        } */
 
     }
 </style>
