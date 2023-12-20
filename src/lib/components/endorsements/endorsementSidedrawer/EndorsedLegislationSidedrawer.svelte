@@ -266,7 +266,7 @@
                     </td>
                     <td>
                         {#if (sponsorsHouseNames)}
-                            {sponsorsHouseNames.toString()}
+                            {sponsorsHouseNames.join(', ').toString()}
                         {/if}
                     </td>
                 </tr>
@@ -276,7 +276,7 @@
                     </td>
                     <td>
                         {#if (coSponsorsHouseNames)}
-                            {coSponsorsHouseNames.toString()}
+                            {coSponsorsHouseNames.join(', ').toString()}
                         {/if}
                     </td>
                 </tr>
@@ -286,7 +286,7 @@
                     </td>
                     <td>
                         {#if (sponsorsSenateNames)}
-                            {sponsorsSenateNames.toString()}
+                            {sponsorsSenateNames.join(', ').toString()}
                         {/if}
                     </td>
                 </tr>
@@ -296,7 +296,7 @@
                     </td>
                     <td>
                         {#if (coSponsorsSenateNames)}
-                            {coSponsorsSenateNames.toString()}
+                            {coSponsorsSenateNames.join(', ').toString()}
                         {/if}
                     </td>
                 </tr>

@@ -21,6 +21,7 @@
   	import EndorsedCandidateSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedCandidateSidedrawer.svelte';
   	import EndorsedLegislationSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
+  	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
 
 	let openMobileNav: boolean = false;
 
@@ -170,6 +171,7 @@
 	<EndorsedCandidateSidedrawer />
 	<EndorsedLegislationSidedrawer />
 	<EndorsedReferendumSidedrawer />
+	<DeleteConfirmationModal />
 </div>
 
 <style>

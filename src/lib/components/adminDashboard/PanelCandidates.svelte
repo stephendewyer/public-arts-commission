@@ -1,10 +1,28 @@
 <script lang="ts">
+    import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
+    import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
-    export let panel_data: Candidate[];
+    import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
+    import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+
+    export let panel_data: CandidateWithImage[];
 
     let activeTab: number = 0;
 
     $: activeTab;
+
+    const editClickHandler = (campaignID: number) => {
+
+    };
+
+    const deleteClickHandler = (campaignID: number) => {
+        
+    };
+
+    const moreInfoClickHandler = (campaignID: number, index: number) => {
+        EndorsedCandidateSelectedStore.update((value) => value = panel_data[index]);
+        EndorsedCandidateOpenStore.update((value) => value = true);
+    };
 
 </script>
 <div class="tabpanel_container">
@@ -57,6 +75,16 @@
                     </th>
                     <th>
                         <h5>
+                            edit
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            delete
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
                             more info
                         </h5>
                     </th>
@@ -64,27 +92,40 @@
                 {#each panel_data as campaign, i}
                     <tr>
                         <td>
-                            <p>
-                                {campaign.campaign_name}
-                            </p>
-                            
+                            {campaign.campaign_name}
                         </td>
                         <td>
-                            <p>
-                                {campaign.election_date_general.slice(0, 4)}
-                            </p>
-                            
+                            {campaign.election_date_general.slice(0, 4)}
                         </td>
                         <td>
-                            <p>
-                                {campaign.electorate}
-                            </p>
-                            
+                            {campaign.electorate}
                         </td>
                         <td>
-                            <div class="meatballs_container">
+                            <button 
+                                on:click={() => editClickHandler(campaign.campaign_ID)}
+                                on:keyup={() => editClickHandler(campaign.campaign_ID)}
+                                class="icon_container"
+                            >
+                                {@html EditIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => deleteClickHandler(campaign.campaign_ID)}
+                                on:keyup={() => deleteClickHandler(campaign.campaign_ID)}
+                                class="icon_container"
+                            >
+                                {@html DeleteIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => moreInfoClickHandler(campaign.campaign_ID, i)}
+                                on:keyup={() => moreInfoClickHandler(campaign.campaign_ID, i)}
+                                class="icon_container"
+                            >
                                 {@html MeatballsIcon}
-                            </div>
+                            </button>
                         </td>
                     </tr>
                 {/each}
@@ -106,6 +147,9 @@
 
     tbody > tr > td {
         padding: 1rem;
+        font-size: 1.25rem;
+        overflow-wrap: break-word;
+        hyphens: auto;
     }
 
     .tabpanel_container {
@@ -189,8 +233,25 @@
 		overflow: visible;
 	}
 
-    .meatballs_container {
-        width: 2rem;
+    .icon_container {
+        max-width: 1.5rem;
+        width: 100%;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        fill: #4C4239;
+        margin: 0 auto;
+        transition: fill 0.2s linear;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container:hover {
+        fill: #28387C;
     }
 
     @media (max-width: 1440px) {
