@@ -37,8 +37,6 @@
 
     let legislationStatus: string[] = [];
 
-    $: legislationStatus;
-
     $: if (endorsedLegislationData?.passed_in_House === 1) {
 
         legislationStatus.push(" passed in the House");
@@ -234,9 +232,7 @@
                         status: 
                     </td>
                     <td>
-                        {#if (statusString)}
-                            {statusString}
-                        {/if}
+                        {legislationStatus.toString()}
                     </td>
                 </tr>
             </tbody>

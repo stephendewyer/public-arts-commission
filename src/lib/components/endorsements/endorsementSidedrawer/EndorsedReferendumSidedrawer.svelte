@@ -44,8 +44,6 @@
 
     let referendumStatus: string[] = [];
 
-    $: referendumStatus;
-
     $: if (endorsedReferendumSelected?.elected === 1) {
 
         referendumStatus.push(" elected by voters");
@@ -61,14 +59,6 @@
     $: if (endorsedReferendumSelected?.pending_election === 1) {
 
         referendumStatus.push(" pending election by voters");
-
-    };
-
-    let statusString: string;
-
-    $: if (referendumStatus.length > 0) {
-        
-        statusString = referendumStatus.toString();
 
     };
 
@@ -195,9 +185,7 @@
                         status: 
                     </td>
                     <td>
-                        {#if (statusString)}
-                            {statusString}
-                        {/if}
+                        {referendumStatus.toString()}
                     </td>
                 </tr>
             </tbody>

@@ -60,8 +60,6 @@
 
     let candidateStatus: string[] = [];
 
-    $: candidateStatus;
-
     $: if (endorsedCandidateData?.running_in_primary === 1) {
 
         candidateStatus.push(" running in the primary");
@@ -234,9 +232,7 @@
                         status: 
                     </td>
                     <td>
-                        {#if (statusString)}
-                            {statusString}
-                        {/if}
+                        {candidateStatus.toString()}
                     </td>
                 </tr>
             </tbody>

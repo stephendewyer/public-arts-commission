@@ -255,9 +255,7 @@
                         status: 
                     </td>
                     <td>
-                        {#if (statusString)}
-                            {statusString}
-                        {/if}
+                        {amendmentStatus.toString()}
                     </td>
                 </tr>
             </tbody>
