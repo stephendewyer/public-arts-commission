@@ -5,7 +5,6 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
-
     let endorsedAmendmentData: AmendmentWithImage | null = null;
 
     const unsubscribeTeamMemberSelectedStore = EndorsedAmendmentSelectedStore.subscribe(value => {
@@ -46,51 +45,49 @@
 
     $: if (endorsedAmendmentData?.introduced_in_House === 1) {
 
-        amendmentStatus.push(" introduced in the House");
+        amendmentStatus = [...amendmentStatus, " introduced in the House"];
 
     };
     
     $: if (endorsedAmendmentData?.introduced_in_Senate === 1) {
 
-        amendmentStatus.push(" introduced in the Senate");
+        amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
 
     };
     
     $: if (endorsedAmendmentData?.twothirds_House_and_Senate_passed === 1) {
 
-        amendmentStatus.push(" passed by two-thirds majorities in the House and Senate");
+        amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
 
     };
     
     $: if (endorsedAmendmentData?.simple_majority_House_and_Senate_passed === 1) {
 
-        amendmentStatus.push(" passed by simple majorities in the House and Senate");
+        amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
 
     };
     
     $: if (endorsedAmendmentData?.simple_majority_voters_passed === 1) {
 
-        amendmentStatus.push(" passed by a simple majority of voters");
+        amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
 
     };
     
     $: if (endorsedAmendmentData?.ratified_by_state_convenctions === 1) {
-        
-        amendmentStatus.push(" ratified by three-fourths of state conventions called in each state");
+
+        amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
 
     };
 
     $: if (endorsedAmendmentData?.ratified_by_state_legislatures === 1) {
-        
-        amendmentStatus.push(" ratified by three-fourths of state legislatures");
+
+        amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
 
     };
 
-    let statusString: string;
+    $: if (endorsedAmendmentData === null) {
 
-    $: if (amendmentStatus.length > 0) {
-        
-        statusString = amendmentStatus.toString();
+        amendmentStatus = [];
 
     };
 

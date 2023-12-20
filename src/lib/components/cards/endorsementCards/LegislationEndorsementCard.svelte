@@ -5,43 +5,41 @@
 
     export let endorsedLegislationData: LegislationWithImage;
 
-    let status: string[] = [];
+    let legislationStatus: string[] = [];
 
-    $: status;
+    $: if (endorsedLegislationData?.passed_in_House === 1) {
 
-    $: if (endorsedLegislationData.passed_in_House === 1) {
-
-        status.push(" passed in House");
+        legislationStatus = [...legislationStatus, " passed in the House"];
 
     };
     
-    $: if (endorsedLegislationData.passed_in_Senate === 1) {
+    $: if (endorsedLegislationData?.passed_in_Senate === 1) {
 
-        status.push(" passed in Senate");
-
-    };
-    
-    $: if (endorsedLegislationData.rejected_in_House === 1) {
-
-        status.push(" rejected in House");
+        legislationStatus = [...legislationStatus, " passed in the Senate"];
 
     };
     
-    $: if (endorsedLegislationData.rejected_in_Senate === 1) {
+    $: if (endorsedLegislationData?.rejected_in_House === 1) {
 
-        status.push(" running in Senate");
-
-    };
-    
-    $: if (endorsedLegislationData.vetoed_by_Executive === 1) {
-
-        status.push(" vetoed by Executive");
+        legislationStatus = [...legislationStatus, " rejected in the House"];
 
     };
     
-    $: if (endorsedLegislationData.signed_by_Executive === 1) {
-        
-        status.push(" signed into law by Executive");
+    $: if (endorsedLegislationData?.rejected_in_Senate === 1) {
+
+        legislationStatus = [...legislationStatus, " rejected in the Senate"];
+
+    };
+    
+    $: if (endorsedLegislationData?.vetoed_by_Executive === 1) {
+
+        legislationStatus = [...legislationStatus, " vetoed by the Executive"];
+
+    };
+    
+    $: if (endorsedLegislationData?.signed_by_Executive === 1) {
+
+        legislationStatus = [...legislationStatus, " signed into law by the Executive"];
 
     };
 
@@ -136,13 +134,7 @@
             </h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {#each status as item, i}
-                {#if (i === status.length -1)}
-                    {item}
-                {:else}
-                    {item},
-                {/if}
-            {/each}
+            {legislationStatus.toString()}
         </h5>
     </div>
 </div>

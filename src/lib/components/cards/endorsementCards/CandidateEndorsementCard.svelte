@@ -5,52 +5,49 @@
 
     export let endorsedCandidateData: CandidateWithImage;
 
-    let status: string[] = [];
+    let candidateStatus: string[] = [];
 
-    $: status;
+    $: if (endorsedCandidateData?.running_in_primary === 1) {
 
-    $: if (endorsedCandidateData.running_in_primary === 1) {
-
-        status.push(" running in the primary");
+        candidateStatus = [ ...candidateStatus, " running in the primary"];
 
     };
     
-    $: if (endorsedCandidateData.elected_in_primary === 1) {
+    $: if (endorsedCandidateData?.elected_in_primary === 1) {
 
-        status.push(" elected in the primary");
-
-    };
-    
-    $: if (endorsedCandidateData.rejected_in_primary === 1) {
-
-        status.push(" rejected in the primary");
+        candidateStatus = [ ...candidateStatus, " elected in the primary"];
 
     };
     
-    $: if (endorsedCandidateData.running_in_general === 1) {
+    $: if (endorsedCandidateData?.rejected_in_primary === 1) {
 
-        status.push(" running in the general");
-
-    };
-    
-    $: if (endorsedCandidateData.rejected_in_general === 1) {
-
-        status.push(" rejected in the general");
+        candidateStatus = [ ...candidateStatus, " rejected in the primary"];
 
     };
     
-    $: if (endorsedCandidateData.elected_in_general === 1) {
-        
-        status.push(" elected in the general");
+    $: if (endorsedCandidateData?.running_in_general === 1) {
+
+        candidateStatus = [ ...candidateStatus, " running in the general"];
+
+    };
+    
+    $: if (endorsedCandidateData?.rejected_in_general === 1) {
+
+        candidateStatus = [ ...candidateStatus, " rejected in the general"];
+
+    };
+    
+    $: if (endorsedCandidateData?.elected_in_general === 1) {
+
+        candidateStatus = [ ...candidateStatus, " elected in the general"];
 
     };
 
-    $: if (endorsedCandidateData.campaign_ended === 1) {
-        
-        status.push(" campaign ended");
+    $: if (endorsedCandidateData?.campaign_ended === 1) {
+
+        candidateStatus = [ ...candidateStatus, " campaign ended"];
 
     };
-
     let primaryIsValid: boolean = true;
 
     let primaryElectionDate: Date | string;
@@ -135,13 +132,7 @@
         {/if}
         <h5 class="card_heading_02"><span class="data_category">general election date: </span>{generalElectionDate}</h5>
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {#each status as item, i}
-                {#if (i === status.length -1)}
-                    {item}
-                {:else}
-                    {item},
-                {/if}
-            {/each}
+            {candidateStatus.toString()}
         </h5>
     </div>
 </div>

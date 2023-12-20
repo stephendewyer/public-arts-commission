@@ -39,45 +39,43 @@
 
     $: if (endorsedLegislationData?.passed_in_House === 1) {
 
-        legislationStatus.push(" passed in the House");
+        legislationStatus = [...legislationStatus, " passed in the House"];
 
     };
     
     $: if (endorsedLegislationData?.passed_in_Senate === 1) {
 
-        legislationStatus.push(" passed in the Senate");
+        legislationStatus = [...legislationStatus, " passed in the Senate"];
 
     };
     
     $: if (endorsedLegislationData?.rejected_in_House === 1) {
 
-        legislationStatus.push(" rejected in the House");
+        legislationStatus = [...legislationStatus, " rejected in the House"];
 
     };
     
     $: if (endorsedLegislationData?.rejected_in_Senate === 1) {
 
-        legislationStatus.push(" rejected in the Senate");
+        legislationStatus = [...legislationStatus, " rejected in the Senate"];
 
     };
     
     $: if (endorsedLegislationData?.vetoed_by_Executive === 1) {
 
-        legislationStatus.push(" vetoed by the Executive");
+        legislationStatus = [...legislationStatus, " vetoed by the Executive"];
 
     };
     
     $: if (endorsedLegislationData?.signed_by_Executive === 1) {
-        
-        legislationStatus.push(" signed into law by the Executive");
+
+        legislationStatus = [...legislationStatus, " signed into law by the Executive"];
 
     };
 
-    let statusString: string;
+    $: if (endorsedLegislationData === null) {
 
-    $: if (legislationStatus.length > 0) {
-        
-        statusString = legislationStatus.toString();
+        legislationStatus = [];
 
     };
 

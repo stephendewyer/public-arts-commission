@@ -5,7 +5,6 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
-
     let endorsedReferendumSelected: ReferendumWithImage | null = null;
 
     const unsubscribeEndorsedReferendumSelectedStore = EndorsedReferendumSelectedStore.subscribe(value => {
@@ -46,19 +45,25 @@
 
     $: if (endorsedReferendumSelected?.elected === 1) {
 
-        referendumStatus.push(" elected by voters");
+        referendumStatus = [...referendumStatus, " elected by voters"];
 
     };
     
     $: if (endorsedReferendumSelected?.rejected === 1) {
 
-        referendumStatus.push(" rejected by voters");
+        referendumStatus = [...referendumStatus, " rejected by voters"];
 
     };
     
     $: if (endorsedReferendumSelected?.pending_election === 1) {
 
-        referendumStatus.push(" pending election by voters");
+        referendumStatus = [...referendumStatus, " pending election by voters"];
+
+    };
+
+    $: if (endorsedReferendumSelected === null) {
+
+        referendumStatus = [];
 
     };
 

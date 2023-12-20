@@ -7,8 +7,6 @@
 
     let endorsedCandidateData: CandidateWithImage | null = null;
 
-    $: endorsedCandidateData;
-
     const unsubscribeEndorsedCandidateSelectedStore = EndorsedCandidateSelectedStore.subscribe(value => {
 		endorsedCandidateData = value;
     });
@@ -22,11 +20,6 @@
 	const unsubscribeEndorsedCandidateOpenStore = EndorsedCandidateOpenStore.subscribe((value) => {
 		endorsedCandidateOpen = value;
 	});
-
-    onDestroy(() => {
-        unsubscribeEndorsedCandidateSelectedStore();
-        unsubscribeEndorsedCandidateOpenStore();
-    });
 
     const closeClickHandler = () => {
         endorsedCandidateOpen = false;
@@ -62,54 +55,57 @@
 
     $: if (endorsedCandidateData?.running_in_primary === 1) {
 
-        candidateStatus.push(" running in the primary");
+        candidateStatus = [ ...candidateStatus, " running in the primary"];
 
     };
     
     $: if (endorsedCandidateData?.elected_in_primary === 1) {
 
-        candidateStatus.push(" elected in the primary");
+        candidateStatus = [ ...candidateStatus, " elected in the primary"];
 
     };
     
     $: if (endorsedCandidateData?.rejected_in_primary === 1) {
 
-        candidateStatus.push(" rejected in the primary");
+        candidateStatus = [ ...candidateStatus, " rejected in the primary"];
 
     };
     
     $: if (endorsedCandidateData?.running_in_general === 1) {
 
-        candidateStatus.push(" running in the general");
+        candidateStatus = [ ...candidateStatus, " running in the general"];
 
     };
     
     $: if (endorsedCandidateData?.rejected_in_general === 1) {
 
-        candidateStatus.push(" rejected in the general");
+        candidateStatus = [ ...candidateStatus, " rejected in the general"];
 
     };
     
     $: if (endorsedCandidateData?.elected_in_general === 1) {
-        
-        candidateStatus.push(" elected in the general");
+
+        candidateStatus = [ ...candidateStatus, " elected in the general"];
 
     };
 
     $: if (endorsedCandidateData?.campaign_ended === 1) {
-        
-        candidateStatus.push(" campaign ended");
+
+        candidateStatus = [ ...candidateStatus, " campaign ended"];
 
     };
 
-    let statusString: string;
+    onDestroy(() => {
+        unsubscribeEndorsedCandidateSelectedStore();
+        unsubscribeEndorsedCandidateOpenStore();
+    });
 
-    $: if (candidateStatus.length > 0) {
-        
-        statusString = candidateStatus.toString();
+    $: if (endorsedCandidateData === null) {
+
+        candidateStatus = [];
 
     };
-    
+
 </script>
 
 <aside 

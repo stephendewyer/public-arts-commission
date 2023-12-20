@@ -5,19 +5,23 @@
 
     export let endorsedReferendumData: ReferendumWithImage;
 
-    let status: string[] = [];
+    let referendumStatus: string[] = [];
 
-    $: status;
+    $: if (endorsedReferendumData?.elected === 1) {
 
-    $: if (endorsedReferendumData.elected === 1) {
-
-        status.push(" voters approved");
+        referendumStatus = [...referendumStatus, " elected by voters"];
 
     };
     
-    $: if (endorsedReferendumData.rejected === 1) {
+    $: if (endorsedReferendumData?.rejected === 1) {
 
-        status.push(" voters rejected");
+        referendumStatus = [...referendumStatus, " rejected by voters"];
+
+    };
+    
+    $: if (endorsedReferendumData?.pending_election === 1) {
+
+        referendumStatus = [...referendumStatus, " pending election by voters"];
 
     };
     
@@ -102,13 +106,7 @@
             </h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {#each status as item, i}
-                {#if (i === status.length -1)}
-                    {item}
-                {:else}
-                    {item},
-                {/if}
-            {/each}
+            {referendumStatus.toString()}
         </h5>
     </div>
 </div>

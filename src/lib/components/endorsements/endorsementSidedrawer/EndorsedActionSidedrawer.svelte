@@ -7,8 +7,6 @@
 
     let endorsedActionData: ActionWithImage | null = null;
 
-    $: endorsedActionData;
-
     const unsubscribeEndorsedActionSelectedStore = EndorsedActionSelectedStore.subscribe(value => {
 		endorsedActionData = value;
     });

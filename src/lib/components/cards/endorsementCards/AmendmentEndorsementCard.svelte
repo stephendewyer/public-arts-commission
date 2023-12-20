@@ -5,37 +5,47 @@
 
     export let endorsedAmendmentData: AmendmentWithImage;
 
-    let status: string[] = [];
+    let amendmentStatus: string[] = [];
 
-    $: status;
+    $: if (endorsedAmendmentData?.introduced_in_House === 1) {
 
-    $: if (endorsedAmendmentData.twothirds_House_and_Senate_passed === 1) {
-
-        status.push(" passed by two-thirds majorities in the House and Senate");
+        amendmentStatus = [...amendmentStatus, " introduced in the House"];
 
     };
     
-    $: if (endorsedAmendmentData.simple_majority_House_and_Senate_passed === 1) {
+    $: if (endorsedAmendmentData?.introduced_in_Senate === 1) {
 
-        status.push(" passed by simple majorities in the House and Senate");
-
-    };
-    
-    $: if (endorsedAmendmentData.simple_majority_voters_passed === 1) {
-
-        status.push(" passed by a simple majority of voters");
+        amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
 
     };
     
-    $: if (endorsedAmendmentData.ratified_by_state_convenctions === 1) {
+    $: if (endorsedAmendmentData?.twothirds_House_and_Senate_passed === 1) {
 
-        status.push(" ratified by state conventions");
+        amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
 
     };
     
-    $: if (endorsedAmendmentData.ratified_by_state_legislatures === 1) {
+    $: if (endorsedAmendmentData?.simple_majority_House_and_Senate_passed === 1) {
 
-        status.push(" ratified by state legislatures");
+        amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
+
+    };
+    
+    $: if (endorsedAmendmentData?.simple_majority_voters_passed === 1) {
+
+        amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
+
+    };
+    
+    $: if (endorsedAmendmentData?.ratified_by_state_convenctions === 1) {
+
+        amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
+
+    };
+
+    $: if (endorsedAmendmentData?.ratified_by_state_legislatures === 1) {
+
+        amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
 
     };
 
@@ -143,13 +153,7 @@
             </h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {#each status as item, i}
-                {#if (i === status.length -1)}
-                    {item}
-                {:else}
-                    {item},
-                {/if}
-            {/each}
+            {amendmentStatus.toString()}
         </h5>
     </div>
 </div>
