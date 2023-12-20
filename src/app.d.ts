@@ -272,6 +272,48 @@ declare global {
 		alt_text: string;
 	}
 
+	interface LegislationWithSponsorsAndImage {
+		legislation_ID: number;
+		image_ID: number;
+		legislation_name: string;
+		year_released: number;
+		year_introduced_House: number;
+		year_introduced_Senate: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		session_House: string;
+		session_Senate: string;
+		passed_in_House: number;
+		passed_in_Senate: number;
+		rejected_in_House: number;
+		rejected_in_Senate: number;
+		vetoed_by_Executive: number;
+		signed_by_Executive: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: number;
+		contact_street_address: string;
+		contact_street_address: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		sponsors_House: SponsorHouse[];
+		sponsors_Senate: SponsorsSenate[];
+		co_sponsors_House: CoSponsorHouse[];
+		co_sponsors_Senate: CoSponsorsSenate[];
+	}
+
+	
+
 	interface Amendment {
 		amendment_ID: number;
 		image_ID: number;
@@ -343,6 +385,49 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+	}
+
+	interface AmendmentWithSponsorsAndImage {
+		amendment_ID: number;
+		image_ID: number;
+		amendment_name: string;
+		year_released: number;
+		year_introduced_House: number;
+		year_introduced_Senate: number;
+		election_date: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		introduced_in_House: number;
+		introduced_in_Senate: number;
+		session_House: string;
+		session_Senate: string;
+		twothirds_House_and_Senate_passed: number;
+		simple_majority_House_and_Senate_passed: number;
+		simple_majority_voters_passed: number;
+		ratified_by_state_convenctions: number;
+		ratified_by_state_legislatures: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: number;
+		contact_street_address: string;
+		contact_street_address_02: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		contact_email: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		sponsors_House: SponsorHouse[];
+		sponsors_Senate: SponsorsSenate[];
+		co_sponsors_House: CoSponsorHouse[];
+		co_sponsors_Senate: CoSponsorsSenate[];
 	}
 
 	interface Action {

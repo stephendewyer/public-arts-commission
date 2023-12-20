@@ -3,7 +3,7 @@
     import { EndorsedAmendmentSelectedStore } from '$lib/stores/EndorsedAmendmentSelectedStore';
     import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
 
-    export let endorsedAmendmentData: AmendmentWithImage;
+    export let endorsedAmendmentData: AmendmentWithSponsorsAndImage;
 
     let amendmentStatus: string[] = [];
 

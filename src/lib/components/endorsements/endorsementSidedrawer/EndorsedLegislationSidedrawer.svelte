@@ -6,7 +6,7 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
 
-    let endorsedLegislationData: LegislationWithImage | null = null;
+    let endorsedLegislationData: LegislationWithSponsorsAndImage | null = null;
 
     $: endorsedLegislationData;
 
@@ -76,6 +76,65 @@
     $: if (endorsedLegislationData === null) {
 
         legislationStatus = [];
+
+    };
+
+    let sponsorsHouse: SponsorHouse[];
+    let sponsorsSenate: SponsorSenate[];
+    let coSponsorsHouse: CoSponsorHouse[];
+    let coSponsorsSenate: CoSponsorSenate[];
+
+    let sponsorsHouseNames: string[] = [];
+    let sponsorsSenateNames: string[] = [];
+    let coSponsorsHouseNames: string[] = [];
+    let coSponsorsSenateNames: string[] = [];
+
+
+    $: if (endorsedLegislationData?.sponsors_House) {
+
+        sponsorsHouse = endorsedLegislationData?.sponsors_House;
+
+        sponsorsHouse.forEach((sponsor) => {
+
+            sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
+        
+        });
+
+    };
+
+    $: if (endorsedLegislationData?.sponsors_Senate) {
+
+        sponsorsSenate = endorsedLegislationData?.sponsors_Senate;
+
+        sponsorsSenate.forEach((sponsor) => {
+
+            sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
+
+        });
+
+    };
+    
+    $: if (endorsedLegislationData?.co_sponsors_House) {
+
+        coSponsorsHouse = endorsedLegislationData?.co_sponsors_House;
+
+        coSponsorsHouse.forEach((sponsor) => {
+
+            coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
+
+        });
+
+    };
+
+    $: if (endorsedLegislationData?.co_sponsors_Senate) {
+
+        coSponsorsSenate = endorsedLegislationData?.co_sponsors_Senate;
+
+        coSponsorsSenate.forEach((sponsor) => {
+
+            coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
+
+        });
 
     };
 
@@ -193,7 +252,46 @@
                         </td>
                     </tr>
                 {/if}
-                
+                <tr>
+                    <td>
+                        House sponsor: 
+                    </td>
+                    <td>
+                        {#if (sponsorsHouseNames)}
+                            {sponsorsHouseNames.toString()}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        House co-sponsor(s): 
+                    </td>
+                    <td>
+                        {#if (coSponsorsHouseNames)}
+                            {coSponsorsHouseNames.toString()}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Senate sponsor: 
+                    </td>
+                    <td>
+                        {#if (sponsorsSenateNames)}
+                            {sponsorsSenateNames.toString()}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Senate co-sponsor(s): 
+                    </td>
+                    <td>
+                        {#if (coSponsorsSenateNames)}
+                            {coSponsorsSenateNames.toString()}
+                        {/if}
+                    </td>
+                </tr>
                 <tr>
                     <td>
                         details: 

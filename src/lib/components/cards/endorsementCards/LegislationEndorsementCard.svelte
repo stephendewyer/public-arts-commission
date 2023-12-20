@@ -3,7 +3,7 @@
     import { EndorsedLegislationSelectedStore } from '$lib/stores/EndorsedLegislationSelectedStore';
     import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
 
-    export let endorsedLegislationData: LegislationWithImage;
+    export let endorsedLegislationData: LegislationWithSponsorsAndImage;
 
     let legislationStatus: string[] = [];
 

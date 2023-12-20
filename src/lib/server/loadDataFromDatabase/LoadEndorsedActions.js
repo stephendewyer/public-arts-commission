@@ -42,7 +42,7 @@ export const LoadAllEndorsedActions = async () => {
     let endorsedActionsImageIds = [];
 
     endorsedActions.forEach((action) => {
-        endorsedActionsImageIds.push(action.image_ID);
+        endorsedActionsImageIds = [...endorsedActionsImageIds, action.image_ID];
     });
 
     const listImageIds = endorsedActionsImageIds.join(", ");
@@ -71,7 +71,7 @@ export const LoadAllEndorsedActions = async () => {
 
         endorsedActionsImages.forEach((imageRow) => {
             if (actionImageId === imageRow.image_ID) {
-                endorsedActionsWithImages.push({...action, ...imageRow});
+                endorsedActionsWithImages = [...endorsedActionsWithImages, {...action, ...imageRow}];
             };
         });
     });

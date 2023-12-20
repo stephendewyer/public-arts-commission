@@ -40,7 +40,7 @@ export const LoadAllEndorsedReferendums = async () => {
     let endorsedReferendumsImageIds = [];
 
     endorsedReferendums.forEach((referendum) => {
-        endorsedReferendumsImageIds.push(referendum.image_ID);
+        endorsedReferendumsImageIds = [...endorsedReferendumsImageIds, referendum.image_ID];
     });
 
     const listImageIds = endorsedReferendumsImageIds.join(", ");
@@ -69,7 +69,7 @@ export const LoadAllEndorsedReferendums = async () => {
 
         endorsedReferendumsImages.forEach((imageRow) => {
             if (referendumImageId = imageRow.image_ID) {
-                endorsedReferendumsWithImages.push({...referendum, ...imageRow});
+                endorsedReferendumsWithImages = [...endorsedReferendumsWithImages, {...referendum, ...imageRow}];
             };
         });
     });

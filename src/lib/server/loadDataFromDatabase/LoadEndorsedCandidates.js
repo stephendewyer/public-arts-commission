@@ -42,7 +42,7 @@ export const LoadAllEndorsedCandidates = async () => {
     let endorsedCandidatesImageIds = [];
 
     endorsedCandidates.forEach((candidate) => {
-        endorsedCandidatesImageIds.push(candidate.image_ID);
+        endorsedCandidatesImageIds = [...endorsedCandidatesImageIds, candidate.image_ID];
     });
 
     // select images from image_collection table where image_ID == image_ID
@@ -73,7 +73,7 @@ export const LoadAllEndorsedCandidates = async () => {
 
         candidatesImages.forEach((imageRow) => {
             if (candidateImageId === imageRow.image_ID) {
-                endorsedCandidatesWithImages.push({...candidate, ...imageRow});
+                endorsedCandidatesWithImages = [...endorsedCandidatesWithImages, {...candidate, ...imageRow}];
             };
         });
     });
