@@ -31,7 +31,46 @@
         endorsedReferendumSidedrawerOpen = false;
         EndorsedReferendumOpenStore.update((value) => value = endorsedReferendumSidedrawerOpen);
         EndorsedReferendumSelectedStore.update((value) => value = null);
-    }
+    };
+
+    let rawElectionDate: Date;
+
+    let electionDate: string;
+
+    $: if (endorsedReferendumSelected?.election_date) {
+        rawElectionDate = new Date(endorsedReferendumSelected?.election_date);
+        electionDate = rawElectionDate?.toUTCString().substring(0, 16);
+    };
+
+    let referendumStatus: string[] = [];
+
+    $: referendumStatus;
+
+    $: if (endorsedReferendumSelected?.elected === 1) {
+
+        referendumStatus.push(" elected by voters");
+
+    };
+    
+    $: if (endorsedReferendumSelected?.rejected === 1) {
+
+        referendumStatus.push(" rejected by voters");
+
+    };
+    
+    $: if (endorsedReferendumSelected?.pending_election === 1) {
+
+        referendumStatus.push(" pending election by voters");
+
+    };
+
+    let statusString: string;
+
+    $: if (referendumStatus.length > 0) {
+        
+        statusString = referendumStatus.toString();
+
+    };
 
 </script>
 
@@ -52,6 +91,117 @@
         <picture>
             <img src={endorsedReferendumSelected?.image_URL} alt={endorsedReferendumSelected?.alt_text} />
         </picture>
+        <h3 class="referendum_name">
+            {endorsedReferendumSelected?.referendum_name}
+        </h3>
+        <table>
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:60%">
+            </colgroup>  
+            <tbody>
+                <tr>
+                    <td>
+                        starting year if enacted:
+                    </td>
+                    <td>
+                        {#if (endorsedReferendumSelected)}
+                            {endorsedReferendumSelected?.starting_year_if_enacted}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        election date:
+                    </td>
+                    <td>
+                        {#if (electionDate)}
+                            {electionDate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        country: 
+                    </td>
+                    <td>
+                        United States of America
+                    </td>
+                </tr>
+                {#if (endorsedReferendumSelected?.state)}
+                    <tr>
+                        <td>
+                            state: 
+                        </td>
+                        <td>
+                            {endorsedReferendumSelected?.state}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedReferendumSelected?.county)}
+                    <tr>
+                        <td>
+                            county: 
+                        </td>
+                        <td>
+                            {endorsedReferendumSelected?.county}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedReferendumSelected?.city)}
+                    <tr>
+                        <td>
+                            city: 
+                        </td>
+                        <td>
+                            {endorsedReferendumSelected?.city}
+                        </td>
+                    </tr>
+                {/if}
+                
+                <tr>
+                    <td>
+                        details: 
+                    </td>
+                    <td>
+                        {#if (endorsedReferendumSelected?.details)}
+                            {endorsedReferendumSelected?.details}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        website: 
+                    </td>
+                    <td>
+                        {#if (endorsedReferendumSelected?.website_URL)}
+                            <a 
+                                class="external_link_container"
+                                href={endorsedReferendumSelected?.website_URL} 
+                                target="_blank"
+                            >
+                                <div class="external_link_icon">
+                                    {@html ExternalLinkIcon}
+                                </div>
+                                <div class="website_URL">
+                                    {endorsedReferendumSelected?.website_URL} 
+                                </div>
+                            </a>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        status: 
+                    </td>
+                    <td>
+                        {#if (statusString)}
+                            {statusString}
+                        {/if}
+                    </td>
+                </tr>
+            </tbody>
+        </table>   
     </div>
 </aside>
 
@@ -118,6 +268,11 @@
         fill: #CB6D44;
     }
 
+    .referendum_name {
+        padding: 0 1rem;
+        text-align: center;
+    }
+
     table {
         border-spacing: 0;
         width: 100%;
@@ -125,7 +280,7 @@
     }
 
     tbody tr:nth-child(odd) {
-        background-color: #CBC6C2;
+        background-color: #DBE4D7;
     }
 
     tbody > tr > td {
@@ -154,6 +309,7 @@
     }
 
     .external_link_icon {
+        min-width: 1.5rem;
         width: 1.5rem;
         height: 100%;
         display: flex;

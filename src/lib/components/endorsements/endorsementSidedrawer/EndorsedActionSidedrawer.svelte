@@ -9,7 +9,6 @@
 
     $: endorsedActionData;
 
-
     const unsubscribeEndorsedActionSelectedStore = EndorsedActionSelectedStore.subscribe(value => {
 		endorsedActionData = value;
     });
@@ -320,6 +319,7 @@
     }
 
     .external_link_icon {
+        min-width: 1.5rem;
         width: 1.5rem;
         height: 100%;
         display: flex;

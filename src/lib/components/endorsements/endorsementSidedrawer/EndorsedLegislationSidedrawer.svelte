@@ -8,6 +8,8 @@
 
     let endorsedLegislationData: LegislationWithImage | null = null;
 
+    $: endorsedLegislationData;
+
     const unsubscribeEndorsedLegislationSelectedStore = EndorsedLegislationSelectedStore.subscribe(value => {
 		endorsedLegislationData = value;
     });
@@ -31,7 +33,55 @@
         endorsedLegislationOpen = false;
         EndorsedLegislationOpenStore.update((value) => value = endorsedLegislationOpen);
         EndorsedLegislationSelectedStore.update((value) => value = null);
-    }
+    };
+
+    let legislationStatus: string[] = [];
+
+    $: legislationStatus;
+
+    $: if (endorsedLegislationData?.passed_in_House === 1) {
+
+        legislationStatus.push(" passed in the House");
+
+    };
+    
+    $: if (endorsedLegislationData?.passed_in_Senate === 1) {
+
+        legislationStatus.push(" passed in the Senate");
+
+    };
+    
+    $: if (endorsedLegislationData?.rejected_in_House === 1) {
+
+        legislationStatus.push(" rejected in the House");
+
+    };
+    
+    $: if (endorsedLegislationData?.rejected_in_Senate === 1) {
+
+        legislationStatus.push(" rejected in the Senate");
+
+    };
+    
+    $: if (endorsedLegislationData?.vetoed_by_Executive === 1) {
+
+        legislationStatus.push(" vetoed by the Executive");
+
+    };
+    
+    $: if (endorsedLegislationData?.signed_by_Executive === 1) {
+        
+        legislationStatus.push(" signed into law by the Executive");
+
+    };
+
+    let statusString: string;
+
+    $: if (legislationStatus.length > 0) {
+        
+        statusString = legislationStatus.toString();
+
+    };
 
 </script>
 
@@ -51,7 +101,146 @@
     <div>
         <picture>
             <img src={endorsedLegislationData?.image_URL} alt={endorsedLegislationData?.alt_text} />
-        </picture>                
+        </picture>
+        <h3 class="legislation_name">
+            {endorsedLegislationData?.legislation_name}
+        </h3>
+        <table>
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:60%">
+            </colgroup>  
+            <tbody>
+                <tr>
+                    <td>
+                        year released:
+                    </td>
+                    <td>
+                        {endorsedLegislationData?.year_released}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        year introduced in the House:
+                    </td>
+                    <td>
+                        {#if (endorsedLegislationData?.year_introduced_House)}
+                            {endorsedLegislationData?.year_introduced_House}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        year introduced in the Senate:
+                    </td>
+                    <td>
+                        {#if (endorsedLegislationData?.year_introduced_Senate)}
+                            {endorsedLegislationData?.year_introduced_Senate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        House session:
+                    </td>
+                    <td>
+                        {#if (endorsedLegislationData?.session_House)}
+                            {endorsedLegislationData?.session_House}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Senate session:
+                    </td>
+                    <td>
+                        {#if (endorsedLegislationData?.session_Senate)}
+                            {endorsedLegislationData?.session_Senate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        country: 
+                    </td>
+                    <td>
+                        United States of America
+                    </td>
+                </tr>
+                {#if (endorsedLegislationData?.state)}
+                    <tr>
+                        <td>
+                            state: 
+                        </td>
+                        <td>
+                            {endorsedLegislationData?.state}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedLegislationData?.county)}
+                    <tr>
+                        <td>
+                            county: 
+                        </td>
+                        <td>
+                            {endorsedLegislationData?.county}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedLegislationData?.city)}
+                    <tr>
+                        <td>
+                            city: 
+                        </td>
+                        <td>
+                            {endorsedLegislationData?.city}
+                        </td>
+                    </tr>
+                {/if}
+                
+                <tr>
+                    <td>
+                        details: 
+                    </td>
+                    <td>
+                        {#if (endorsedLegislationData?.details)}
+                            {endorsedLegislationData?.details}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        website: 
+                    </td>
+                    <td>
+                        {#if (endorsedLegislationData?.website_URL)}
+                            <a 
+                                class="external_link_container"
+                                href={endorsedLegislationData?.website_URL} 
+                                target="_blank"
+                            >
+                                <div class="external_link_icon">
+                                    {@html ExternalLinkIcon}
+                                </div>
+                                <div class="website_URL">
+                                    {endorsedLegislationData?.website_URL} 
+                                </div>
+                            </a>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        status: 
+                    </td>
+                    <td>
+                        {#if (statusString)}
+                            {statusString}
+                        {/if}
+                    </td>
+                </tr>
+            </tbody>
+        </table>                
     </div>
 </aside>
 
@@ -118,6 +307,11 @@
         fill: #CB6D44;
     }
 
+    .legislation_name {
+        padding: 0 1rem;
+        text-align: center;
+    }
+
     table {
         border-spacing: 0;
         width: 100%;
@@ -154,6 +348,7 @@
     }
 
     .external_link_icon {
+        min-width: 1.5rem;
         width: 1.5rem;
         height: 100%;
         display: flex;

@@ -31,7 +31,68 @@
         endorsedAmendmentOpen = false;
         EndorsedAmendmentOpenStore.update((value) => value = endorsedAmendmentOpen);
         EndorsedAmendmentSelectedStore.update((value) => value = null);
-    }
+    };
+
+    let rawElectionDate: Date;
+
+    let electionDate: string;
+
+    $: if (endorsedAmendmentData?.election_date) {
+        rawElectionDate = new Date(endorsedAmendmentData?.election_date);
+        electionDate = rawElectionDate?.toUTCString().substring(0, 16);
+    };
+
+    let amendmentStatus: string[] = [];
+
+    $: if (endorsedAmendmentData?.introduced_in_House === 1) {
+
+        amendmentStatus.push(" introduced in the House");
+
+    };
+    
+    $: if (endorsedAmendmentData?.introduced_in_Senate === 1) {
+
+        amendmentStatus.push(" introduced in the Senate");
+
+    };
+    
+    $: if (endorsedAmendmentData?.twothirds_House_and_Senate_passed === 1) {
+
+        amendmentStatus.push(" passed by two-thirds majorities in the House and Senate");
+
+    };
+    
+    $: if (endorsedAmendmentData?.simple_majority_House_and_Senate_passed === 1) {
+
+        amendmentStatus.push(" passed by simple majorities in the House and Senate");
+
+    };
+    
+    $: if (endorsedAmendmentData?.simple_majority_voters_passed === 1) {
+
+        amendmentStatus.push(" passed by a simple majority of voters");
+
+    };
+    
+    $: if (endorsedAmendmentData?.ratified_by_state_convenctions === 1) {
+        
+        amendmentStatus.push(" ratified by three-fourths of state conventions called in each state");
+
+    };
+
+    $: if (endorsedAmendmentData?.ratified_by_state_legislatures === 1) {
+        
+        amendmentStatus.push(" ratified by three-fourths of state legislatures");
+
+    };
+
+    let statusString: string;
+
+    $: if (amendmentStatus.length > 0) {
+        
+        statusString = amendmentStatus.toString();
+
+    };
 
 </script>
 
@@ -52,6 +113,155 @@
         <picture>
             <img src={endorsedAmendmentData?.image_URL} alt={endorsedAmendmentData?.alt_text} />
         </picture>
+        <h3 class="amendment_name">
+            {endorsedAmendmentData?.amendment_name}
+        </h3>
+        <table>
+            <colgroup>
+                <col style="width:40%">
+                <col style="width:60%">
+            </colgroup>  
+            <tbody>
+                <tr>
+                    <td>
+                        year released:
+                    </td>
+                    <td>
+                        {endorsedAmendmentData?.year_released}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        year introduced in the House:
+                    </td>
+                    <td>
+                        {#if (endorsedAmendmentData?.year_introduced_House)}
+                            {endorsedAmendmentData?.year_introduced_House}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        year introduced in the Senate:
+                    </td>
+                    <td>
+                        {#if (endorsedAmendmentData?.year_introduced_Senate)}
+                            {endorsedAmendmentData?.year_introduced_Senate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        House session:
+                    </td>
+                    <td>
+                        {#if (endorsedAmendmentData?.session_House)}
+                            {endorsedAmendmentData?.session_House}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Senate session:
+                    </td>
+                    <td>
+                        {#if (endorsedAmendmentData?.session_Senate)}
+                            {endorsedAmendmentData?.session_Senate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        election date:
+                    </td>
+                    <td>
+                        {#if (electionDate)}
+                            {electionDate}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        country: 
+                    </td>
+                    <td>
+                        United States of America
+                    </td>
+                </tr>
+                {#if (endorsedAmendmentData?.state)}
+                    <tr>
+                        <td>
+                            state: 
+                        </td>
+                        <td>
+                            {endorsedAmendmentData?.state}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedAmendmentData?.county)}
+                    <tr>
+                        <td>
+                            county: 
+                        </td>
+                        <td>
+                            {endorsedAmendmentData?.county}
+                        </td>
+                    </tr>
+                {/if}
+                {#if (endorsedAmendmentData?.city)}
+                    <tr>
+                        <td>
+                            city: 
+                        </td>
+                        <td>
+                            {endorsedAmendmentData?.city}
+                        </td>
+                    </tr>
+                {/if}
+                
+                <tr>
+                    <td>
+                        details: 
+                    </td>
+                    <td>
+                        {#if (endorsedAmendmentData?.details)}
+                            {endorsedAmendmentData?.details}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        website: 
+                    </td>
+                    <td>
+                        {#if (endorsedAmendmentData?.website_URL)}
+                            <a 
+                                class="external_link_container"
+                                href={endorsedAmendmentData?.website_URL} 
+                                target="_blank"
+                            >
+                                <div class="external_link_icon">
+                                    {@html ExternalLinkIcon}
+                                </div>
+                                <div class="website_URL">
+                                    {endorsedAmendmentData?.website_URL} 
+                                </div>
+                            </a>
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        status: 
+                    </td>
+                    <td>
+                        {#if (statusString)}
+                            {statusString}
+                        {/if}
+                    </td>
+                </tr>
+            </tbody>
+        </table> 
     </div>
 </aside>
 
@@ -118,6 +328,11 @@
         fill: #CB6D44;
     }
 
+    .amendment_name {
+        padding: 0 1rem;
+        text-align: center;
+    }
+
     table {
         border-spacing: 0;
         width: 100%;
@@ -154,6 +369,7 @@
     }
 
     .external_link_icon {
+        min-width: 1.5rem;
         width: 1.5rem;
         height: 100%;
         display: flex;

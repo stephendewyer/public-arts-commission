@@ -58,49 +58,57 @@
 
     $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
 
-    let status: string[] = [];
+    let candidateStatus: string[] = [];
 
-    $: status;
+    $: candidateStatus;
 
     $: if (endorsedCandidateData?.running_in_primary === 1) {
 
-        status.push(" running in the primary");
+        candidateStatus.push(" running in the primary");
 
     };
     
     $: if (endorsedCandidateData?.elected_in_primary === 1) {
 
-        status.push(" elected in the primary");
+        candidateStatus.push(" elected in the primary");
 
     };
     
     $: if (endorsedCandidateData?.rejected_in_primary === 1) {
 
-        status.push(" rejected in the primary");
+        candidateStatus.push(" rejected in the primary");
 
     };
     
     $: if (endorsedCandidateData?.running_in_general === 1) {
 
-        status.push(" running in the general");
+        candidateStatus.push(" running in the general");
 
     };
     
     $: if (endorsedCandidateData?.rejected_in_general === 1) {
 
-        status.push(" rejected in the general");
+        candidateStatus.push(" rejected in the general");
 
     };
     
     $: if (endorsedCandidateData?.elected_in_general === 1) {
         
-        status.push(" elected in the general");
+        candidateStatus.push(" elected in the general");
 
     };
 
     $: if (endorsedCandidateData?.campaign_ended === 1) {
         
-        status.push(" campaign ended");
+        candidateStatus.push(" campaign ended");
+
+    };
+
+    let statusString: string;
+
+    $: if (candidateStatus.length > 0) {
+        
+        statusString = candidateStatus.toString();
 
     };
     
@@ -205,18 +213,20 @@
                         website: 
                     </td>
                     <td>
-                        <a 
-                            class="external_link_container"
-                            href={endorsedCandidateData?.website_URL} 
-                            target="_blank"
-                        >
-                            <div class="external_link_icon">
-                                {@html ExternalLinkIcon}
-                            </div>
-                            <div class="website_URL">
-                                {endorsedCandidateData?.website_URL} 
-                            </div>
-                        </a>
+                        {#if (endorsedCandidateData?.website_URL)}
+                            <a 
+                                class="external_link_container"
+                                href={endorsedCandidateData?.website_URL} 
+                                target="_blank"
+                            >
+                                <div class="external_link_icon">
+                                    {@html ExternalLinkIcon}
+                                </div>
+                                <div class="website_URL">
+                                    {endorsedCandidateData?.website_URL} 
+                                </div>
+                            </a>
+                        {/if}
                     </td>
                 </tr>
                 <tr>
@@ -224,13 +234,9 @@
                         status: 
                     </td>
                     <td>
-                        {#each status as item, i}
-                            {#if (i === status.length -1)}
-                                {item}
-                            {:else}
-                                {item},
-                            {/if}
-                        {/each}
+                        {#if (statusString)}
+                            {statusString}
+                        {/if}
                     </td>
                 </tr>
             </tbody>
@@ -343,6 +349,7 @@
     }
 
     .external_link_icon {
+        min-width: 1.5rem;
         width: 1.5rem;
         height: 100%;
         display: flex;
