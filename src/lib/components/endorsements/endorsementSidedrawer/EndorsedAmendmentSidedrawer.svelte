@@ -88,7 +88,15 @@
     $: if (endorsedAmendmentData === null) {
 
         amendmentStatus = [];
-
+        sponsorsHouse = [];
+        sponsorsSenate = [];
+        coSponsorsHouse = [];
+        coSponsorsSenate = [];
+        sponsorsHouseNames = [];
+        sponsorsSenateNames = [];
+        coSponsorsHouseNames = [];
+        coSponsorsSenateNames = [];
+        
     };
 
     let sponsorsHouse: SponsorHouse[];

@@ -76,6 +76,14 @@
     $: if (endorsedLegislationData === null) {
 
         legislationStatus = [];
+        sponsorsHouse = [];
+        sponsorsSenate = [];
+        coSponsorsHouse = [];
+        coSponsorsSenate = [];
+        sponsorsHouseNames = [];
+        sponsorsSenateNames = [];
+        coSponsorsHouseNames = [];
+        coSponsorsSenateNames = [];
 
     };
 
