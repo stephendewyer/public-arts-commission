@@ -8,7 +8,7 @@
 	import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
   	import { onDestroy } from 'svelte';
 	import './styles.css';
-  	import CreateVoterAccountPromptModal from '$lib/components/endorsements/createVoterAccountModal/CreateVoterAccountPromptModal.svelte';
+  	import CreateVoterAccountPromptModal from '$lib/components/modals/CreateVoterAccountPromptModal.svelte';
   	import { CreateVoterAccountPromptStore } from '$lib/stores/CreateVoterAccountPromptStore';
 	import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
 	import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
@@ -21,8 +21,8 @@
   	import EndorsedCandidateSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedCandidateSidedrawer.svelte';
   	import EndorsedLegislationSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
-  	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
-
+	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
+	
 	let openMobileNav: boolean = false;
 
 	let openCreateVoterAccountPrompt: boolean = false;

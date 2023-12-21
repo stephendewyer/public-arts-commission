@@ -593,6 +593,14 @@ declare global {
 		date_co_sponsored: Date;
 	}
 
+	interface DeleteItem {
+		endorsement_name: string;
+		endorsement_ID: number;
+		endorsement_image_ID: number;
+        endorsement_image_URL: string;
+		endorsement_category: string;
+	}
+
 }
 
 export {};

@@ -8,9 +8,9 @@
     
     export let categories_data: any;
 
-    const endorsedAmendments: AmendmentWithImage[] = categories_data.endorsed_amendments;
+    const endorsedAmendments: AmendmentWithSponsorsAndImage[] = categories_data.endorsed_amendments;
     const endorsedCandidates: CandidateWithImage[] = categories_data.endorsed_candidates;
-    const endorsedLegislation: LegislationWithImage[] = categories_data.endorsed_legislation;
+    const endorsedLegislation: LegislationWithSponsorsAndImage[] = categories_data.endorsed_legislation;
     const endorsedReferendums: ReferendumWithImage[] = categories_data.endorsed_referendums;
 
     const user: User | undefined = categories_data.user;

@@ -6,7 +6,7 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
 
-    let nominationCategory: string = "";
+    let nominationCategory: string | null = null;
 
     const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe(n => {
 		nominationCategory = n;
@@ -30,7 +30,7 @@
     const closeClickHandler = () => {
         modalOpen = false;
         ModalOpenStore.update((value) => value = modalOpen);
-        CreateVoterAccountPromptStore.update((value) => value = "");
+        CreateVoterAccountPromptStore.update((value) => value = null);
     };
 
     let action: string = "";
@@ -48,11 +48,19 @@
         action = "make a nomination";
     };
 
+    let openCreateVoterAccountPromptModal: boolean = false;
+
+    $: if (modalOpen && (nominationCategory !== null)) {
+        openCreateVoterAccountPromptModal = true;
+    } else {
+        openCreateVoterAccountPromptModal = false;
+    };
+
 </script>
 
-<dialog open={modalOpen}
-    class={(modalOpen) ? "dialog_open" : "dialog_closed"}
-    aria-hidden={ (modalOpen) ? 'false' : 'true'}
+<dialog open={openCreateVoterAccountPromptModal}
+    class={(openCreateVoterAccountPromptModal) ? "dialog_open" : "dialog_closed"}
+    aria-hidden={ (openCreateVoterAccountPromptModal) ? 'false' : 'true'}
 >
     <div class="close_button_container">
         <button 

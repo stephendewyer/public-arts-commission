@@ -2,10 +2,12 @@
     import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
     import { onDestroy } from 'svelte';
-    import ActionButton from '$lib/components/buttons/ActionButton.svelte';
+    import SubmitButtonSecondary from '../buttons/SubmitButtonSecondary.svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
-    let deleteItem;
+    let deleteItem: DeleteItem | null = null;
+
+    $: console.log(deleteItem?.endorsement_ID)
 
     const unsubscribeDeleteConfirmationStore = DeleteConfirmationStore.subscribe(n => {
 		deleteItem = n;
@@ -13,32 +15,84 @@
 
     let modalOpen = false;
 
-    // set the value for the sidedrawer open value from store
-
-    // let modalOpen: boolean = false;
-
-    // get the value for the sidedrawer open value from store
-
-	// const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-	// 	modalOpen = value;
-	// });
+	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
+		modalOpen = value;
+	});
 
     onDestroy(() => {
         unsubscribeDeleteConfirmationStore();
-        // unsubscribeModalOpenStore();
+        unsubscribeModalOpenStore();
     });
 
     const closeClickHandler = () => {
-        // modalOpen = false;
-        // ModalOpenStore.update((value) => value = modalOpen);
+        modalOpen = false;
+        ModalOpenStore.update((value) => value = modalOpen);
         DeleteConfirmationStore.update((value) => value = null);
+    };
+
+    const deleteEndorsement = async (
+        deleteItemID: number,
+        deleteItemName: string,
+        deleteItemImageID: number,
+        deleteItemImageURL: string,
+        deleteItemCategory: string
+    ) => {
+        const response = await fetch("/authenticated-administrator/api/deleteEndorsement", {
+            method: 'POST',
+            body: JSON.stringify({
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImageURL,
+                deleteItemCategory
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (response) {
+            console.log(response);
+        };
+    };
+
+    const deleteSubmitHandler = async () => {
+
+        console.log("delete clicked")
+
+        if (deleteItem === null) {
+            return;
+        };
+
+        try {
+            await deleteEndorsement(
+                deleteItem?.endorsement_ID,
+                deleteItem?.endorsement_name,
+                deleteItem?.endorsement_image_ID,
+                deleteItem?.endorsement_image_URL,
+                deleteItem?.endorsement_category
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    let deleteConfirmationModalOpen: boolean = false;
+
+    $: if (modalOpen && (deleteItem !== null)) {
+        deleteConfirmationModalOpen = true;
+    } else {
+        deleteConfirmationModalOpen = false;
     };
 
 </script>
 
-<dialog open={modalOpen}
-    class={(modalOpen) ? "dialog_open" : "dialog_closed"}
-    aria-hidden={ (modalOpen) ? 'false' : 'true'}
+<dialog open={deleteConfirmationModalOpen}
+    class={(deleteConfirmationModalOpen) ? "dialog_open" : "dialog_closed"}
+    aria-hidden={ (deleteConfirmationModalOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
         <button 
@@ -50,31 +104,15 @@
         </button>
     </div>
     <div class="info_container">
-        <h1 class="modal_heading">You requested to delete.</h1>
-        <h2 class="modal_heading_02">already have an account?</h2>
-        <a 
-            href="/login-voter"
-            on:click={() => closeClickHandler()}
-            on:keyup={() => closeClickHandler()}
-        >
-            <ActionButton 
+        <h1 class="modal_heading">confirm delete</h1>
+        <h2 class="modal_heading_02">do you want to delete {deleteItem?.endorsement_name}?</h2>
+        <form on:submit|preventDefault={deleteSubmitHandler}>
+            <SubmitButtonSecondary 
                 disable={false}
             >
-                voter login
-            </ActionButton>
-        </a>
-        <h2 class="modal_heading_02">don't have an account?</h2>
-        <a 
-            href="/create-account-voter"
-            on:click={() => closeClickHandler()}
-            on:keyup={() => closeClickHandler()}
-        >
-            <ActionButton
-                disable={false}
-            >
-                create voter account
-            </ActionButton>
-        </a>
+                delete
+            </SubmitButtonSecondary>
+        </form>
     </div>
 </dialog>
 
@@ -143,6 +181,7 @@
 
     .modal_heading{
         margin: 0;
+        text-align: center;
     }
 
     .modal_heading_02 {

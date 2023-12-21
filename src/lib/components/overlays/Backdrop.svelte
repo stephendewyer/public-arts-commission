@@ -18,7 +18,7 @@
 
     let openTeamMember: boolean = false;
 
-    let openCreateVoterAccountPrompt: boolean = false;
+    let modalOpen: boolean = false;
 
     let openEndorsedAction: boolean = false;
 
@@ -33,7 +33,6 @@
     let open: boolean = false;
 
     let selectedTeamMemberId: number | null = null;
-
 
     const backdropClickedHandler = () => {
         openMobileNav = false;
@@ -53,7 +52,7 @@
     };
 
     const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-		openCreateVoterAccountPrompt = value;
+		modalOpen = value;
 	});
 
     const unsubscribeSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
@@ -95,7 +94,7 @@
     $: if (
         openMobileNav ||
         openTeamMember ||
-        openCreateVoterAccountPrompt ||
+        modalOpen ||
         openEndorsedReferendum ||
         openEndorsedLegislation ||
         openEndorsedCandidate ||

@@ -22,7 +22,7 @@
 
     export let data;
 
-    $: userEmail = data.user?.email;
+    $: userEmail = data.streamed.user?.email;
 
     let addHouseCoSponsor: boolean = false;
     let addSenateCoSponsor: boolean = false;

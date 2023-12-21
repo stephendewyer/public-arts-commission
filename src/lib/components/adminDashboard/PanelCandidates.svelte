@@ -1,6 +1,8 @@
 <script lang="ts">
     import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
+    import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
+    import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
@@ -12,11 +14,27 @@
     $: activeTab;
 
     const editClickHandler = (campaignID: number) => {
-
+        console.log(campaignID)
     };
 
-    const deleteClickHandler = (campaignID: number) => {
-        
+    let endorsementCategory: string = "candidate";
+
+    const deleteClickHandler = (
+            campaign_ID: number, 
+            campaign_name: string,
+            campaign_image_ID: number,
+            campaign_image_URL: string,
+    ) => {
+
+        console.log(campaign_ID)
+        DeleteConfirmationStore.update((value) => value = {
+            endorsement_ID: campaign_ID,
+            endorsement_name: campaign_name,
+            endorsement_image_ID: campaign_image_ID,
+            endorsement_image_URL: campaign_image_URL,
+            endorsement_category: endorsementCategory
+        });
+        ModalOpenStore.update((value) => value = true);
     };
 
     const moreInfoClickHandler = (campaignID: number, index: number) => {
@@ -102,8 +120,8 @@
                         </td>
                         <td>
                             <button 
-                                on:click={() => editClickHandler(campaign.campaign_ID)}
-                                on:keyup={() => editClickHandler(campaign.campaign_ID)}
+                                on:click={() => editClickHandler(campaign.candidate_ID)}
+                                on:keyup={() => editClickHandler(campaign.candidate_ID)}
                                 class="icon_container"
                             >
                                 {@html EditIcon}
@@ -111,8 +129,18 @@
                         </td>
                         <td>
                             <button 
-                                on:click={() => deleteClickHandler(campaign.campaign_ID)}
-                                on:keyup={() => deleteClickHandler(campaign.campaign_ID)}
+                                on:click={() => deleteClickHandler(
+                                    campaign.candidate_ID, 
+                                    campaign.campaign_name,
+                                    campaign.image_ID,
+                                    campaign.image_URL
+                                )}
+                                on:keyup={() => deleteClickHandler(
+                                    campaign.candidate_ID, 
+                                    campaign.campaign_name,
+                                    campaign.image_ID,
+                                    campaign.image_URL
+                                )}
                                 class="icon_container"
                             >
                                 {@html DeleteIcon}
@@ -120,8 +148,8 @@
                         </td>
                         <td>
                             <button 
-                                on:click={() => moreInfoClickHandler(campaign.campaign_ID, i)}
-                                on:keyup={() => moreInfoClickHandler(campaign.campaign_ID, i)}
+                                on:click={() => moreInfoClickHandler(campaign.candidate_ID, i)}
+                                on:keyup={() => moreInfoClickHandler(campaign.candidate_ID, i)}
                                 class="icon_container"
                             >
                                 {@html MeatballsIcon}
