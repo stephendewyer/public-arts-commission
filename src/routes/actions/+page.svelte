@@ -4,6 +4,7 @@
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import type { User } from '@auth/core/types.js';
     import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
+    import { getContext, onDestroy } from 'svelte';
 
     export let data;
 
@@ -11,7 +12,19 @@
 
     const user: User | undefined = data.streamed.user;
 
-    const endorsedActions: ActionWithImage[] = data.streamed.endorsed_actions;    
+    const endorsedActionsStore = getContext<any>('endorsedActionsStore');
+
+	let endorsedActions: ActionWithImage[];
+    
+	const unsubscribeEndorsedActionsStore = endorsedActionsStore.subscribe((value: ActionWithImage[]) => {
+		
+		endorsedActions = value;
+
+	});
+
+	onDestroy(() => {
+		unsubscribeEndorsedActionsStore;
+	});
 
     let searchValue: string;
 

@@ -1,10 +1,16 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    import { onDestroy, getContext } from 'svelte';
+
     export let panel_data: ReferendumWithImage[];
 
     let activeTab: number = 0;
 
     $: activeTab;
+
+    let endorsedReferendums: ReferendumWithImage[] = [];
+
+    $: endorsedReferendums = panel_data;
 
 </script>
 <div class="tabpanel_container">

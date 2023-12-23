@@ -141,11 +141,16 @@ export const POST = async ({request}) => {
 
   let uploadedImageURL;
 
+  let uploadedImagePublicID;
+
   try {
 
     const uploadImageResponse = await cloudinary.uploader.upload(image, {});
 
     uploadedImageURL = uploadImageResponse.secure_url;
+
+    uploadedImagePublicID = uploadImageResponse.public_id;
+
 
   } catch (err) {
 
@@ -155,7 +160,7 @@ export const POST = async ({request}) => {
 
   };
 
-  
+  // console.log(uploadedImagePublicID)
 
   // connect to the database
   
@@ -188,11 +193,13 @@ export const POST = async ({request}) => {
   const insertImageStatement = `INSERT INTO image_collection (
     admin_ID, 
     image_URL,
-    alt_text
+    alt_text,
+    public_ID
   ) VALUES (
     "${adminID}", 
     "${uploadedImageURL}",
-    "${imageAltText}"
+    "${imageAltText}",
+    "${uploadedImagePublicID}"
   )`;
 
   let imageID;
@@ -211,33 +218,33 @@ export const POST = async ({request}) => {
 
   const insertEndorsedCandidateInformationStatement = `INSERT INTO endorsed_candidates (
     image_ID,
-	campaign_name,
-	office_sought_starting_year,
-	election_date_primary,
-	election_date_general,
-	government_level,
-	state,
-	county,
-	city,
-	party,
-	website_URL,
-	running_in_primary,
-	elected_in_primary,
-	rejected_in_primary,
-	running_in_general,
-	elected_in_general,
-	rejected_in_general,
-	campaign_ended,
-	contact_name_first,
-	contact_name_last,
-	contact_phone_number,
-	contact_street_address,
-	contact_street_address_02,
-	contact_city,
-	contact_state,
-	contact_zip_code,
-	contact_email,
-	electorate
+    campaign_name,
+    office_sought_starting_year,
+    election_date_primary,
+    election_date_general,
+    government_level,
+    state,
+    county,
+    city,
+    party,
+    website_URL,
+    running_in_primary,
+    elected_in_primary,
+    rejected_in_primary,
+    running_in_general,
+    elected_in_general,
+    rejected_in_general,
+    campaign_ended,
+    contact_name_first,
+    contact_name_last,
+    contact_phone_number,
+    contact_street_address,
+    contact_street_address_02,
+    contact_city,
+    contact_state,
+    contact_zip_code,
+    contact_email,
+    electorate
   ) VALUES (
     "${imageID}",
     "${campaignName}",

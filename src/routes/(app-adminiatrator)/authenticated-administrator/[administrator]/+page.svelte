@@ -17,10 +17,9 @@
     import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
     import { page } from '$app/stores';
     import GovernmentLevels from '$lib/data/governmentLevel.json';
+    import { getContext, onDestroy } from 'svelte';
 
     const slug: string = $page.url.pathname;
-
-    $: console.log($page.data.streamed.endorsed_actions)
 
     export let data;
 
@@ -28,11 +27,65 @@
 
     let username = data.streamed.username;
 
-    let endorsedLegislation = data.streamed.endorsed_legislation;
-    let endorsedReferendums = data.streamed.endorsed_referendums;
-    let endorsedActions = data.streamed.endorsed_actions;
-    let endorsedCandidates = data.streamed.endorsed_candidates;
-    let endorsedAmendments = data.streamed.endorsed_amendments;
+    const endorsedActionsStore = getContext<any>('endorsedActionsStore');
+
+    let endorsedActions: ActionWithImage[] = [];
+
+    const unsubscribeEndorsedActionsStore = endorsedActionsStore.subscribe((value: ActionWithImage[]) => {
+
+        endorsedActions = value;
+
+    });
+
+    const endorsedAmendmentsStore = getContext<any>('endorsedAmendmentsStore');
+
+    let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+
+    const unsubscribeEndorsedAmendmentsStore = endorsedAmendmentsStore.subscribe((value: AmendmentWithSponsorsAndImage[]) => {
+
+        endorsedAmendments = value;
+
+    });
+
+    const endorsedCandidatesStore = getContext<any>('endorsedCandidatesStore');
+
+    let endorsedCandidates: CandidateWithImage[] = [];
+
+    const unsubscribeEndorsedCandidatesStore = endorsedCandidatesStore.subscribe((value: CandidateWithImage[]) => {
+        
+        endorsedCandidates = value;
+
+    });
+
+    const endorsedLegislationStore = getContext<any>('endorsedLegislationStore');
+
+    let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+
+    const unsubscribeEndorsedLegislationStore = endorsedLegislationStore.subscribe((value: LegislationWithSponsorsAndImage[]) => {
+
+        endorsedLegislation = value;
+
+    });
+
+    const endorsedReferendumsStore = getContext<any>('endorsedReferendumsStore');
+
+    let endorsedReferendums: ReferendumWithImage[] = [];
+
+    const unsubscribeEndorsedReferendumsStore = endorsedReferendumsStore.subscribe((value: ReferendumWithImage[]) => {
+
+        endorsedReferendums = value;
+
+    });
+
+    onDestroy(() => {
+        unsubscribeEndorsedReferendumsStore();
+        unsubscribeEndorsedLegislationStore();
+        unsubscribeEndorsedCandidatesStore();
+        unsubscribeEndorsedActionsStore();
+        unsubscribeEndorsedAmendmentsStore();
+    });
+
+    // $: console.log(endorsedCandidates)
 
     let openFilters: boolean;
 

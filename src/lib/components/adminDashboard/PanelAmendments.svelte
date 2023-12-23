@@ -1,10 +1,15 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+
     export let panel_data: AmendmentWithSponsorsAndImage[];
 
     let activeTab: number = 0;
 
     $: activeTab;
+
+    let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+
+    $: endorsedAmendments = panel_data;
 
 </script>
 <div class="tabpanel_container">

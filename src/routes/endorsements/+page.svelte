@@ -2,7 +2,7 @@
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy, getContext } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -20,37 +20,58 @@
 
 	$: data;
 
-	let candidatesFederal: Candidate[] = [];
-	let candidatesState: Candidate[] = [];
-	let candidatesCounty: Candidate[] = [];
-	let candidatesCity: Candidate[] = [];
+	let candidatesFederal: CandidateWithImage[] = [];
+	let candidatesState: CandidateWithImage[] = [];
+	let candidatesCounty: CandidateWithImage[] = [];
+	let candidatesCity: CandidateWithImage[] = [];
 
-	data.streamed.endorsed_candidates.forEach((candidate) => {
+	const endorsedCandidatesStore = getContext<any>('endorsedCandidatesStore');
+
+	let endorsedCandidates: CandidateWithImage[] = [];
+
+	const unsubscribeEndorsedCandidatesStore = endorsedCandidatesStore.subscribe((value: CandidateWithImage[]) => {
+		
+		endorsedCandidates = value;
+
+	});
+
+	endorsedCandidates.forEach((candidate) => {
 		if (candidate.government_level === "federal") {
-			candidatesFederal.push(candidate);
+			candidatesFederal = [...candidatesFederal, candidate];
 		} else if (candidate.government_level === "state") {
-			candidatesState.push(candidate);
+			candidatesState = [...candidatesState, candidate];
 		} else if (candidate.government_level === "county") {
-			candidatesCounty.push(candidate);
+			candidatesCounty = [...candidatesCounty, candidate];
 		} else if (candidate.government_level === "city") {
-			candidatesCity.push(candidate);
+			candidatesCity = [...candidatesCity, candidate];
 		};
 	});
 
-	let legislationFederal: Legislation[] = [];
-	let legislationState: Legislation[] = [];
-	let legislationCounty: Legislation[] = [];
-	let legislationCity: Legislation[] = [];
+	let legislationFederal: LegislationWithSponsorsAndImage[] = [];
+	let legislationState: LegislationWithSponsorsAndImage[] = [];
+	let legislationCounty: LegislationWithSponsorsAndImage[] = [];
+	let legislationCity: LegislationWithSponsorsAndImage[] = [];
 
-	data.streamed.endorsed_legislation.forEach((legislation) => {
+	const endorsedLegislationStore = getContext<any>('endorsedLegislationStore');
+
+	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+
+	const unsubscribeEndorsedLegislationStore = endorsedLegislationStore.subscribe((value: LegislationWithSponsorsAndImage[]) => {
+		
+		endorsedLegislation = value;
+
+	});
+
+	endorsedLegislation.forEach((legislation) => {
 		if (legislation.government_level === "federal") {
-			legislationFederal.push(legislation);
+			legislationFederal = [...legislationFederal, legislation];
 		} else if (legislation.government_level === "state") {
-			legislationState.push(legislation);
+			legislationState = [...legislationState, legislation];
 		} else if (legislation.government_level === "county") {
-			legislationCounty.push(legislation);
+			legislationCounty = [...legislationCounty, legislation];
 		} else if (legislation.government_level === "city") {
-			legislationCity.push(legislation);
+			legislationCity = [...legislationCity, legislation];
+
 		};
 	});
 
@@ -59,15 +80,25 @@
 	let amendmentsCounty: Amendment[] = [];
 	let amendmentsCity: Amendment[] = [];
 
-	data.streamed.endorsed_amendments.forEach((amendment) => {
+	const endorsedAmendmentsStore = getContext<any>('endorsedAmendmentsStore');
+
+	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+
+	const unsubscribeEndorsedAmendmentsStore = endorsedAmendmentsStore.subscribe((value: AmendmentWithSponsorsAndImage[]) => {
+		
+		endorsedAmendments = value;
+
+	});
+
+	endorsedAmendments.forEach((amendment) => {
 		if (amendment.government_level === "federal") {
-			amendmentsFederal.push(amendment);
+			amendmentsFederal = [...amendmentsFederal, amendment];
 		} else if (amendment.government_level === "state") {
-			amendmentsState.push(amendment);
+			amendmentsState = [...amendmentsState, amendment]
 		} else if (amendment.government_level === "county") {
-			amendmentsCounty.push(amendment);
+			amendmentsCounty = [...amendmentsCounty, amendment]
 		} else if (amendment.government_level === "city") {
-			amendmentsCity.push(amendment);
+			amendmentsCity = [...amendmentsCity, amendment]
 		};
 	});
 
@@ -76,16 +107,33 @@
 	let referendumsCounty: Referendum[] = [];
 	let referendumsCity: Referendum[] = [];
 
-	data.streamed.endorsed_referendums.forEach((referendum) => {
+	const endorsedReferendumsStore = getContext<any>('endorsedReferendumsStore');
+
+	let endorsedReferendums: ReferendumWithImage[] = [];
+
+	const unsubscribeEndorsedReferendumsStore = endorsedReferendumsStore.subscribe((value: ReferendumWithImage[]) => {
+		
+		endorsedReferendums = value;
+
+	});
+
+	endorsedReferendums.forEach((referendum) => {
 		if (referendum.government_level === "federal") {
-			referendumsFederal.push(referendum);
+			referendumsFederal = [...referendumsFederal, referendum];
 		} else if (referendum.government_level === "state") {
-			referendumsState.push(referendum);
+			referendumsState = [...referendumsState, referendum];
 		} else if (referendum.government_level === "county") {
-			referendumsCounty.push(referendum);
+			referendumsCounty = [...referendumsCounty, referendum];
 		} else if (referendum.government_level === "city") {
-			referendumsCity.push(referendum);
+			referendumsCity = [...referendumsCity, referendum];
 		};
+	});
+
+	onDestroy(() => {
+		unsubscribeEndorsedCandidatesStore();
+		unsubscribeEndorsedLegislationStore();
+		unsubscribeEndorsedAmendmentsStore();
+		unsubscribeEndorsedReferendumsStore();
 	});
 
     let searchValue: string;
@@ -237,10 +285,10 @@
 			panel: AllEndorsementPanel,
 			data: {
 				user: data.streamed.user,
-				endorsed_amendments: data.streamed.endorsed_amendments, 
-				endorsed_candidates: data.streamed.endorsed_candidates,
-				endorsed_legislation: data.streamed.endorsed_legislation,
-				endorsed_referendums: data.streamed.endorsed_referendums
+				endorsed_amendments: endorsedAmendments, 
+				endorsed_candidates: endorsedCandidates,
+				endorsed_legislation: endorsedLegislation,
+				endorsed_referendums: endorsedReferendums
 			}
 		},
 		{

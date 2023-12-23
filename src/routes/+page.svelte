@@ -33,13 +33,11 @@
 
 		if ((actionEndDate >= currentDate) || (actionAllDayDate >= currentDate)) {
 
-			futureEndorsedActions.push(action);
+			futureEndorsedActions = [...futureEndorsedActions, action];
 
 		};
 
 	});
-
-	console.log(futureEndorsedActions)
 
 	let activeLoginTab: number;
 

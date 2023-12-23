@@ -7,8 +7,6 @@
 
     let deleteItem: DeleteItem | null = null;
 
-    $: console.log(deleteItem?.endorsement_ID)
-
     const unsubscribeDeleteConfirmationStore = DeleteConfirmationStore.subscribe(n => {
 		deleteItem = n;
     });
@@ -27,23 +25,29 @@
     const closeClickHandler = () => {
         modalOpen = false;
         ModalOpenStore.update((value) => value = modalOpen);
-        DeleteConfirmationStore.update((value) => value = null);
+        DeleteConfirmationStore.update((value: DeleteItem) => value = {
+            endorsement_name: null,
+            endorsement_ID: null,
+            endorsement_image_ID: null,
+            edorsement_image_public_ID: null,
+            endorsement_category: null
+        });
     };
 
     const deleteEndorsement = async (
-        deleteItemID: number,
-        deleteItemName: string,
-        deleteItemImageID: number,
-        deleteItemImageURL: string,
-        deleteItemCategory: string
+        deleteItemID: number | null,
+        deleteItemName: string | null,
+        deleteItemImageID: number | null,
+        deleteItemImagePublicID: string | null,
+        deleteItemCategory: string | null
     ) => {
         const response = await fetch("/authenticated-administrator/api/deleteEndorsement", {
-            method: 'POST',
+            method: 'DELETE',
             body: JSON.stringify({
                 deleteItemID,
                 deleteItemName,
                 deleteItemImageID,
-                deleteItemImageURL,
+                deleteItemImagePublicID,
                 deleteItemCategory
             }),
             headers: {
@@ -57,8 +61,6 @@
 
     const deleteSubmitHandler = async () => {
 
-        console.log("delete clicked")
-
         if (deleteItem === null) {
             return;
         };
@@ -68,9 +70,19 @@
                 deleteItem?.endorsement_ID,
                 deleteItem?.endorsement_name,
                 deleteItem?.endorsement_image_ID,
-                deleteItem?.endorsement_image_URL,
+                deleteItem?.edorsement_image_public_ID,
                 deleteItem?.endorsement_category
             );
+
+            modalOpen = false;
+            ModalOpenStore.update((value) => value = modalOpen);
+            DeleteConfirmationStore.update((value: DeleteItem) => value = {
+                endorsement_name: null,
+                endorsement_ID: null,
+                endorsement_image_ID: null,
+                edorsement_image_public_ID: null,
+                endorsement_category: null
+            });
 
         } catch (error) {
 

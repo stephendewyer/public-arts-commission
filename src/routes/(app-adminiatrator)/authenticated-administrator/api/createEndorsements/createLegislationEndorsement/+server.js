@@ -137,11 +137,16 @@ export const POST = async ({request}) => {
 
   let uploadedImageURL;
 
+  let uploadedImagePublicID;
+
   try {
 
     const uploadImageResponse = await cloudinary.uploader.upload(image, {});
 
     uploadedImageURL = uploadImageResponse.secure_url;
+
+    uploadedImagePublicID = uploadImageResponse.public_id;
+
 
   } catch (err) {
 
@@ -182,11 +187,13 @@ export const POST = async ({request}) => {
   const insertImageStatement = `INSERT INTO image_collection (
     admin_ID, 
     image_URL,
-    alt_text
+    alt_text,
+    public_ID
   ) VALUES (
     "${adminID}", 
     "${uploadedImageURL}",
-    "${imageAltText}"
+    "${imageAltText}",
+    "${uploadedImagePublicID}"
   )`;
 
   let imageID;

@@ -203,6 +203,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 	}
 
 	interface Legislation {
@@ -270,6 +271,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 	}
 
 	interface LegislationWithSponsorsAndImage {
@@ -310,6 +312,7 @@ declare global {
 		sponsors_Senate: SponsorsSenate[];
 		co_sponsors_House: CoSponsorHouse[];
 		co_sponsors_Senate: CoSponsorsSenate[];
+		public_ID: string;
 	}
 
 	
@@ -385,6 +388,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 	}
 
 	interface AmendmentWithSponsorsAndImage {
@@ -424,6 +428,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 		sponsors_House: SponsorHouse[];
 		sponsors_Senate: SponsorsSenate[];
 		co_sponsors_House: CoSponsorHouse[];
@@ -493,6 +498,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 	}
 
 	interface Referendum {
@@ -550,6 +556,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 	}
 
 	interface Image {
@@ -559,6 +566,7 @@ declare global {
 		campaign_ID: number;
 		image_URL: string;
 		alt_text: string;
+		public_ID: string;
 	}
 
 	interface SponsorHouse {
@@ -594,11 +602,11 @@ declare global {
 	}
 
 	interface DeleteItem {
-		endorsement_name: string;
-		endorsement_ID: number;
-		endorsement_image_ID: number;
-        endorsement_image_URL: string;
-		endorsement_category: string;
+		endorsement_name: string | null;
+		endorsement_ID: number| null;
+		endorsement_image_ID: number| null;
+        edorsement_image_public_ID: string| null;
+		endorsement_category: string| null;
 	}
 
 }

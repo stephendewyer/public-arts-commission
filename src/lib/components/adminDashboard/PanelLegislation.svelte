@@ -1,6 +1,11 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+
     export let panel_data: LegislationWithSponsorsAndImage[];
+
+    let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+
+    $: endorsedLegislation = panel_data;
 
     let activeTab: number = 0;
 

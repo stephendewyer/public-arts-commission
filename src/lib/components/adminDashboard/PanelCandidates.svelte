@@ -6,15 +6,19 @@
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
-
+    
     export let panel_data: CandidateWithImage[];
-
+    
     let activeTab: number = 0;
 
     $: activeTab;
 
+    let endorsedCandidates: CandidateWithImage[] = [];
+
+    $: endorsedCandidates = panel_data;
+
     const editClickHandler = (campaignID: number) => {
-        console.log(campaignID)
+        console.log(campaignID);
     };
 
     let endorsementCategory: string = "candidate";
@@ -23,22 +27,20 @@
             campaign_ID: number, 
             campaign_name: string,
             campaign_image_ID: number,
-            campaign_image_URL: string,
+            campaign_image_public_ID: string
     ) => {
-
-        console.log(campaign_ID)
         DeleteConfirmationStore.update((value) => value = {
             endorsement_ID: campaign_ID,
             endorsement_name: campaign_name,
             endorsement_image_ID: campaign_image_ID,
-            endorsement_image_URL: campaign_image_URL,
+            edorsement_image_public_ID: campaign_image_public_ID,
             endorsement_category: endorsementCategory
         });
         ModalOpenStore.update((value) => value = true);
     };
 
     const moreInfoClickHandler = (campaignID: number, index: number) => {
-        EndorsedCandidateSelectedStore.update((value) => value = panel_data[index]);
+        EndorsedCandidateSelectedStore.update((value) => value = endorsedCandidates[index]);
         EndorsedCandidateOpenStore.update((value) => value = true);
     };
 
@@ -107,7 +109,7 @@
                         </h5>
                     </th>
                 </tr>
-                {#each panel_data as campaign, i}
+                {#each endorsedCandidates as campaign, i}
                     <tr>
                         <td>
                             {campaign.campaign_name}
@@ -133,13 +135,13 @@
                                     campaign.candidate_ID, 
                                     campaign.campaign_name,
                                     campaign.image_ID,
-                                    campaign.image_URL
+                                    campaign.public_ID
                                 )}
                                 on:keyup={() => deleteClickHandler(
                                     campaign.candidate_ID, 
                                     campaign.campaign_name,
                                     campaign.image_ID,
-                                    campaign.image_URL
+                                    campaign.public_ID
                                 )}
                                 class="icon_container"
                             >

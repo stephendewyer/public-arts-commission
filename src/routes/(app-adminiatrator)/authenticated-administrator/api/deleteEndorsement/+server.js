@@ -3,7 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
-import EndorsementCategories from "$lib/components/endorsements/endorsementsCategories/EndorsementCategories.svelte";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -11,11 +10,11 @@ cloudinary.config({
   api_secret: CLOUDINARYSECRETKEY
 });
 
-export const POST = async ({request}) => {
+export const DELETE = async ({request}) => {
 
-    if (request.method !== 'POST') {
+    if (request.method !== 'DELETE') {
 
-        return new Response(JSON.stringify({error: "method is not POST"}), {status: 422});
+        return new Response(JSON.stringify({error: "method is not DELETE"}), {status: 422});
 
     };
 
@@ -27,7 +26,7 @@ export const POST = async ({request}) => {
         deleteItemID,
         deleteItemName,
         deleteItemImageID,
-        deleteItemImageURL,
+        deleteItemImagePublicID,
         deleteItemCategory
     } = data;
 
@@ -35,7 +34,7 @@ export const POST = async ({request}) => {
         !deleteItemID ||
         !deleteItemName ||
         !deleteItemImageID ||
-        !deleteItemImageURL ||
+        !deleteItemImagePublicID ||
         !deleteItemCategory 
     ) {
 
@@ -68,7 +67,21 @@ export const POST = async ({request}) => {
 
     } else if (deleteItemCategory === "referendum") {
 
-    };      
+    };
+
+    let deleteResponse;
+
+    try {
+
+        deleteResponse = await cloudinary.uploader.destroy(deleteItemImagePublicID, {});
+    
+      } catch (err) {
+    
+        console.log(err);
+    
+        return new Response(JSON.stringify({error: "problem with deleting image from Cloudinary"}), {status: 500});
+    
+    };
 
     res.end();
 

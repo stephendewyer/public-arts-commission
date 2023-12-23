@@ -1,10 +1,15 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+
     export let panel_data: ActionWithImage[];
 
     let activeTab: number = 0;
 
     $: activeTab;
+
+    let endorsedActions: ActionWithImage[];
+
+    $: endorsedActions = panel_data;
 
 </script>
 <div class="tabpanel_container">
@@ -68,7 +73,7 @@
                     </h5>
                 </th>
             </tr>
-            {#each panel_data as action, i}
+            {#each endorsedActions as action, i}
                 <tr>
                     <td>
                         <p>
