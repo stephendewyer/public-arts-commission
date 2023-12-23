@@ -15,7 +15,11 @@
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 	import Years from '$lib/data/years.json';
 	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
-
+	import { EndorsedCandidatesStore } from '$lib/stores/EndorsedCandidatesStore';
+	import { EndorsedLegislationStore } from '$lib/stores/EndorsedLegislationStore';
+	import { EndorsedAmendmentsStore } from '$lib/stores/EndorsedAmendmentsStore';
+	import { EndorsedReferendumsStore } from '$lib/stores/EndorsedReferendumsStore';
+	
 	export let data;
 
 	$: data;
@@ -25,15 +29,13 @@
 	let candidatesCounty: CandidateWithImage[] = [];
 	let candidatesCity: CandidateWithImage[] = [];
 
-	const endorsedCandidatesStore = getContext<any>('endorsedCandidatesStore');
+	let endorsedCandidates: CandidateWithImage[] = [];    
 
-	let endorsedCandidates: CandidateWithImage[] = [];
+    const unsubscribeEndorsedCandidatesStore = EndorsedCandidatesStore.subscribe((value: CandidateWithImage[]) => {
+        
+        endorsedCandidates = value;
 
-	const unsubscribeEndorsedCandidatesStore = endorsedCandidatesStore.subscribe((value: CandidateWithImage[]) => {
-		
-		endorsedCandidates = value;
-
-	});
+    });
 
 	endorsedCandidates.forEach((candidate) => {
 		if (candidate.government_level === "federal") {
@@ -52,11 +54,9 @@
 	let legislationCounty: LegislationWithSponsorsAndImage[] = [];
 	let legislationCity: LegislationWithSponsorsAndImage[] = [];
 
-	const endorsedLegislationStore = getContext<any>('endorsedLegislationStore');
-
 	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
 
-	const unsubscribeEndorsedLegislationStore = endorsedLegislationStore.subscribe((value: LegislationWithSponsorsAndImage[]) => {
+	const unsubscribeEndorsedLegislationStore = EndorsedLegislationStore.subscribe((value: LegislationWithSponsorsAndImage[]) => {
 		
 		endorsedLegislation = value;
 
@@ -80,11 +80,9 @@
 	let amendmentsCounty: Amendment[] = [];
 	let amendmentsCity: Amendment[] = [];
 
-	const endorsedAmendmentsStore = getContext<any>('endorsedAmendmentsStore');
-
 	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
-	const unsubscribeEndorsedAmendmentsStore = endorsedAmendmentsStore.subscribe((value: AmendmentWithSponsorsAndImage[]) => {
+	const unsubscribeEndorsedAmendmentsStore = EndorsedAmendmentsStore.subscribe((value: AmendmentWithSponsorsAndImage[]) => {
 		
 		endorsedAmendments = value;
 
@@ -107,11 +105,9 @@
 	let referendumsCounty: Referendum[] = [];
 	let referendumsCity: Referendum[] = [];
 
-	const endorsedReferendumsStore = getContext<any>('endorsedReferendumsStore');
-
 	let endorsedReferendums: ReferendumWithImage[] = [];
 
-	const unsubscribeEndorsedReferendumsStore = endorsedReferendumsStore.subscribe((value: ReferendumWithImage[]) => {
+	const unsubscribeEndorsedReferendumsStore = EndorsedReferendumsStore.subscribe((value: ReferendumWithImage[]) => {
 		
 		endorsedReferendums = value;
 

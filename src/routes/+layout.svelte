@@ -22,50 +22,34 @@
   	import EndorsedLegislationSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
 	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
-	import { setContext } from 'svelte';
-	import { writable } from 'svelte/store';
+	import { EndorsedCandidatesStore } from '$lib/stores/EndorsedCandidatesStore';
+	import { EndorsedActionsStore } from '$lib/stores/EndorsedActionsStore';
+	import { EndorsedLegislationStore } from '$lib/stores/EndorsedLegislationStore';
+	import { EndorsedAmendmentsStore } from '$lib/stores/EndorsedAmendmentsStore';
+	import { EndorsedReferendumsStore } from '$lib/stores/EndorsedReferendumsStore';
+
 
 	export let data;
 
 	// create a store for endorsed candidates
 
-	const endorsedCandidatesStore = writable();
-
-	$: endorsedCandidatesStore.set(data.streamed.endorsed_candidates);
-
-	setContext('endorsedCandidatesStore', endorsedCandidatesStore);
+	EndorsedCandidatesStore.set(data.streamed.endorsed_candidates);
 
 	// create a store for endorsed legislation
 
-	const endorsedLegislationStore = writable();
-
-	$: endorsedLegislationStore.set(data.streamed.endorsed_legislation);
-
-	setContext('endorsedLegislationStore', endorsedLegislationStore);
+	EndorsedLegislationStore.set(data.streamed.endorsed_legislation);
 
 	// create a store for endorsed referendums
 
-	const endorsedReferendumsStore = writable();
-
-	$: endorsedReferendumsStore.set(data.streamed.endorsed_referendums);
-
-	setContext('endorsedReferendumsStore', endorsedReferendumsStore);
+	EndorsedReferendumsStore.set(data.streamed.endorsed_referendums);
 
 	// create a store for endorsed amendments
 
-	const endorsedAmendmentsStore = writable();
-
-	$: endorsedAmendmentsStore.set(data.streamed.endorsed_amendments);
-
-	setContext('endorsedAmendmentsStore', endorsedAmendmentsStore);
+	EndorsedAmendmentsStore.set(data.streamed.endorsed_amendments);
 
 	// create a store for endorsed actions
 
-	const endorsedActionsStore = writable<ActionWithImage[]>();
-
-	$: endorsedActionsStore.set(data.streamed.endorsed_actions);
-
-	setContext('endorsedActionsStore', endorsedActionsStore);
+	EndorsedActionsStore.set(data.streamed.endorsed_actions);
 	
 	let openMobileNav: boolean = false;
 
