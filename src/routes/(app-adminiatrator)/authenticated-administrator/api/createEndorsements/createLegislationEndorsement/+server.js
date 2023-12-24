@@ -5,6 +5,8 @@ import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
 import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
+import { LoadAllEndorsedLegislation } from "$lib/server/loadDataFromDatabase/LoadEndorsedLegislation.js";
+import { EndorsedLegislationStore } from "$lib/stores/EndorsedLegislationStore.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -376,6 +378,13 @@ export const POST = async ({request}) => {
       });
 
     };
+
+    // load the updated endorsed legislation data and update endorsed legislation store
+
+    const updatedEndorsedLegislation = await LoadAllEndorsedLegislation();
+
+    // @ts-ignore
+    EndorsedLegislationStore.update((value) => value = updatedEndorsedLegislation);
 
     res.end();
 

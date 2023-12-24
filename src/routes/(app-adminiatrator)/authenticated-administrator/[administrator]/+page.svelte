@@ -32,56 +32,22 @@
 
     let username = data.streamed.username;
 
-    let endorsedActions: ActionWithImage[] = [];
+    let subscribedEndorsedActions: ActionWithImage[] | null[] = [];
+    $: subscribedEndorsedActions = $EndorsedActionsStore;
 
-    const unsubscribeEndorsedActionsStore = EndorsedActionsStore.subscribe((value: ActionWithImage[]) => {
+    let subscribedEndorsedAmendments: AmendmentWithSponsorsAndImage[] | null[] = [];
+    $: subscribedEndorsedAmendments = $EndorsedAmendmentsStore;
 
-        endorsedActions = value;
+    let subscribedEndorsedCandidates: CandidateWithImage[] | null[] = [];
+    $: subscribedEndorsedCandidates = $EndorsedCandidatesStore;
 
-    });
+    let subscribedEndorsedReferendums: ReferendumWithImage[] | null[] = [];
+    $: subscribedEndorsedReferendums = $EndorsedReferendumsStore;
 
-    let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+    let subscribedEndorsedLegislation: LegislationWithSponsorsAndImage[] | null[] = [];
+    $: subscribedEndorsedLegislation = $EndorsedLegislationStore;
 
-    const unsubscribeEndorsedAmendmentsStore = EndorsedAmendmentsStore.subscribe((value: AmendmentWithSponsorsAndImage[]) => {
-
-        endorsedAmendments = value;
-
-    });
-
-    let endorsedCandidates: CandidateWithImage[] = [];    
-
-    const unsubscribeEndorsedCandidatesStore = EndorsedCandidatesStore.subscribe((value: CandidateWithImage[]) => {
-        
-        endorsedCandidates = value;
-
-    });
-
-
-    let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
-
-    const unsubscribeEndorsedLegislationStore = EndorsedLegislationStore.subscribe((value: LegislationWithSponsorsAndImage[]) => {
-
-        endorsedLegislation = value;
-
-    });
-
-    let endorsedReferendums: ReferendumWithImage[] = [];
-
-    const unsubscribeEndorsedReferendumsStore = EndorsedReferendumsStore.subscribe((value: ReferendumWithImage[]) => {
-
-        endorsedReferendums = value;
-
-    });
-
-    onDestroy(() => {
-        unsubscribeEndorsedReferendumsStore();
-        unsubscribeEndorsedLegislationStore();
-        unsubscribeEndorsedCandidatesStore();
-        unsubscribeEndorsedActionsStore();
-        unsubscribeEndorsedAmendmentsStore();
-    });
-
-    // $: console.log(endorsedCandidates)
+    $: console.log(`endorsed candidates from admin dashboard is `, subscribedEndorsedCandidates);
 
     let openFilters: boolean;
 
@@ -108,7 +74,7 @@
             label: "candidates",
             hasCapitol: false,
             panel: PanelCandidates,
-            data: endorsedCandidates
+            data: subscribedEndorsedCandidates
         },
         {
             id: uuidv4(),
@@ -116,7 +82,7 @@
             label: "referendums",
             hasCapitol: false,
             panel: PanelReferendums,
-            data: endorsedReferendums
+            data: subscribedEndorsedReferendums
         },
         {
             id: uuidv4(),
@@ -124,7 +90,7 @@
             label: "legislation",
             hasCapitol: false,
             panel: PanelLegislation,
-            data: endorsedLegislation
+            data: subscribedEndorsedLegislation
         },
         {
             id: uuidv4(),
@@ -132,7 +98,7 @@
             label: "amendments",
             hasCapitol: false,
             panel: PanelAmendments,
-            data: endorsedAmendments
+            data: subscribedEndorsedAmendments
         },
         {
             id: uuidv4(),
@@ -140,7 +106,7 @@
             label: "actions",
             hasCapitol: false,
             panel: PanelActions,
-            data: endorsedActions
+            data: subscribedEndorsedActions
         }
     ];
 

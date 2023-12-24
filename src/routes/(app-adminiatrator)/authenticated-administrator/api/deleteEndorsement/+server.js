@@ -3,6 +3,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { LoadAllEndorsedCandidates } from "$lib/server/loadDataFromDatabase/LoadEndorsedCandidates.js";
+import { EndorsedCandidatesStore } from "$lib/stores/EndorsedCandidatesStore.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -10,6 +12,7 @@ cloudinary.config({
   api_secret: CLOUDINARYSECRETKEY
 });
 
+// @ts-ignore
 export const DELETE = async ({request}) => {
 
     if (request.method !== 'DELETE') {
@@ -19,8 +22,6 @@ export const DELETE = async ({request}) => {
     };
 
     const data = await request.json();
-
-    console.log(data);
 
     const { 
         deleteItemID,
@@ -49,6 +50,9 @@ export const DELETE = async ({request}) => {
     let res = await mysqlConnection();
 
     if (deleteItemCategory === "candidate") {
+
+        // delete the endorsed candidate row from endorsed_candidates where candidate_ID = deleteItemID
+
         const deleteCandidateStatement = `DELETE FROM endorsed_candidates
         WHERE candidate_ID = ${deleteItemID}`;
 
@@ -58,6 +62,13 @@ export const DELETE = async ({request}) => {
         .catch(error => {
             throw error;
         });
+
+        // load the updated endorsed candidates data and update endorsed candidate store
+
+        const updatedEndorsedCandidates = await LoadAllEndorsedCandidates();
+
+        // @ts-ignore
+        EndorsedCandidatesStore.update((value) => value = updatedEndorsedCandidates);
 
     } else if (deleteItemCategory === "amendment") {
 

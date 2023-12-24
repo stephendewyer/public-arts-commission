@@ -3,15 +3,25 @@
     import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
     import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
 
-    export let endorsedActionData: ActionWithImage;
+    export let endorsedActionData: ActionWithImage | null;
 
-    const actionIsAllDay = endorsedActionData.all_day_event;
-    const rawAllDayActionDate = new Date(endorsedActionData.all_day_event_date);
-    const allDayActionDate = rawAllDayActionDate.toUTCString().substring(0, 16);
-    const actionRawStartDate = new Date(endorsedActionData.date_start);
-    const actionStartDate = actionRawStartDate.toUTCString();
-    const actionRawEndDate = new Date(endorsedActionData.date_end);
-    const actionEndDate = actionRawEndDate.toUTCString();
+    let actionIsAllDay: boolean;
+    let rawAllDayActionDate: Date;
+    let allDayActionDate: string;
+    let actionRawStartDate: Date;
+    let actionStartDate: string;
+    let actionRawEndDate: Date;
+    let actionEndDate: string;
+
+    $: if (endorsedActionData !== null) {
+        actionIsAllDay = endorsedActionData.all_day_event;
+        rawAllDayActionDate = new Date(endorsedActionData.all_day_event_date);
+        allDayActionDate = rawAllDayActionDate.toUTCString().substring(0, 16);
+        actionRawStartDate = new Date(endorsedActionData.date_start);
+        actionStartDate = actionRawStartDate.toUTCString();
+        actionRawEndDate = new Date(endorsedActionData.date_end);
+        actionEndDate = actionRawEndDate.toUTCString();
+    };
 
     let cardHovered: boolean = false;
 
@@ -37,7 +47,7 @@
 </script>
 
 <div 
-    tabindex={endorsedActionData.action_ID}
+    tabindex={endorsedActionData?.action_ID}
     role="treeitem"
     aria-selected={cardHovered}
     on:focus={() => cardHoverHandler()}
@@ -52,7 +62,7 @@
 >
     
     <div class="image_container">
-        <img src={endorsedActionData.image_URL} alt={endorsedActionData.alt_text} />
+        <img src={endorsedActionData?.image_URL} alt={endorsedActionData?.alt_text} />
     </div>
     <div class="endorsement_card_overlay" />
     <div 
@@ -69,22 +79,22 @@
                 {actionStartDate} - {actionEndDate}
             {/if}
         </h5>
-        {#if (endorsedActionData.action_street_address)}
+        {#if (endorsedActionData?.action_street_address)}
             <h5 class="card_heading_02">{endorsedActionData.action_street_address}</h5>
         {/if}
-        {#if (endorsedActionData.action_street_address_02)}
+        {#if (endorsedActionData?.action_street_address_02)}
             <h5 class="card_heading_02">{endorsedActionData.action_street_address_02}</h5>
         {/if}
-        {#if (endorsedActionData.action_city)}
+        {#if (endorsedActionData?.action_city)}
             <h5 class="card_heading_02">{endorsedActionData.action_city}</h5>
         {/if}
-        {#if (endorsedActionData.action_state)}
+        {#if (endorsedActionData?.action_state)}
             <h5 class="card_heading_02">{endorsedActionData.action_state}</h5>
         {/if}
-        {#if (endorsedActionData.action_zip_code)}
+        {#if (endorsedActionData?.action_zip_code)}
             <h5 class="card_heading_02">{endorsedActionData.action_zip_code}</h5>
         {/if}
-        <h4 class="card_heading_01">{endorsedActionData.action_name}</h4>
+        <h4 class="card_heading_01">{endorsedActionData?.action_name}</h4>
     </div>
 </div>
 

@@ -9,7 +9,7 @@
 
     let endorsedActions: ActionWithImage[];
 
-    $: endorsedActions = panel_data;
+    $: endorsedActions = [...panel_data];
 
 </script>
 <div class="tabpanel_container">

@@ -11,6 +11,8 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
 	import ForthcomingActionCarousel from '$lib/components/sliders/ForthcomingActionCarousel.svelte';
+	import { EndorsedActionsStore } from '$lib/stores/EndorsedActionsStore.js';
+	import { onDestroy } from 'svelte';
 
 	export let data;
 
@@ -20,8 +22,13 @@
 
 	// load all the endorsed actions
 
-	const endorsedActions: ActionWithImage[] = data.streamed.endorsed_actions;
+	let endorsedActions: ActionWithImage[] = [];
 
+	const unsubscribeEndorsedActionsStore = EndorsedActionsStore.subscribe((value) => endorsedActions = [...value]);
+
+	onDestroy(() => {
+		unsubscribeEndorsedActionsStore();
+	})
 	// load all the future actions
 
 	let futureEndorsedActions: ActionWithImage[] = [];
@@ -232,7 +239,7 @@
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
-		{#if (futureEndorsedActions.length)}
+		{#if (futureEndorsedActions.length > 0)}
 			<ForthcomingActionCarousel 
 				forthcoming_actions={futureEndorsedActions} 
 			/>

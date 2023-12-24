@@ -2,7 +2,7 @@
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
-    import { onMount, onDestroy, getContext } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -19,7 +19,7 @@
 	import { EndorsedLegislationStore } from '$lib/stores/EndorsedLegislationStore';
 	import { EndorsedAmendmentsStore } from '$lib/stores/EndorsedAmendmentsStore';
 	import { EndorsedReferendumsStore } from '$lib/stores/EndorsedReferendumsStore';
-	
+
 	export let data;
 
 	$: data;
@@ -29,22 +29,18 @@
 	let candidatesCounty: CandidateWithImage[] = [];
 	let candidatesCity: CandidateWithImage[] = [];
 
-	let endorsedCandidates: CandidateWithImage[] = [];    
+	let endorsedCandidates: CandidateWithImage[] | null[] = [];
 
-    const unsubscribeEndorsedCandidatesStore = EndorsedCandidatesStore.subscribe((value: CandidateWithImage[]) => {
-        
-        endorsedCandidates = value;
+	$: endorsedCandidates = $EndorsedCandidatesStore;
 
-    });
-
-	endorsedCandidates.forEach((candidate) => {
-		if (candidate.government_level === "federal") {
+	endorsedCandidates.forEach((candidate: CandidateWithImage | null) => {
+		if (candidate?.government_level === "federal") {
 			candidatesFederal = [...candidatesFederal, candidate];
-		} else if (candidate.government_level === "state") {
+		} else if (candidate?.government_level === "state") {
 			candidatesState = [...candidatesState, candidate];
-		} else if (candidate.government_level === "county") {
+		} else if (candidate?.government_level === "county") {
 			candidatesCounty = [...candidatesCounty, candidate];
-		} else if (candidate.government_level === "city") {
+		} else if (candidate?.government_level === "city") {
 			candidatesCity = [...candidatesCity, candidate];
 		};
 	});
@@ -54,22 +50,18 @@
 	let legislationCounty: LegislationWithSponsorsAndImage[] = [];
 	let legislationCity: LegislationWithSponsorsAndImage[] = [];
 
-	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+	let endorsedLegislation: LegislationWithSponsorsAndImage[] | null[] = [];
 
-	const unsubscribeEndorsedLegislationStore = EndorsedLegislationStore.subscribe((value: LegislationWithSponsorsAndImage[]) => {
-		
-		endorsedLegislation = value;
+	$: endorsedLegislation = $EndorsedLegislationStore;
 
-	});
-
-	endorsedLegislation.forEach((legislation) => {
-		if (legislation.government_level === "federal") {
+	endorsedLegislation.forEach((legislation: LegislationWithSponsorsAndImage | null) => {
+		if (legislation?.government_level === "federal") {
 			legislationFederal = [...legislationFederal, legislation];
-		} else if (legislation.government_level === "state") {
+		} else if (legislation?.government_level === "state") {
 			legislationState = [...legislationState, legislation];
-		} else if (legislation.government_level === "county") {
+		} else if (legislation?.government_level === "county") {
 			legislationCounty = [...legislationCounty, legislation];
-		} else if (legislation.government_level === "city") {
+		} else if (legislation?.government_level === "city") {
 			legislationCity = [...legislationCity, legislation];
 
 		};
@@ -80,56 +72,41 @@
 	let amendmentsCounty: Amendment[] = [];
 	let amendmentsCity: Amendment[] = [];
 
-	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+	let endorsedAmendments: AmendmentWithSponsorsAndImage[] | null[] = [];
 
-	const unsubscribeEndorsedAmendmentsStore = EndorsedAmendmentsStore.subscribe((value: AmendmentWithSponsorsAndImage[]) => {
-		
-		endorsedAmendments = value;
+	$: endorsedAmendments = $EndorsedAmendmentsStore;
 
-	});
-
-	endorsedAmendments.forEach((amendment) => {
-		if (amendment.government_level === "federal") {
+	endorsedAmendments.forEach((amendment: AmendmentWithSponsorsAndImage | null) => {
+		if (amendment?.government_level === "federal") {
 			amendmentsFederal = [...amendmentsFederal, amendment];
-		} else if (amendment.government_level === "state") {
+		} else if (amendment?.government_level === "state") {
 			amendmentsState = [...amendmentsState, amendment]
-		} else if (amendment.government_level === "county") {
+		} else if (amendment?.government_level === "county") {
 			amendmentsCounty = [...amendmentsCounty, amendment]
-		} else if (amendment.government_level === "city") {
+		} else if (amendment?.government_level === "city") {
 			amendmentsCity = [...amendmentsCity, amendment]
 		};
 	});
 
-	let referendumsFederal: Referendum[] = [];
-	let referendumsState: Referendum[] = [];
-	let referendumsCounty: Referendum[] = [];
-	let referendumsCity: Referendum[] = [];
+	let referendumsFederal: ReferendumWithImage[] = [];
+	let referendumsState: ReferendumWithImage[] = [];
+	let referendumsCounty: ReferendumWithImage[] = [];
+	let referendumsCity: ReferendumWithImage[] = [];
 
-	let endorsedReferendums: ReferendumWithImage[] = [];
+	let endorsedReferendums: ReferendumWithImage[] | null[] = [];
 
-	const unsubscribeEndorsedReferendumsStore = EndorsedReferendumsStore.subscribe((value: ReferendumWithImage[]) => {
-		
-		endorsedReferendums = value;
+	$: endorsedReferendums = $EndorsedReferendumsStore;
 
-	});
-
-	endorsedReferendums.forEach((referendum) => {
-		if (referendum.government_level === "federal") {
+	endorsedReferendums.forEach((referendum: ReferendumWithImage | null) => {
+		if (referendum?.government_level === "federal") {
 			referendumsFederal = [...referendumsFederal, referendum];
-		} else if (referendum.government_level === "state") {
+		} else if (referendum?.government_level === "state") {
 			referendumsState = [...referendumsState, referendum];
-		} else if (referendum.government_level === "county") {
+		} else if (referendum?.government_level === "county") {
 			referendumsCounty = [...referendumsCounty, referendum];
-		} else if (referendum.government_level === "city") {
+		} else if (referendum?.government_level === "city") {
 			referendumsCity = [...referendumsCity, referendum];
 		};
-	});
-
-	onDestroy(() => {
-		unsubscribeEndorsedCandidatesStore();
-		unsubscribeEndorsedLegislationStore();
-		unsubscribeEndorsedAmendmentsStore();
-		unsubscribeEndorsedReferendumsStore();
 	});
 
     let searchValue: string;

@@ -9,7 +9,7 @@
 
     let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
-    $: endorsedAmendments = panel_data;
+    $: endorsedAmendments = [...panel_data];
 
 </script>
 <div class="tabpanel_container">

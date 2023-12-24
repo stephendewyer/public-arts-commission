@@ -5,7 +5,7 @@
     import SubmitButtonSecondary from '../buttons/SubmitButtonSecondary.svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
-    let deleteItem: DeleteItem | null = null;
+    let deleteItem: DeleteItem | any | null = null;
 
     const unsubscribeDeleteConfirmationStore = DeleteConfirmationStore.subscribe(n => {
 		deleteItem = n;
@@ -25,7 +25,7 @@
     const closeClickHandler = () => {
         modalOpen = false;
         ModalOpenStore.update((value) => value = modalOpen);
-        DeleteConfirmationStore.update((value: DeleteItem) => value = {
+        DeleteConfirmationStore.update((value: DeleteItem | any) => value = {
             endorsement_name: null,
             endorsement_ID: null,
             endorsement_image_ID: null,
@@ -76,7 +76,7 @@
 
             modalOpen = false;
             ModalOpenStore.update((value) => value = modalOpen);
-            DeleteConfirmationStore.update((value: DeleteItem) => value = {
+            DeleteConfirmationStore.update((value: DeleteItem | any) => value = {
                 endorsement_name: null,
                 endorsement_ID: null,
                 endorsement_image_ID: null,

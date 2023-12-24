@@ -4,6 +4,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { LoadAllEndorsedActions } from "$lib/server/loadDataFromDatabase/LoadEndorsedActions.js";
+import { EndorsedActionsStore } from "$lib/stores/EndorsedActionsStore.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -224,6 +226,13 @@ export const POST = async ({request}) => {
   .catch(error => {
     throw error;
   });
+
+  // load the updated endorsed actions data and update endorsed actions store
+
+  const updatedEndorsedActions = await LoadAllEndorsedActions();
+
+  // @ts-ignore
+  EndorsedActionsStore.update((value) => value = updatedEndorsedActions);
 
   res.end();
 

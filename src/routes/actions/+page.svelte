@@ -13,17 +13,9 @@
 
     const user: User | undefined = data.streamed.user;
 
-	let endorsedActions: ActionWithImage[];
-    
-	const unsubscribeEndorsedActionsStore = EndorsedActionsStore.subscribe((value: ActionWithImage[]) => {
-		
-		endorsedActions = value;
+	let endorsedActions: ActionWithImage[] | null[] = [];
 
-	});
-
-	onDestroy(() => {
-		unsubscribeEndorsedActionsStore;
-	});
+    $: endorsedActions = [...$EndorsedActionsStore]
 
     let searchValue: string;
 

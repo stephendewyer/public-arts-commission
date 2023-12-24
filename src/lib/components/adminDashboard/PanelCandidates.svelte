@@ -15,7 +15,9 @@
 
     let endorsedCandidates: CandidateWithImage[] = [];
 
-    $: endorsedCandidates = panel_data;
+    $: endorsedCandidates = [...panel_data];
+
+    $: console.log(`panel candidates data is `, endorsedCandidates);
 
     const editClickHandler = (campaignID: number) => {
         console.log(campaignID);

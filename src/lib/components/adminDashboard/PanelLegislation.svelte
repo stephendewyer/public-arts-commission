@@ -5,7 +5,7 @@
 
     let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
 
-    $: endorsedLegislation = panel_data;
+    $: endorsedLegislation = [...panel_data];
 
     let activeTab: number = 0;
 

@@ -1,3 +1,3 @@
 import { writable } from 'svelte/store';
 
-export const EndorsedAmendmentsStore = writable([]);
+export const EndorsedAmendmentsStore = writable([null]);
