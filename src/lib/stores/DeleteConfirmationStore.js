@@ -1,5 +1,3 @@
 import { writable } from 'svelte/store';
 
-export const DeleteConfirmationStore = writable({
-    
-});
+export const DeleteConfirmationStore = writable(null);
