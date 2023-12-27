@@ -34,7 +34,7 @@
 
     let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
-	$: endorsedAmendments = [...data.streamed.endorsed_legislation];
+	$: endorsedAmendments = [...data.streamed.endorsed_amendments];
 
     let endorsedReferendums: ReferendumWithImage[] = [];
 

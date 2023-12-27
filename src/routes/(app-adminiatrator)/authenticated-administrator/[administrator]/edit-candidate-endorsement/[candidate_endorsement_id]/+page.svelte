@@ -13,7 +13,6 @@
     import PhoneInput from "$lib/components/inputs/PhoneInput.svelte";
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
-    import TextArea from "$lib/components/inputs/TextArea.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
 
@@ -21,26 +20,27 @@
 
     $: userEmail = data.streamed.user?.email;  
 
-    // referendum information variables
-
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
     let image: any;
-    let referendumNameInputValue: string = "";
-    let startingYearIfEnactedInputValue: number | null = null;
-    let electionDateInputValue: string = "";
+    let campaignNameInputValue: string = "";
+    let electorateInputValue: string = "";
+    let yearOfficeSoughtInputValue: number | null = null;
+    let electionDatePrimaryInputValue: string = "";
+    let electionDateGeneralInputValue: string = "";
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
     let countyInputValue: string = "";
     let cityInputValue: string = "";
+    let partyInputValue: string = "";
     let websiteURLInputValue: string = "";
-    let detailsInputValue: string = "";
-    let electedChecked: boolean = false;
-    let rejectedChecked: boolean = false;
-    let pendingElectionChecked: boolean = false;
-
-    // referendum contact information variables
-
+    let runningInPrimaryChecked: boolean = false;
+    let electedInPrimaryChecked: boolean = false;
+    let rejectedInPrimaryChecked: boolean = false;
+    let runnningInGeneralChecked: boolean = false;
+    let electedInGeneralChecked: boolean = false;
+    let rejectedInGeneralChecked: boolean = false;
+    let campaignEndedChecked: boolean = false;
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -55,17 +55,18 @@
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
-    let referendumNameIsValid: boolean = true;
-    let startingYearIfEnactedIsValid: boolean = true;
-    let electionDateIsValid: boolean = true;
+    let campaignNameIsValid: boolean = true;
+    let yearOfficeSoughtIsValid: boolean = true;
+    let electionDatePrimaryIsValid: boolean = true;
+    let electionDateGeneralIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
     let countryIsValid: boolean = true;
     let stateIsValid: boolean = true;
     let countyIsValid: boolean = true;
     let cityIsValid: boolean = true;
+    let partyIsValid: boolean = true;
     let websiteURLIsValid: boolean = true;
-    let detailsIsValid: boolean = true;
-
+    let electorateIsValid: boolean = true;
     let nameFirstContactIsValid: boolean = true;
     let nameLastContactIsValid: boolean = true;
     let phoneContactIsValid: boolean = true;
@@ -89,26 +90,32 @@
             responseItem.success = "";
             responseItem.error = "";
             status: null;
-        }, 4000)
+        }, 4000);
     };
-    
-    const createReferendumEndorsement = async (
+
+    const createCandidateEndorsement = async (
         userEmail: string | null | undefined,
-        image: string,
-        imageFileName: string,
+        imageFile: string,
         imageAltText: string,
-        referendumName: string,
-        startingYearIfEnacted: number | null,
-        electionDate: string,
+        image: any,
+        campaignName: string,
+        electorate: string,
+        yearOfficeSought: number | null,
+        electionDatePrimary: string,
+        electionDateGeneral: string,
         governmentLevel: string,
         state: string,
         county: string,
         city: string,
+        party: string,
         websiteURL: string,
-        details: string,
-        elected: boolean,
-        rejected: boolean,
-        pendingElection: boolean,
+        runningInPrimary: boolean,
+        electedInPrimary: boolean,
+        rejectedInPrimary: boolean,
+        runnningInGeneral: boolean,
+        electedInGeneral: boolean,
+        rejectedInGeneral: boolean,
+        campaignEnded: boolean,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: string,
@@ -119,25 +126,31 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createCandidateEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
-                image,
-                imageFileName,
+                imageFile,
                 imageAltText,
-                referendumName,
-                startingYearIfEnacted,
-                electionDate,
+                image,
+                campaignName,
+                electorate,
+                yearOfficeSought,
+                electionDatePrimary,
+                electionDateGeneral,
                 governmentLevel,
                 state,
                 county,
                 city,
+                party,
                 websiteURL,
-                details,
-                elected,
-                rejected,
-                pendingElection,
+                runningInPrimary,
+                electedInPrimary,
+                rejectedInPrimary,
+                runnningInGeneral,
+                electedInGeneral,
+                rejectedInGeneral,
+                campaignEnded,
                 nameFirstContact,
                 nameLastContact,
                 phoneContact,
@@ -159,7 +172,7 @@
 
     }
 
-    const submitReferendumEndoresementHandler = async () => {
+    const submitCandidateEndoresementHandler = async () => {
 
         pending = true;
 
@@ -167,23 +180,29 @@
 
         try {
             
-            await createReferendumEndorsement(
+            await createCandidateEndorsement(
                 userEmail,
-                image,
                 imageFileInputValue,
                 imageAltTextInputValue,
-                referendumNameInputValue,
-                startingYearIfEnactedInputValue,
-                electionDateInputValue,
+                image,
+                campaignNameInputValue,
+                electorateInputValue,
+                yearOfficeSoughtInputValue,
+                electionDatePrimaryInputValue,
+                electionDateGeneralInputValue,
                 governmentLevelInputValue,
                 stateInputValue,
                 countyInputValue,
                 cityInputValue,
+                partyInputValue,
                 websiteURLInputValue,
-                detailsInputValue,
-                electedChecked,
-                rejectedChecked,
-                pendingElectionChecked,
+                runningInPrimaryChecked,
+                electedInPrimaryChecked,
+                rejectedInPrimaryChecked,
+                runnningInGeneralChecked,
+                electedInGeneralChecked,
+                rejectedInGeneralChecked,
+                campaignEndedChecked,
                 nameFirstContactInputValue,
                 nameLastContactInputValue,
                 phoneContactInputValue,
@@ -195,20 +214,26 @@
                 emailContactInputValue
             );
             if (responseItem.success) {
+                imageFileInputValue = "",
                 imageAltTextInputValue = "",
                 image = "",
-                referendumNameInputValue = "",
-                startingYearIfEnactedInputValue = null,
-                electionDateInputValue = "",
+                campaignNameInputValue = "",
+                yearOfficeSoughtInputValue = null,
+                electionDatePrimaryInputValue = "",
+                electionDateGeneralInputValue = "",
                 governmentLevelInputValue = "",
                 stateInputValue = "",
                 countyInputValue = "",
                 cityInputValue = "",
+                partyInputValue = "",
                 websiteURLInputValue = "",
-                detailsInputValue = "",
-                electedChecked = false,
-                rejectedChecked= false,
-                pendingElectionChecked= false,
+                runningInPrimaryChecked = false,
+                electedInPrimaryChecked = false,
+                rejectedInPrimaryChecked = false,
+                runnningInGeneralChecked = false,
+                electedInGeneralChecked = false,
+                rejectedInGeneralChecked = false,
+                campaignEndedChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
                 phoneContactInputValue = "",
@@ -229,17 +254,9 @@
                 if (imageFileInputValue === "") {
                     imageFileIsValid = false;
                 };
-                if (referendumNameInputValue === "") {
-                    referendumNameIsValid = false;
-                };
-                if (startingYearIfEnactedInputValue === null) {
-                    startingYearIfEnactedIsValid = false;
-                };
+
                 if (governmentLevelInputValue === "") {
                     governmentLevelIsValid = false;
-                };
-                if (detailsInputValue === "") {
-                    detailsIsValid = false;
                 };
 
             };
@@ -255,15 +272,15 @@
     };
 
 </script>
-<div class="add_referendum_endorsement_container">
-    <h1>add referendum endorsement</h1>
+<div class="add_candidate_endorsement_container">
+    <h1>add candidate endorsement</h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitReferendumEndoresementHandler}
+        on:submit|preventDefault={submitCandidateEndoresementHandler}
         enctype="multipart/form-data"
     >
-        <h2>referendum image</h2>
-        <h3>select an image to represent the referendum*</h3>
+        <h2>campaign image</h2>
+        <h3>select an image to represent the campaign*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
@@ -271,8 +288,8 @@
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="referendum_name_or_action"
-            inputID="referendum_name_or_action"
+            inputName="campaign_name_or_action"
+            inputID="campaign_name_or_action"
             bind:isValid={imageFileIsValid}
             required={true}
             imageFileInputErrorMessage="image file required"
@@ -280,7 +297,7 @@
             image file*
         </ImageFileInput>
         {#if (image)}
-            <div class="image_container">
+            <div class="campaign_image_container">
                 <img src={image} alt="test"/>
             </div>
         {/if}
@@ -288,7 +305,7 @@
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
             bind:isValid={imageAltTextIsValid}
-            placeholder="referendum banner"
+            placeholder="profile of candidate"
             inputName="image_alt_text"
             inputID="image_alt_text"
             required={true}
@@ -296,43 +313,67 @@
         >
             image alt text*
         </TextInput>
-        <h2>referendum information</h2>
+        <h2>campaign information</h2>
         <TextInput
             inputLabel={true}
-            bind:textInputValue={referendumNameInputValue}
-            bind:isValid={referendumNameIsValid}
-            placeholder="DIA millage renewal"
-            inputName="referendum_name"
-            inputID="referendum_name"
+            bind:textInputValue={campaignNameInputValue}
+            bind:isValid={campaignNameIsValid}
+            placeholder="candidate for X office"
+            inputName="campaign_name"
+            inputID="campaign_name"
             required={true}
-            textInputErrorMessage="referendum name required"
+            textInputErrorMessage="campaign name required"
         >
-            referendum name*
+            campaign name*
+        </TextInput>
+        <TextInput
+            inputLabel={true}
+            bind:textInputValue={electorateInputValue}
+            bind:isValid={electorateIsValid}
+            placeholder="Michigan Congressional District 13"
+            inputName="electorate"
+            inputID="electorate"
+            required={true}
+            textInputErrorMessage="electorat required"
+        >
+            electorate*
         </TextInput>
         <NumberInput
             inputLabel={true}
-            bind:numberInputValue={startingYearIfEnactedInputValue}
-            bind:isValid={startingYearIfEnactedIsValid}
+            bind:numberInputValue={yearOfficeSoughtInputValue}
+            bind:isValid={yearOfficeSoughtIsValid}
             placeholder="2024"
-            inputName="starting_year_if_enacted"
-            inputID="starting_year_if_enacted"
+            inputName="year_office_sought_to_begin"
+            inputID="year_office_sought_to_begin"
             required={true}
-            numberInputErrorMessage="starting year if enacted required"
+            numberInputErrorMessage="starting year required for office sought"
         >
-            starting year if enacted*
+            starting year for office sought
         </NumberInput>
         <div class="two_columns">
             <DateInput
                 inputLabel={true}
-                bind:dateInputValue={electionDateInputValue}
-                bind:isValid={electionDateIsValid}
-                inputName="election_date"
-                inputID="election_date"
+                bind:dateInputValue={electionDatePrimaryInputValue}
+                bind:isValid={electionDatePrimaryIsValid}
+                inputName="election_date_primary"
+                inputID="election_date_primary"
                 required={true}
-                dateInputErrorMessage="election date required"
+                dateInputErrorMessage="primary election date required"
             >
-                election date*
-            </DateInput>            
+                primary election date
+            </DateInput>
+            <DateInput
+                inputLabel={true}
+                bind:dateInputValue={electionDateGeneralInputValue}
+                bind:isValid={electionDateGeneralIsValid}
+                inputName="election_date_general"
+                inputID="election_date_genearl"
+                required={true}
+                dateInputErrorMessage="general election date required"
+            >
+                general election date
+            </DateInput>
+            
         </div>
         <SelectInput 
             options={governmentLevelOptions}
@@ -423,6 +464,18 @@
         {/if}
         <TextInput
             inputLabel={true}
+            bind:textInputValue={partyInputValue}
+            bind:isValid={partyIsValid}
+            placeholder="Democracy Party"
+            inputName="party"
+            inputID="party"
+            required={true}
+            textInputErrorMessage="party required"
+        >
+            party
+        </TextInput>
+        <TextInput
+            inputLabel={true}
             bind:textInputValue={websiteURLInputValue}
             bind:isValid={websiteURLIsValid}
             placeholder="https://candidateforxoffice.com"
@@ -433,39 +486,52 @@
         >
             website URL
         </TextInput>
-        <TextArea
-            inputLabel={true}
-            bind:textareaInputValue={detailsInputValue}
-            bind:isValid={detailsIsValid}
-            placeholder="The referendum is on a measure to..."
-            inputName="referendum_details"
-            inputID="referendum_details"
-            required={true}
-            textAreaInputErrorMessage="details required"
-        >
-            details*
-        </TextArea>
-        <h2>referendum status</h2>
+        <h2>campaign status</h2>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedChecked}>
-                    elected
+                <AnimatedCheckbox bind:checked={runningInPrimaryChecked}>
+                    running in the primary
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedChecked}>
-                    rejected
+                <AnimatedCheckbox bind:checked={electedInPrimaryChecked}>
+                    elected in the primary
                 </AnimatedCheckbox>
             </div>
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={pendingElectionChecked}>
-                    pending election
+                <AnimatedCheckbox bind:checked={rejectedInPrimaryChecked}>
+                    rejected in the primary
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={rejectedInGeneralChecked}>
+                    running in the general
                 </AnimatedCheckbox>
             </div>
         </div>
-        <h2>referendum contact informations</h2>
+        
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={electedInGeneralChecked}>
+                    elected in the general
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={rejectedInGeneralChecked}>
+                    rejected in the general        
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={campaignEndedChecked}>
+                    campaign ended
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <h2>campaign contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
         </AnimatedCheckbox>
@@ -570,7 +636,7 @@
                     state
                 </SelectInput>
             </div>
-                <NumberInput 
+            <NumberInput 
                     isValid={zipCodeContactIsValid}
                     placeholder=11111
                     inputID="zip_code"
@@ -583,28 +649,28 @@
                     zip code
                 </NumberInput>
             {/if}
-        <ActionButton disable={false}>
-            add referendum endorsement
+        <ActionButton>
+            add candidate endorsement
         </ActionButton>
+        {#if (pending)}
+            <PendingFlashMessage >
+                please wait while we validate your data
+            </PendingFlashMessage>
+        {:else if (responseItem.error)}
+            <ErrorFlashMessage >
+                {responseItem.error}
+            </ErrorFlashMessage>
+        {:else if (responseItem.success)}
+            <SuccessFlashMessage>
+                {responseItem.success}
+            </SuccessFlashMessage>
+        {/if}
     </form>
-    {#if (pending)}
-        <PendingFlashMessage >
-            please wait while we validate your data
-        </PendingFlashMessage>
-    {:else if (responseItem.error)}
-        <ErrorFlashMessage >
-            {responseItem.error}
-        </ErrorFlashMessage>
-    {:else if (responseItem.success)}
-        <SuccessFlashMessage>
-            {responseItem.success}
-        </SuccessFlashMessage>
-    {/if}
 </div>
 
 <style>
 
-    .add_referendum_endorsement_container {
+    .add_candidate_endorsement_container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -625,7 +691,7 @@
         font-weight: 600;
     }
 
-    .image_container {
+    .campaign_image_container {
         padding: 1rem;
         max-width: 20rem;
         width: 100%;

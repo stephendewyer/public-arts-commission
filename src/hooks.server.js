@@ -85,7 +85,6 @@ const authorization = async ({ event, resolve }) => {
     };
 
     // if still request, proceed as normal
-    
 
     return await resolve(event);
 

@@ -2,6 +2,12 @@
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
+    import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
+    import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
+    import { EndorsedReferendumOpenStore } from "$lib/stores/EndorsedReferendumOpenStore";
+    import { EndorsedReferendumSelectedStore } from "$lib/stores/EndorsedReferendumSelectedStore";
+    import { goto } from "$app/navigation";
 
     export let panel_data: ReferendumWithImage[] = [];
 
@@ -15,7 +21,134 @@
 
     const editClickHandler = (referendumID: number | undefined) => {
 
-        console.log(referendumID);
+        goto(`/authenticated-administrator/admin/edit-referendum-endorsement/${referendumID}`);
+
+    };
+
+    let endorsementCategory: string = "referendum";
+
+    let deleteItemID: number | null = null;
+    let deleteItemName: string | null = null;
+    let deleteItemImageID: number | null = null;
+    let deleteItemImagePublicID: string | null = null;
+    let deleteItemCategory: string | null = null;
+
+    const deleteReferendum = async (
+        deleteItemID: number | null,
+        deleteItemName: string | null,
+        deleteItemImageID: number | null,
+        deleteItemImagePublicID: string | null,
+        deleteItemCategory: string | null
+    ) => {        
+
+        const response = await fetch("../../../authenticated-administrator/api/deleteEndorsement", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response) {
+
+            console.log(response);
+
+        };
+
+    };
+
+    const deleteClickHandler = async (
+            referendum_ID: number, 
+            referendum_name: any,
+            referendum_image_ID: number,
+            referendum_image_public_ID: string
+    ) => {
+
+        // set the values for the open modal stores
+
+        DeleteConfirmationStore.update((value) => value = referendum_name);
+
+        ModalOpenStore.update((value) => value = true);
+
+        // set the values for the item to be deleted
+
+        deleteItemID = referendum_ID;
+        deleteItemName = referendum_name;
+        deleteItemImageID = referendum_image_ID;
+        deleteItemImagePublicID =  referendum_image_public_ID;
+        deleteItemCategory = endorsementCategory;
+
+    };
+
+    const GetReferendumEndorsements = async () => {
+
+        let newReferendumsData: ReferendumWithImage[] = [];
+
+        try {
+
+            await fetch("../../../authenticated-administrator/api/loadReferendumEndorsements")
+            
+            .then((res) => res.json())
+
+            .then((data) => newReferendumsData = [...data])
+
+            endorsedReferendums = [...newReferendumsData];
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    const ConfirmedDelete = async () => {
+
+        try {
+
+            await deleteReferendum(
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    $: if ($DeleteConfirmedStore === true) {
+
+        // delete the candidate row from the database
+
+        ConfirmedDelete();  
+
+        // load new data from endorsed candidates table in database
+
+        GetReferendumEndorsements();
+
+        // load the DeleteConfirmedStore to false
+
+        DeleteConfirmedStore.update(value => value = false);
+
+    };
+
+    const moreInfoClickHandler = (referendumID: number | undefined, index: number ) => {
+
+        EndorsedReferendumSelectedStore.update((value) => value = endorsedReferendums[index]);
+
+        EndorsedReferendumOpenStore.update((value) => value = true);
 
     };
 
@@ -49,12 +182,104 @@
             </h3>
         </a>
     </div>
-    
-
     {#if (activeTab === 0)}
-        endorsed candidates
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        <h5>
+                            referendum name
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            election date
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            electorate/jurisdiction
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            edit
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            delete
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            more info
+                        </h5>
+                    </th>
+                </tr>
+                {#each endorsedReferendums as referendum, i}
+                    <tr>
+                        <td>
+                            {referendum?.referendum_name}
+                        </td>
+                        <td>
+                            {new Date(referendum?.election_date).toUTCString().substring(0, 16)}
+                        </td>
+                        <td>
+                            {#if (referendum.city)}
+                                {referendum.city}
+                            {/if}
+                            {#if (referendum.county)}
+                                {referendum.county}
+                            {/if}
+                            {#if (referendum.state)}
+                                {referendum.state}
+                            {/if}
+                            United States of America
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => editClickHandler(referendum.referendum_ID)}
+                                on:keyup={() => editClickHandler(referendum.referendum_ID)}
+                                class="icon_container"
+                            >
+                                {@html EditIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => deleteClickHandler(
+                                    referendum.referendum_ID, 
+                                    referendum.referendum_name,
+                                    referendum.image_ID,
+                                    referendum.public_ID
+                                )}
+                                on:keyup={() => deleteClickHandler(
+                                    referendum.referendum_ID, 
+                                    referendum.referendum_name,
+                                    referendum.image_ID,
+                                    referendum.public_ID
+                                )}
+                                class="icon_container"
+                            >
+                                {@html DeleteIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                                on:keyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                                class="icon_container"
+                            >
+                                {@html MeatballsIcon}
+                            </button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
     {:else if (activeTab === 1)}
-        nominated candidates
+        nominated referendums
     {/if}
 </div>
 <style>

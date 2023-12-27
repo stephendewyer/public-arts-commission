@@ -2,6 +2,12 @@
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
+    import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
+    import { EndorsedLegislationSelectedStore } from "$lib/stores/EndorsedLegislationSelectedStore";
+    import { EndorsedLegislationOpenStore } from "$lib/stores/EndorsedLegislationOpenStore";
+    import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
+    import { goto } from "$app/navigation";
 
     export let panel_data: LegislationWithSponsorsAndImage[] = [];
 
@@ -15,7 +21,134 @@
 
     const editClickHandler = (legislationID: number | undefined) => {
 
-        console.log(legislationID);
+        goto(`/authenticated-administrator/admin/edit-legislation-endorsement/${legislationID}`);
+
+    };
+
+    let endorsementCategory: string = "amendment";
+
+    let deleteItemID: number | null = null;
+    let deleteItemName: string | null = null;
+    let deleteItemImageID: number | null = null;
+    let deleteItemImagePublicID: string | null = null;
+    let deleteItemCategory: string | null = null;
+
+    const deleteEndorsement = async (
+        deleteItemID: number | null,
+        deleteItemName: string | null,
+        deleteItemImageID: number | null,
+        deleteItemImagePublicID: string | null,
+        deleteItemCategory: string | null
+    ) => {        
+
+        const response = await fetch("../../../authenticated-administrator/api/deleteEndorsement", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response) {
+
+            console.log(response);
+
+        };
+
+    };
+
+    const deleteClickHandler = async (
+            legislation_ID: number, 
+            legislation_name: any,
+            legislation_image_ID: number,
+            legislation_image_public_ID: string
+    ) => {
+
+        // set the values for the open modal stores
+
+        DeleteConfirmationStore.update((value) => value = legislation_name);
+
+        ModalOpenStore.update((value) => value = true);
+
+        // set the values for the item to be deleted
+
+        deleteItemID = legislation_ID;
+        deleteItemName = legislation_name;
+        deleteItemImageID = legislation_image_ID;
+        deleteItemImagePublicID =  legislation_image_public_ID;
+        deleteItemCategory = endorsementCategory;
+
+    };
+
+    const GetLegislationEndorsements = async () => {
+
+        let newLegislationData: LegislationWithSponsorsAndImage[] = [];
+
+        try {
+
+            await fetch("../../../authenticated-administrator/api/loadLegislationEndorsements")
+            
+            .then((res) => res.json())
+
+            .then((data) => newLegislationData = [...data])
+
+            endorsedLegislation = [...newLegislationData];
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    const ConfirmedDelete = async () => {
+
+        try {
+
+            await deleteEndorsement(
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    $: if ($DeleteConfirmedStore === true) {
+
+        // delete the candidate row from the database
+
+        ConfirmedDelete();  
+
+        // load new data from endorsed candidates table in database
+
+        GetLegislationEndorsements();
+
+        // load the DeleteConfirmedStore to false
+
+        DeleteConfirmedStore.update(value => value = false);
+
+    };
+
+    const moreInfoClickHandler = (legislationID: number | undefined, index: number ) => {
+
+        EndorsedLegislationSelectedStore.update((value) => value = endorsedLegislation[index]);
+
+        EndorsedLegislationOpenStore.update((value) => value = true);
 
     };
 
@@ -49,16 +182,108 @@
             </h3>
         </a>
     </div>
-    
-
     {#if (activeTab === 0)}
-        endorsed candidates
+        <table>
+            <tbody>
+                <tr>
+                    <th>
+                        <h5>
+                            legislation name
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            year released
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            electorate/jurisdiction
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            edit
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            delete
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            more info
+                        </h5>
+                    </th>
+                </tr>
+                {#each endorsedLegislation as legislation, i}
+                    <tr>
+                        <td>
+                            {legislation?.legislation_name}
+                        </td>
+                        <td>
+                            {legislation?.year_released}
+                        </td>
+                        <td>
+                            {#if (legislation.city)}
+                                {legislation.city}
+                            {/if}
+                            {#if (legislation.county)}
+                                {legislation.county}
+                            {/if}
+                            {#if (legislation.state)}
+                                {legislation.state}
+                            {/if}
+                            United States of America
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => editClickHandler(legislation.legislation_ID)}
+                                on:keyup={() => editClickHandler(legislation.legislation_ID)}
+                                class="icon_container"
+                            >
+                                {@html EditIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => deleteClickHandler(
+                                    legislation.legislation_ID, 
+                                    legislation.legislation_name,
+                                    legislation.image_ID,
+                                    legislation.public_ID
+                                )}
+                                on:keyup={() => deleteClickHandler(
+                                    legislation.legislation_ID, 
+                                    legislation.legislation_name,
+                                    legislation.image_ID,
+                                    legislation.public_ID
+                                )}
+                                class="icon_container"
+                            >
+                                {@html DeleteIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                                on:keyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                                class="icon_container"
+                            >
+                                {@html MeatballsIcon}
+                            </button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
     {:else if (activeTab === 1)}
         nominated candidates
     {/if}
 </div>
 <style>
-    table {
+table {
         border-spacing: 0;
         width: 100%;
     }

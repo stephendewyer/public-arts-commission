@@ -7,6 +7,7 @@
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import { goto } from "$app/navigation";
 
     export let panel_data: CandidateWithImage[] = [];
         
@@ -20,7 +21,7 @@
 
     const editClickHandler = (campaignID: number | undefined) => {
 
-        console.log(campaignID);
+        goto(`/authenticated-administrator/admin/edit-candidate-endorsement/${campaignID}`);
 
     };
 

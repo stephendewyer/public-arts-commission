@@ -14,32 +14,34 @@
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import TimeInput from "$lib/components/inputs/TimeInput.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
+    import TimeZones from "$lib/data/timeZones.json";
     import { goto } from '$app/navigation';
 
     export let data;
 
     $: userEmail = data.streamed.user?.email;  
 
-    // referendum information variables
-
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
     let image: any;
-    let referendumNameInputValue: string = "";
-    let startingYearIfEnactedInputValue: number | null = null;
-    let electionDateInputValue: string = "";
+    let actionNameInputValue: string = "";
+    let allDayActionChecked: boolean = false;
+    let allDayActionDateInputValue: string = "";
+    let actionStartDateInputValue: string = "";
+    let actionEndDateInputValue: string = "";
+    let startTimeInputValue: string = "";
+    let endTimeInputValue: string = "";
+    let timeZoneInputValue: string = "";
+    let actionStreetAddressInputValue: string = "";
+    let actionStreetAddress02InputValue: string = "";
+    let actionCityInputValue: string = "";
+    let actionStateInputValue: string = "";
+    let actionZipCodeInputValue: number | null = null;
     let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
-    let electedChecked: boolean = false;
-    let rejectedChecked: boolean = false;
-    let pendingElectionChecked: boolean = false;
-
-    // referendum contact information variables
 
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
@@ -55,17 +57,23 @@
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
-    let referendumNameIsValid: boolean = true;
-    let startingYearIfEnactedIsValid: boolean = true;
-    let electionDateIsValid: boolean = true;
+    let actionNameIsValid: boolean = true;
+    let allDayActionIsValid: boolean = false;
+    let allDayActionDateIsValid: boolean = true;
+    let actionStartDateIsValid: boolean = true;
+    let actionEndDateIsValid: boolean = true;
+    let startTimeIsValid: boolean = true;
+    let endTimeIsValid: boolean = true;
+    let timeZoneIsValid: boolean = true;
+    let actionStreetAddressIsValid: boolean = true;
+    let actionStreetAddress02IsValid: boolean = true;
+    let actionCityIsValid: boolean = true;
+    let actionStateIsValid: boolean = true;
+    let actionZipCodeIsValid: boolean = true;
+    let detailsIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
     let countryIsValid: boolean = true;
-    let stateIsValid: boolean = true;
-    let countyIsValid: boolean = true;
-    let cityIsValid: boolean = true;
     let websiteURLIsValid: boolean = true;
-    let detailsIsValid: boolean = true;
-
     let nameFirstContactIsValid: boolean = true;
     let nameLastContactIsValid: boolean = true;
     let phoneContactIsValid: boolean = true;
@@ -77,6 +85,8 @@
     let emailContactIsValid: boolean = true;
 
     const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
+
+    const timeZoneOptions: TimeZone[] = TimeZones;
 
 	let responseItem: ResponseObj = {
         success: "",
@@ -91,24 +101,28 @@
             status: null;
         }, 4000)
     };
-    
-    const createReferendumEndorsement = async (
+
+    const createActionEndorsement = async (
         userEmail: string | null | undefined,
-        image: string,
-        imageFileName: string,
+        imageFile: string,
         imageAltText: string,
-        referendumName: string,
-        startingYearIfEnacted: number | null,
-        electionDate: string,
+        image: any,
+        actionName: string,
+        allDayAction: boolean,
+        allDayActionDate: string,
+        actionStartDate: string,
+        actionEndDate: string,
+        startTime: string,
+        endTime: string,
+        timeZone: string,
+        actionStreetAddress: string,
+        actionStreetAddress02: string,
+        actionCity: string,
+        actionState: string,
+        actionZipCode: number | null,
         governmentLevel: string,
-        state: string,
-        county: string,
-        city: string,
         websiteURL: string,
         details: string,
-        elected: boolean,
-        rejected: boolean,
-        pendingElection: boolean,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: string,
@@ -119,25 +133,29 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createActionEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
-                image,
-                imageFileName,
+                imageFile,
                 imageAltText,
-                referendumName,
-                startingYearIfEnacted,
-                electionDate,
+                image,
+                actionName,
+                allDayAction,
+                allDayActionDate,
+                actionStartDate,
+                actionEndDate,
+                startTime,
+                endTime,
+                timeZone,
+                actionStreetAddress,
+                actionStreetAddress02,
+                actionCity,
+                actionState,
+                actionZipCode,
                 governmentLevel,
-                state,
-                county,
-                city,
                 websiteURL,
                 details,
-                elected,
-                rejected,
-                pendingElection,
                 nameFirstContact,
                 nameLastContact,
                 phoneContact,
@@ -159,7 +177,7 @@
 
     }
 
-    const submitReferendumEndoresementHandler = async () => {
+    const submitActionEndoresementHandler = async () => {
 
         pending = true;
 
@@ -167,23 +185,27 @@
 
         try {
             
-            await createReferendumEndorsement(
+            await createActionEndorsement(
                 userEmail,
-                image,
                 imageFileInputValue,
                 imageAltTextInputValue,
-                referendumNameInputValue,
-                startingYearIfEnactedInputValue,
-                electionDateInputValue,
+                image,
+                actionNameInputValue,
+                allDayActionChecked,
+                allDayActionDateInputValue,
+                actionStartDateInputValue,
+                actionEndDateInputValue,
+                startTimeInputValue,
+                endTimeInputValue,
+                timeZoneInputValue,
+                actionStreetAddressInputValue,
+                actionStreetAddress02InputValue,
+                actionCityInputValue,
+                actionStateInputValue,
+                actionZipCodeInputValue,
                 governmentLevelInputValue,
-                stateInputValue,
-                countyInputValue,
-                cityInputValue,
                 websiteURLInputValue,
                 detailsInputValue,
-                electedChecked,
-                rejectedChecked,
-                pendingElectionChecked,
                 nameFirstContactInputValue,
                 nameLastContactInputValue,
                 phoneContactInputValue,
@@ -195,20 +217,25 @@
                 emailContactInputValue
             );
             if (responseItem.success) {
+                imageFileInputValue = "",
                 imageAltTextInputValue = "",
                 image = "",
-                referendumNameInputValue = "",
-                startingYearIfEnactedInputValue = null,
-                electionDateInputValue = "",
+                actionNameInputValue = "",
+                allDayActionChecked = false,
+                allDayActionDateInputValue = "",
+                actionStartDateInputValue = "",
+                actionEndDateInputValue = "",
+                startTimeInputValue = "",
+                endTimeInputValue = "",
+                timeZoneInputValue = "",
+                actionStreetAddressInputValue = "",
+                actionStreetAddress02InputValue = "",
+                actionCityInputValue = "",
+                actionStateInputValue = "",
+                actionZipCodeInputValue = null,
                 governmentLevelInputValue = "",
-                stateInputValue = "",
-                countyInputValue = "",
-                cityInputValue = "",
                 websiteURLInputValue = "",
                 detailsInputValue = "",
-                electedChecked = false,
-                rejectedChecked= false,
-                pendingElectionChecked= false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
                 phoneContactInputValue = "",
@@ -229,11 +256,17 @@
                 if (imageFileInputValue === "") {
                     imageFileIsValid = false;
                 };
-                if (referendumNameInputValue === "") {
-                    referendumNameIsValid = false;
+                if (actionNameInputValue === "") {
+                    actionNameIsValid = false;
                 };
-                if (startingYearIfEnactedInputValue === null) {
-                    startingYearIfEnactedIsValid = false;
+                if (allDayActionChecked && (allDayActionDateInputValue === "")) {
+                    allDayActionIsValid = false;
+                }
+                if (!allDayActionChecked && (actionStartDateInputValue === "")) {
+                    actionStartDateIsValid = false;
+                };
+                if (!allDayActionChecked && (actionEndDateInputValue === "")) {
+                    actionEndDateIsValid = false;
                 };
                 if (governmentLevelInputValue === "") {
                     governmentLevelIsValid = false;
@@ -255,15 +288,15 @@
     };
 
 </script>
-<div class="add_referendum_endorsement_container">
-    <h1>add referendum endorsement</h1>
+<div class="add_candidate_endorsement_container">
+    <h1>add action endorsement</h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitReferendumEndoresementHandler}
+        on:submit|preventDefault={submitActionEndoresementHandler}
         enctype="multipart/form-data"
     >
-        <h2>referendum image</h2>
-        <h3>select an image to represent the referendum*</h3>
+        <h2>action image</h2>
+        <h3>select an image to represent the action*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
@@ -271,16 +304,16 @@
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="referendum_name_or_action"
-            inputID="referendum_name_or_action"
+            inputName="action_image_file"
+            inputID="action_image_file"
             bind:isValid={imageFileIsValid}
             required={true}
             imageFileInputErrorMessage="image file required"
         >
-            image file*
+            image file
         </ImageFileInput>
         {#if (image)}
-            <div class="image_container">
+            <div class="campaign_image_container">
                 <img src={image} alt="test"/>
             </div>
         {/if}
@@ -288,139 +321,203 @@
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
             bind:isValid={imageAltTextIsValid}
-            placeholder="referendum banner"
+            placeholder="image of action"
             inputName="image_alt_text"
             inputID="image_alt_text"
             required={true}
             textInputErrorMessage="image alt text required"
         >
-            image alt text*
+            image alt text
         </TextInput>
-        <h2>referendum information</h2>
+        <h2>action information</h2>
         <TextInput
             inputLabel={true}
-            bind:textInputValue={referendumNameInputValue}
-            bind:isValid={referendumNameIsValid}
-            placeholder="DIA millage renewal"
-            inputName="referendum_name"
-            inputID="referendum_name"
+            bind:textInputValue={actionNameInputValue}
+            bind:isValid={actionNameIsValid}
+            placeholder="rally for democracy"
+            inputName="action_name"
+            inputID="action_name"
             required={true}
-            textInputErrorMessage="referendum name required"
+            textInputErrorMessage="action name required"
         >
-            referendum name*
+            action name
         </TextInput>
-        <NumberInput
-            inputLabel={true}
-            bind:numberInputValue={startingYearIfEnactedInputValue}
-            bind:isValid={startingYearIfEnactedIsValid}
-            placeholder="2024"
-            inputName="starting_year_if_enacted"
-            inputID="starting_year_if_enacted"
-            required={true}
-            numberInputErrorMessage="starting year if enacted required"
-        >
-            starting year if enacted*
-        </NumberInput>
         <div class="two_columns">
-            <DateInput
-                inputLabel={true}
-                bind:dateInputValue={electionDateInputValue}
-                bind:isValid={electionDateIsValid}
-                inputName="election_date"
-                inputID="election_date"
-                required={true}
-                dateInputErrorMessage="election date required"
-            >
-                election date*
-            </DateInput>            
+            <AnimatedCheckbox bind:checked={allDayActionChecked}>
+                all day action
+            </AnimatedCheckbox>
+            {#if (allDayActionChecked)}
+                <DateInput
+                    inputLabel={true}
+                    bind:dateInputValue={allDayActionDateInputValue}
+                    bind:isValid={allDayActionDateIsValid}
+                    inputName="all_day_action_date"
+                    inputID="all_day_action_date"
+                    required={true}
+                    dateInputErrorMessage="all day action date required"
+                >
+                    action date
+                </DateInput>
+            {/if}
         </div>
-        <SelectInput 
-            options={governmentLevelOptions}
-            bind:selectInputValue={governmentLevelInputValue}
-            isValid={governmentLevelIsValid}
-            required={false}
-            inputID="government_level"
-            inputName="government_level"
-            selectInputErrorMessage=""
-            inputLabel={true}
-        >
-            government level*
-        </SelectInput>
-        {#if (governmentLevelInputValue !== "")}
-            <div class="expandable_cells">
-                <div class="cell">
-                    <TextInputReadonly
-                        inputLabel={true}
-                        textInputValue={"United States"}
-                        bind:isValid={countryIsValid}
-                        placeholder="United States"
-                        inputName="country"
-                        inputID="country"
-                        required={true}
-                        textInputErrorMessage="country required"
-                    >
-                        country
-                    </TextInputReadonly>
-                </div>
-                
-                {#if (
-                    (governmentLevelInputValue === "state") ||
-                    (governmentLevelInputValue === "county") ||
-                    (governmentLevelInputValue === "city")
-                )}
-                    <div class="cell">
-                        <SelectInput 
-                            isValid={stateIsValid}
-                            inputID="state"
-                            inputName="state"
-                            options={States}
-                            bind:selectInputValue={stateInputValue}
-                            inputLabel={true}
-                            required={true}
-                            selectInputErrorMessage="state required"
-                        >
-                            state
-                        </SelectInput>
-                    </div>
-                    {#if (
-                        (governmentLevelInputValue === "county") ||
-                        (governmentLevelInputValue === "city")
-                    )}
-                        <div class="cell">
-                            <TextInput
-                                inputLabel={true}
-                                bind:textInputValue={countyInputValue}
-                                bind:isValid={countyIsValid}
-                                placeholder="Oakland"
-                                inputName="county"
-                                inputID="county"
-                                required={true}
-                                textInputErrorMessage="county required"
-                            >
-                                county
-                            </TextInput>
-                        </div>
-                        
-                        {#if (governmentLevelInputValue === "city")}
-                            <div class="cell">
-                                <TextInput
-                                    inputLabel={true}
-                                    bind:textInputValue={cityInputValue}
-                                    bind:isValid={cityIsValid}
-                                    placeholder="Detroit"
-                                    inputName="city"
-                                    inputID="city"
-                                    required={true}
-                                    textInputErrorMessage="city required"
-                                >
-                                    city
-                                </TextInput>
-                            </div>
-                        {/if}
-                    {/if}
-                {/if}
+        {#if (!allDayActionChecked)}
+            <div class="two_columns">
+                <DateInput
+                    inputLabel={true}
+                    bind:dateInputValue={actionStartDateInputValue}
+                    bind:isValid={actionStartDateIsValid}
+                    inputName="action_start_date"
+                    inputID="action_start_date"
+                    required={true}
+                    dateInputErrorMessage="action start date required"
+                >
+                    action start date
+                </DateInput>
+                <DateInput
+                    inputLabel={true}
+                    bind:dateInputValue={actionEndDateInputValue}
+                    bind:isValid={actionEndDateIsValid}
+                    inputName="action_end_date"
+                    inputID="action_end_date"
+                    required={true}
+                    dateInputErrorMessage="action end date required"
+                >
+                    action end date
+                </DateInput>
+            </div>
+            <div class="two_columns">
+                <TimeInput
+                    inputLabel={true}
+                    bind:timeInputValue={startTimeInputValue}
+                    bind:isValid={startTimeIsValid}
+                    inputName="start_time"
+                    inputID="start_time"
+                    required={true}
+                    timeInputErrorMessage="start time required"
+                >
+                    action start time
+                </TimeInput>
+                <TimeInput
+                    inputLabel={true}
+                    bind:timeInputValue={endTimeInputValue}
+                    bind:isValid={endTimeIsValid}
+                    inputName="end_time"
+                    inputID="end_time"
+                    required={true}
+                    timeInputErrorMessage="end time required"
+                >
+                    action end time
+                </TimeInput> 
             </div>
         {/if}
+        <div class="two_columns">
+            {#if (!allDayActionChecked)}
+                <SelectInput 
+                    options={timeZoneOptions}
+                    bind:selectInputValue={timeZoneInputValue}
+                    isValid={timeZoneIsValid}
+                    required={true}
+                    inputID="time_zone"
+                    inputName="time_zone"
+                    selectInputErrorMessage="time zone required"
+                    inputLabel={true}
+                >
+                    action time zone
+                </SelectInput>
+            {/if}
+            <SelectInput 
+                options={governmentLevelOptions}
+                bind:selectInputValue={governmentLevelInputValue}
+                isValid={governmentLevelIsValid}
+                required={true}
+                inputID="government_level"
+                inputName="government_level"
+                selectInputErrorMessage="government level required"
+                inputLabel={true}
+            >
+                action government level
+            </SelectInput>
+        </div>
+        <div class="two_columns">
+            {#if (governmentLevelInputValue !== "")}
+                <TextInputReadonly
+                    inputLabel={true}
+                    textInputValue={"United States"}
+                    bind:isValid={countryIsValid}
+                    placeholder="United States"
+                    inputName="country"
+                    inputID="country"
+                    required={true}
+                    textInputErrorMessage="country required"
+                >
+                    action country
+                </TextInputReadonly>
+            {/if}
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={actionStreetAddressInputValue}
+                bind:isValid={actionStreetAddressIsValid}
+                placeholder="1000 Democracy Way"
+                inputName="action_street_address"
+                inputID="action_street_address"
+                required={false}
+                textInputErrorMessage="action street address required"
+            >
+                action street address
+            </TextInput>
+        </div>
+        <div class="two_columns">
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={actionStreetAddress02InputValue}
+                bind:isValid={actionStreetAddress02IsValid}
+                placeholder="Suite 300"
+                inputName="action_street_address"
+                inputID="action_street_address"
+                required={false}
+                textInputErrorMessage=""
+            >
+                action street address 2
+            </TextInput>
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={actionCityInputValue}
+                bind:isValid={actionCityIsValid}
+                placeholder="Democracy City"
+                inputName="action_city"
+                inputID="action_city"
+                required={false}
+                textInputErrorMessage="city"
+            >
+                action city
+            </TextInput>
+        </div>
+        <div class="two_columns">
+            <SelectInput 
+                options={States}
+                bind:selectInputValue={actionStateInputValue}
+                bind:isValid={actionStateIsValid}
+                inputName="action_street_address"
+                inputID="action_street_address"
+                required={false}
+                selectInputErrorMessage=""
+                inputLabel={true}
+            >
+                action state
+            </SelectInput>
+            <NumberInput
+                inputLabel={true}
+                bind:numberInputValue={actionZipCodeInputValue}
+                bind:isValid={actionZipCodeIsValid}
+                placeholder="11111"
+                inputName="action_zip_code"
+                inputID="action_zip_code"
+                required={false}
+                numberInputErrorMessage=""
+            >
+                action zip code
+            </NumberInput>
+        </div>
         <TextInput
             inputLabel={true}
             bind:textInputValue={websiteURLInputValue}
@@ -431,7 +528,7 @@
             required={false}
             textInputErrorMessage=""
         >
-            website URL
+            action website URL
         </TextInput>
         <TextArea
             inputLabel={true}
@@ -443,29 +540,9 @@
             required={true}
             textAreaInputErrorMessage="details required"
         >
-            details*
+            action details
         </TextArea>
-        <h2>referendum status</h2>
-        <div class="two_columns_checkbox">
-            <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedChecked}>
-                    elected
-                </AnimatedCheckbox>
-            </div>
-            <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedChecked}>
-                    rejected
-                </AnimatedCheckbox>
-            </div>
-        </div>
-        <div class="two_columns_checkbox">
-            <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={pendingElectionChecked}>
-                    pending election
-                </AnimatedCheckbox>
-            </div>
-        </div>
-        <h2>referendum contact informations</h2>
+        <h2>action contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
         </AnimatedCheckbox>
@@ -570,7 +647,7 @@
                     state
                 </SelectInput>
             </div>
-                <NumberInput 
+            <NumberInput 
                     isValid={zipCodeContactIsValid}
                     placeholder=11111
                     inputID="zip_code"
@@ -583,28 +660,28 @@
                     zip code
                 </NumberInput>
             {/if}
-        <ActionButton disable={false}>
-            add referendum endorsement
+        <ActionButton>
+            add action endorsement
         </ActionButton>
+        {#if (pending)}
+            <PendingFlashMessage >
+                please wait while we validate your data
+            </PendingFlashMessage>
+        {:else if (responseItem.error)}
+            <ErrorFlashMessage >
+                {responseItem.error}
+            </ErrorFlashMessage>
+        {:else if (responseItem.success)}
+            <SuccessFlashMessage>
+                {responseItem.success}
+            </SuccessFlashMessage>
+        {/if}
     </form>
-    {#if (pending)}
-        <PendingFlashMessage >
-            please wait while we validate your data
-        </PendingFlashMessage>
-    {:else if (responseItem.error)}
-        <ErrorFlashMessage >
-            {responseItem.error}
-        </ErrorFlashMessage>
-    {:else if (responseItem.success)}
-        <SuccessFlashMessage>
-            {responseItem.success}
-        </SuccessFlashMessage>
-    {/if}
 </div>
 
 <style>
 
-    .add_referendum_endorsement_container {
+    .add_candidate_endorsement_container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -625,7 +702,7 @@
         font-weight: 600;
     }
 
-    .image_container {
+    .campaign_image_container {
         padding: 1rem;
         max-width: 20rem;
         width: 100%;
@@ -638,42 +715,11 @@
         gap: 1rem;
     }
 
-    .two_columns_checkbox {
-        display: flex;
-        width: 100%;
-        gap: 1rem;
-    }
-
-    .checkbox_column {
-        width: 50%;
-        display:  flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .expandable_cells {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-
-    .cell {
-        width: 15rem;
-    }
-
     @media (max-width: 1440px) {
 
     }
 
     @media (max-width: 720px) {
-
-        .two_columns_checkbox {
-            display: flex;
-            width: 100%;
-            gap: 0.5rem;
-        }
 
     }
 </style>

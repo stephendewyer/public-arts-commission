@@ -7,9 +7,9 @@
     import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
     import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
     import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
+  import { goto } from "$app/navigation";
     
     export let panel_data: ActionWithImage[] = [];
-
 
     let activeTab: number = 0;
 
@@ -23,7 +23,7 @@
 
     const editClickHandler = (actionID: number | undefined) => {
 
-        console.log(actionID);
+        goto(`/authenticated-administrator/admin/edit-action-endorsement/${actionID}`);
 
     };
 
@@ -65,88 +65,88 @@
 
     };
 
-const deleteClickHandler = async (
-        action_ID: number, 
-        action_name: any,
-        action_image_ID: number,
-        action_image_public_ID: string
-) => {
+    const deleteClickHandler = async (
+            action_ID: number, 
+            action_name: any,
+            action_image_ID: number,
+            action_image_public_ID: string
+    ) => {
 
-    // set the values for the open modal stores
+        // set the values for the open modal stores
 
-    DeleteConfirmationStore.update((value) => value = action_name);
+        DeleteConfirmationStore.update((value) => value = action_name);
 
-    ModalOpenStore.update((value) => value = true);
+        ModalOpenStore.update((value) => value = true);
 
-    // set the values for the item to be deleted
+        // set the values for the item to be deleted
 
-    deleteItemID = action_ID;
-    deleteItemName = action_name;
-    deleteItemImageID = action_image_ID;
-    deleteItemImagePublicID =  action_image_public_ID;
-    deleteItemCategory = endorsementCategory;
-
-};
-
-const GetActionEndorsements = async () => {
-
-    let newActionsData: ActionWithImage[] = [];
-
-    try {
-
-        await fetch("../../../authenticated-administrator/api/loadActionEndorsements")
-        
-        .then((res) => res.json())
-
-        .then((data) => newActionsData = [...data])
-
-        endorsedActions = [...newActionsData];
-
-    } catch (error) {
-
-        console.log(error);
+        deleteItemID = action_ID;
+        deleteItemName = action_name;
+        deleteItemImageID = action_image_ID;
+        deleteItemImagePublicID =  action_image_public_ID;
+        deleteItemCategory = endorsementCategory;
 
     };
 
-};
+    const GetActionEndorsements = async () => {
 
-const ConfirmedDelete = async () => {
+        let newActionsData: ActionWithImage[] = [];
 
-    try {
+        try {
 
-        await deleteEndorsement(
-            deleteItemID,
-            deleteItemName,
-            deleteItemImageID,
-            deleteItemImagePublicID,
-            deleteItemCategory
-        );
+            await fetch("../../../authenticated-administrator/api/loadActionEndorsements")
+            
+            .then((res) => res.json())
 
-    } catch (error) {
+            .then((data) => newActionsData = [...data])
 
-        console.log(error);
+            endorsedActions = [...newActionsData];
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
 
     };
 
-};
+    const ConfirmedDelete = async () => {
 
-$: if ($DeleteConfirmedStore === true) {
+        try {
 
-    // delete the candidate row from the database
+            await deleteEndorsement(
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            );
 
-    ConfirmedDelete();  
+        } catch (error) {
 
-    // load new data from endorsed candidates table in database
+            console.log(error);
 
-    GetActionEndorsements();
+        };
 
-    // load the DeleteConfirmedStore to false
+    };
 
-    DeleteConfirmedStore.update(value => value = false);
+    $: if ($DeleteConfirmedStore === true) {
 
-};
+        // delete the candidate row from the database
 
-    const moreInfoClickHandler = (campaignID: number | undefined, index: number ) => {
+        ConfirmedDelete();  
+
+        // load new data from endorsed candidates table in database
+
+        GetActionEndorsements();
+
+        // load the DeleteConfirmedStore to false
+
+        DeleteConfirmedStore.update(value => value = false);
+
+    };
+
+    const moreInfoClickHandler = (actionID: number | undefined, index: number ) => {
 
         EndorsedActionSelectedStore.update((value) => value = endorsedActions[index]);
 
@@ -222,23 +222,17 @@ $: if ($DeleteConfirmedStore === true) {
                 {#each endorsedActions as action, i}
                     <tr>
                         <td>
-                            <p>
-                                {action?.action_name}
-                            </p>
+                            {action?.action_name}
                         </td>
                         <td>
-                            <p>
-                                {#if (action?.all_day_event)}
-                                    {new Date(action?.all_day_event_date).toUTCString().substring(0, 16)}
-                                {:else if (!action?.all_day_event)}
-                                    {new Date(action?.date_start).toUTCString().substring(0, 16)} - {new Date(action?.date_end).toUTCString().substring(0, 16)}
-                                {/if}
-                            </p>
+                            {#if (action?.all_day_event)}
+                                {new Date(action?.all_day_event_date).toUTCString().substring(0, 16)}
+                            {:else if (!action?.all_day_event)}
+                                {new Date(action?.date_start).toUTCString().substring(0, 16)} - {new Date(action?.date_end).toUTCString().substring(0, 16)}
+                            {/if}
                         </td>
                         <td>
-                            <p>
-                                {action?.government_level}
-                            </p>
+                            {action?.government_level}
                         </td>
                         <td>
                             <button 

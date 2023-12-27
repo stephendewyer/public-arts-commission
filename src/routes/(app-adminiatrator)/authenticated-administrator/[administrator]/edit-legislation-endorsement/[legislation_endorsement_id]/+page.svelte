@@ -6,7 +6,7 @@
     import SuccessFlashMessage from "$lib/components/flashMessages/SuccessFlashMessage.svelte";
     import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
     import NumberInput from "$lib/components/inputs/NumberInput.svelte";
-    import DateInput from "$lib/components/inputs/DateInput.svelte";
+    import AddItemToArrayButton from "$lib/components/buttons/AddItemToArrayButton.svelte";
     import SelectInput from "$lib/components/inputs/SelectInput.svelte";
     import States from '$lib/data/states.titlecase.json';
     import EmailInput from "$lib/components/inputs/EmailInput.svelte";
@@ -14,33 +14,137 @@
     import AnimatedCheckbox from "$lib/components/inputs/AnimatedCheckbox.svelte";
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import TextArea from "$lib/components/inputs/TextArea.svelte";
+    import SubtractItemButton from "$lib/components/buttons/SubtractItemButton.svelte";
+    import SessionsCongress from "$lib/data/sessionsCongress.json";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
 
     export let data;
 
-    $: userEmail = data.streamed.user?.email;  
+    $: userEmail = data.streamed.user?.email;
+    
+    let addHouseCoSponsor: boolean = false;
+    let addSenateCoSponsor: boolean = false;
 
-    // referendum information variables
+    interface CoSponsorInputValue {
+
+        co_sponsor: string;
+        isValid: boolean;
+
+    };
+
+    let coSponsorsHouseValues: CoSponsorInputValue[] = [
+        {
+            co_sponsor: "",
+            isValid: true
+        }
+    ];
+
+    let coSponsorsSenateValues: CoSponsorInputValue[] = [
+        {
+            co_sponsor: "",
+            isValid: true
+        }
+    ];
+
+    $: if (addHouseCoSponsor) {
+
+        coSponsorsHouseValues = [...coSponsorsHouseValues, {co_sponsor: "", isValid: true}];
+
+        addHouseCoSponsor = false;
+
+    };
+
+    $: if (addSenateCoSponsor) {
+
+        coSponsorsSenateValues = [...coSponsorsSenateValues, {co_sponsor: "", isValid: true}];
+
+        addSenateCoSponsor = false;
+
+    };
+
+    // begin remove Senate sponsor
+
+    let coSponsorSenateFieldIndexRemoved: null | number = null;
+
+    let subtractCoSponsorSenateClicked: boolean = false;
+
+    let coSponsorSenateFieldForRemovalNotNull: number;
+
+    $: if (coSponsorSenateFieldIndexRemoved !== null) {
+
+        coSponsorSenateFieldForRemovalNotNull = coSponsorSenateFieldIndexRemoved;
+
+    };
+
+    $: if (subtractCoSponsorSenateClicked) {
+
+        subtractCoSponsorSenateClicked = false;
+
+        if (coSponsorsSenateValues.length > 1) {
+
+            coSponsorsSenateValues.splice(coSponsorSenateFieldForRemovalNotNull, coSponsorSenateFieldForRemovalNotNull);
+
+        };
+
+    };
+
+    // end remove Senate sponsor
+
+    // begin remove House sponsor
+
+    let coSponsorHouseFieldIndexRemoved: null | number = null;
+
+    let subtractCoSponsorHouseClicked: boolean = false;
+
+    let coSponsorHouseFieldForRemovalNotNull: number;
+
+    $: if (coSponsorHouseFieldIndexRemoved !== null) {
+
+        coSponsorHouseFieldForRemovalNotNull = coSponsorHouseFieldIndexRemoved;
+
+    };
+
+    $: if (subtractCoSponsorHouseClicked) {
+
+        subtractCoSponsorHouseClicked = false;
+
+        if (coSponsorsHouseValues.length > 1) {
+
+            coSponsorsHouseValues.splice(coSponsorHouseFieldForRemovalNotNull, coSponsorHouseFieldForRemovalNotNull);
+
+        };
+
+    };
+
+    // end remove House sponsor
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
     let image: any;
-    let referendumNameInputValue: string = "";
-    let startingYearIfEnactedInputValue: number | null = null;
-    let electionDateInputValue: string = "";
+    let legislationTitleInputValue: string = "";
+    let yearReleasedInputValue: number | null = null;
+    let yearIntroducedInHouseInputValue: number | null = null;
+    let yearIntroducedInSenateInputValue: number | null = null;
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
     let countyInputValue: string = "";
     let cityInputValue: string = "";
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
-    let electedChecked: boolean = false;
-    let rejectedChecked: boolean = false;
-    let pendingElectionChecked: boolean = false;
-
-    // referendum contact information variables
-
+    let introducedInHouseChecked: boolean = false;
+    let introducedInSenateChecked: boolean = false;
+    let sponsorHouseInputValue: string = "";
+    let sponsorSenateInputValue: string = "";
+    let houseSessionInputValue: string = "";
+    let senateSessionInputValue: string = "";
+    let passedInHouseChecked: boolean = false;
+    let passedInSenateChecked: boolean = false;
+    let rejectedByHouseChecked: boolean = false;
+    let rejectedBySenateChecked: boolean = false;
+    let vetoedByExecutiveChecked: boolean = false;
+    let ExecutiveSignedIntoLawChecked: boolean = false;
+    
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
     let phoneContactInputValue: string = "";
@@ -55,9 +159,14 @@
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
-    let referendumNameIsValid: boolean = true;
-    let startingYearIfEnactedIsValid: boolean = true;
-    let electionDateIsValid: boolean = true;
+    let legislationTitleIsValid: boolean = true;
+    let yearReleasedIsValid: boolean = true;
+    let yearIntroducedInHouseIsValid: boolean = true;
+    let yearIntroducedInSenateIsValid: boolean = true;
+    let sponsorHouseIsValid: boolean = true;
+    let sponsorSenateIsValid: boolean = true;
+    let houseSessionIsValid: boolean = true;
+    let senateSessionIsValid: boolean = true;
     let governmentLevelIsValid: boolean = true;
     let countryIsValid: boolean = true;
     let stateIsValid: boolean = true;
@@ -91,24 +200,36 @@
             status: null;
         }, 4000)
     };
-    
-    const createReferendumEndorsement = async (
+
+    const createLegislationEndorsement = async (
         userEmail: string | null | undefined,
-        image: string,
-        imageFileName: string,
+        imageFile: string,
         imageAltText: string,
-        referendumName: string,
-        startingYearIfEnacted: number | null,
-        electionDate: string,
+        image: any,
+        legislationTitle: string,
+        yearReleased: number | null,
+        yearIntroducedInHouse: number | null,
+        yearIntroducedInSenate: number | null,
         governmentLevel: string,
         state: string,
         county: string,
         city: string,
         websiteURL: string,
         details: string,
-        elected: boolean,
-        rejected: boolean,
-        pendingElection: boolean,
+        introducedInHouse: boolean,
+        introducedInSenate: boolean,
+        sponsorHouse: string,
+        sponsorSenate: string,
+        coSponsorsHouse: CoSponsorInputValue[],
+        coSponsorsSenate: CoSponsorInputValue[],
+        houseSession: string,
+        senateSession: string,
+        passedInHouse: boolean,
+        passedInSenate: boolean,
+        rejectedByHouse: boolean,
+        rejectedBySenate: boolean,
+        vetoedByExecutive: boolean,
+        ExecutiveSignedIntoLaw: boolean,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: string,
@@ -119,25 +240,37 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/createEndorsements/createLegislationEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
-                image,
-                imageFileName,
+                imageFile,
                 imageAltText,
-                referendumName,
-                startingYearIfEnacted,
-                electionDate,
+                image,
+                legislationTitle,
+                yearReleased,
+                yearIntroducedInHouse,
+                yearIntroducedInSenate,
                 governmentLevel,
                 state,
                 county,
                 city,
                 websiteURL,
                 details,
-                elected,
-                rejected,
-                pendingElection,
+                introducedInHouse,
+                introducedInSenate,
+                sponsorHouse,
+                sponsorSenate,
+                coSponsorsHouse,
+                coSponsorsSenate,
+                houseSession,
+                senateSession,
+                passedInHouse,
+                passedInSenate,
+                rejectedByHouse,
+                rejectedBySenate,
+                vetoedByExecutive,
+                ExecutiveSignedIntoLaw,
                 nameFirstContact,
                 nameLastContact,
                 phoneContact,
@@ -159,7 +292,7 @@
 
     }
 
-    const submitReferendumEndoresementHandler = async () => {
+    const submitLegislationEndoresementHandler = async () => {
 
         pending = true;
 
@@ -167,23 +300,35 @@
 
         try {
             
-            await createReferendumEndorsement(
+            await createLegislationEndorsement(
                 userEmail,
-                image,
                 imageFileInputValue,
                 imageAltTextInputValue,
-                referendumNameInputValue,
-                startingYearIfEnactedInputValue,
-                electionDateInputValue,
+                image,
+                legislationTitleInputValue,
+                yearReleasedInputValue,
+                yearIntroducedInHouseInputValue,
+                yearIntroducedInSenateInputValue,
                 governmentLevelInputValue,
                 stateInputValue,
                 countyInputValue,
                 cityInputValue,
                 websiteURLInputValue,
                 detailsInputValue,
-                electedChecked,
-                rejectedChecked,
-                pendingElectionChecked,
+                introducedInHouseChecked,
+                introducedInSenateChecked,
+                sponsorHouseInputValue,
+                sponsorSenateInputValue,
+                coSponsorsHouseValues,
+                coSponsorsSenateValues,
+                houseSessionInputValue,
+                senateSessionInputValue,
+                passedInHouseChecked,
+                passedInSenateChecked,
+                rejectedByHouseChecked,
+                rejectedBySenateChecked,
+                vetoedByExecutiveChecked,
+                ExecutiveSignedIntoLawChecked,
                 nameFirstContactInputValue,
                 nameLastContactInputValue,
                 phoneContactInputValue,
@@ -196,19 +341,33 @@
             );
             if (responseItem.success) {
                 imageAltTextInputValue = "",
+                imageFileInputValue = "",
+                imageAltTextInputValue = "",
                 image = "",
-                referendumNameInputValue = "",
-                startingYearIfEnactedInputValue = null,
-                electionDateInputValue = "",
+                legislationTitleInputValue = "",
+                yearReleasedInputValue = null,
+                yearIntroducedInHouseInputValue = null,
+                yearIntroducedInSenateInputValue = null,
                 governmentLevelInputValue = "",
                 stateInputValue = "",
                 countyInputValue = "",
                 cityInputValue = "",
                 websiteURLInputValue = "",
                 detailsInputValue = "",
-                electedChecked = false,
-                rejectedChecked= false,
-                pendingElectionChecked= false,
+                introducedInHouseChecked = false,
+                introducedInSenateChecked = false,
+                sponsorHouseInputValue = "",
+                sponsorSenateInputValue = "",
+                coSponsorsHouseValues = [],
+                coSponsorsSenateValues = [],
+                houseSessionInputValue = "",
+                senateSessionInputValue = "",
+                passedInHouseChecked = false,
+                passedInSenateChecked = false,
+                rejectedByHouseChecked = false,
+                rejectedBySenateChecked = false,
+                vetoedByExecutiveChecked = false,
+                ExecutiveSignedIntoLawChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
                 phoneContactInputValue = "",
@@ -222,19 +381,36 @@
             };
 
             if (responseItem.error) {
-
+                if (introducedInHouseChecked && !yearIntroducedInHouseInputValue) {
+                    yearIntroducedInHouseIsValid = false;
+                };
+                if (introducedInSenateChecked && !yearIntroducedInSenateInputValue) {
+                    yearIntroducedInSenateIsValid = false;
+                };
+                if (introducedInHouseChecked && !sponsorHouseInputValue) {
+                    sponsorHouseIsValid = false;
+                };
+                if (introducedInHouseChecked && !houseSessionInputValue) {
+                    houseSessionIsValid = false;
+                };
+                if (introducedInSenateChecked && !sponsorSenateInputValue) {
+                    sponsorSenateIsValid = false;
+                };
+                if (introducedInSenateChecked && !senateSessionInputValue) {
+                    senateSessionIsValid = false;
+                };
                 if (imageAltTextInputValue === "") {
                     imageAltTextIsValid = false;
                 };
                 if (imageFileInputValue === "") {
                     imageFileIsValid = false;
                 };
-                if (referendumNameInputValue === "") {
-                    referendumNameIsValid = false;
+                if (legislationTitleInputValue === "") {
+                    legislationTitleIsValid = false;
                 };
-                if (startingYearIfEnactedInputValue === null) {
-                    startingYearIfEnactedIsValid = false;
-                };
+                if (yearReleasedInputValue === null) {
+                    yearReleasedIsValid = false;
+                }
                 if (governmentLevelInputValue === "") {
                     governmentLevelIsValid = false;
                 };
@@ -255,15 +431,15 @@
     };
 
 </script>
-<div class="add_referendum_endorsement_container">
-    <h1>add referendum endorsement</h1>
+<div class="add_legislation_endorsement_container">
+    <h1>add legislation endorsement</h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitReferendumEndoresementHandler}
+        on:submit|preventDefault={submitLegislationEndoresementHandler}
         enctype="multipart/form-data"
     >
-        <h2>referendum image</h2>
-        <h3>select an image to represent the referendum*</h3>
+        <h2>legislation image</h2>
+        <h3>select an image to represent the legislation*</h3>
         <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
         <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
@@ -271,13 +447,13 @@
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="referendum_name_or_action"
-            inputID="referendum_name_or_action"
+            inputName="legislation_image"
+            inputID="legislation_image"
             bind:isValid={imageFileIsValid}
             required={true}
             imageFileInputErrorMessage="image file required"
         >
-            image file*
+            image file
         </ImageFileInput>
         {#if (image)}
             <div class="image_container">
@@ -288,51 +464,184 @@
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
             bind:isValid={imageAltTextIsValid}
-            placeholder="referendum banner"
+            placeholder="legislation_banner_image.jpg"
             inputName="image_alt_text"
             inputID="image_alt_text"
             required={true}
             textInputErrorMessage="image alt text required"
         >
-            image alt text*
+            image alt text
         </TextInput>
-        <h2>referendum information</h2>
+        <h2>legislation information</h2>
         <TextInput
             inputLabel={true}
-            bind:textInputValue={referendumNameInputValue}
-            bind:isValid={referendumNameIsValid}
-            placeholder="DIA millage renewal"
-            inputName="referendum_name"
-            inputID="referendum_name"
+            bind:textInputValue={legislationTitleInputValue}
+            bind:isValid={legislationTitleIsValid}
+            placeholder="Creative Economy Revitalization Act (CERA)"
+            inputName="legislation_title"
+            inputID="legislation title"
             required={true}
-            textInputErrorMessage="referendum name required"
+            textInputErrorMessage="legislation title required"
         >
-            referendum name*
+            legislation title
         </TextInput>
         <NumberInput
             inputLabel={true}
-            bind:numberInputValue={startingYearIfEnactedInputValue}
-            bind:isValid={startingYearIfEnactedIsValid}
+            bind:numberInputValue={yearReleasedInputValue}
+            bind:isValid={yearReleasedIsValid}
             placeholder="2024"
-            inputName="starting_year_if_enacted"
-            inputID="starting_year_if_enacted"
+            inputName="year_released"
+            inputID="year_released"
             required={true}
-            numberInputErrorMessage="starting year if enacted required"
+            numberInputErrorMessage="year released required"
         >
-            starting year if enacted*
+            year released
         </NumberInput>
         <div class="two_columns">
-            <DateInput
-                inputLabel={true}
-                bind:dateInputValue={electionDateInputValue}
-                bind:isValid={electionDateIsValid}
-                inputName="election_date"
-                inputID="election_date"
-                required={true}
-                dateInputErrorMessage="election date required"
-            >
-                election date*
-            </DateInput>            
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={introducedInHouseChecked}>
+                    introduced in the House
+                </AnimatedCheckbox>
+                {#if (introducedInHouseChecked)}
+                    <NumberInput
+                        inputLabel={true}
+                        bind:numberInputValue={yearIntroducedInHouseInputValue}
+                        bind:isValid={yearIntroducedInHouseIsValid}
+                        placeholder="2024"
+                        inputName="year_introduced_in_House"
+                        inputID="year_introduced_in_House"
+                        required={true}
+                        numberInputErrorMessage="year introduced in House required"
+                    >
+                        year introduced in the House
+                    </NumberInput>
+                    <SelectInput
+                        options={SessionsCongress}
+                        bind:selectInputValue={houseSessionInputValue}
+                        isValid={houseSessionIsValid}
+                        required={false}
+                        inputID="House_session"
+                        inputName="House_session"
+                        selectInputErrorMessage=""
+                        inputLabel={true}
+                    >
+                        House session
+                    </SelectInput>
+                    <TextInput
+                        inputLabel={true}
+                        bind:textInputValue={sponsorHouseInputValue}
+                        bind:isValid={sponsorHouseIsValid}
+                        placeholder="Bernie Sanders"
+                        inputName="House_sponsor"
+                        inputID="House_sponsor"
+                        required={true}
+                        textInputErrorMessage="House sponsor required"
+                    >
+                        House sponsor
+                    </TextInput>
+                    <p style={"font-weight: 600"}>House co-sponsor(s)</p>
+                    {#each coSponsorsHouseValues as coSponsor, i}
+                        <div class="sponsor_row">
+                            <TextInput
+                                inputLabel={false}
+                                bind:textInputValue={coSponsorsHouseValues[i].co_sponsor}
+                                bind:isValid={coSponsorsHouseValues[i].isValid}
+                                placeholder="Alexandria Ocasio-Cortez"
+                                inputName={`co-sponsor_House_${i}`}
+                                inputID={`co-sponsor_House_${i}`}
+                                required={true}
+                                textInputErrorMessage="sponsor required"
+                            />
+                            {#if (coSponsorsHouseValues.length > 1 && i !== 0)}
+                                <SubtractItemButton 
+                                    index={i}
+                                    bind:subtractedItemIndex={coSponsorHouseFieldIndexRemoved}
+                                    bind:subtractItemsClicked={subtractCoSponsorHouseClicked}
+                                >
+                                    subtract
+                                </SubtractItemButton>
+                            {/if}
+                        </div>
+                    {/each}
+                    <AddItemToArrayButton
+                        bind:addItemsClicked={addHouseCoSponsor}
+                    >
+                        co-sponsor
+                    </AddItemToArrayButton>
+                {/if}
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={introducedInSenateChecked}>
+                    introduced in the Senate
+                </AnimatedCheckbox>
+                {#if (introducedInSenateChecked)}
+                    <NumberInput
+                        inputLabel={true}
+                        bind:numberInputValue={yearIntroducedInSenateInputValue}
+                        bind:isValid={yearIntroducedInSenateIsValid}
+                        placeholder="2024"
+                        inputName="year_introduced_in_Senate"
+                        inputID="year_introduced_in_Senate"
+                        required={true}
+                        numberInputErrorMessage="year introduced in Senate required"
+                    >
+                        year introduced in the Senate
+                    </NumberInput>
+                    <SelectInput
+                        options={SessionsCongress}
+                        bind:selectInputValue={senateSessionInputValue}
+                        isValid={senateSessionIsValid}
+                        required={false}
+                        inputID="Senate_session"
+                        inputName="Senate_session"
+                        selectInputErrorMessage=""
+                        inputLabel={true}
+                    >
+                        Senate session
+                    </SelectInput>
+                    <TextInput
+                        inputLabel={true}
+                        bind:textInputValue={sponsorSenateInputValue}
+                        bind:isValid={sponsorSenateIsValid}
+                        placeholder="Bernie Sanders"
+                        inputName="Senate_sponsor"
+                        inputID="Senate_sponsor"
+                        required={true}
+                        textInputErrorMessage="Senate sponsor required"
+                    >
+                        Senate sponsor
+                    </TextInput>
+                    <p style={"font-weight: 600"}>Senate co-sponsor(s)</p>
+                    {#each coSponsorsSenateValues as coSponsor, i}
+                        <div class="sponsor_row">
+                            <TextInput
+                                inputLabel={false}
+                                bind:textInputValue={coSponsorsSenateValues[i].co_sponsor}
+                                bind:isValid={coSponsorsSenateValues[i].isValid}
+                                placeholder="Bernie Sanders"
+                                inputName={`co-sponsor_Senate_${i}`}
+                                inputID={`co-sponsor_Senate_${i}`}
+                                required={true}
+                                textInputErrorMessage="co-sponsor required"
+                            />
+                            {#if (coSponsorsSenateValues.length > 1 && i !== 0)}
+                                <SubtractItemButton 
+                                    index={i}
+                                    bind:subtractedItemIndex={coSponsorSenateFieldIndexRemoved}
+                                    bind:subtractItemsClicked={subtractCoSponsorSenateClicked}
+                                >
+                                    subtract
+                                </SubtractItemButton>
+                            {/if}
+                        </div>
+                    {/each}
+                    <AddItemToArrayButton
+                        bind:addItemsClicked={addSenateCoSponsor}
+                    >
+                        co-sponsor
+                    </AddItemToArrayButton>
+                {/if}
+            </div>
         </div>
         <SelectInput 
             options={governmentLevelOptions}
@@ -344,7 +653,7 @@
             selectInputErrorMessage=""
             inputLabel={true}
         >
-            government level*
+            government level
         </SelectInput>
         {#if (governmentLevelInputValue !== "")}
             <div class="expandable_cells">
@@ -425,7 +734,7 @@
             inputLabel={true}
             bind:textInputValue={websiteURLInputValue}
             bind:isValid={websiteURLIsValid}
-            placeholder="https://candidateforxoffice.com"
+            placeholder="https://creativeeconomyrevitalizationact.com"
             inputName="website_URL"
             inputID="websiteURL"
             required={false}
@@ -437,35 +746,52 @@
             inputLabel={true}
             bind:textareaInputValue={detailsInputValue}
             bind:isValid={detailsIsValid}
-            placeholder="The referendum is on a measure to..."
-            inputName="referendum_details"
-            inputID="referendum_details"
+            placeholder="The legisation would..."
+            inputName="legislation_details"
+            inputID="legislation_details"
             required={true}
             textAreaInputErrorMessage="details required"
         >
-            details*
+            details
         </TextArea>
-        <h2>referendum status</h2>
+        <h2>legislation status</h2>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={electedChecked}>
-                    elected
+                <AnimatedCheckbox bind:checked={passedInHouseChecked}>
+                    passed in the House
                 </AnimatedCheckbox>
             </div>
-            <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedChecked}>
-                    rejected
+            <div class="checkbox_column" >
+                <AnimatedCheckbox bind:checked={passedInSenateChecked}>
+                    passed in the Senate
                 </AnimatedCheckbox>
             </div>
         </div>
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={pendingElectionChecked}>
-                    pending election
+                <AnimatedCheckbox bind:checked={rejectedByHouseChecked}>
+                    rejected by House
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={rejectedBySenateChecked}>
+                    rejected by Senate          
                 </AnimatedCheckbox>
             </div>
         </div>
-        <h2>referendum contact informations</h2>
+        <div class="two_columns_checkbox">
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={ExecutiveSignedIntoLawChecked}>
+                    Executive signed into law
+                </AnimatedCheckbox>
+            </div>
+            <div class="checkbox_column">
+                <AnimatedCheckbox bind:checked={vetoedByExecutiveChecked}>
+                    votoed by Executive           
+                </AnimatedCheckbox>
+            </div>
+        </div>
+        <h2>legislation contact informations</h2>
         <AnimatedCheckbox bind:checked={noContactInformationChecked}>
             no contact information
         </AnimatedCheckbox>
@@ -570,7 +896,7 @@
                     state
                 </SelectInput>
             </div>
-                <NumberInput 
+            <NumberInput 
                     isValid={zipCodeContactIsValid}
                     placeholder=11111
                     inputID="zip_code"
@@ -583,28 +909,28 @@
                     zip code
                 </NumberInput>
             {/if}
-        <ActionButton disable={false}>
-            add referendum endorsement
+        <ActionButton>
+            add legislation endorsement
         </ActionButton>
+        {#if (pending)}
+            <PendingFlashMessage >
+                please wait while we validate your data
+            </PendingFlashMessage>
+        {:else if (responseItem.error)}
+            <ErrorFlashMessage >
+                {responseItem.error}
+            </ErrorFlashMessage>
+        {:else if (responseItem.success)}
+            <SuccessFlashMessage>
+                {responseItem.success}
+            </SuccessFlashMessage>
+        {/if}
     </form>
-    {#if (pending)}
-        <PendingFlashMessage >
-            please wait while we validate your data
-        </PendingFlashMessage>
-    {:else if (responseItem.error)}
-        <ErrorFlashMessage >
-            {responseItem.error}
-        </ErrorFlashMessage>
-    {:else if (responseItem.success)}
-        <SuccessFlashMessage>
-            {responseItem.success}
-        </SuccessFlashMessage>
-    {/if}
 </div>
 
 <style>
 
-    .add_referendum_endorsement_container {
+    .add_legislation_endorsement_container {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -661,6 +987,11 @@
 
     .cell {
         width: 15rem;
+    }
+
+    .sponsor_row {
+        display: flex;
+        gap: 0.5rem;
     }
 
     @media (max-width: 1440px) {
