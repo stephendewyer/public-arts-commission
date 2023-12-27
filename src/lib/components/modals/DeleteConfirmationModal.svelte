@@ -1,103 +1,63 @@
 <script lang="ts">
     import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore';
+    import { DeleteConfirmedStore } from '$lib/stores/DeleteConfirmedStore';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
     import { onDestroy } from 'svelte';
     import SubmitButtonSecondary from '../buttons/SubmitButtonSecondary.svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
-    let deleteItem: DeleteItem | any | null = null;
-
-    const unsubscribeDeleteConfirmationStore = DeleteConfirmationStore.subscribe(n => {
-		deleteItem = n;
-    });
-
     let modalOpen = false;
 
 	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
+
 		modalOpen = value;
+
 	});
 
     onDestroy(() => {
-        unsubscribeDeleteConfirmationStore();
+
         unsubscribeModalOpenStore();
+
     });
 
     const closeClickHandler = () => {
-        modalOpen = false;
-        ModalOpenStore.update((value) => value = modalOpen);
-        DeleteConfirmationStore.update((value: DeleteItem | any) => value = {
-            endorsement_name: null,
-            endorsement_ID: null,
-            endorsement_image_ID: null,
-            edorsement_image_public_ID: null,
-            endorsement_category: null
-        });
-    };
 
-    const deleteEndorsement = async (
-        deleteItemID: number | null,
-        deleteItemName: string | null,
-        deleteItemImageID: number | null,
-        deleteItemImagePublicID: string | null,
-        deleteItemCategory: string | null
-    ) => {
-        const response = await fetch("/authenticated-administrator/api/deleteEndorsement", {
-            method: 'DELETE',
-            body: JSON.stringify({
-                deleteItemID,
-                deleteItemName,
-                deleteItemImageID,
-                deleteItemImagePublicID,
-                deleteItemCategory
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-        if (response) {
-            console.log(response);
-        };
-    };
+        modalOpen = false;
+
+        ModalOpenStore.update((value) => value = modalOpen);
+
+        DeleteConfirmationStore.update((value: DeleteItem | any) => value = null);
+
+    };    
 
     const deleteSubmitHandler = async () => {
+        // confirm delete in store
+        if ($DeleteConfirmationStore === null) {
 
-        if (deleteItem === null) {
             return;
-        };
-
-        try {
-            await deleteEndorsement(
-                deleteItem?.endorsement_ID,
-                deleteItem?.endorsement_name,
-                deleteItem?.endorsement_image_ID,
-                deleteItem?.edorsement_image_public_ID,
-                deleteItem?.endorsement_category
-            );
-
-            modalOpen = false;
-            ModalOpenStore.update((value) => value = modalOpen);
-            DeleteConfirmationStore.update((value: DeleteItem | any) => value = {
-                endorsement_name: null,
-                endorsement_ID: null,
-                endorsement_image_ID: null,
-                edorsement_image_public_ID: null,
-                endorsement_category: null
-            });
-
-        } catch (error) {
-
-            console.log(error);
 
         };
+
+        DeleteConfirmedStore.update(value => value = true);
+
+        modalOpen = false;
+
+        ModalOpenStore.update((value) => value = modalOpen);
+
+        DeleteConfirmationStore.update((value) => value = null);
 
     };
 
     let deleteConfirmationModalOpen: boolean = false;
 
-    $: if (modalOpen && (deleteItem !== null)) {
+    $: if (modalOpen && ($DeleteConfirmationStore !== null)) {
+
         deleteConfirmationModalOpen = true;
+
     } else {
+
         deleteConfirmationModalOpen = false;
+
     };
 
 </script>
@@ -117,7 +77,7 @@
     </div>
     <div class="info_container">
         <h1 class="modal_heading">confirm delete</h1>
-        <h2 class="modal_heading_02">do you want to delete {deleteItem?.endorsement_name}?</h2>
+        <h2 class="modal_heading_02">do you want to delete {$DeleteConfirmationStore}?</h2>
         <form on:submit|preventDefault={deleteSubmitHandler}>
             <SubmitButtonSecondary 
                 disable={false}

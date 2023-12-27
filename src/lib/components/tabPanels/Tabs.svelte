@@ -123,11 +123,11 @@
     @media (max-width: 1440px) {
 
         .active_tab {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
         }
 
         .tab {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
         }
     }
   

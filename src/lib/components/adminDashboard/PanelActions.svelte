@@ -1,15 +1,158 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
+    import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import { EndorsedActionSelectedStore } from "$lib/stores/EndorsedActionSelectedStore";
+    import { EndorsedActionOpenStore } from "$lib/stores/EndorsedActionOpenStore";
+    import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
+    import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
+    import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
+    
+    export let panel_data: ActionWithImage[] = [];
 
-    export let panel_data: ActionWithImage[];
 
     let activeTab: number = 0;
 
     $: activeTab;
 
-    let endorsedActions: ActionWithImage[];
+    let endorsedActions: ActionWithImage[] = [];
 
     $: endorsedActions = [...panel_data];
+
+    $: console.log(endorsedActions);
+
+    const editClickHandler = (actionID: number | undefined) => {
+
+        console.log(actionID);
+
+    };
+
+    let endorsementCategory: string = "action";
+
+    let deleteItemID: number | null = null;
+    let deleteItemName: string | null = null;
+    let deleteItemImageID: number | null = null;
+    let deleteItemImagePublicID: string | null = null;
+    let deleteItemCategory: string | null = null;
+
+    const deleteEndorsement = async (
+        deleteItemID: number | null,
+        deleteItemName: string | null,
+        deleteItemImageID: number | null,
+        deleteItemImagePublicID: string | null,
+        deleteItemCategory: string | null
+    ) => {        
+
+        const response = await fetch("../../../authenticated-administrator/api/deleteEndorsement", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response) {
+
+            console.log(response);
+
+        };
+
+    };
+
+const deleteClickHandler = async (
+        action_ID: number, 
+        action_name: any,
+        action_image_ID: number,
+        action_image_public_ID: string
+) => {
+
+    // set the values for the open modal stores
+
+    DeleteConfirmationStore.update((value) => value = action_name);
+
+    ModalOpenStore.update((value) => value = true);
+
+    // set the values for the item to be deleted
+
+    deleteItemID = action_ID;
+    deleteItemName = action_name;
+    deleteItemImageID = action_image_ID;
+    deleteItemImagePublicID =  action_image_public_ID;
+    deleteItemCategory = endorsementCategory;
+
+};
+
+const GetActionEndorsements = async () => {
+
+    let newActionsData: ActionWithImage[] = [];
+
+    try {
+
+        await fetch("../../../authenticated-administrator/api/loadActionEndorsements")
+        
+        .then((res) => res.json())
+
+        .then((data) => newActionsData = [...data])
+
+        endorsedActions = [...newActionsData];
+
+    } catch (error) {
+
+        console.log(error);
+
+    };
+
+};
+
+const ConfirmedDelete = async () => {
+
+    try {
+
+        await deleteEndorsement(
+            deleteItemID,
+            deleteItemName,
+            deleteItemImageID,
+            deleteItemImagePublicID,
+            deleteItemCategory
+        );
+
+    } catch (error) {
+
+        console.log(error);
+
+    };
+
+};
+
+$: if ($DeleteConfirmedStore === true) {
+
+    // delete the candidate row from the database
+
+    ConfirmedDelete();  
+
+    // load new data from endorsed candidates table in database
+
+    GetActionEndorsements();
+
+    // load the DeleteConfirmedStore to false
+
+    DeleteConfirmedStore.update(value => value = false);
+
+};
+
+    const moreInfoClickHandler = (campaignID: number | undefined, index: number ) => {
+
+        EndorsedActionSelectedStore.update((value) => value = endorsedActions[index]);
+
+        EndorsedActionOpenStore.update((value) => value = true);
+
+    };
 
 </script>
 <div class="tabpanel_container">
@@ -41,79 +184,129 @@
             </h3>
         </a>
     </div>
-    
-
     {#if (activeTab === 0)}
-    <table>
-        <tbody>
-            <tr>
-                <th>
-                    <h5>
-                        action name
-                    </h5>
-                </th>
-                <th>
-                    <h5>
-                        start date
-                    </h5>
-                </th>
-                <th>
-                    <h5>
-                        end date
-                    </h5>
-                </th>
-                <th>
-                    <h5>
-                        government level
-                    </h5>
-                </th>
-                <th>
-                    <h5>
-                        more info
-                    </h5>
-                </th>
-            </tr>
-            {#each endorsedActions as action, i}
+        <table>
+            <tbody>
                 <tr>
-                    <td>
-                        <p>
-                            {action.action_name}
-                        </p>
-                    </td>
-                    <td>
-                        <p>
-                            {action.date_start.slice(0, 4)}
-                        </p>
-                    </td>
-                    <td>
-                        <p>
-                            {action.date_end.slice(0, 4)}
-                        </p>
-                    </td>
-                    <td>
-                        <p>
-                            {action.government_level}
-                        </p>
-                    </td>
-                    <td>
-                        <div class="meatballs_container">
-                            {@html MeatballsIcon}
-                        </div>
-                    </td>
+                    <th>
+                        <h5>
+                            action name
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            date(s)
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            government level
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            edit
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            delete
+                        </h5>
+                    </th>
+                    <th>
+                        <h5>
+                            more info
+                        </h5>
+                    </th>
                 </tr>
-            {/each}
-        </tbody>
-    </table>
+                {#each endorsedActions as action, i}
+                    <tr>
+                        <td>
+                            <p>
+                                {action?.action_name}
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                {#if (action?.all_day_event)}
+                                    {new Date(action?.all_day_event_date).toUTCString().substring(0, 16)}
+                                {:else if (!action?.all_day_event)}
+                                    {new Date(action?.date_start).toUTCString().substring(0, 16)} - {new Date(action?.date_end).toUTCString().substring(0, 16)}
+                                {/if}
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                {action?.government_level}
+                            </p>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => editClickHandler(action.action_ID)}
+                                on:keyup={() => editClickHandler(action.action_ID)}
+                                class="icon_container"
+                            >
+                                {@html EditIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => deleteClickHandler(
+                                    action.action_ID, 
+                                    action.action_name,
+                                    action.image_ID,
+                                    action.public_ID
+                                )}
+                                on:keyup={() => deleteClickHandler(
+                                    action.action_ID, 
+                                    action.action_name,
+                                    action.image_ID,
+                                    action.public_ID
+                                )}
+                                class="icon_container"
+                            >
+                                {@html DeleteIcon}
+                            </button>
+                        </td>
+                        <td>
+                            <button 
+                                on:click={() => moreInfoClickHandler(action.action_ID, i)}
+                                on:keyup={() => moreInfoClickHandler(action.action_ID, i)}
+                                class="icon_container"
+                            >
+                                {@html MeatballsIcon}
+                            </button>
+                        </td>
+                    </tr>
+                {/each}
+            </tbody>
+        </table>
     {:else if (activeTab === 1)}
         nominated candidates
     {/if}
 </div>
 <style>
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #FBF4F9;
+    }
+
+    tbody > tr > td {
+        padding: 1rem;
+        font-size: 1.25rem;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
 
     .tabpanel_container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
     .tabs_container {
@@ -190,6 +383,27 @@
 		overflow: visible;
 	}
 
+    .icon_container {
+        max-width: 1.5rem;
+        width: 100%;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        fill: #4C4239;
+        margin: 0 auto;
+        transition: fill 0.2s linear;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container:hover {
+        fill: #28387C;
+    }
+
     @media (max-width: 1440px) {
 
         .active_tab {
@@ -198,6 +412,26 @@
 
         .tab {
             font-size: 1.1rem;
+        }
+
+        tbody > tr > th {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        tbody > tr > th > h5 {
+            margin: 0;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        tbody > tr > td {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .icon_container {
+            max-width: 1.25rem;
         }
     }
 
@@ -219,6 +453,26 @@
         .active_tab {
             font-size: 0.8rem;
             padding: 0 0.5rem;
+        }
+
+        tbody > tr > th {
+            padding: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        tbody > tr > th > h5 {
+            margin: 0;
+            padding: 0;
+            font-size: 0.8rem;
+        }
+
+        tbody > tr > td {
+            padding: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .icon_container {
+            max-width: 1rem;
         }
 
     }

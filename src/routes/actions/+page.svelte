@@ -4,8 +4,6 @@
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import type { User } from '@auth/core/types.js';
     import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
-    import { onDestroy } from 'svelte';
-	import { EndorsedActionsStore } from '$lib/stores/EndorsedActionsStore';
 
     export let data;
 
@@ -13,9 +11,33 @@
 
     const user: User | undefined = data.streamed.user;
 
-	let endorsedActions: ActionWithImage[] | null[] = [];
+	let endorsedActions: ActionWithImage[] = [];
 
-    $: endorsedActions = [...$EndorsedActionsStore]
+    $: endorsedActions = [...data.streamed.endorsed_actions];
+
+    // load all the future actions
+
+	let futureEndorsedActions: ActionWithImage[] = [];
+
+    let pastEndorsedActions: ActionWithImage[] = [];
+
+    const currentDate = new Date();
+
+    $: endorsedActions.forEach((action: ActionWithImage) => {
+
+        const actionEndDate = new Date(action.date_end);
+        const actionAllDayDate = new Date(action.all_day_event_date);
+
+        if ((actionEndDate >= currentDate) || (actionAllDayDate >= currentDate)) {
+
+            futureEndorsedActions = [...futureEndorsedActions, action];
+            
+        } else {
+
+            pastEndorsedActions = [...pastEndorsedActions, action]
+
+        };
+    });
 
     let searchValue: string;
 
@@ -30,8 +52,8 @@
         } else if (searchValue == "") {
 
             disableButton = true;
-        }
-    }
+        };
+    };
 
         const searchSubmitHandler = () => {
 
@@ -68,7 +90,7 @@
             <h3>
                 forthcoming actions
             </h3>
-            {#each endorsedActions as endorsedAction, i}
+            {#each futureEndorsedActions as endorsedAction, i}
                 <ActionEndorsementCard endorsedActionData={endorsedAction} />
             {/each}
             <div class="propose_an_action_button_container">
@@ -84,6 +106,9 @@
             <h3>
                 actions history
             </h3>
+            {#each pastEndorsedActions as endorsedAction, i}
+                <ActionEndorsementCard endorsedActionData={endorsedAction} />
+            {/each}
         </li>
     </ul>
 </section>

@@ -7,37 +7,37 @@
 
     let legislationStatus: string[] = [];
 
-    $: if (endorsedLegislationData?.passed_in_House === 1) {
+    $: if (endorsedLegislationData.passed_in_House === 1) {
 
         legislationStatus = [...legislationStatus, " passed in the House"];
 
     };
     
-    $: if (endorsedLegislationData?.passed_in_Senate === 1) {
+    $: if (endorsedLegislationData.passed_in_Senate === 1) {
 
         legislationStatus = [...legislationStatus, " passed in the Senate"];
 
     };
     
-    $: if (endorsedLegislationData?.rejected_in_House === 1) {
+    $: if (endorsedLegislationData.rejected_in_House === 1) {
 
         legislationStatus = [...legislationStatus, " rejected in the House"];
 
     };
     
-    $: if (endorsedLegislationData?.rejected_in_Senate === 1) {
+    $: if (endorsedLegislationData.rejected_in_Senate === 1) {
 
         legislationStatus = [...legislationStatus, " rejected in the Senate"];
 
     };
     
-    $: if (endorsedLegislationData?.vetoed_by_Executive === 1) {
+    $: if (endorsedLegislationData.vetoed_by_Executive === 1) {
 
         legislationStatus = [...legislationStatus, " vetoed by the Executive"];
 
     };
     
-    $: if (endorsedLegislationData?.signed_by_Executive === 1) {
+    $: if (endorsedLegislationData.signed_by_Executive === 1) {
 
         legislationStatus = [...legislationStatus, " signed into law by the Executive"];
 

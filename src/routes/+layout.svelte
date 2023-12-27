@@ -22,34 +22,6 @@
   	import EndorsedLegislationSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
 	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
-	import { EndorsedCandidatesStore } from '$lib/stores/EndorsedCandidatesStore';
-	import { EndorsedActionsStore } from '$lib/stores/EndorsedActionsStore';
-	import { EndorsedLegislationStore } from '$lib/stores/EndorsedLegislationStore';
-	import { EndorsedAmendmentsStore } from '$lib/stores/EndorsedAmendmentsStore';
-	import { EndorsedReferendumsStore } from '$lib/stores/EndorsedReferendumsStore';
-
-
-	export let data;
-
-	// create a store for endorsed candidates
-
-	EndorsedCandidatesStore.set(data.streamed.endorsed_candidates);
-
-	// create a store for endorsed legislation
-
-	EndorsedLegislationStore.set(data.streamed.endorsed_legislation);
-
-	// create a store for endorsed referendums
-
-	EndorsedReferendumsStore.set(data.streamed.endorsed_referendums);
-
-	// create a store for endorsed amendments
-
-	EndorsedAmendmentsStore.set(data.streamed.endorsed_amendments);
-
-	// create a store for endorsed actions
-
-	EndorsedActionsStore.set(data.streamed.endorsed_actions);
 	
 	let openMobileNav: boolean = false;
 

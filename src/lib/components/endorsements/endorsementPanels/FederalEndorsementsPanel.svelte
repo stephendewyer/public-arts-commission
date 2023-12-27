@@ -1,6 +1,8 @@
 <script lang="ts">
     import EndorsementCategories from '$lib/components/endorsements/endorsementsCategories/EndorsementCategories.svelte';
     export let panel_data: any[];
+
+    $: panel_data;
     
 </script>
 <div>

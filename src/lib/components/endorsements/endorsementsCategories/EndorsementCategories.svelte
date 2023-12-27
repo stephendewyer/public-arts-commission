@@ -8,10 +8,15 @@
     
     export let categories_data: any;
 
-    const endorsedAmendments: AmendmentWithSponsorsAndImage[] = categories_data.endorsed_amendments;
-    const endorsedCandidates: CandidateWithImage[] = categories_data.endorsed_candidates;
-    const endorsedLegislation: LegislationWithSponsorsAndImage[] = categories_data.endorsed_legislation;
-    const endorsedReferendums: ReferendumWithImage[] = categories_data.endorsed_referendums;
+    let endorsedAmendments: AmendmentWithSponsorsAndImage[];
+    let endorsedCandidates: CandidateWithImage[];
+    let endorsedLegislation: LegislationWithSponsorsAndImage[];
+    let endorsedReferendums: ReferendumWithImage[];
+
+    $: endorsedAmendments = [...categories_data.endorsed_amendments];
+    $: endorsedCandidates = [...categories_data.endorsed_candidates];
+    $: endorsedLegislation = [...categories_data.endorsed_legislation];
+    $: endorsedReferendums = [...categories_data.endorsed_referendums];
 
     const user: User | undefined = categories_data.user;
 

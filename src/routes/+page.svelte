@@ -11,8 +11,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
 	import ForthcomingActionCarousel from '$lib/components/sliders/ForthcomingActionCarousel.svelte';
-	import { EndorsedActionsStore } from '$lib/stores/EndorsedActionsStore.js';
-	import { onDestroy } from 'svelte';
+  	import { afterUpdate } from 'svelte';
 
 	export let data;
 
@@ -24,28 +23,27 @@
 
 	let endorsedActions: ActionWithImage[] = [];
 
-	const unsubscribeEndorsedActionsStore = EndorsedActionsStore.subscribe((value) => endorsedActions = [...value]);
+	$: endorsedActions = [...data.streamed.endorsed_actions];
 
-	onDestroy(() => {
-		unsubscribeEndorsedActionsStore();
-	})
 	// load all the future actions
 
 	let futureEndorsedActions: ActionWithImage[] = [];
 
-	endorsedActions.forEach((action) => {
+	afterUpdate(() => {
+		endorsedActions.forEach((action: ActionWithImage) => {
 
-		const actionEndDate = new Date(action.date_end);
-		const actionAllDayDate = new Date(action.all_day_event_date);
+			const actionEndDate = new Date(action.date_end);
+			const actionAllDayDate = new Date(action.all_day_event_date);
 
-		if ((actionEndDate >= currentDate) || (actionAllDayDate >= currentDate)) {
+			if ((actionEndDate >= currentDate) || (actionAllDayDate >= currentDate)) {
 
-			futureEndorsedActions = [...futureEndorsedActions, action];
+				futureEndorsedActions = [...futureEndorsedActions, action];
 
-		};
+			};
 
+		});
 	});
-
+	
 	let activeLoginTab: number;
 
 	let useCurrentLocationChecked: boolean;

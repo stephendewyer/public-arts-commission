@@ -49,9 +49,7 @@
 
     };
 
-    let rawElectionDate: Date;
-
-    $: rawElectionDate = new Date (endorsedAmendmentData.election_date);
+    let rawElectionDate: Date = new Date (endorsedAmendmentData.election_date);
 
     let electionDate: string;
 
@@ -81,7 +79,7 @@
 </script>
 
 <div 
-    tabindex={endorsedAmendmentData.amendment_ID}
+    tabindex={endorsedAmendmentData?.amendment_ID}
     role="treeitem"
     aria-selected={cardHovered}
     on:focus={() => cardHoverHandler()}

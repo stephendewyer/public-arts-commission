@@ -5,8 +5,6 @@ import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
 import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
-import { LoadAllEndorsedCandidates } from "$lib/server/loadDataFromDatabase/LoadEndorsedCandidates.js";
-import { EndorsedCandidatesStore } from "$lib/stores/EndorsedCandidatesStore.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -86,7 +84,6 @@ export const POST = async ({request}) => {
     return new Response(JSON.stringify({error: "missing image!"}), {status: 422});
 
   };
-
 
   let runningInPrimaryINT = 0;
   let electedInPrimaryINT = 0;
@@ -189,7 +186,6 @@ export const POST = async ({request}) => {
 
   });
 
-
   const adminID = userInAdministrators[0].ID;
 
   const insertImageStatement = `INSERT INTO image_collection (
@@ -285,13 +281,6 @@ export const POST = async ({request}) => {
   .catch(error => {
     throw error;
   });
-
-  // load the updated endorsed candidates data and update endorsed candidate store
-
-  const updatedEndorsedCandidates = await LoadAllEndorsedCandidates();
-
-  // @ts-ignore
-  EndorsedCandidatesStore.update((value) => value = updatedEndorsedCandidates);
 
   res.end();
 

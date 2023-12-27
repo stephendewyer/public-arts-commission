@@ -3,8 +3,6 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
-import { LoadAllEndorsedCandidates } from "$lib/server/loadDataFromDatabase/LoadEndorsedCandidates.js";
-import { EndorsedCandidatesStore } from "$lib/stores/EndorsedCandidatesStore.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -12,7 +10,6 @@ cloudinary.config({
   api_secret: CLOUDINARYSECRETKEY
 });
 
-// @ts-ignore
 export const DELETE = async ({request}) => {
 
     if (request.method !== 'DELETE') {
@@ -63,20 +60,62 @@ export const DELETE = async ({request}) => {
             throw error;
         });
 
-        // load the updated endorsed candidates data and update endorsed candidate store
-
-        const updatedEndorsedCandidates = await LoadAllEndorsedCandidates();
-
-        // @ts-ignore
-        EndorsedCandidatesStore.update((value) => value = updatedEndorsedCandidates);
-
     } else if (deleteItemCategory === "amendment") {
+
+        // delete the endorsed amendment row from endorsed_amendments where amendment_ID = deleteItemID
+
+        const deleteAmendmentStatement = `DELETE FROM endorsed_amendments
+        WHERE action_ID = ${deleteItemID}`;
+
+        await res.query(deleteAmendmentStatement)
+        .then(() => {
+        })
+        .catch(error => {
+            throw error;
+        });
+
 
     } else if (deleteItemCategory === "action") {
 
+        // delete the endorsed action row from endorsed_actions where action_ID = deleteItemID
+
+        const deleteActionStatement = `DELETE FROM endorsed_actions
+        WHERE action_ID = ${deleteItemID}`;
+
+        await res.query(deleteActionStatement)
+        .then(() => {
+        })
+        .catch(error => {
+            throw error;
+        });
+
     } else if (deleteItemCategory === "legislation") {
 
+        // delete the endorsed legislation row from endorsed_legislation where legislation_ID = deleteItemID
+
+        const deleteLegislationStatement = `DELETE FROM endorsed_legislation
+        WHERE legislation_ID = ${deleteItemID}`;
+
+        await res.query(deleteLegislationStatement)
+        .then(() => {
+        })
+        .catch(error => {
+            throw error;
+        });
+
     } else if (deleteItemCategory === "referendum") {
+
+        // delete the endorsed referendum row from endorsed_referendum where referendum_ID = deleteItemID
+
+        const deleteReferendumStatement = `DELETE FROM endorsed_referendums
+        WHERE referendum_ID = ${deleteItemID}`;
+
+        await res.query(deleteReferendumStatement)
+        .then(() => {
+        })
+        .catch(error => {
+            throw error;
+        });
 
     };
 

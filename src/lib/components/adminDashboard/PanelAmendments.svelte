@@ -1,7 +1,9 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
+    import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
 
-    export let panel_data: AmendmentWithSponsorsAndImage[];
+    export let panel_data: AmendmentWithSponsorsAndImage[] = [];
 
     let activeTab: number = 0;
 
@@ -10,6 +12,12 @@
     let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
     $: endorsedAmendments = [...panel_data];
+
+    const editClickHandler = (amendmentID: number | undefined) => {
+
+        console.log(amendmentID);
+
+    };
 
 </script>
 <div class="tabpanel_container">
@@ -50,11 +58,27 @@
     {/if}
 </div>
 <style>
+    table {
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #FBF4F9;
+    }
+
+    tbody > tr > td {
+        padding: 1rem;
+        font-size: 1.25rem;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
 
     .tabpanel_container {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
     .tabs_container {
@@ -131,6 +155,27 @@
 		overflow: visible;
 	}
 
+    .icon_container {
+        max-width: 1.5rem;
+        width: 100%;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        fill: #4C4239;
+        margin: 0 auto;
+        transition: fill 0.2s linear;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container:hover {
+        fill: #28387C;
+    }
+
     @media (max-width: 1440px) {
 
         .active_tab {
@@ -139,6 +184,26 @@
 
         .tab {
             font-size: 1.1rem;
+        }
+
+        tbody > tr > th {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        tbody > tr > th > h5 {
+            margin: 0;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        tbody > tr > td {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .icon_container {
+            max-width: 1.25rem;
         }
     }
 
@@ -160,6 +225,26 @@
         .active_tab {
             font-size: 0.8rem;
             padding: 0 0.5rem;
+        }
+
+        tbody > tr > th {
+            padding: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        tbody > tr > th > h5 {
+            margin: 0;
+            padding: 0;
+            font-size: 0.8rem;
+        }
+
+        tbody > tr > td {
+            padding: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .icon_container {
+            max-width: 1rem;
         }
 
     }

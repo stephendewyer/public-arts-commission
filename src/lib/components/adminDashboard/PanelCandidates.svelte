@@ -3,12 +3,13 @@
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
     import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
+    import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
-    
-    export let panel_data: CandidateWithImage[];
-    
+
+    export let panel_data: CandidateWithImage[] = [];
+        
     let activeTab: number = 0;
 
     $: activeTab;
@@ -17,33 +18,137 @@
 
     $: endorsedCandidates = [...panel_data];
 
-    $: console.log(`panel candidates data is `, endorsedCandidates);
+    const editClickHandler = (campaignID: number | undefined) => {
 
-    const editClickHandler = (campaignID: number) => {
         console.log(campaignID);
+
     };
 
     let endorsementCategory: string = "candidate";
 
-    const deleteClickHandler = (
+    let deleteItemID: number | null = null;
+    let deleteItemName: string | null = null;
+    let deleteItemImageID: number | null = null;
+    let deleteItemImagePublicID: string | null = null;
+    let deleteItemCategory: string | null = null;
+
+    const deleteEndorsement = async (
+        deleteItemID: number | null,
+        deleteItemName: string | null,
+        deleteItemImageID: number | null,
+        deleteItemImagePublicID: string | null,
+        deleteItemCategory: string | null
+    ) => {        
+
+        const response = await fetch("../../../authenticated-administrator/api/deleteEndorsement", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response) {
+
+            console.log(response);
+
+        };
+
+    };
+
+    const deleteClickHandler = async (
             campaign_ID: number, 
-            campaign_name: string,
+            campaign_name: any,
             campaign_image_ID: number,
             campaign_image_public_ID: string
     ) => {
-        DeleteConfirmationStore.update((value) => value = {
-            endorsement_ID: campaign_ID,
-            endorsement_name: campaign_name,
-            endorsement_image_ID: campaign_image_ID,
-            edorsement_image_public_ID: campaign_image_public_ID,
-            endorsement_category: endorsementCategory
-        });
+
+        // set the values for the open modal stores
+
+        DeleteConfirmationStore.update((value) => value = campaign_name);
+
         ModalOpenStore.update((value) => value = true);
+
+        // set the values for the item to be deleted
+
+        deleteItemID = campaign_ID;
+        deleteItemName = campaign_name;
+        deleteItemImageID = campaign_image_ID;
+        deleteItemImagePublicID =  campaign_image_public_ID;
+        deleteItemCategory = endorsementCategory;
+
     };
 
-    const moreInfoClickHandler = (campaignID: number, index: number) => {
+    const GetCandidateEndorsements = async () => {
+
+        let newCandidatesData: CandidateWithImage[] = [];
+
+        try {
+
+            await fetch("../../../authenticated-administrator/api/loadCandidateEndorsements")
+            
+            .then((res) => res.json())
+
+            .then((data) => newCandidatesData = [...data])
+
+            endorsedCandidates = [...newCandidatesData];
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    const ConfirmedDelete = async () => {
+
+        try {
+
+            await deleteEndorsement(
+                deleteItemID,
+                deleteItemName,
+                deleteItemImageID,
+                deleteItemImagePublicID,
+                deleteItemCategory
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    $: if ($DeleteConfirmedStore === true) {
+
+        // delete the candidate row from the database
+
+        ConfirmedDelete();  
+
+        // load new data from endorsed candidates table in database
+
+        GetCandidateEndorsements();
+
+        // load the DeleteConfirmedStore to false
+
+        DeleteConfirmedStore.update(value => value = false);
+
+    };
+
+    const moreInfoClickHandler = (campaignID: number | undefined, index: number ) => {
+
         EndorsedCandidateSelectedStore.update((value) => value = endorsedCandidates[index]);
+
         EndorsedCandidateOpenStore.update((value) => value = true);
+
     };
 
 </script>
@@ -114,13 +219,13 @@
                 {#each endorsedCandidates as campaign, i}
                     <tr>
                         <td>
-                            {campaign.campaign_name}
+                            {campaign?.campaign_name}
                         </td>
                         <td>
-                            {campaign.election_date_general.slice(0, 4)}
+                            {campaign?.election_date_general.slice(0, 4)}
                         </td>
                         <td>
-                            {campaign.electorate}
+                            {campaign?.electorate}
                         </td>
                         <td>
                             <button 
@@ -295,6 +400,26 @@
         .tab {
             font-size: 1.1rem;
         }
+
+        tbody > tr > th {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        tbody > tr > th > h5 {
+            margin: 0;
+            padding: 0;
+            font-size: 1rem;
+        }
+
+        tbody > tr > td {
+            padding: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .icon_container {
+            max-width: 1.25rem;
+        }
     }
 
     @media (max-width: 720px) {
@@ -315,6 +440,26 @@
         .active_tab {
             font-size: 0.8rem;
             padding: 0 0.5rem;
+        }
+
+        tbody > tr > th {
+            padding: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        tbody > tr > th > h5 {
+            margin: 0;
+            padding: 0;
+            font-size: 0.8rem;
+        }
+
+        tbody > tr > td {
+            padding: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .icon_container {
+            max-width: 1rem;
         }
 
     }
