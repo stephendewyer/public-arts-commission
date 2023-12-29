@@ -19,6 +19,7 @@
     import SessionsCongress from "$lib/data/sessionsCongress.json"
     import DateInput from "$lib/components/inputs/DateInput.svelte";
     import { goto } from '$app/navigation';
+    import type { E164Number } from 'svelte-tel-input/types';
 
     export let data;
 
@@ -147,7 +148,7 @@
     let ratifiedByStateConventionsChecked: boolean = false;
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: string = "";
+    let phoneContactInputValue: E164Number | null = null;
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
@@ -201,7 +202,7 @@
         }, 4000)
     };
 
-    const createAmendmentEndorsement = async (
+    const updateAmendmentEndorsement = async (
         userEmail: string | null | undefined,
         imageFile: string,
         imageAltText: string,
@@ -232,7 +233,7 @@
         ratifiedByStateConventions: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: string,
+        phoneContact: E164Number | null,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
@@ -240,8 +241,8 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createAmendmentEndorsement", {
-            method: 'POST',
+        const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateAmendmentEndorsement", {
+            method: 'PATCH',
             body: JSON.stringify({
                 userEmail,
                 imageFile,
@@ -300,7 +301,7 @@
 
         try {
             
-            await createAmendmentEndorsement(
+            await updateAmendmentEndorsement(
                 userEmail,
                 imageFileInputValue,
                 imageAltTextInputValue,
@@ -369,7 +370,7 @@
                 ratifiedByStateConventionsChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = "",
+                phoneContactInputValue = null,
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
@@ -437,7 +438,7 @@
 
 </script>
 <div class="add_endorsement_container">
-    <h1>add amendment endorsement</h1>
+    <h1>edit amendment endorsement</h1>
     <form 
         class="form_container"
         on:submit|preventDefault={submitAmendmentEndoresementHandler}

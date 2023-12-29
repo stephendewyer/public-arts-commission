@@ -18,40 +18,46 @@
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import TimeZones from "$lib/data/timeZones.json";
     import { goto } from '$app/navigation';
+    import type { E164Number } from 'svelte-tel-input/types';
+    import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat";
 
     export let data;
 
-    $: userEmail = data.streamed.user?.email;  
+    let userEmail: string | null | undefined;
 
+    $: userEmail = data.streamed.user?.email;
+    let actionID: number | null = data.endorsedActionWithImage.action_ID;
+    let imageID: number | null = data.endorsedActionWithImage.image_ID;
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = "";
-    let image: any;
-    let actionNameInputValue: string = "";
-    let allDayActionChecked: boolean = false;
-    let allDayActionDateInputValue: string = "";
-    let actionStartDateInputValue: string = "";
-    let actionEndDateInputValue: string = "";
-    let startTimeInputValue: string = "";
-    let endTimeInputValue: string = "";
-    let timeZoneInputValue: string = "";
-    let actionStreetAddressInputValue: string = "";
-    let actionStreetAddress02InputValue: string = "";
-    let actionCityInputValue: string = "";
-    let actionStateInputValue: string = "";
-    let actionZipCodeInputValue: number | null = null;
-    let governmentLevelInputValue: string = "";
-    let websiteURLInputValue: string = "";
-    let detailsInputValue: string = "";
+    let imagePublicID: string = data.endorsedActionWithImage.public_ID;
+    let imageAltTextInputValue: string = data.endorsedActionWithImage.alt_text;
+    let image: string = data.endorsedActionWithImage.image_URL;
+    let actionNameInputValue: string = data.endorsedActionWithImage.action_name;
+    let allDayActionChecked: boolean = data.endorsedActionWithImage.all_day_event;
+    let allDayActionDateInputValue: string = ConvertDateInputFormat(data.endorsedActionWithImage.all_day_event_date);
+    let actionStartDateInputValue: string = ConvertDateInputFormat(data.endorsedActionWithImage.date_start);
+    let actionEndDateInputValue: string = ConvertDateInputFormat(data.endorsedActionWithImage.date_end);
+    let startTimeInputValue: string = data.endorsedActionWithImage.time_start.toString();
+    let endTimeInputValue: string = data.endorsedActionWithImage.time_end.toString();
+    let timeZoneInputValue: string = data.endorsedActionWithImage.time_zone;
+    let actionStreetAddressInputValue: string = data.endorsedActionWithImage.action_street_address;
+    let actionStreetAddress02InputValue: string = data.endorsedActionWithImage.action_street_address_02;
+    let actionCityInputValue: string = data.endorsedActionWithImage.action_city;
+    let actionStateInputValue: string = data.endorsedActionWithImage.action_state;
+    let actionZipCodeInputValue: number | null = data.endorsedActionWithImage.action_zip_code;
+    let governmentLevelInputValue: string = data.endorsedActionWithImage.government_level;
+    let websiteURLInputValue: string = data.endorsedActionWithImage.website_URL;
+    let detailsInputValue: string = data.endorsedActionWithImage.details;
 
-    let nameFirstContactInputValue: string = "";
-    let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: string = "";
-    let streetAddressContactInputValue: string = "";
-    let streetAddress02ContactInputValue: string = "";
-    let cityContactInputValue: string = "";
-    let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
-    let emailContactInputValue: string = "";
+    let nameFirstContactInputValue: string = data.endorsedActionWithImage.contact_name_first;
+    let nameLastContactInputValue: string = data.endorsedActionWithImage.contact_name_last;
+    let phoneContactInputValue: E164Number | null = data.endorsedActionWithImage.contact_phone_number;
+    let streetAddressContactInputValue: string = data.endorsedActionWithImage.contact_street_address;
+    let streetAddress02ContactInputValue: string = data.endorsedActionWithImage.action_street_address_02;
+    let cityContactInputValue: string = data.endorsedActionWithImage.contact_city;
+    let stateContactInputValue: string = data.endorsedActionWithImage.contact_state;
+    let zipCodeContactInputValue: number | null = data.endorsedActionWithImage.contact_zip_code;
+    let emailContactInputValue: string = data.endorsedActionWithImage.contact_email;
 
     let noContactInformationChecked: boolean;
 
@@ -102,9 +108,12 @@
         }, 4000)
     };
 
-    const createActionEndorsement = async (
+    const updateActionEndorsement = async (
         userEmail: string | null | undefined,
+        actionID: number | null,
+        imageID: number | null,
         imageFile: string,
+        imagePublicID: string,
         imageAltText: string,
         image: any,
         actionName: string,
@@ -125,7 +134,7 @@
         details: string,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: string,
+        phoneContact: E164Number | null,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
@@ -133,11 +142,14 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createActionEndorsement", {
-            method: 'POST',
+        const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateActionEndorsement", {
+            method: 'PATCH',
             body: JSON.stringify({
                 userEmail,
+                actionID,
+                imageID,
                 imageFile,
+                imagePublicID,
                 imageAltText,
                 image,
                 actionName,
@@ -185,9 +197,12 @@
 
         try {
             
-            await createActionEndorsement(
+            await updateActionEndorsement(
                 userEmail,
+                actionID,
+                imageID,
                 imageFileInputValue,
+                imagePublicID,
                 imageAltTextInputValue,
                 image,
                 actionNameInputValue,
@@ -217,8 +232,10 @@
                 emailContactInputValue
             );
             if (responseItem.success) {
+                imageID = null,
                 imageFileInputValue = "",
                 imageAltTextInputValue = "",
+                imagePublicID = "",
                 image = "",
                 actionNameInputValue = "",
                 allDayActionChecked = false,
@@ -238,7 +255,7 @@
                 detailsInputValue = "",
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = "",
+                phoneContactInputValue = null,
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
@@ -289,7 +306,7 @@
 
 </script>
 <div class="add_candidate_endorsement_container">
-    <h1>add action endorsement</h1>
+    <h1>edit action endorsement</h1>
     <form 
         class="form_container"
         on:submit|preventDefault={submitActionEndoresementHandler}
@@ -661,7 +678,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            add action endorsement
+            submit changes
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >

@@ -18,6 +18,7 @@
     import SessionsCongress from "$lib/data/sessionsCongress.json";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
+    import type { E164Number } from "svelte-tel-input/types";
 
     export let data;
 
@@ -147,7 +148,7 @@
     
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: string = "";
+    let phoneContactInputValue: E164Number | null = null;
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
@@ -232,7 +233,7 @@
         ExecutiveSignedIntoLaw: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: string,
+        phoneContact: E164Number | null,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
@@ -240,7 +241,7 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createLegislationEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateLegislationEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
@@ -370,7 +371,7 @@
                 ExecutiveSignedIntoLawChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = "",
+                phoneContactInputValue = null,
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
@@ -432,7 +433,7 @@
 
 </script>
 <div class="add_legislation_endorsement_container">
-    <h1>add legislation endorsement</h1>
+    <h1>edit legislation endorsement</h1>
     <form 
         class="form_container"
         on:submit|preventDefault={submitLegislationEndoresementHandler}

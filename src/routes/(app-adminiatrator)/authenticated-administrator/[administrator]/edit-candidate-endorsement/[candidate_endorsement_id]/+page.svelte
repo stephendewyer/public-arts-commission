@@ -15,6 +15,7 @@
     import TextInputReadonly from "$lib/components/inputs/TextInputReadonly.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
+    import type { E164Number } from 'svelte-tel-input/types';
 
     export let data;
 
@@ -43,7 +44,7 @@
     let campaignEndedChecked: boolean = false;
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: string = "";
+    let phoneContactInputValue: E164Number | null = null;
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
@@ -93,7 +94,7 @@
         }, 4000);
     };
 
-    const createCandidateEndorsement = async (
+    const updateCandidateEndorsement = async (
         userEmail: string | null | undefined,
         imageFile: string,
         imageAltText: string,
@@ -118,7 +119,7 @@
         campaignEnded: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: string,
+        phoneContact: E164Number | null,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
@@ -126,7 +127,7 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createCandidateEndorsement", {
+        const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateCandidateEndorsement", {
             method: 'POST',
             body: JSON.stringify({
                 userEmail,
@@ -180,7 +181,7 @@
 
         try {
             
-            await createCandidateEndorsement(
+            await updateCandidateEndorsement(
                 userEmail,
                 imageFileInputValue,
                 imageAltTextInputValue,
@@ -236,7 +237,7 @@
                 campaignEndedChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = "",
+                phoneContactInputValue = null,
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
@@ -273,7 +274,7 @@
 
 </script>
 <div class="add_candidate_endorsement_container">
-    <h1>add candidate endorsement</h1>
+    <h1>edit candidate endorsement</h1>
     <form 
         class="form_container"
         on:submit|preventDefault={submitCandidateEndoresementHandler}

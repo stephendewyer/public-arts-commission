@@ -85,6 +85,10 @@ export const POST = async ({request}) => {
 
   };
 
+  // check if image is the same as image already in database
+
+  
+
   // upload image to Cloudinary
 
   let uploadedImageURL;

@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 import type { SvelteComponent } from 'svelte';
+import type { E164Number } from 'svelte-tel-input/types';
 
 declare global {
 	namespace App {
@@ -158,7 +159,7 @@ declare global {
 		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -190,7 +191,7 @@ declare global {
 		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -229,7 +230,7 @@ declare global {
 		signed_by_Executive: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address: string;
 		contact_city: string;
@@ -260,7 +261,7 @@ declare global {
 		signed_by_Executive: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address: string;
 		contact_city: string;
@@ -297,7 +298,7 @@ declare global {
 		signed_by_Executive: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address: string;
 		contact_city: string;
@@ -342,7 +343,7 @@ declare global {
 		ratified_by_state_legislatures: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -376,7 +377,7 @@ declare global {
 		ratified_by_state_legislatures: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -416,7 +417,7 @@ declare global {
 		ratified_by_state_legislatures: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -456,7 +457,7 @@ declare global {
 		details: string;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -486,7 +487,7 @@ declare global {
 		details: string;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -518,7 +519,7 @@ declare global {
 		pending_election: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;
@@ -544,7 +545,7 @@ declare global {
 		pending_election: number;
 		contact_name_first: string;
 		contact_name_last: string;
-		contact_phone_number: number;
+		contact_phone_number: E164Number | null;
 		contact_street_address: string;
 		contact_street_address_02: string;
 		contact_city: string;

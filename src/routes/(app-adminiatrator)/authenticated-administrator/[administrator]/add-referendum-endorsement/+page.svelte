@@ -16,6 +16,7 @@
     import TextArea from "$lib/components/inputs/TextArea.svelte";
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
+    import type { E164Number } from 'svelte-tel-input/types';
 
     export let data;
 
@@ -43,7 +44,7 @@
 
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: string = "";
+    let phoneContactInputValue: E164Number | null= null;
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
@@ -111,7 +112,7 @@
         pendingElection: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: string,
+        phoneContact: E164Number | null,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
@@ -211,7 +212,7 @@
                 pendingElectionChecked= false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = "",
+                phoneContactInputValue = null,
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
