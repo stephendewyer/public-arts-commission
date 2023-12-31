@@ -610,6 +610,13 @@ declare global {
 		endorsement_category: string| null;
 	}
 
+	interface CoSponsorInputValue {
+
+        co_sponsor: string;
+        isValid: boolean;
+
+    };
+
 }
 
 export {};

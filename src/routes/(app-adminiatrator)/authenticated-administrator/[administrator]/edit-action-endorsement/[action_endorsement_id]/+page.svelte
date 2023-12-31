@@ -678,7 +678,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            submit changes
+            update action endorsement
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >

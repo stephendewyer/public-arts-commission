@@ -29,13 +29,6 @@
     let addHouseCoSponsor: boolean = false;
     let addSenateCoSponsor: boolean = false;
 
-    interface CoSponsorInputValue {
-
-        co_sponsor: string;
-        isValid: boolean;
-
-    };
-
     let coSponsorsHouseValues: CoSponsorInputValue[] = [
         {
             co_sponsor: "",

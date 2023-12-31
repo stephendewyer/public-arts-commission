@@ -20,34 +20,32 @@
     import DateInput from "$lib/components/inputs/DateInput.svelte";
     import { goto } from '$app/navigation';
     import type { E164Number } from 'svelte-tel-input/types';
+    import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat";
 
     export let data;
 
     $: userEmail = data.streamed.user?.email;
-
+    
     let addHouseCoSponsor: boolean = false;
     let addSenateCoSponsor: boolean = false;
 
-    interface CoSponsorInputValue {
-
-        co_sponsor: string;
-        isValid: boolean;
-
-    };
-
-    let coSponsorsHouseValues: CoSponsorInputValue[] = [
-        {
-            co_sponsor: "",
+    let coSponsorsHouseValues: CoSponsorInputValue[] = [];
+    
+    data.endorsedAmendmentImagesAndSponsors.co_sponsors_House.forEach((sponsor: CoSponsorHouse) => {
+        coSponsorsHouseValues = [...coSponsorsHouseValues, {
+            co_sponsor: sponsor.co_sponsor_name,
             isValid: true
-        }
-    ];
+        }];
+    });
 
-    let coSponsorsSenateValues: CoSponsorInputValue[] = [
-        {
-            co_sponsor: "",
+    let coSponsorsSenateValues: CoSponsorInputValue[] = [];
+    
+    data.endorsedAmendmentImagesAndSponsors.co_sponsors_Senate.forEach((sponsor: CoSponsorSenate) => {
+        coSponsorsSenateValues = [...coSponsorsSenateValues, {
+            co_sponsor: sponsor.co_sponsor_name,
             isValid: true
-        }
-    ];
+        }];
+    });
 
     $: if (addHouseCoSponsor) {
 
@@ -122,39 +120,39 @@
     // end remove House sponsor
 
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = "";
-    let image: any;
-    let amendmentNameInputValue: string = "";
-    let yearReleasedInputValue: number | null = null;
-    let yearIntroducedInHouseInputValue: number | null = null;
-    let yearIntroducedInSenateInputValue: number | null = null;
-    let electionDateInputValue: string = "";
-    let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
-    let introducedInHouseChecked: boolean = false;
-    let introducedInSenateChecked: boolean = false;
-    let sponsorHouseInputValue: string = "";
-    let sponsorSenateInputValue: string = "";
-    let houseSessionInputValue: string = "";
-    let senateSessionInputValue: string = "";
-    let detailsInputValue: string = "";
-    let websiteURLInputValue: string = "";
-    let twoThirdsHouseAndSenatePassedChecked: boolean = false;
-    let simpleMajorityHouseAndSenatePassedChecked: boolean = false;
-    let simpleMajorityVotersPassedChecked: boolean = false;
-    let ratifiedByStateLegislaturesChecked: boolean = false;
-    let ratifiedByStateConventionsChecked: boolean = false;
-    let nameFirstContactInputValue: string = "";
-    let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
-    let streetAddressContactInputValue: string = "";
-    let streetAddress02ContactInputValue: string = "";
-    let cityContactInputValue: string = "";
-    let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
-    let emailContactInputValue: string = "";
+    let imageAltTextInputValue: string = data.endorsedAmendmentImagesAndSponsors.alt_text;
+    let image: any = data.endorsedAmendmentImagesAndSponsors.image_URL;
+    let amendmentNameInputValue: string = data.endorsedAmendmentImagesAndSponsors.amendment_name;
+    let yearReleasedInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_released;
+    let yearIntroducedInHouseInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_introduced_House;
+    let yearIntroducedInSenateInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_introduced_Senate;
+    let electionDateInputValue: string = ConvertDateInputFormat(new Date(data.endorsedAmendmentImagesAndSponsors.election_date));
+    let governmentLevelInputValue: string = data.endorsedAmendmentImagesAndSponsors.government_level;
+    let stateInputValue: string = data.endorsedAmendmentImagesAndSponsors.state;
+    let countyInputValue: string = data.endorsedAmendmentImagesAndSponsors.county;
+    let cityInputValue: string = data.endorsedAmendmentImagesAndSponsors.city;
+    let introducedInHouseChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.introduced_in_House;
+    let introducedInSenateChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.introduced_in_Senate;
+    let sponsorHouseInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_House[0].sponsor_name;
+    let sponsorSenateInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_Senate[0].sponsor_name;
+    let houseSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_House;
+    let senateSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_Senate;
+    let detailsInputValue: string = data.endorsedAmendmentImagesAndSponsors.details;
+    let websiteURLInputValue: string = data.endorsedAmendmentImagesAndSponsors.website_URL;
+    let twoThirdsHouseAndSenatePassedChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.twothirds_House_and_Senate_passed;
+    let simpleMajorityHouseAndSenatePassedChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.simple_majority_House_and_Senate_passed;
+    let simpleMajorityVotersPassedChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.simple_majority_voters_passed;
+    let ratifiedByStateLegislaturesChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.ratified_by_state_legislatures;
+    let ratifiedByStateConventionsChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.ratified_by_state_convenctions;
+    let nameFirstContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_name_first;
+    let nameLastContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_name_last;
+    let phoneContactInputValue: E164Number | null = data.endorsedAmendmentImagesAndSponsors.contact_phone_number;
+    let streetAddressContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_street_address;
+    let streetAddress02ContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_street_address_02;
+    let cityContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_city;
+    let stateContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_state;
+    let zipCodeContactInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.contact_zip_code;
+    let emailContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_email;
 
     let noContactInformationChecked: boolean;
 
@@ -204,6 +202,7 @@
 
     const updateAmendmentEndorsement = async (
         userEmail: string | null | undefined,
+        amendmentID: number,
         imageFile: string,
         imageAltText: string,
         image: any,
@@ -216,8 +215,8 @@
         state: string,
         county: string,
         city: string,
-        introducedInHouse: boolean,
-        introducedInSenate: boolean,
+        introducedInHouse: boolean | number,
+        introducedInSenate: boolean | number,
         sponsorHouse: string,
         sponsorSenate: string,
         coSponsorsHouse: CoSponsorInputValue[],
@@ -226,11 +225,11 @@
         senateSession: string,
         details: string,
         websiteURL: string,
-        twoThirdsHouseAndSenatePassed: boolean,
-        simpleMajorityHouseAndSenatePassed: boolean,
-        simpleMajorityVotersPassed: boolean,
-        ratifiedByStateLegislatures: boolean,
-        ratifiedByStateConventions: boolean,
+        twoThirdsHouseAndSenatePassed: boolean | number,
+        simpleMajorityHouseAndSenatePassed: boolean | number,
+        simpleMajorityVotersPassed: boolean | number,
+        ratifiedByStateLegislatures: boolean | number,
+        ratifiedByStateConventions: boolean | number,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: E164Number | null,
@@ -245,6 +244,7 @@
             method: 'PATCH',
             body: JSON.stringify({
                 userEmail,
+                amendmentID,
                 imageFile,
                 imageAltText,
                 image,
@@ -303,6 +303,7 @@
             
             await updateAmendmentEndorsement(
                 userEmail,
+                data.endorsedAmendmentImagesAndSponsors.amendment_ID,
                 imageFileInputValue,
                 imageAltTextInputValue,
                 image,
@@ -924,7 +925,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            add amendment endorsement
+            update amendment endorsement
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >
