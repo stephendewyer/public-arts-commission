@@ -122,6 +122,8 @@
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = data.endorsedAmendmentImagesAndSponsors.alt_text;
     let image: any = data.endorsedAmendmentImagesAndSponsors.image_URL;
+    let imageID: number = data.endorsedAmendmentImagesAndSponsors.image_ID;
+    let imagePublicID: string = data.endorsedAmendmentImagesAndSponsors.public_ID;
     let amendmentNameInputValue: string = data.endorsedAmendmentImagesAndSponsors.amendment_name;
     let yearReleasedInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_released;
     let yearIntroducedInHouseInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_introduced_House;
@@ -204,8 +206,10 @@
         userEmail: string | null | undefined,
         amendmentID: number,
         imageFile: string,
+        imagePublicID: string,
         imageAltText: string,
         image: any,
+        imageID: number,
         amendmentName: string,
         yearReleased: number | null,
         yearIntroducedInHouse: number | null,
@@ -246,8 +250,10 @@
                 userEmail,
                 amendmentID,
                 imageFile,
+                imagePublicID,
                 imageAltText,
                 image,
+                imageID,
                 amendmentName,
                 yearReleased,
                 yearIntroducedInHouse,
@@ -305,8 +311,10 @@
                 userEmail,
                 data.endorsedAmendmentImagesAndSponsors.amendment_ID,
                 imageFileInputValue,
+                imagePublicID,
                 imageAltTextInputValue,
                 image,
+                imageID,
                 amendmentNameInputValue,
                 yearReleasedInputValue,
                 yearIntroducedInHouseInputValue,

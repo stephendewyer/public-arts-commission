@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -76,6 +77,8 @@ export const PATCH = async ({request}) => {
         return new Response(JSON.stringify({error: "missing form data!"}), {status: 422});
 
     };
+
+    GovernmentLevelValidation(governmentLevel, state, county, city);
 
     if (imageFile && (ImageFileExtensionTest(imageFile) === "false") ) {
 

@@ -27,26 +27,25 @@
     let addHouseCoSponsor: boolean = false;
     let addSenateCoSponsor: boolean = false;
 
-    interface CoSponsorInputValue {
+    let legislationID = data.endorsedLegislationImagesAndSponsors.legislation_ID;
 
-        co_sponsor: string;
-        isValid: boolean;
-
-    };
-
-    let coSponsorsHouseValues: CoSponsorInputValue[] = [
-        {
-            co_sponsor: "",
+    let coSponsorsHouseValues: CoSponsorInputValue[] = [];
+    
+    data.endorsedLegislationImagesAndSponsors.co_sponsors_House.forEach((sponsor: CoSponsorHouse) => {
+        coSponsorsHouseValues = [...coSponsorsHouseValues, {
+            co_sponsor: sponsor.co_sponsor_name,
             isValid: true
-        }
-    ];
+        }];
+    });
 
-    let coSponsorsSenateValues: CoSponsorInputValue[] = [
-        {
-            co_sponsor: "",
+    let coSponsorsSenateValues: CoSponsorInputValue[] = [];
+    
+    data.endorsedLegislationImagesAndSponsors.co_sponsors_Senate.forEach((sponsor: CoSponsorSenate) => {
+        coSponsorsSenateValues = [...coSponsorsSenateValues, {
+            co_sponsor: sponsor.co_sponsor_name,
             isValid: true
-        }
-    ];
+        }];
+    });
 
     $: if (addHouseCoSponsor) {
 
@@ -121,30 +120,32 @@
     // end remove House sponsor
 
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = "";
-    let image: any;
-    let legislationTitleInputValue: string = "";
-    let yearReleasedInputValue: number | null = null;
-    let yearIntroducedInHouseInputValue: number | null = null;
-    let yearIntroducedInSenateInputValue: number | null = null;
-    let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
-    let websiteURLInputValue: string = "";
-    let detailsInputValue: string = "";
-    let introducedInHouseChecked: boolean = false;
-    let introducedInSenateChecked: boolean = false;
-    let sponsorHouseInputValue: string = "";
-    let sponsorSenateInputValue: string = "";
-    let houseSessionInputValue: string = "";
-    let senateSessionInputValue: string = "";
-    let passedInHouseChecked: boolean = false;
-    let passedInSenateChecked: boolean = false;
-    let rejectedByHouseChecked: boolean = false;
-    let rejectedBySenateChecked: boolean = false;
-    let vetoedByExecutiveChecked: boolean = false;
-    let ExecutiveSignedIntoLawChecked: boolean = false;
+    let imageAltTextInputValue: string = data.endorsedLegislationImagesAndSponsors.alt_text;
+    let image: any = data.endorsedLegislationImagesAndSponsors.image_URL;
+    let imageID: number = data.endorsedLegislationImagesAndSponsors.image_ID;
+    let imagePublicID: string = data.endorsedLegislationImagesAndSponsors.public_ID;
+    let legislationTitleInputValue: string = data.endorsedLegislationImagesAndSponsors.legislation_name;
+    let yearReleasedInputValue: number | null = data.endorsedLegislationImagesAndSponsors.year_released;
+    let yearIntroducedInHouseInputValue: number | null = data.endorsedLegislationImagesAndSponsors.year_introduced_House;
+    let yearIntroducedInSenateInputValue: number | null = data.endorsedLegislationImagesAndSponsors.year_introduced_Senate;
+    let governmentLevelInputValue: string = data.endorsedLegislationImagesAndSponsors.government_level;
+    let stateInputValue: string = data.endorsedLegislationImagesAndSponsors.state;
+    let countyInputValue: string = data.endorsedLegislationImagesAndSponsors.county;
+    let cityInputValue: string = data.endorsedLegislationImagesAndSponsors.city;
+    let websiteURLInputValue: string = data.endorsedLegislationImagesAndSponsors.website_URL;
+    let detailsInputValue: string = data.endorsedLegislationImagesAndSponsors.details;
+    let introducedInHouseChecked: boolean = data.endorsedLegislationImagesAndSponsors.year_introduced_House ? true : false;
+    let introducedInSenateChecked: boolean = data.endorsedLegislationImagesAndSponsors.year_introduced_Senate ? true : false;
+    let sponsorHouseInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_House[0].sponsor_name;
+    let sponsorSenateInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_Senate[0].sponsor_name;
+    let houseSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_House;
+    let senateSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_Senate;
+    let passedInHouseChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.passed_in_House;
+    let passedInSenateChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.passed_in_Senate;
+    let rejectedByHouseChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.rejected_in_House;
+    let rejectedBySenateChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.rejected_in_Senate;
+    let vetoedByExecutiveChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.vetoed_by_Executive;
+    let ExecutiveSignedIntoLawChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.signed_by_Executive;
     
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
@@ -203,10 +204,13 @@
     };
 
     const createLegislationEndorsement = async (
+        legialstionID: number,
         userEmail: string | null | undefined,
         imageFile: string,
+        imagePublicID: string,
         imageAltText: string,
         image: any,
+        imageID: number,
         legislationTitle: string,
         yearReleased: number | null,
         yearIntroducedInHouse: number | null,
@@ -225,12 +229,12 @@
         coSponsorsSenate: CoSponsorInputValue[],
         houseSession: string,
         senateSession: string,
-        passedInHouse: boolean,
-        passedInSenate: boolean,
-        rejectedByHouse: boolean,
-        rejectedBySenate: boolean,
-        vetoedByExecutive: boolean,
-        ExecutiveSignedIntoLaw: boolean,
+        passedInHouse: boolean | any,
+        passedInSenate: boolean | any,
+        rejectedByHouse: boolean | any,
+        rejectedBySenate: boolean | any,
+        vetoedByExecutive: boolean | any,
+        ExecutiveSignedIntoLaw: boolean | any,
         nameFirstContact: string,
         nameLastContact: string,
         phoneContact: E164Number | null,
@@ -242,12 +246,15 @@
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateLegislationEndorsement", {
-            method: 'POST',
+            method: 'PATCH',
             body: JSON.stringify({
+                legislationID,
                 userEmail,
                 imageFile,
+                imagePublicID,
                 imageAltText,
                 image,
+                imageID,
                 legislationTitle,
                 yearReleased,
                 yearIntroducedInHouse,
@@ -302,10 +309,13 @@
         try {
             
             await createLegislationEndorsement(
+                legislationID,
                 userEmail,
                 imageFileInputValue,
+                imagePublicID,
                 imageAltTextInputValue,
                 image,
+                imageID,
                 legislationTitleInputValue,
                 yearReleasedInputValue,
                 yearIntroducedInHouseInputValue,
