@@ -10,7 +10,19 @@
 
     $: endorsedLegislationData;
 
-    $: console.log(endorsedLegislationData)
+    // $: console.log(endorsedLegislationData)
+
+    let sponsorsHouse: SponsorHouse[] = [];
+    let sponsorsSenate: SponsorSenate[]  = [];
+    let coSponsorsHouse: CoSponsorHouse[]  = [];
+    let coSponsorsSenate: CoSponsorSenate[]  = [];
+
+    let sponsorsHouseNames: string[] = [];
+    let sponsorsSenateNames: string[] = [];
+    let coSponsorsHouseNames: string[] = [];
+    let coSponsorsSenateNames: string[] = [];
+
+    // $: console.log(endorsedLegislationData)
 
     const unsubscribeEndorsedLegislationSelectedStore = EndorsedLegislationSelectedStore.subscribe(value => {
 		endorsedLegislationData = value;
@@ -89,20 +101,9 @@
 
     };
 
-    let sponsorsHouse: SponsorHouse[];
-    let sponsorsSenate: SponsorSenate[];
-    let coSponsorsHouse: CoSponsorHouse[];
-    let coSponsorsSenate: CoSponsorSenate[];
-
-    let sponsorsHouseNames: string[] = [];
-    let sponsorsSenateNames: string[] = [];
-    let coSponsorsHouseNames: string[] = [];
-    let coSponsorsSenateNames: string[] = [];
-
-
     $: if (endorsedLegislationData?.sponsors_House) {
 
-        sponsorsHouse = endorsedLegislationData?.sponsors_House;
+        sponsorsHouse = endorsedLegislationData.sponsors_House;
 
         sponsorsHouse.forEach((sponsor) => {
 
@@ -114,7 +115,7 @@
 
     $: if (endorsedLegislationData?.sponsors_Senate) {
 
-        sponsorsSenate = endorsedLegislationData?.sponsors_Senate;
+        sponsorsSenate = endorsedLegislationData.sponsors_Senate;
 
         sponsorsSenate.forEach((sponsor) => {
 
@@ -126,7 +127,7 @@
     
     $: if (endorsedLegislationData?.co_sponsors_House) {
 
-        coSponsorsHouse = endorsedLegislationData?.co_sponsors_House;
+        coSponsorsHouse = endorsedLegislationData.co_sponsors_House;
 
         coSponsorsHouse.forEach((sponsor) => {
 

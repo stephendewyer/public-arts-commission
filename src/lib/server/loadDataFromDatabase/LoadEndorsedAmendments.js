@@ -211,7 +211,7 @@ export const LoadAllEndorsedAmendments = async () => {
 
         endorsedAmendmentsSponsorsHouse.forEach((sponsor) => {
             
-            if (endorsedAmendmentId = sponsor.sponsored_amendment_ID) {
+            if (endorsedAmendmentId === sponsor.sponsored_amendment_ID) {
 
                 sponsorsHouseByAmendmentID = [...sponsorsHouseByAmendmentID, sponsor];
                 
@@ -221,7 +221,7 @@ export const LoadAllEndorsedAmendments = async () => {
 
         endorsedAmendmentsSponsorsSenate.forEach((sponsor) => {
 
-            if (endorsedAmendmentId = sponsor.sponsored_amendment_ID) {
+            if (endorsedAmendmentId === sponsor.sponsored_amendment_ID) {
 
                 sponsorsSenateByAmendmentID = [...sponsorsSenateByAmendmentID, sponsor];
 
@@ -231,7 +231,7 @@ export const LoadAllEndorsedAmendments = async () => {
 
         endorsedAmendmentsCoSponsorsHouse.forEach((sponsor) => {
 
-            if (endorsedAmendmentId = sponsor.co_sponsored_amendment_ID) {
+            if (endorsedAmendmentId === sponsor.co_sponsored_amendment_ID) {
 
                 coSponsorsHouseByAmendmentID = [...coSponsorsHouseByAmendmentID, sponsor];
 
@@ -241,7 +241,7 @@ export const LoadAllEndorsedAmendments = async () => {
 
         endorsedAmendmentsCoSponsorsSenate.forEach((sponsor) => {
 
-            if (endorsedAmendmentId = sponsor.co_sponsored_amendment_ID) {
+            if (endorsedAmendmentId === sponsor.co_sponsored_amendment_ID) {
 
                 coSponsorsSenateByAmendmentID = [...coSponsorsSenateByAmendmentID, sponsor];
 

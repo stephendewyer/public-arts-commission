@@ -101,7 +101,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
     // console.log("endorsed legislation with images: ", endorsedLegislationWithImages);
 
-    // get all the legislation IDs
+    // load all the legislation IDs from endorsedLegislation
 
     /**
      * @type {number[]}
@@ -109,12 +109,14 @@ export const LoadAllEndorsedLegislation = async () => {
     let endorsedLegislationIds = [];
 
     endorsedLegislation.forEach((legislation) => {
+
         endorsedLegislationIds = [...endorsedLegislationIds, legislation.legislation_ID];
+
     });
 
     const listLegislationIds = endorsedLegislationIds.join(", ");
 
-    // get the sponsors from House    
+    // load all the House sponsors who have a sponsored_legislation_ID
 
     const loadSponsorsHouse = `SELECT * FROM sponsors_House WHERE sponsored_legislation_ID in(${listLegislationIds})`;
 
@@ -135,7 +137,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
     });
 
-    // get the sponsors from Senate
+    // load all the Senate sponsors who have a sponsored_Legislation_ID
 
     const loadSponsorsSenate = `SELECT * FROM sponsors_Senate WHERE sponsored_legislation_ID in(${listLegislationIds})`;
 
@@ -156,7 +158,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
     });
 
-    // get the co-sponsors from Senate
+    // load all the Senate co-sponsors who have a co_sponsored_legislation_ID
 
     const loadCoSponsorsSenate = `SELECT * FROM co_sponsors_Senate WHERE co_sponsored_legislation_ID in(${listLegislationIds})`;
 
@@ -177,7 +179,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
     });
 
-    // get the sponsors from House    
+    // load all the House co-sponsors who have a co_sponsored_legislation_ID
 
     const loadCoSponsorsHouse = `SELECT * FROM co_sponsors_House WHERE co_sponsored_legislation_ID in(${listLegislationIds})`;
 
@@ -224,7 +226,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
         endorsedLegislationSponsorsHouse.forEach((sponsor) => {
             
-            if (endorsedLegislationId = sponsor.sponsored_legislation_ID) {
+            if (endorsedLegislationId === sponsor.sponsored_legislation_ID) {
 
                 sponsorsHouseByLegislationID = [...sponsorsHouseByLegislationID, sponsor];
                 
@@ -234,7 +236,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
         endorsedLegislationSponsorsSenate.forEach((sponsor) => {
 
-            if (endorsedLegislationId = sponsor.sponsored_legislation_ID) {
+            if (endorsedLegislationId === sponsor.sponsored_legislation_ID) {
 
                 sponsorsSenateByLegislationID = [...sponsorsSenateByLegislationID, sponsor];
 
@@ -244,7 +246,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
         endorsedLegislationCoSponsorsHouse.forEach((sponsor) => {
 
-            if (endorsedLegislationId = sponsor.co_sponsored_legislation_ID) {
+            if (endorsedLegislationId === sponsor.co_sponsored_legislation_ID) {
 
                 coSponsorsHouseByLegislationID = [...coSponsorsHouseByLegislationID, sponsor];
 
@@ -254,7 +256,7 @@ export const LoadAllEndorsedLegislation = async () => {
 
         endorsedLegislationCoSponsorsSenate.forEach((sponsor) => {
 
-            if (endorsedLegislationId = sponsor.co_sponsored_legislation_ID) {
+            if (endorsedLegislationId === sponsor.co_sponsored_legislation_ID) {
 
                 coSponsorsSenateByLegislationID = [...coSponsorsSenateByLegislationID, sponsor];
 

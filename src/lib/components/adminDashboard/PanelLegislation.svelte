@@ -15,6 +15,8 @@
 
     $: endorsedLegislation = [...panel_data];
 
+    // $: console.log(endorsedLegislation);
+
     let activeTab: number = 0;
 
     $: activeTab;
