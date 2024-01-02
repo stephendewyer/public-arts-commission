@@ -7,7 +7,12 @@ export const LoadAllEndorsedAmendments = async () => {
      */
     let endorsedAmendmentsWithImages = [];
 
-    // begin loaad amendments 
+    /**
+     * @type {AmendmentWithSponsorsAndImage[]}
+     */
+    let endorsedAmendmentsImagesAndSponsors = [];
+
+    // load all the endorsed amendments
 
     const loadEndorsedAmendmentsStatement = "SELECT * FROM endorsed_amendments";
 
@@ -32,7 +37,7 @@ export const LoadAllEndorsedAmendments = async () => {
 
     if (endorsedAmendments.length === 0) {
 
-        return endorsedAmendmentsWithImages;
+        return endorsedAmendmentsImagesAndSponsors;
 
     };
 
@@ -42,7 +47,9 @@ export const LoadAllEndorsedAmendments = async () => {
     let endorsedAmendmentsImageIds = [];
 
     endorsedAmendments.forEach((amendment) => {
+
         endorsedAmendmentsImageIds = [...endorsedAmendmentsImageIds, amendment.image_ID];
+
     });
 
     const listImageIds = endorsedAmendmentsImageIds.join(", ");
@@ -67,13 +74,19 @@ export const LoadAllEndorsedAmendments = async () => {
     });
 
     endorsedAmendments.forEach((amendment) => {
+
         let amendmentImageId = amendment.image_ID;
 
         endorsedAmendmentsImages.forEach((imageRow) => {
+
             if (amendmentImageId === imageRow.image_ID) {
+
                 endorsedAmendmentsWithImages = [...endorsedAmendmentsWithImages, {...amendment, ...imageRow}];
+
             };
+
         });
+
     });
 
     /**
@@ -82,7 +95,9 @@ export const LoadAllEndorsedAmendments = async () => {
     let endorsedAmendmentsIds = [];
 
     endorsedAmendments.forEach((amendment) => {
+
         endorsedAmendmentsIds = [...endorsedAmendmentsIds, amendment.amendment_ID];
+        
     });
 
     const listAmendmentIds = endorsedAmendmentsIds.join(", ");
@@ -170,10 +185,6 @@ export const LoadAllEndorsedAmendments = async () => {
         throw error;
 
     });
-    /**
-     * @type {any[]}
-     */
-    let endorsedAmendmentsImagesAndSponsors = [];
 
     // add sponsors to endorsedLegislationWithImages objects in array
 

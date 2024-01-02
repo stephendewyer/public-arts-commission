@@ -10,6 +10,8 @@
 
     $: endorsedLegislationData;
 
+    $: console.log(endorsedLegislationData)
+
     const unsubscribeEndorsedLegislationSelectedStore = EndorsedLegislationSelectedStore.subscribe(value => {
 		endorsedLegislationData = value;
     });

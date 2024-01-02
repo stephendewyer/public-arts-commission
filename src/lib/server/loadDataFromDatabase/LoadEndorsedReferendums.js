@@ -40,7 +40,9 @@ export const LoadAllEndorsedReferendums = async () => {
     let endorsedReferendumsImageIds = [];
 
     endorsedReferendums.forEach((referendum) => {
+
         endorsedReferendumsImageIds = [...endorsedReferendumsImageIds, referendum.image_ID];
+
     });
 
     const listImageIds = endorsedReferendumsImageIds.join(", ");
@@ -65,11 +67,15 @@ export const LoadAllEndorsedReferendums = async () => {
     });
 
     endorsedReferendums.forEach((referendum) => {
+
         let referendumImageId = referendum.image_ID;
 
         endorsedReferendumsImages.forEach((imageRow) => {
-            if (referendumImageId = imageRow.image_ID) {
+
+            if (referendumImageId === imageRow.image_ID) {
+
                 endorsedReferendumsWithImages = [...endorsedReferendumsWithImages, {...referendum, ...imageRow}];
+                
             };
         });
     });

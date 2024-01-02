@@ -135,8 +135,8 @@
     let cityInputValue: string = data.endorsedAmendmentImagesAndSponsors.city;
     let introducedInHouseChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.introduced_in_House;
     let introducedInSenateChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.introduced_in_Senate;
-    let sponsorHouseInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_House[0].sponsor_name;
-    let sponsorSenateInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_Senate[0].sponsor_name;
+    let sponsorHouseInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_House[0]?.sponsor_name;
+    let sponsorSenateInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_Senate[0]?.sponsor_name;
     let houseSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_House;
     let senateSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_Senate;
     let detailsInputValue: string = data.endorsedAmendmentImagesAndSponsors.details;

@@ -136,8 +136,8 @@
     let detailsInputValue: string = data.endorsedLegislationImagesAndSponsors.details;
     let introducedInHouseChecked: boolean = data.endorsedLegislationImagesAndSponsors.year_introduced_House ? true : false;
     let introducedInSenateChecked: boolean = data.endorsedLegislationImagesAndSponsors.year_introduced_Senate ? true : false;
-    let sponsorHouseInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_House[0].sponsor_name;
-    let sponsorSenateInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_Senate[0].sponsor_name;
+    let sponsorHouseInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_House[0]?.sponsor_name;
+    let sponsorSenateInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_Senate[0]?.sponsor_name;
     let houseSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_House;
     let senateSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_Senate;
     let passedInHouseChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.passed_in_House;

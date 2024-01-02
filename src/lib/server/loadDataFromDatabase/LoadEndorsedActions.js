@@ -7,7 +7,7 @@ export const LoadAllEndorsedActions = async () => {
      */
     let endorsedActionsWithImages = [];
 
-    // begin load actions
+    // load all the endorsed actions
     
     const loadEndorsedActionsStatement = "SELECT * FROM endorsed_actions";
 
@@ -36,13 +36,17 @@ export const LoadAllEndorsedActions = async () => {
 
     };
 
+    // load all the image rows from image_collection table with image_IDs that match action image_IDs
+
     /**
      * @type {number[]}
      */
     let endorsedActionsImageIds = [];
 
     endorsedActions.forEach((action) => {
+
         endorsedActionsImageIds = [...endorsedActionsImageIds, action.image_ID];
+
     });
 
     const listImageIds = endorsedActionsImageIds.join(", ");
@@ -66,14 +70,22 @@ export const LoadAllEndorsedActions = async () => {
 
     });
 
+    // combine each endorsed action object with image object that has matching image_ID 
+
     endorsedActions.forEach((action) => {
+
         let actionImageId = action.image_ID;
 
         endorsedActionsImages.forEach((imageRow) => {
+
             if (actionImageId === imageRow.image_ID) {
+
                 endorsedActionsWithImages = [...endorsedActionsWithImages, {...action, ...imageRow}];
+
             };
+
         });
+        
     });
 
     res.end();

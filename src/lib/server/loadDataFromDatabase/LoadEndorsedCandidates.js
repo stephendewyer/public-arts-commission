@@ -7,7 +7,7 @@ export const LoadAllEndorsedCandidates = async () => {
      */
     let endorsedCandidatesWithImages = [];
 
-    // begin load candidates
+    // load all the endorsed candidates
 
     const loadEndorsedCandidatesStatement = "SELECT * FROM endorsed_candidates";
 
@@ -42,7 +42,9 @@ export const LoadAllEndorsedCandidates = async () => {
     let endorsedCandidatesImageIds = [];
 
     endorsedCandidates.forEach((candidate) => {
+
         endorsedCandidatesImageIds = [...endorsedCandidatesImageIds, candidate.image_ID];
+
     });
 
     // select images from image_collection table where image_ID == image_ID
@@ -69,13 +71,19 @@ export const LoadAllEndorsedCandidates = async () => {
     });
 
     endorsedCandidates.forEach((candidate) => {
+
         let candidateImageId = candidate.image_ID;
 
         candidatesImages.forEach((imageRow) => {
+
             if (candidateImageId === imageRow.image_ID) {
+
                 endorsedCandidatesWithImages = [...endorsedCandidatesWithImages, {...candidate, ...imageRow}];
+
             };
+
         });
+        
     });
 
     res.end();

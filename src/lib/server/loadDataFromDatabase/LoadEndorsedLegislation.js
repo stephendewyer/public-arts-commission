@@ -7,6 +7,11 @@ export const LoadAllEndorsedLegislation = async () => {
      */
     let endorsedLegislationWithImages = [];
 
+    /**
+     * @type {LegislationWithSponsorsAndImage[]}
+     */
+    let endorsedLegislationImagesAndSponsors = [];
+
     // begin load legislation
 
     const loadEndorsedLegislationStatement = "SELECT * FROM endorsed_legislation";
@@ -30,11 +35,15 @@ export const LoadAllEndorsedLegislation = async () => {
 
     });
 
+    // console.log("endorsed legislation: ", endorsedLegislation);
+
     if (endorsedLegislation.length === 0) {
 
-        return endorsedLegislationWithImages;
+        return endorsedLegislationImagesAndSponsors;
 
     };
+
+    // create an array of legislation image_IDs
 
     /**
      * @type {number[]}
@@ -42,8 +51,12 @@ export const LoadAllEndorsedLegislation = async () => {
     let endorsedLegislationImageIds = [];
 
     endorsedLegislation.forEach((legislation) => {
+
         endorsedLegislationImageIds = [...endorsedLegislationImageIds, legislation.image_ID];
+
     });
+
+    // load all the image rows from image_collection table that have an ID that matches an ID in endorsedLegislationImageIds
 
     const listImageIds = endorsedLegislationImageIds.join(", ");
 
@@ -66,15 +79,27 @@ export const LoadAllEndorsedLegislation = async () => {
 
     });
 
+    // console.log("endorsed legislation images, ", endorsedLegislationImages);
+
+    // combine each endorsedLegislation object with imageRow object that has matching image_ID
+
     endorsedLegislation.forEach((legislation) => {
+
         let endorsedLegislationImageId = legislation.image_ID;
 
         endorsedLegislationImages.forEach((imageRow) => {
-            if (endorsedLegislationImageId = imageRow.image_ID) {
+
+            if (endorsedLegislationImageId === imageRow.image_ID) {
+
                 endorsedLegislationWithImages = [...endorsedLegislationWithImages, {...legislation, ...imageRow}];
+
             };
+
         });
+
     });
+
+    // console.log("endorsed legislation with images: ", endorsedLegislationWithImages);
 
     // get all the legislation IDs
 
@@ -172,10 +197,7 @@ export const LoadAllEndorsedLegislation = async () => {
         throw error;
 
     });
-    /**
-     * @type {any[]}
-     */
-    let endorsedLegislationImagesAndSponsors = [];
+    
 
     // add sponsors to endorsedLegislationWithImages objects in array
 

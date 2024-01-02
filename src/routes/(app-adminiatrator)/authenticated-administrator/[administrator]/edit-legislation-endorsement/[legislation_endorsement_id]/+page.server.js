@@ -2,6 +2,8 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 
 export const load = async ({params}) => {
 
+    // load the legislation endorsement ID
+
     const id = params.legislation_endorsement_id;
 
     // load the legislation endorsement using the legislation endorsement_id
@@ -33,6 +35,9 @@ export const load = async ({params}) => {
 
     });
 
+    // console.log("endorsed legislation to edit: ", endorsedLegislation);
+
+    // load the endorsed legsilation image from image_collection table
 
     /**
      * @type {number}
@@ -60,7 +65,7 @@ export const load = async ({params}) => {
 
     endorsedLegislationWithImage = {...endorsedLegislation[0], ...endorsedLegislationImage[0]};
 
-    // get the sponsors from House    
+    // load the endorsed_legislation House sponsors  
 
     const loadSponsorsHouse = `SELECT * FROM sponsors_House WHERE sponsored_legislation_ID = ${id}`;
 
@@ -81,7 +86,7 @@ export const load = async ({params}) => {
 
     });
 
-    // get the sponsors from Senate
+    // load the endorsed legislation Senate sponsors
 
     const loadSponsorsSenate = `SELECT * FROM sponsors_Senate WHERE sponsored_legislation_ID  = "${id}"`;
 
@@ -102,7 +107,7 @@ export const load = async ({params}) => {
 
     });
 
-    // get the co-sponsors from Senate
+    // load the endorsed legislation Senate co-sponsors
 
     const loadCoSponsorsSenate = `SELECT * FROM co_sponsors_Senate WHERE co_sponsored_legislation_ID = "${id}"`;
 
@@ -123,7 +128,7 @@ export const load = async ({params}) => {
 
     });
 
-    // get the sponsors from House    
+    // load the endorsed legislation House co-sponsors  
 
     const loadCoSponsorsHouse = `SELECT * FROM co_sponsors_House WHERE co_sponsored_legislation_ID = "${id}"`;
 
