@@ -16,41 +16,45 @@
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
     import type { E164Number } from 'svelte-tel-input/types';
+    import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat.js";
 
     export let data;
 
     $: userEmail = data.streamed.user?.email;  
 
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = "";
-    let image: any;
-    let campaignNameInputValue: string = "";
-    let electorateInputValue: string = "";
-    let yearOfficeSoughtInputValue: number | null = null;
-    let electionDatePrimaryInputValue: string = "";
-    let electionDateGeneralInputValue: string = "";
-    let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
-    let partyInputValue: string = "";
-    let websiteURLInputValue: string = "";
-    let runningInPrimaryChecked: boolean = false;
-    let electedInPrimaryChecked: boolean = false;
-    let rejectedInPrimaryChecked: boolean = false;
-    let runnningInGeneralChecked: boolean = false;
-    let electedInGeneralChecked: boolean = false;
-    let rejectedInGeneralChecked: boolean = false;
-    let campaignEndedChecked: boolean = false;
-    let nameFirstContactInputValue: string = "";
-    let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
-    let streetAddressContactInputValue: string = "";
-    let streetAddress02ContactInputValue: string = "";
-    let cityContactInputValue: string = "";
-    let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
-    let emailContactInputValue: string = "";
+    let candidateID: number = data.endorsedCandidateWithImage.candidate_ID;
+    let imageID: number = data.endorsedCandidateWithImage.image_ID;
+    let imageAltTextInputValue: string = data.endorsedCandidateWithImage.alt_text;
+    let image: any = data.endorsedCandidateWithImage.image_URL;
+    let imagePublicID: string = data.endorsedCandidateWithImage.public_ID;
+    let campaignNameInputValue: string = data.endorsedCandidateWithImage.campaign_name;
+    let electorateInputValue: string = data.endorsedCandidateWithImage.electorate;
+    let yearOfficeSoughtInputValue: number | null = data.endorsedCandidateWithImage.office_sought_starting_year;
+    let electionDatePrimaryInputValue: string = ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_primary));
+    let electionDateGeneralInputValue: string = ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_general));
+    let governmentLevelInputValue: string = data.endorsedCandidateWithImage.government_level;
+    let stateInputValue: string = data.endorsedCandidateWithImage.state;
+    let countyInputValue: string = data.endorsedCandidateWithImage.county;
+    let cityInputValue: string = data.endorsedCandidateWithImage.city;
+    let partyInputValue: string = data.endorsedCandidateWithImage.party;
+    let websiteURLInputValue: string = data.endorsedCandidateWithImage.website_URL;
+    let runningInPrimaryChecked: boolean | any = data.endorsedCandidateWithImage.running_in_primary;
+    let electedInPrimaryChecked: boolean | any = data.endorsedCandidateWithImage.elected_in_primary;
+    let rejectedInPrimaryChecked: boolean | any = data.endorsedCandidateWithImage.rejected_in_primary;
+    let runnningInGeneralChecked: boolean | any = data.endorsedCandidateWithImage.running_in_general;
+    let electedInGeneralChecked: boolean | any = data.endorsedCandidateWithImage.elected_in_general;
+    let rejectedInGeneralChecked: boolean | any = data.endorsedCandidateWithImage.rejected_in_general;
+    let campaignEndedChecked: boolean | any = data.endorsedCandidateWithImage.campaign_ended;
+    let nameFirstContactInputValue: string = data.endorsedCandidateWithImage.contact_name_first;
+    let nameLastContactInputValue: string = data.endorsedCandidateWithImage.contact_name_last;
+    let phoneContactInputValue: E164Number | null = data.endorsedCandidateWithImage.contact_phone_number;
+    let streetAddressContactInputValue: string = data.endorsedCandidateWithImage.contact_street_address;
+    let streetAddress02ContactInputValue: string = data.endorsedCandidateWithImage.contact_street_address_02;
+    let cityContactInputValue: string = data.endorsedCandidateWithImage.contact_city;
+    let stateContactInputValue: string = data.endorsedCandidateWithImage.contact_state;
+    let zipCodeContactInputValue: number | null = data.endorsedCandidateWithImage.contact_zip_code;
+    let emailContactInputValue: string = data.endorsedCandidateWithImage.contact_email;
 
     let noContactInformationChecked: boolean;
 
@@ -99,6 +103,9 @@
         imageFile: string,
         imageAltText: string,
         image: any,
+        imageID: number,
+        imagePublicID: string,
+        candidateID: number,
         campaignName: string,
         electorate: string,
         yearOfficeSought: number | null,
@@ -128,12 +135,15 @@
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateCandidateEndorsement", {
-            method: 'POST',
+            method: 'PATCH',
             body: JSON.stringify({
                 userEmail,
                 imageFile,
                 imageAltText,
                 image,
+                imageID,
+                imagePublicID,
+                candidateID,
                 campaignName,
                 electorate,
                 yearOfficeSought,
@@ -186,6 +196,9 @@
                 imageFileInputValue,
                 imageAltTextInputValue,
                 image,
+                imageID,
+                imagePublicID,
+                candidateID,
                 campaignNameInputValue,
                 electorateInputValue,
                 yearOfficeSoughtInputValue,
@@ -651,7 +664,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            add candidate endorsement
+            update candidate endorsement
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >

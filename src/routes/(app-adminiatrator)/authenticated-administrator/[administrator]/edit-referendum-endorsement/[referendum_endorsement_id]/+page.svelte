@@ -17,6 +17,7 @@
     import GovernmentLevel from "$lib/data/governmentLevel.json";
     import { goto } from '$app/navigation';
     import type { E164Number } from "svelte-tel-input/types";
+    import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat.js";
 
     export let data;
 
@@ -25,32 +26,35 @@
     // referendum information variables
 
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = "";
-    let image: any;
-    let referendumNameInputValue: string = "";
-    let startingYearIfEnactedInputValue: number | null = null;
-    let electionDateInputValue: string = "";
-    let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
-    let websiteURLInputValue: string = "";
-    let detailsInputValue: string = "";
-    let electedChecked: boolean = false;
-    let rejectedChecked: boolean = false;
-    let pendingElectionChecked: boolean = false;
+    let imageID: number = data.endorsedReferendumWithImage.image_ID;
+    let imageAltTextInputValue: string = data.endorsedReferendumWithImage.alt_text;
+    let image: string = data.endorsedReferendumWithImage.image_URL;
+    let imagePublicID: string = data.endorsedReferendumWithImage.public_ID;
+    let referendumID = data.endorsedReferendumWithImage.referendum_ID;
+    let referendumNameInputValue: string = data.endorsedReferendumWithImage.referendum_name;
+    let startingYearIfEnactedInputValue: number | null = data.endorsedReferendumWithImage.starting_year_if_enacted;
+    let electionDateInputValue: string = ConvertDateInputFormat(data.endorsedReferendumWithImage.election_date);
+    let governmentLevelInputValue: string = data.endorsedReferendumWithImage.government_level;
+    let stateInputValue: string = data.endorsedReferendumWithImage.state;
+    let countyInputValue: string = data.endorsedReferendumWithImage.county;
+    let cityInputValue: string = data.endorsedReferendumWithImage.city;
+    let websiteURLInputValue: string = data.endorsedReferendumWithImage.website_URL;
+    let detailsInputValue: string = data.endorsedReferendumWithImage.details;
+    let electedChecked: boolean | any = data.endorsedReferendumWithImage.elected;
+    let rejectedChecked: boolean | any = data.endorsedReferendumWithImage.rejected;
+    let pendingElectionChecked: boolean | any = data.endorsedReferendumWithImage.pending_election;
 
     // referendum contact information variables
 
-    let nameFirstContactInputValue: string = "";
-    let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
-    let streetAddressContactInputValue: string = "";
-    let streetAddress02ContactInputValue: string = "";
-    let cityContactInputValue: string = "";
-    let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
-    let emailContactInputValue: string = "";
+    let nameFirstContactInputValue: string = data.endorsedReferendumWithImage.contact_name_first;
+    let nameLastContactInputValue: string = data.endorsedReferendumWithImage.contact_name_last;
+    let phoneContactInputValue: E164Number | null = data.endorsedReferendumWithImage.contact_phone_number;
+    let streetAddressContactInputValue: string = data.endorsedReferendumWithImage.contact_street_address;
+    let streetAddress02ContactInputValue: string = data.endorsedReferendumWithImage.contact_street_address_02;
+    let cityContactInputValue: string = data.endorsedReferendumWithImage.contact_city;
+    let stateContactInputValue: string = data.endorsedReferendumWithImage.contact_state;
+    let zipCodeContactInputValue: number | null = data.endorsedReferendumWithImage.contact_zip_code;
+    let emailContactInputValue: string = data.endorsedReferendumWithImage.contact_email;
 
     let noContactInformationChecked: boolean;
 
@@ -95,9 +99,12 @@
     
     const createReferendumEndorsement = async (
         userEmail: string | null | undefined,
+        imageID: number,
         image: string,
         imageFileName: string,
         imageAltText: string,
+        imagePublicID: string,
+        referendumID: number,
         referendumName: string,
         startingYearIfEnacted: number | null,
         electionDate: string,
@@ -120,13 +127,16 @@
         zipCodeContact: number | null,
         emailContact: string
     ) => {
-        const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
-            method: 'POST',
+        const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateReferendumEndorsement", {
+            method: 'PATCH',
             body: JSON.stringify({
                 userEmail,
+                imageID,
                 image,
                 imageFileName,
                 imageAltText,
+                imagePublicID,
+                referendumID,
                 referendumName,
                 startingYearIfEnacted,
                 electionDate,
@@ -170,9 +180,12 @@
             
             await createReferendumEndorsement(
                 userEmail,
+                imageID,
                 image,
                 imageFileInputValue,
                 imageAltTextInputValue,
+                imagePublicID,
+                referendumID,
                 referendumNameInputValue,
                 startingYearIfEnactedInputValue,
                 electionDateInputValue,
@@ -585,7 +598,7 @@
                 </NumberInput>
             {/if}
         <ActionButton disable={false}>
-            add referendum endorsement
+            update referendum endorsement
         </ActionButton>
     </form>
     {#if (pending)}

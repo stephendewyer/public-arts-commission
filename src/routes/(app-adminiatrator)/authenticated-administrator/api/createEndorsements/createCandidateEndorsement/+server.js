@@ -135,7 +135,6 @@ export const POST = async ({request}) => {
 
   };
 
-
   // upload image to Cloudinary
 
   let uploadedImageURL;

@@ -86,18 +86,6 @@ export const PATCH = async ({request}) => {
     };
 
     GovernmentLevelValidation(governmentLevel, state, county, city);
- 
-    if (imageFile && (ImageFileExtensionTest(imageFile) === "false") ) {
-
-        return new Response(JSON.stringify({error: "invalid image file!"}), {status: 422});
-
-    };
-
-    if (!image) {
-
-        return new Response(JSON.stringify({error: "missing image!"}), {status: 422});
-
-    };
 
     if (passedInHouse) {
 

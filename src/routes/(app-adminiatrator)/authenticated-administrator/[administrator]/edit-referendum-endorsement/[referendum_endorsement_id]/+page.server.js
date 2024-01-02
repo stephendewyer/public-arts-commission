@@ -11,7 +11,7 @@ export const load = async ({params}) => {
      */
     let endorsedReferendumWithImage;
     
-    const loadEndorsedReferendumByIDStatement = `SELECT * FROM endorsed_referendum 
+    const loadEndorsedReferendumByIDStatement = `SELECT * FROM endorsed_referendums 
     WHERE referendum_ID = ${id}`;
 
     /**

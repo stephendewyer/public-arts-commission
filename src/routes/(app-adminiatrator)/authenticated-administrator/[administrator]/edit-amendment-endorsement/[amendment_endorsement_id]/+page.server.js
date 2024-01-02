@@ -35,8 +35,7 @@ export const load = async ({params}) => {
         throw error;
 
     });
-
-
+    
     /**
      * @type {number}
      */

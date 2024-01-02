@@ -23,28 +23,30 @@ export const PATCH = async ({request}) => {
 
     let { 
         userEmail,
-        actionID,
-        imageID,
         imageFile,
-        imagePublicID,
         imageAltText,
         image,
-        actionName,
-        allDayAction,
-        allDayActionDate,
-        actionStartDate,
-        actionEndDate,
-        startTime,
-        endTime,
-        timeZone,
-        actionStreetAddress,
-        actionStreetAddress02,
-        actionCity,
-        actionState,
-        actionZipCode,
+        imageID,
+        imagePublicID,
+        candidateID,
+        campaignName,
+        electorate,
+        yearOfficeSought,
+        electionDatePrimary,
+        electionDateGeneral,
         governmentLevel,
+        state,
+        county,
+        city,
+        party,
         websiteURL,
-        details,
+        runningInPrimary,
+        electedInPrimary,
+        rejectedInPrimary,
+        runningInGeneral,
+        electedInGeneral,
+        rejectedInGeneral,
+        campaignEnded,
         nameFirstContact,
         nameLastContact,
         phoneContact,
@@ -59,9 +61,9 @@ export const PATCH = async ({request}) => {
     if (
         !image ||
         !imageAltText ||
-        !actionName ||
-        !governmentLevel||
-        !details
+        !electorate ||
+        !campaignName ||
+        !governmentLevel
     ) {
 
         return new Response(JSON.stringify({error: "missing form data!"}), {status: 422});
@@ -80,11 +82,53 @@ export const PATCH = async ({request}) => {
 
     };
 
-    let allDayActionINT = 0;
+    let runningInPrimaryINT = 0;
+    let electedInPrimaryINT = 0;
+    let rejectedInPrimaryINT = 0;
+    let runningInGeneralINT = 0;
+    let electedInGeneralINT = 0;
+    let rejectedInGeneralINT = 0;
+    let campaignEndedINT = 0;
 
-    if (allDayAction) {
+    if (runningInPrimary) {
 
-        allDayActionINT = 1;
+        runningInPrimaryINT = 1;
+
+    };
+
+    if (electedInPrimary) {
+
+        electedInPrimaryINT = 1;
+
+    };
+
+    if (rejectedInPrimary) {
+
+        rejectedInPrimaryINT = 1;
+
+    };
+
+    if (runningInGeneral) {
+
+        runningInGeneralINT = 1;
+
+    };
+
+    if (electedInGeneral) {
+
+        electedInGeneralINT = 1;
+
+    };
+
+    if (rejectedInGeneral) {
+
+        rejectedInPrimaryINT = 1;
+
+    };
+
+    if (campaignEnded) {
+
+        campaignEndedINT = 1;
 
     };
 
@@ -180,26 +224,27 @@ export const PATCH = async ({request}) => {
 
     };
 
-  // update the action information into the endorsed_actions table
+  // update the candidate information into the endorsed_candidates table
 
-    const updateEndorsedActionInformationStatement = `UPDATE endorsed_actions 
+    const updateEndorsedCandidateInformationStatement = `UPDATE endorsed_candidates 
         SET
-            action_name = "${actionName}",
-            all_day_event = "${allDayActionINT}",
-            all_day_event_date = "${allDayActionDate}",
-            date_start = "${actionStartDate}",
-            date_end = "${actionEndDate}",
-            time_start = "${startTime}",
-            time_end = "${endTime}",
-            time_zone = "${timeZone}",
-            action_street_address = "${actionStreetAddress}",
-            action_street_address_02 = "${actionStreetAddress02}",
-            action_city = "${actionCity}",
-            action_state = "${actionState}",
-            action_zip_code = "${actionZipCode}",
+            campaign_name = "${campaignName}",
+            office_sought_starting_year = "${yearOfficeSought}",
+            election_date_primary = "${electionDatePrimary}",
+            election_date_general = "${electionDateGeneral}",
             government_level = "${governmentLevel}",
+            state = "${state}",
+            county = "${county}",
+            city = "${city}",
+            party = "${party}",
             website_URL = "${websiteURL}",
-            details = "${details}",
+            running_in_primary = "${runningInPrimaryINT}",
+            elected_in_primary = "${electedInPrimaryINT}",
+            rejected_in_primary = "${rejectedInPrimaryINT}",
+            running_in_general = "${runningInGeneralINT}",
+            elected_in_general = "${electedInGeneralINT}",
+            rejected_in_general = "${rejectedInGeneralINT}",
+            campaign_ended = "${campaignEndedINT}",
             contact_name_first = "${nameFirstContact}",
             contact_name_last = "${nameLastContact}",
             contact_phone_number = "${phoneContact}",
@@ -208,13 +253,14 @@ export const PATCH = async ({request}) => {
             contact_city = "${cityContact}",
             contact_state = "${stateContact}",
             contact_zip_code = "${zipCodeContact}",
-            contact_email = "${emailContact}"
-        WHERE action_ID = "${actionID}"
+            contact_email = "${emailContact}",
+            electorate = "${electorate}"
+        WHERE candidate_ID = "${candidateID}"
     `;
 
-  await res.query(updateEndorsedActionInformationStatement)
+  await res.query(updateEndorsedCandidateInformationStatement)
   .then(() => {
-    console.log(`action endorsement information for ${actionName} updated`);
+    console.log(`candidate endorsement information for ${campaignName} updated`);
   })
   .catch(error => {
     throw error;
@@ -222,6 +268,6 @@ export const PATCH = async ({request}) => {
 
   res.end();
 
-  return new Response(JSON.stringify({success: `action endorsement updated!`}), {status: 200});
+  return new Response(JSON.stringify({success: `candidate endorsement updated!`}), {status: 200});
 
 };

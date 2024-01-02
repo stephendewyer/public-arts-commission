@@ -19,32 +19,34 @@ export const PATCH = async ({request}) => {
 
     };
 
+    let electedINT = 0;
+    let pendingElectionINT = 0;
+    let rejectedINT = 0;
+
     const data = await request.json();
+
+    console.log(data)
 
     let { 
         userEmail,
-        actionID,
         imageID,
-        imageFile,
-        imagePublicID,
-        imageAltText,
         image,
-        actionName,
-        allDayAction,
-        allDayActionDate,
-        actionStartDate,
-        actionEndDate,
-        startTime,
-        endTime,
-        timeZone,
-        actionStreetAddress,
-        actionStreetAddress02,
-        actionCity,
-        actionState,
-        actionZipCode,
+        imageFileName,
+        imageAltText,
+        imagePublicID,
+        referendumID,
+        referendumName,
+        startingYearIfEnacted,
+        electionDate,
         governmentLevel,
+        state,
+        county,
+        city,
         websiteURL,
         details,
+        elected,
+        rejected,
+        pendingElection,
         nameFirstContact,
         nameLastContact,
         phoneContact,
@@ -57,18 +59,19 @@ export const PATCH = async ({request}) => {
     } = data;
 
     if (
-        !image ||
         !imageAltText ||
-        !actionName ||
-        !governmentLevel||
-        !details
+        !referendumName ||
+        !startingYearIfEnacted ||
+        !electionDate ||
+        !governmentLevel ||
+        !details 
     ) {
 
         return new Response(JSON.stringify({error: "missing form data!"}), {status: 422});
 
     };
 
-    if (imageFile && (ImageFileExtensionTest(imageFile) === "false") ) {
+    if (imageFileName && (ImageFileExtensionTest(imageFileName) === "false") ) {
 
         return new Response(JSON.stringify({error: "invalid image file!"}), {status: 422});
 
@@ -80,13 +83,25 @@ export const PATCH = async ({request}) => {
 
     };
 
-    let allDayActionINT = 0;
+    if (elected) {
 
-    if (allDayAction) {
-
-        allDayActionINT = 1;
+        electedINT = 1;
 
     };
+
+    if (pendingElection) {
+
+        pendingElectionINT = 1;
+
+    };
+
+    if (rejected) {
+
+        rejectedINT = 1;
+
+    };
+
+    // upload image to Cloudinary
 
     // upload image to Cloudinary
 
@@ -100,7 +115,7 @@ export const PATCH = async ({request}) => {
 
     // if local image file:
     
-    if (imageFile) {
+    if (imageFileName) {
         // delete the image associated with the action from Cloudinary 
         try {
 
@@ -180,26 +195,24 @@ export const PATCH = async ({request}) => {
 
     };
 
-  // update the action information into the endorsed_actions table
+    // update the House sponsors
+    
+  // update the referendum information into the endorsed_referendums table
 
-    const updateEndorsedActionInformationStatement = `UPDATE endorsed_actions 
+    const updateEndorsedReferendumInformationStatement = `UPDATE endorsed_referendums 
         SET
-            action_name = "${actionName}",
-            all_day_event = "${allDayActionINT}",
-            all_day_event_date = "${allDayActionDate}",
-            date_start = "${actionStartDate}",
-            date_end = "${actionEndDate}",
-            time_start = "${startTime}",
-            time_end = "${endTime}",
-            time_zone = "${timeZone}",
-            action_street_address = "${actionStreetAddress}",
-            action_street_address_02 = "${actionStreetAddress02}",
-            action_city = "${actionCity}",
-            action_state = "${actionState}",
-            action_zip_code = "${actionZipCode}",
+            referendum_name = "${referendumName}",
+            starting_year_if_enacted = "${startingYearIfEnacted}",
+            election_date = "${electionDate}",
             government_level = "${governmentLevel}",
+            state = "${state}",
+            county = "${county}",
+            city = "${city}",
             website_URL = "${websiteURL}",
             details = "${details}",
+            elected = "${electedINT}",
+            rejected = "${rejectedINT}",
+            pending_election = "${pendingElectionINT}",
             contact_name_first = "${nameFirstContact}",
             contact_name_last = "${nameLastContact}",
             contact_phone_number = "${phoneContact}",
@@ -209,12 +222,12 @@ export const PATCH = async ({request}) => {
             contact_state = "${stateContact}",
             contact_zip_code = "${zipCodeContact}",
             contact_email = "${emailContact}"
-        WHERE action_ID = "${actionID}"
+        WHERE referendum_ID = "${referendumID}"
     `;
 
-  await res.query(updateEndorsedActionInformationStatement)
+  await res.query(updateEndorsedReferendumInformationStatement)
   .then(() => {
-    console.log(`action endorsement information for ${actionName} updated`);
+    console.log(`referendum endorsement information for ${referendumName} updated`);
   })
   .catch(error => {
     throw error;
@@ -222,6 +235,6 @@ export const PATCH = async ({request}) => {
 
   res.end();
 
-  return new Response(JSON.stringify({success: `action endorsement updated!`}), {status: 200});
+  return new Response(JSON.stringify({success: `referendum endorsement updated!`}), {status: 200});
 
 };
