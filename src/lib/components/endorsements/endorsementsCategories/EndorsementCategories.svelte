@@ -27,9 +27,11 @@
         <h3>
             candidates
         </h3>
-        {#each endorsedCandidates as candidate, i}
-            <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-        {/each}
+        <div class="endorsement_cards_container">
+            {#each endorsedCandidates as candidate, i}
+                <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+            {/each}
+        </div>
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="candidate" 
@@ -43,9 +45,11 @@
         <h3>
             referendums
         </h3>
-        {#each endorsedReferendums as referendum, i}
-            <EndorsedReferendumCard endorsedReferendumData={referendum} />
-        {/each}
+        <div class="endorsement_cards_container">
+            {#each endorsedReferendums as referendum, i}
+                <EndorsedReferendumCard endorsedReferendumData={referendum} />
+            {/each}
+        </div>
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="referendum"
@@ -59,9 +63,11 @@
         <h3>
             legislation
         </h3>
-        {#each endorsedLegislation as legislation, i}
-            <EndorsedLegislationCard endorsedLegislationData={legislation} />
-        {/each}
+        <div class="endorsement_cards_container">
+            {#each endorsedLegislation as legislation, i}
+                <EndorsedLegislationCard endorsedLegislationData={legislation} />
+            {/each}
+        </div>
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="legislation"
@@ -75,9 +81,12 @@
         <h3>
             amendments
         </h3>
-        {#each endorsedAmendments as amendment, i}
-            <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-        {/each}
+        <div class="endorsement_cards_container">
+            {#each endorsedAmendments as amendment, i}
+                <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+            {/each}
+        </div>
+        
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="amendment"
@@ -131,6 +140,15 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
+    }
+
+    .endorsement_cards_container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;      
+        gap: 1rem;
+        padding: 0 1rem 1rem 1rem;
         width: 100%;
     }
 
