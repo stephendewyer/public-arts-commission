@@ -456,7 +456,7 @@ export const PATCH = async ({request}) => {
 
         };
 
-        if (sponsorFromDatabase.sponsor_name === sponsorHouse) {
+        if (sponsorFromDatabase.sponsor_name === sponsorSenate) {
 
             matchingSenateSponsors = [...matchingSenateSponsors, sponsorFromDatabase]
 
