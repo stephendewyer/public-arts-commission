@@ -33,12 +33,23 @@
     };
 
     let rawElectionDate: Date;
-
-    let electionDate: string;
+    let electionDate: Date | string;
+    let blankDate = new Date("2016-01-01T06:00:00.000Z");
 
     $: if (endorsedAmendmentData?.election_date) {
-        rawElectionDate = new Date(endorsedAmendmentData?.election_date);
-        electionDate = rawElectionDate?.toUTCString().substring(0, 16);
+
+        rawElectionDate = new Date (endorsedAmendmentData.election_date);
+
+    };
+    
+    $: if ((endorsedAmendmentData?.election_date) && (rawElectionDate < blankDate)) {
+
+        electionDate = "";
+
+    } else {
+
+        electionDate = rawElectionDate.toUTCString().substring(0, 16);;
+
     };
 
     let amendmentStatus: string[] = [];
