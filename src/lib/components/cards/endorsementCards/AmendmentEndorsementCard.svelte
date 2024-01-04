@@ -49,13 +49,23 @@
 
     };
 
+    let cardHovered: boolean = false;
+
+    let electionDate: Date | string;
+
     let rawElectionDate: Date = new Date (endorsedAmendmentData.election_date);
 
-    let electionDate: string;
+    let blankDate = new Date("2016-01-01T06:00:00.000Z");
+    
+    $: if (rawElectionDate < blankDate) {
 
-    $: electionDate = rawElectionDate.toUTCString().substring(0, 16);
+        electionDate = "";
 
-    let cardHovered: boolean = false;
+    } else {
+
+        electionDate = rawElectionDate.toUTCString().substring(0, 16);;
+
+    };
 
     const cardHoverHandler = () => {
 
