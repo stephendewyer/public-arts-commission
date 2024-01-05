@@ -28,12 +28,6 @@ export const LoadAllEndorsedActions = async () => {
 
     });
 
-    if (endorsedActionsWithImages.length === 0) {
-
-        return endorsedActionsWithImages;
-
-    };
-
     res.end();
 
     return endorsedActionsWithImages;

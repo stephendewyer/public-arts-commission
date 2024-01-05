@@ -9,81 +9,22 @@ export const LoadAllEndorsedCandidates = async () => {
 
     // load all the endorsed candidates
 
-    const loadEndorsedCandidatesStatement = "SELECT * FROM endorsed_candidates";
-
-    /**
-     * @type {Candidate[]}
-     */
-    let endorsedCandidates = [];
+    const loadEndorsedCandidatesWithImagesStatement = `SELECT * 
+        FROM endorsed_candidates
+        INNER JOIN image_collection ON endorsed_candidates.image_ID=image_collection.image_ID`;
 
     let res = await mysqlConnection();
 
-    await res.query(loadEndorsedCandidatesStatement)
+    await res.query(loadEndorsedCandidatesWithImagesStatement)
     .then(([ rows ]) => {
 
-        endorsedCandidates = JSON.parse(JSON.stringify(rows));
+        endorsedCandidatesWithImages = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
 
         throw error;
 
-    });
-
-    if (endorsedCandidates.length === 0) {
-
-        return endorsedCandidatesWithImages;
-
-    };
-
-    /**
-     * @type {number[]}
-     */
-    let endorsedCandidatesImageIds = [];
-
-    endorsedCandidates.forEach((candidate) => {
-
-        endorsedCandidatesImageIds = [...endorsedCandidatesImageIds, candidate.image_ID];
-
-    });
-
-    // select images from image_collection table where image_ID == image_ID
-    //image ids comma separated list
-    const listImageIds = endorsedCandidatesImageIds.join(", ");
-
-    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
-
-    /**
-     * @type {Image[]}
-     */
-    let candidatesImages = [];
-
-    await res.query(loadImagesStatement)
-    .then(([ rows ]) => {
-
-        candidatesImages = JSON.parse(JSON.stringify(rows));
-
-    })
-    .catch(error => {
-
-        throw error;
-
-    });
-
-    endorsedCandidates.forEach((candidate) => {
-
-        let candidateImageId = candidate.image_ID;
-
-        candidatesImages.forEach((imageRow) => {
-
-            if (candidateImageId === imageRow.image_ID) {
-
-                endorsedCandidatesWithImages = [...endorsedCandidatesWithImages, {...candidate, ...imageRow}];
-
-            };
-
-        });
-        
     });
 
     res.end();
