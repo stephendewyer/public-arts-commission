@@ -14,19 +14,17 @@ export const LoadAllEndorsedAmendments = async () => {
 
     // load all the endorsed amendments
 
-    const loadEndorsedAmendmentsStatement = "SELECT * FROM endorsed_amendments";
-
-    /**
-     * @type {Amendment[]}
-     */
-    let endorsedAmendments = [];
+    const loadEndorsedAmendmentsWithImagesStatement = `SELECT * 
+    FROM endorsed_amendments
+    INNER JOIN image_collection
+    ON endorsed_amendments.image_ID=image_collection.image_ID`;
 
     let res = await mysqlConnection();
 
-    await res.query(loadEndorsedAmendmentsStatement)
+    await res.query(loadEndorsedAmendmentsWithImagesStatement)
     .then(([ rows ]) => {
 
-        endorsedAmendments = JSON.parse(JSON.stringify(rows));
+        endorsedAmendmentsWithImages = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
@@ -35,7 +33,7 @@ export const LoadAllEndorsedAmendments = async () => {
 
     });
 
-    if (endorsedAmendments.length === 0) {
+    if (endorsedAmendmentsWithImages.length === 0) {
 
         return endorsedAmendmentsImagesAndSponsors;
 
@@ -44,57 +42,9 @@ export const LoadAllEndorsedAmendments = async () => {
     /**
      * @type {number[]}
      */
-    let endorsedAmendmentsImageIds = [];
-
-    endorsedAmendments.forEach((amendment) => {
-
-        endorsedAmendmentsImageIds = [...endorsedAmendmentsImageIds, amendment.image_ID];
-
-    });
-
-    const listImageIds = endorsedAmendmentsImageIds.join(", ");
-
-    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
-
-    /**
-     * @type {Image[]}
-     */
-    let endorsedAmendmentsImages = [];
-
-    await res.query(loadImagesStatement)
-    .then(([ rows ]) => {
-
-        endorsedAmendmentsImages = JSON.parse(JSON.stringify(rows));
-
-    })
-    .catch(error => {
-
-        throw error;
-
-    });
-
-    endorsedAmendments.forEach((amendment) => {
-
-        let amendmentImageId = amendment.image_ID;
-
-        endorsedAmendmentsImages.forEach((imageRow) => {
-
-            if (amendmentImageId === imageRow.image_ID) {
-
-                endorsedAmendmentsWithImages = [...endorsedAmendmentsWithImages, {...amendment, ...imageRow}];
-
-            };
-
-        });
-
-    });
-
-    /**
-     * @type {number[]}
-     */
     let endorsedAmendmentsIds = [];
 
-    endorsedAmendments.forEach((amendment) => {
+    endorsedAmendmentsWithImages.forEach((amendment) => {
 
         endorsedAmendmentsIds = [...endorsedAmendmentsIds, amendment.amendment_ID];
         

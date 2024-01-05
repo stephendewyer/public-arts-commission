@@ -12,21 +12,19 @@ export const LoadAllEndorsedLegislation = async () => {
      */
     let endorsedLegislationImagesAndSponsors = [];
 
-    // begin load legislation
+    // begin load legislation with images
 
-    const loadEndorsedLegislationStatement = "SELECT * FROM endorsed_legislation";
-
-    /**
-     * @type {Legislation[]}
-     */
-    let endorsedLegislation = [];
+    const loadEndorsedLegislationWithImagesStatement = `SELECT * 
+        FROM endorsed_legislation
+        INNER JOIN image_collection
+        ON endorsed_legislation.image_ID=image_collection.image_ID`;
 
     let res = await mysqlConnection();
 
-    await res.query(loadEndorsedLegislationStatement)
+    await res.query(loadEndorsedLegislationWithImagesStatement)
     .then(([ rows ]) => {
 
-        endorsedLegislation = JSON.parse(JSON.stringify(rows));
+        endorsedLegislationWithImages = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
@@ -35,71 +33,11 @@ export const LoadAllEndorsedLegislation = async () => {
 
     });
 
-    // console.log("endorsed legislation: ", endorsedLegislation);
-
-    if (endorsedLegislation.length === 0) {
+    if (endorsedLegislationWithImages.length === 0) {
 
         return endorsedLegislationImagesAndSponsors;
 
     };
-
-    // create an array of legislation image_IDs
-
-    /**
-     * @type {number[]}
-     */
-    let endorsedLegislationImageIds = [];
-
-    endorsedLegislation.forEach((legislation) => {
-
-        endorsedLegislationImageIds = [...endorsedLegislationImageIds, legislation.image_ID];
-
-    });
-
-    // load all the image rows from image_collection table that have an ID that matches an ID in endorsedLegislationImageIds
-
-    const listImageIds = endorsedLegislationImageIds.join(", ");
-
-    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
-
-    /**
-     * @type {Image[]}
-     */
-    let endorsedLegislationImages = [];
-
-    await res.query(loadImagesStatement)
-    .then(([ rows ]) => {
-
-        endorsedLegislationImages = JSON.parse(JSON.stringify(rows));
-
-    })
-    .catch(error => {
-
-        throw error;
-
-    });
-
-    // console.log("endorsed legislation images, ", endorsedLegislationImages);
-
-    // combine each endorsedLegislation object with imageRow object that has matching image_ID
-
-    endorsedLegislation.forEach((legislation) => {
-
-        let endorsedLegislationImageId = legislation.image_ID;
-
-        endorsedLegislationImages.forEach((imageRow) => {
-
-            if (endorsedLegislationImageId === imageRow.image_ID) {
-
-                endorsedLegislationWithImages = [...endorsedLegislationWithImages, {...legislation, ...imageRow}];
-
-            };
-
-        });
-
-    });
-
-    // console.log("endorsed legislation with images: ", endorsedLegislationWithImages);
 
     // load all the legislation IDs from endorsedLegislation
 
@@ -108,7 +46,7 @@ export const LoadAllEndorsedLegislation = async () => {
      */
     let endorsedLegislationIds = [];
 
-    endorsedLegislation.forEach((legislation) => {
+    endorsedLegislationWithImages.forEach((legislation) => {
 
         endorsedLegislationIds = [...endorsedLegislationIds, legislation.legislation_ID];
 
