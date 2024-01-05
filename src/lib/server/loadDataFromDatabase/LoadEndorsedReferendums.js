@@ -7,77 +7,23 @@ export const LoadAllEndorsedReferendums = async () => {
      */
     let endorsedReferendumsWithImages = [];
 
-    const loadEndorsedReferendumsStatement = "SELECT * FROM endorsed_referendums";
-
-    /**
-     * @type {Referendum[]}
-     */
-    let endorsedReferendums = [];
+    const loadEndorsedReferendumsWithImagesStatement = `SELECT * 
+    FROM endorsed_referendums
+    INNER JOIN image_collection
+    ON endorsed_referendums.image_ID=image_collection.image_ID`;
 
     let res = await mysqlConnection();
 
-    await res.query(loadEndorsedReferendumsStatement)
+    await res.query(loadEndorsedReferendumsWithImagesStatement)
     .then(([ rows ]) => {
 
-        endorsedReferendums = JSON.parse(JSON.stringify(rows));
+        endorsedReferendumsWithImages = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
 
         throw error;
 
-    });
-
-    if (endorsedReferendums.length === 0) {
-
-        return endorsedReferendumsWithImages;
-
-    };
-
-    /**
-     * @type {number[]}
-     */
-    let endorsedReferendumsImageIds = [];
-
-    endorsedReferendums.forEach((referendum) => {
-
-        endorsedReferendumsImageIds = [...endorsedReferendumsImageIds, referendum.image_ID];
-
-    });
-
-    const listImageIds = endorsedReferendumsImageIds.join(", ");
-
-    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
-
-    /**
-     * @type {Image[]}
-     */
-    let endorsedReferendumsImages = [];
-
-    await res.query(loadImagesStatement)
-    .then(([ rows ]) => {
-
-        endorsedReferendumsImages = JSON.parse(JSON.stringify(rows));
-
-    })
-    .catch(error => {
-
-        throw error;
-
-    });
-
-    endorsedReferendums.forEach((referendum) => {
-
-        let referendumImageId = referendum.image_ID;
-
-        endorsedReferendumsImages.forEach((imageRow) => {
-
-            if (referendumImageId === imageRow.image_ID) {
-
-                endorsedReferendumsWithImages = [...endorsedReferendumsWithImages, {...referendum, ...imageRow}];
-                
-            };
-        });
     });
 
     res.end();
