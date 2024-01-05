@@ -7,21 +7,19 @@ export const LoadAllEndorsedActions = async () => {
      */
     let endorsedActionsWithImages = [];
 
-    // load all the endorsed actions
+    // load all the endorsed actions with respective matching image rows by joining the tables endorsed_actions and image_collection
     
-    const loadEndorsedActionsStatement = "SELECT * FROM endorsed_actions";
-
-    /**
-     * @type {Action[]}
-     */
-    let endorsedActions = [];
+    const loadEndorsedActionsWithImagesStatement = `SELECT * 
+    FROM endorsed_actions
+    INNER JOIN image_collection
+    ON endorsed_actions.image_ID=image_collection.image_ID`;
 
     let res = await mysqlConnection();
 
-    await res.query(loadEndorsedActionsStatement)
+    await res.query(loadEndorsedActionsWithImagesStatement)
     .then(([ rows ]) => {
 
-        endorsedActions = JSON.parse(JSON.stringify(rows));
+        endorsedActionsWithImages = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
@@ -30,63 +28,11 @@ export const LoadAllEndorsedActions = async () => {
 
     });
 
-    if (endorsedActions.length === 0) {
+    if (endorsedActionsWithImages.length === 0) {
 
         return endorsedActionsWithImages;
 
     };
-
-    // load all the image rows from image_collection table with image_IDs that match action image_IDs
-
-    /**
-     * @type {number[]}
-     */
-    let endorsedActionsImageIds = [];
-
-    endorsedActions.forEach((action) => {
-
-        endorsedActionsImageIds = [...endorsedActionsImageIds, action.image_ID];
-
-    });
-
-    const listImageIds = endorsedActionsImageIds.join(", ");
-
-    const loadImagesStatement = `SELECT * FROM image_collection WHERE image_ID in(${listImageIds})`;
-
-    /**
-     * @type {Image[]}
-     */
-    let endorsedActionsImages = [];
-
-    await res.query(loadImagesStatement)
-    .then(([ rows ]) => {
-
-        endorsedActionsImages = JSON.parse(JSON.stringify(rows));
-
-    })
-    .catch(error => {
-
-        throw error;
-
-    });
-
-    // combine each endorsed action object with image object that has matching image_ID 
-
-    endorsedActions.forEach((action) => {
-
-        let actionImageId = action.image_ID;
-
-        endorsedActionsImages.forEach((imageRow) => {
-
-            if (actionImageId === imageRow.image_ID) {
-
-                endorsedActionsWithImages = [...endorsedActionsWithImages, {...action, ...imageRow}];
-
-            };
-
-        });
-        
-    });
 
     res.end();
 
