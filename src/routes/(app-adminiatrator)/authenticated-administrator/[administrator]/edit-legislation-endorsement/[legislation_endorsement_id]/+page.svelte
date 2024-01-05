@@ -921,7 +921,7 @@
                 </NumberInput>
             {/if}
         <ActionButton>
-            add legislation endorsement
+            update legislation endorsement
         </ActionButton>
         {#if (pending)}
             <PendingFlashMessage >

@@ -13,25 +13,24 @@ const authorization = async ({ event, resolve }) => {
 
     const session = await event.locals.getSession();
 
+    //redirect users to "/authenticated-administrator/admin" if startsWith("/authenticated-administrator") is false
+
+    if (
+        !event.url.pathname.startsWith("/authenticated-administrator") && 
+        session?.user?.name === "administrator"
+    ) {
+
+        throw redirect(303, "/authenticated-administrator/admin");
+
+    };
+
     // protect any routes under /authenticated-administrator
 
     if (event.url.pathname.startsWith("/authenticated-administrator")) {        
 
         if (session?.user?.name !== "administrator") {
 
-            redirect(303, "/login-administrator");
-
-        };
-
-    };
-
-    // protect any routes that don't start with "/authenticated-administrator" from session.user.name === admin
-
-    if (!event.url.pathname.startsWith("/authenticated-administrator")) {
-
-        if (session?.user?.name === "administrator") {
-
-            redirect(303, "/authenticated-administrator/administrator");
+            throw redirect(303, "/login-administrator");
 
         };
 
@@ -43,7 +42,7 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name !== "campaign") {
 
-            redirect(303, "/login-campaign");
+            throw redirect(303, "/login-campaign");
 
         };
 
@@ -51,13 +50,12 @@ const authorization = async ({ event, resolve }) => {
 
     // protect any routes that don't start with "/authenticated-campaign" from session.user.name === campaign
 
-    if (!event.url.pathname.startsWith("/authenticated-campaign")) {
+    if (
+        !event.url.pathname.startsWith("/authenticated-campaign") &&
+        session?.user?.name === "campaign"
+    ) {
 
-        if (session?.user?.name === "campaign") {
-
-            redirect(303, "/authenticated-campaign/campaign");
-
-        };
+        throw redirect(303, "/authenticated-campaign/campaign");
 
     };
 
@@ -67,21 +65,20 @@ const authorization = async ({ event, resolve }) => {
 
         if (session?.user?.name !== "voter") {
 
-            redirect(303, "/login-voter");
+            throw redirect(303, "/login-voter");
         };
 
     };
 
     // protect any routes that don't start with "/authenticated-voter" from session.user.name === voter
 
-    if (!event.url.pathname.startsWith("/authenticated-voter")) {
-
-        if (session?.user?.name === "voter") {
-
-            redirect(303, "/authenticated-voter/voter");
-
-        };
-
+    if (
+        !event.url.pathname.startsWith("/authenticated-voter") &&
+        session?.user?.name === "voter"
+    ) {
+        
+        throw redirect(303, "/authenticated-voter/voter");
+        
     };
 
     // if still request, proceed as normal

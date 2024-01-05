@@ -11,7 +11,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
 	import ForthcomingActionCarousel from '$lib/components/sliders/ForthcomingActionCarousel.svelte';
-  	import { afterUpdate } from 'svelte';
+  	import { onMount } from 'svelte';
 
 	export let data;
 
@@ -29,7 +29,7 @@
 
 	let futureEndorsedActions: ActionWithImage[] = [];
 
-	afterUpdate(() => {
+	onMount(() => {
 		endorsedActions.forEach((action: ActionWithImage) => {
 
 			const actionEndDate = new Date(action.date_end);

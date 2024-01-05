@@ -40,15 +40,15 @@
 
         rawElectionDate = new Date (endorsedAmendmentData.election_date);
 
-    };
-    
-    $: if ((endorsedAmendmentData?.election_date) && (rawElectionDate < blankDate)) {
+        if (rawElectionDate < blankDate) {
 
-        electionDate = "";
+            electionDate = "";
+            
+        } else {
 
-    } else {
+            electionDate = rawElectionDate.toUTCString().substring(0, 16);
 
-        electionDate = rawElectionDate.toUTCString().substring(0, 16);;
+        };
 
     };
 
