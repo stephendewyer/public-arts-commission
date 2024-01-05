@@ -11,7 +11,8 @@ export const LoadAllEndorsedCandidates = async () => {
 
     const loadEndorsedCandidatesWithImagesStatement = `SELECT * 
         FROM endorsed_candidates
-        INNER JOIN image_collection ON endorsed_candidates.image_ID=image_collection.image_ID`;
+        INNER JOIN image_collection 
+        ON endorsed_candidates.image_ID=image_collection.image_ID`;
 
     let res = await mysqlConnection();
 
