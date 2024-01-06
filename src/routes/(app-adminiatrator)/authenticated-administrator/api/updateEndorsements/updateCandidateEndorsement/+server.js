@@ -122,7 +122,7 @@ export const PATCH = async ({request}) => {
 
     if (rejectedInGeneral) {
 
-        rejectedInPrimaryINT = 1;
+        rejectedInGeneralINT = 1;
 
     };
 

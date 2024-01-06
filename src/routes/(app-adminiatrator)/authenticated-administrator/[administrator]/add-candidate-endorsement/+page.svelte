@@ -507,7 +507,7 @@
                 </AnimatedCheckbox>
             </div>
             <div class="checkbox_column">
-                <AnimatedCheckbox bind:checked={rejectedInGeneralChecked}>
+                <AnimatedCheckbox bind:checked={runnningInGeneralChecked}>
                     running in the general
                 </AnimatedCheckbox>
             </div>

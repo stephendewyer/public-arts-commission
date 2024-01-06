@@ -125,7 +125,7 @@ export const POST = async ({request}) => {
 
   if (rejectedInGeneral) {
 
-    rejectedInPrimaryINT = 1;
+    rejectedInGeneralINT = 1;
 
   };
 

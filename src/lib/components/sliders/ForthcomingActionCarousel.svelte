@@ -24,7 +24,9 @@
         >
             {#each forthcoming_actions as action, i}
                 <SplideSlide>
-                    <ActionEndorsementCard endorsedActionData={action} />
+                    <div class="slide_container">
+                        <ActionEndorsementCard endorsedActionData={action} />
+                    </div>
                 </SplideSlide>
             {/each}
         </Splide>
@@ -44,7 +46,7 @@
         max-width: 30rem;
     }
 
-    :global(.splide__slide) {
+    .slide_container {
         display: flex;
         flex-direction: column;
         align-items: center;
