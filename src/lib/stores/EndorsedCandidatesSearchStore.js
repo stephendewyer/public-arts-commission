@@ -74,34 +74,77 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
         // AND store search city is not empty,
         // OR if store search city is not in store search county
         // OR if store search city is not in store search state
-        // remove from filtered array        
-
+        // remove from filtered array
         if (
-            item.searchTerms.state.toLowerCase().includes(searchState)
+            store.search.state === "" &&
+            store.search.county === "" &&
+            store.search.city === ""
         ) {
 
             return item;
 
-        } 
+        } else if (
+            store.search.state &&
+            store.search.county &&
+            store.search.city
+        ) {
+
+            if (
+                (
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                    item.searchTerms.city.toLowerCase().includes(searchCity)
+                ) ||
+                (
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.county.toLowerCase().includes(searchCounty) 
+                ) ||
+                (
+                    item.searchTerms.state.toLowerCase().includes(searchState)
+                )
+            ) {
+
+                return item;
+
+            };
+
+        } else if (
+            store.search.state &&
+            store.search.county &&
+            store.search.city === ""
+        ) {
+
+            if (
+                (
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.county.toLowerCase().includes(searchCounty)
+                ) ||
+                (
+                    item.searchTerms.state.toLowerCase().includes(searchState)
+                )       
+
+            ) {
+
+                return item;
+
+            };
+
+        } else if (
+            store.search.state &&
+            store.search.county === "" &&
+            store.search.city === ""
+        ) {
+
+            if (
+                item.searchTerms.state.toLowerCase().includes(searchState)
+            ) {
+
+                return item;
+
+            };
+
+        };
         
-        // if (!item.searchTerms.county.toLowerCase().includes(searchCounty)) {
-
-        //     return;
-
-        // } else if (!item.searchTerms.city.toLowerCase().includes(searchCity)) {
-
-        //     return;
-
-        // } else {
-
-        //     return item;
-
-        // };
-
-        // return item.searchTerms.state.toLowerCase().includes(searchState);
-
-        // return item;
-
     });
 
 };

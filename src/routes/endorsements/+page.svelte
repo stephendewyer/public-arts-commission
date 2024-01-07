@@ -344,7 +344,7 @@
 
 			// use zip code to load county from parsed address
 
-			county = USCities.find((location) => location.zip_code.toString() === zipcode);
+			county = USCities.find((location) => location.zip_code.toString() === zipcode).county;
 
 		} else {
 
