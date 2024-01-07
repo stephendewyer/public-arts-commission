@@ -1,8 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import ActionButton from '$lib/components/buttons/ActionButton.svelte';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -15,130 +14,18 @@
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 	import Years from '$lib/data/years.json';
 	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
+	import { parse } from "@universe/address-parser";
+	import USCities from '$lib/data/USCities.json';
+  	import { createEndorsedCandidatesSearchStore, searchEndorsedCandidatesHandler } from '$lib/stores/EndorsedCandidatesSearchStore.js';
+	import { createEndorsedLegislationSearchStore } from '$lib/stores/EndorsedLegislationSearchStore.js';
+	import { createEndorsedReferendumsSearchStore } from '$lib/stores/EndorsedReferendumsSearchStore.js';
+	import { createEndorsedAmendmentsSearchStore } from '$lib/stores/EndorsedAmendmentsSearchStore.js';
 
 	export let data;
 
 	$: data;
 
-	let candidatesFederal: CandidateWithImage[] = [];
-	let candidatesState: CandidateWithImage[] = [];
-	let candidatesCounty: CandidateWithImage[] = [];
-	let candidatesCity: CandidateWithImage[] = [];
-
-	let endorsedCandidates: CandidateWithImage[] = [];
-
-	$: endorsedCandidates = [...data.streamed.endorsed_candidates];
-
-	$: endorsedCandidates.forEach((candidate: CandidateWithImage) => {
-		if (candidate.government_level === "federal") {
-			candidatesFederal = [...candidatesFederal, candidate];
-		} else if (candidate.government_level === "state") {
-			candidatesState = [...candidatesState, candidate];
-		} else if (candidate.government_level === "county") {
-			candidatesCounty = [...candidatesCounty, candidate];
-		} else if (candidate.government_level === "city") {
-			candidatesCity = [...candidatesCity, candidate];
-		};
-	});
-
-	let legislationFederal: LegislationWithSponsorsAndImage[] = [];
-	let legislationState: LegislationWithSponsorsAndImage[] = [];
-	let legislationCounty: LegislationWithSponsorsAndImage[] = [];
-	let legislationCity: LegislationWithSponsorsAndImage[] = [];
-
-	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
-
-	$: endorsedLegislation = [...data.streamed.endorsed_legislation];
-
-	$: endorsedLegislation.forEach((legislation: LegislationWithSponsorsAndImage) => {
-		if (legislation.government_level === "federal") {
-			legislationFederal = [...legislationFederal, legislation];
-		} else if (legislation.government_level === "state") {
-			legislationState = [...legislationState, legislation];
-		} else if (legislation.government_level === "county") {
-			legislationCounty = [...legislationCounty, legislation];
-		} else if (legislation.government_level === "city") {
-			legislationCity = [...legislationCity, legislation];
-
-		};
-	});
-
-	let amendmentsFederal: Amendment[] = [];
-	let amendmentsState: Amendment[] = [];
-	let amendmentsCounty: Amendment[] = [];
-	let amendmentsCity: Amendment[] = [];
-
-	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
-
-	$: endorsedAmendments = [...data.streamed.endorsed_amendments];
-
-	$: endorsedAmendments.forEach((amendment: AmendmentWithSponsorsAndImage) => {
-		if (amendment.government_level === "federal") {
-			amendmentsFederal = [...amendmentsFederal, amendment];
-		} else if (amendment.government_level === "state") {
-			amendmentsState = [...amendmentsState, amendment]
-		} else if (amendment.government_level === "county") {
-			amendmentsCounty = [...amendmentsCounty, amendment]
-		} else if (amendment.government_level === "city") {
-			amendmentsCity = [...amendmentsCity, amendment]
-		};
-	});
-
-	let referendumsFederal: ReferendumWithImage[] = [];
-	let referendumsState: ReferendumWithImage[] = [];
-	let referendumsCounty: ReferendumWithImage[] = [];
-	let referendumsCity: ReferendumWithImage[] = [];
-
-	let endorsedReferendums: ReferendumWithImage[] = [];
-
-	$: endorsedReferendums = [...data.streamed.endorsed_referendums];
-
-	$: endorsedReferendums.forEach((referendum: ReferendumWithImage) => {
-		if (referendum.government_level === "federal") {
-			referendumsFederal = [...referendumsFederal, referendum];
-		} else if (referendum.government_level === "state") {
-			referendumsState = [...referendumsState, referendum];
-		} else if (referendum.government_level === "county") {
-			referendumsCounty = [...referendumsCounty, referendum];
-		} else if (referendum.government_level === "city") {
-			referendumsCity = [...referendumsCity, referendum];
-		};
-	});
-
-    let searchValue: string;
-
-    let useCurrentLocationChecked: boolean;
-
-    let disableButton: boolean = true;
-
-	let activeEndorsementsTab: number;
-
-	let yearInputValue: number;
-
-	$: activeEndorsementsTab = 0;
-
-    // get string from url of whether get current location checkbox checked and address
-
-    let searchQueries: string[];
-
-    // use onMount to get data from params after page is prerendered
-
-    onMount(() => {
-        if ($page.url.search !== "") {
-            searchQueries = $page.url.search.split("?");
-            console.log(searchQueries);
-            if (searchQueries[1] === "current_address_checked=true") {
-                useCurrentLocationChecked = true;
-            } else if (searchQueries[1] !== "current_address_checked=true") {
-                searchValue = searchQueries[2].replace(/_/g, ' ');
-                if (searchValue !== "") {
-                    disableButton = false;
-                };
-            };
-        };
-    });
-    
-    // once user clicks "use my current location" checkbox, 
+	// once user clicks "use my current location" checkbox, 
 
 	// define the latitude and longitude variables
 	let latitude: number | null = null;
@@ -146,13 +33,13 @@
 
 	// define the location variables
 
-	let country: string = "";
-	let zipcode: string = "";
-	let state: string = "";
-	let county: string = "";
-	let city: string = "";
-	let street: string = "";
-	let streetNumber: string = "";
+	let country: string | any = "";
+	let zipcode: string | any = "";
+	let state: string | any = "";
+	let county: string | any = "";
+	let city: string | any = "";
+	let street: string | any = "";
+	let streetNumber: string | any = "";
 
 	// set the latitude and longitude with user's position.coords
 
@@ -177,7 +64,7 @@
 
 		// show the user's address as the value in the searchEndorsements searchInput
 
-		searchValue = reversedGeolocation.addresses[0].address.freeformAddress;
+		searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
 
 		country = reversedGeolocation.addresses[0].address.country;
 		zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
@@ -187,13 +74,28 @@
 		street= reversedGeolocation.addresses[0].address.street;
 		streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
 
-		return searchValue;
+		// clear categories data
+
+		candidatesFederal = [];
+		candidatesState = [];
+		candidatesCounty = [];
+		candidatesCity = [];
+
+		// let endorsedCandidates: CandidateWithImage[] = [];
+
+		$searchEndorsedCandidatesStore.search = {
+			state: state,
+			county: county,
+			city: city
+		};
+
+		return searchByStreetAddressInputValue;
 
 	};
 
-	const success = (position: GeoLocationPosition) => {
+	// if getCurrentPosition is a success, 
 
-		disableButton = false;
+	const success = (position: GeoLocationPosition) => {
 
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
@@ -205,6 +107,7 @@
 	// log an error if getCurrentPosition fails
 
 	const error = (error: any) => {
+
 		console.log("Unable to retrieve your location!" + error);
 	};
 
@@ -220,26 +123,259 @@
 
 	$: if (useCurrentLocationChecked) { findUserLocation() };
 
-	const searchInputValueChangeHandler = () => {
+	let candidatesFederal: CandidateWithImage[] = [];
+	let candidatesState: CandidateWithImage[] = [];
+	let candidatesCounty: CandidateWithImage[] = [];
+	let candidatesCity: CandidateWithImage[] = [];
 
-		if (searchValue !== "" ) {
-			disableButton = false;
-		} else if (searchValue == "") {
-			disableButton = true;
+	let endorsedCandidates: CandidateWithImage[] = [];
+
+	$: endorsedCandidates = [...data.streamed.endorsed_candidates];
+
+	// use the parsed address from seach by address input to filter endorsed candidates 
+
+	$: searchEndorsedCandidates = endorsedCandidates.map((candidate: CandidateWithImage) => ({
+		...candidate,
+		searchTerms: {
+			state: `${candidate.state}`,
+			county: `${candidate.county}`,
+			city: `${candidate.city}`
+		}
+	}));
+
+	$: searchEndorsedCandidatesStore = createEndorsedCandidatesSearchStore(searchEndorsedCandidates);
+
+	$: unsubscribeSearchEndorsedCandidatesStore = searchEndorsedCandidatesStore.subscribe((model) => {
+
+		searchEndorsedCandidatesHandler(model)
+
+	});
+
+	onDestroy(() => {
+
+		unsubscribeSearchEndorsedCandidatesStore();
+		
+	});
+
+	$: console.log($searchEndorsedCandidatesStore.filtered);
+
+	$: console.log("filtered candidates: ", candidatesState);
+
+	$: $searchEndorsedCandidatesStore.filtered.forEach((candidate: CandidateWithImage) => {
+		if (candidate.government_level === "federal") {
+			candidatesFederal = [...candidatesFederal, candidate];
+		} else if (candidate.government_level === "state") {
+			candidatesState = [...candidatesState, candidate];
+		} else if (candidate.government_level === "county") {
+			candidatesCounty = [...candidatesCounty, candidate];
+		} else if (candidate.government_level === "city") {
+			candidatesCity = [...candidatesCity, candidate];
 		};
+	});
 
-		if (useCurrentLocationChecked && (reversedGeolocation.addresses[0].address.freeformAddress !== searchValue)) {
+	let legislationFederal: LegislationWithSponsorsAndImage[] = [];
+	let legislationState: LegislationWithSponsorsAndImage[] = [];
+	let legislationCounty: LegislationWithSponsorsAndImage[] = [];
+	let legislationCity: LegislationWithSponsorsAndImage[] = [];
+
+	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+
+	$: endorsedLegislation = [...data.streamed.endorsed_legislation];
+
+	// use the parsed address from seach by address input to filter endorsed legislation 
+
+	const searchEndorsedLegislation = endorsedLegislation.map((legislation: LegislationWithSponsorsAndImage) => ({
+		...legislation,
+		searchTerms: {
+			state: `${legislation.state}`,
+			county: `${legislation.county}`,
+			city: `${legislation.city}`
+		}
+	}));
+
+	const searchEndorsedLegislationStore = createEndorsedLegislationSearchStore(searchEndorsedLegislation);
+
+	$: $searchEndorsedLegislationStore.filtered.forEach((legislation: LegislationWithSponsorsAndImage) => {
+		if (legislation.government_level === "federal") {
+			legislationFederal = [...legislationFederal, legislation];
+		} else if (legislation.government_level === "state") {
+			legislationState = [...legislationState, legislation];
+		} else if (legislation.government_level === "county") {
+			legislationCounty = [...legislationCounty, legislation];
+		} else if (legislation.government_level === "city") {
+			legislationCity = [...legislationCity, legislation];
+
+		};
+	});
+
+	let amendmentsFederal: Amendment[] = [];
+	let amendmentsState: Amendment[] = [];
+	let amendmentsCounty: Amendment[] = [];
+	let amendmentsCity: Amendment[] = [];
+
+	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+
+	$: endorsedAmendments = [...data.streamed.endorsed_amendments];
+
+	// use the parsed address from seach by address input to filter endorsed amendments 
+
+	const searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
+		...amendment,
+		searchTerms: {
+			state: `${amendment.state}`,
+			county: `${amendment.county}`,
+			city: `${amendment.city}`
+		}
+	}));
+
+	const searchEndorsedAmendmentsStore = createEndorsedAmendmentsSearchStore(searchEndorsedAmendments);
+
+	$: $searchEndorsedAmendmentsStore.filtered.forEach((amendment: AmendmentWithSponsorsAndImage) => {
+		if (amendment.government_level === "federal") {
+			amendmentsFederal = [...amendmentsFederal, amendment];
+		} else if (amendment.government_level === "state") {
+			amendmentsState = [...amendmentsState, amendment]
+		} else if (amendment.government_level === "county") {
+			amendmentsCounty = [...amendmentsCounty, amendment]
+		} else if (amendment.government_level === "city") {
+			amendmentsCity = [...amendmentsCity, amendment]
+		};
+	});
+
+	let referendumsFederal: ReferendumWithImage[] = [];
+	let referendumsState: ReferendumWithImage[] = [];
+	let referendumsCounty: ReferendumWithImage[] = [];
+	let referendumsCity: ReferendumWithImage[] = [];
+
+	let endorsedReferendums: ReferendumWithImage[] = [];
+
+	$: endorsedReferendums = [...data.streamed.endorsed_referendums];
+
+	// use the parsed address from seach by address input to filter endorsed referendums 
+
+	const searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
+		...referendum,
+		searchTerms: {
+			state: `${referendum.state}`,
+			county: `${referendum.county}`,
+			city: `${referendum.city}`
+		}
+	}));
+
+	const searchEndorsedReferendumsStore = createEndorsedReferendumsSearchStore(searchEndorsedReferendums);
+
+	$: $searchEndorsedReferendumsStore.filtered.forEach((referendum: ReferendumWithImage) => {
+		if (referendum.government_level === "federal") {
+			referendumsFederal = [...referendumsFederal, referendum];
+		} else if (referendum.government_level === "state") {
+			referendumsState = [...referendumsState, referendum];
+		} else if (referendum.government_level === "county") {
+			referendumsCounty = [...referendumsCounty, referendum];
+		} else if (referendum.government_level === "city") {
+			referendumsCity = [...referendumsCity, referendum];
+		};
+	});
+
+    let searchByStreetAddressInputValue: string;
+
+    let useCurrentLocationChecked: boolean;
+
+	let activeEndorsementsTab: number;
+
+	let yearInputValue: number;
+
+	$: activeEndorsementsTab = 0;
+
+    // get string from url of whether get current location checkbox checked and address
+
+    let searchQueries: string[];
+
+    // use onMount to get data from params after page is prerendered
+
+    onMount(() => {
+        if ($page.url.search !== "") {
+            searchQueries = $page.url.search.split("?");
+            console.log(searchQueries);
+            if (searchQueries[1] === "current_address_checked=true") {
+                useCurrentLocationChecked = true;
+            } else if (searchQueries[1] !== "current_address_checked=true") {
+                searchByStreetAddressInputValue = searchQueries[2].replace(/_/g, ' ');
+            };
+        };
+    });
+
+	// handle changes to search endorsements by address input
+
+	const searchByStreetAddressInputValueChangeHandler = () => {
+
+		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
+
+		if (
+			useCurrentLocationChecked && 
+			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
+		) {
 
 			useCurrentLocationChecked = false;
 
-			return useCurrentLocationChecked;
+		};
+
+		// IMPORTANT: street address parser must have an input length greater than zero
+
+		// if search by address input value is greater than zero and use my current location is not checked, 
+		// use address-parser to parse search by address input value
+
+		if (
+			(searchByStreetAddressInputValue.length > 0) &&
+			!useCurrentLocationChecked
+		) {
+
+			// parse the search by address input value
+
+			const parsed = parse(searchByStreetAddressInputValue);
+
+			// load the parsed properties
+
+			country = parsed.country;
+			zipcode = parsed.zip;
+			state = parsed.state;
+			city = parsed.city;
+			street= parsed.streetName;
+			streetNumber = parsed.number;
+
+			// use zip code to load county from parsed address
+
+			county = USCities.find((location) => location.zip_code.toString() === zipcode);
+
+		} else {
+
+			country = "";
+			zipcode = "";
+			state = "";
+			city = "";
+			street= "";
+			streetNumber = "";
+			county = "";
 
 		};
-	};
 
-	// console.log(data);
+		// update the search filter stores
 
-	const searchSubmitHandler = () => {
+		// update the candidate search filter store
+
+		// clear categories data
+
+		candidatesFederal = [];
+		candidatesState = [];
+		candidatesCounty = [];
+		candidatesCity = [];
+
+		// let endorsedCandidates: CandidateWithImage[] = [];
+
+		$searchEndorsedCandidatesStore.search = {
+			state: state,
+			county: county,
+			city: city
+		};
 
 	};
 
@@ -328,7 +464,6 @@
 
 <section>    
     <form 
-		on:submit|preventDefault={searchSubmitHandler}
 		class="search_endorsements_by_address_form"
 	>
 		<h1>
@@ -348,16 +483,11 @@
 					inputID="address"
 					inputName="address"
 					inputLabel={false}
-					bind:searchInputValue={searchValue}
-					searchInputValueChange={() => searchInputValueChangeHandler()}
+					bind:searchInputValue={searchByStreetAddressInputValue}
+					searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
 				/>
 			</div>
-		</div>	
-		<ActionButton
-			bind:disable={disableButton}
-		>
-			search endorsements
-		</ActionButton>
+		</div>
 	</form>
 	<div class="election_year_field">
 		<SelectInput 

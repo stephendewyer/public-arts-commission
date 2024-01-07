@@ -8,10 +8,12 @@
     
     export let categories_data: any;
 
-    let endorsedAmendments: AmendmentWithSponsorsAndImage[];
-    let endorsedCandidates: CandidateWithImage[];
-    let endorsedLegislation: LegislationWithSponsorsAndImage[];
-    let endorsedReferendums: ReferendumWithImage[];
+    $: categories_data;
+
+    let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+    let endorsedCandidates: CandidateWithImage[] = [];
+    let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+    let endorsedReferendums: ReferendumWithImage[] = [];
 
     $: endorsedAmendments = [...categories_data.endorsed_amendments];
     $: endorsedCandidates = [...categories_data.endorsed_candidates];

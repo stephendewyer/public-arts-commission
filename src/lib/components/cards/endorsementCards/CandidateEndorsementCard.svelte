@@ -7,47 +7,48 @@
 
     let candidateStatus: string[] = [];
 
-    $: if (endorsedCandidateData.running_in_primary === 1) {
+    if (endorsedCandidateData.running_in_primary === 1) {
 
         candidateStatus = [ ...candidateStatus, " running in the primary"];
 
     };
     
-    $: if (endorsedCandidateData.elected_in_primary === 1) {
+    if (endorsedCandidateData.elected_in_primary === 1) {
 
         candidateStatus = [ ...candidateStatus, " elected in the primary"];
 
     };
     
-    $: if (endorsedCandidateData.rejected_in_primary === 1) {
+    if (endorsedCandidateData.rejected_in_primary === 1) {
 
         candidateStatus = [ ...candidateStatus, " rejected in the primary"];
 
     };
     
-    $: if (endorsedCandidateData.running_in_general === 1) {
+    if (endorsedCandidateData.running_in_general === 1) {
 
         candidateStatus = [ ...candidateStatus, " running in the general"];
 
     };
     
-    $: if (endorsedCandidateData.rejected_in_general === 1) {
+    if (endorsedCandidateData.rejected_in_general === 1) {
 
         candidateStatus = [ ...candidateStatus, " rejected in the general"];
 
     };
     
-    $: if (endorsedCandidateData.elected_in_general === 1) {
+    if (endorsedCandidateData.elected_in_general === 1) {
 
         candidateStatus = [ ...candidateStatus, " elected in the general"];
 
     };
 
-    $: if (endorsedCandidateData.campaign_ended === 1) {
+    if (endorsedCandidateData.campaign_ended === 1) {
 
         candidateStatus = [ ...candidateStatus, " campaign ended"];
 
     };
+
     let primaryIsValid: boolean = true;
 
     let primaryElectionDate: Date | string;

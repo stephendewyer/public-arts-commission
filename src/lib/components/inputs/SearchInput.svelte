@@ -22,6 +22,7 @@
         type="search"
         bind:value={searchInputValue}
         on:input={searchInputValueChange}
+        on:keyup={searchInputValueChange}
     />
 </div>
   
