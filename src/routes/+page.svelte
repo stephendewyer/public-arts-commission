@@ -10,8 +10,8 @@
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
-	import ForthcomingActionCarousel from '$lib/components/sliders/ForthcomingActionCarousel.svelte';
   	import { onMount } from 'svelte';
+  import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
 
 	export let data;
 
@@ -237,10 +237,12 @@
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
+		<h2 class="forthcoming_actions_heading">forthcoming actions</h2>
 		{#if (futureEndorsedActions.length > 0)}
-			<ForthcomingActionCarousel 
-				forthcoming_actions={futureEndorsedActions} 
-			/>
+			{#each futureEndorsedActions as action, i}
+
+				<ActionEndorsementCard endorsedActionData={action} />
+			{/each}
 		{/if}
 	</div>
 </section>
@@ -308,6 +310,10 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	.forthcoming_actions_heading {
+		text-align: center;
 	}
 
 	@media (max-width: 1140px) {
