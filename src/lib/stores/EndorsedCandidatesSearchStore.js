@@ -32,14 +32,14 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
             handleStateName = true;
 
-            handledStateName = state.name.toLowerCase() || "" || undefined || null;
+            handledStateName = state.name.toLowerCase();
 
         };
 
     });
 
-    const searchCity = store.search.city?.toLowerCase() || "" || undefined || null;
-    const searchCounty = store.search.county?.toLowerCase() || "" || undefined || null;
+    const searchCity = store.search.city?.toLowerCase();
+    const searchCounty = store.search.county?.toLowerCase();
 
     /**
      * @type {string | undefined | null}
@@ -52,15 +52,12 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
     } else {
 
-        searchState = store.search.state?.toLowerCase() || "" || undefined || null;
+        searchState = store.search.state?.toLowerCase();
 
     };
-
-    console.log("search candidates store is: ", store)
-
-    console.log("search state: ", searchState);
-
     // filter the endorsed candidates data
+
+    console.log(`search state: ${searchState}, search county: ${searchCounty}, search city: ${searchCity}`)
 
     store.filtered = store.data.filter((/** @type {any} */ item) => {
 
@@ -97,7 +94,7 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
                 ) ||
                 (
                     item.searchTerms.state.toLowerCase().includes(searchState) &&
-                    item.searchTerms.county.toLowerCase().includes(searchCounty) 
+                    item.searchTerms.county.toLowerCase().includes(searchCounty)
                 ) ||
                 (
                     item.searchTerms.state.toLowerCase().includes(searchState)
@@ -109,18 +106,14 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
             };
 
         } else if (
-            store.search.state &&
-            store.search.county &&
-            store.search.city === ""
+            !store.search.state &&
+            !store.search.county &&
+            store.search.city
         ) {
 
             if (
                 (
-                    item.searchTerms.state.toLowerCase().includes(searchState) &&
-                    item.searchTerms.county.toLowerCase().includes(searchCounty)
-                ) ||
-                (
-                    item.searchTerms.state.toLowerCase().includes(searchState)
+                    item.searchTerms.city.toLowerCase().includes(searchCity)
                 )       
 
             ) {
@@ -131,8 +124,8 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
         } else if (
             store.search.state &&
-            store.search.county === "" &&
-            store.search.city === ""
+            !store.search.county &&
+            !store.search.city
         ) {
 
             if (
@@ -143,8 +136,22 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
             };
 
+        } else if (
+            !store.search.state &&
+            store.search.county &&
+            !store.search.city
+        ) {
+
+            if (
+                item.searchTerms.county.toLowerCase().includes(searchCounty)
+            ) {
+
+                return item;
+
+            };
+
         };
-        
+
     });
 
 };

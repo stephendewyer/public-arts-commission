@@ -157,10 +157,6 @@
 		
 	});
 
-	$: console.log($searchEndorsedCandidatesStore.filtered);
-
-	$: console.log("filtered candidates: ", candidatesState);
-
 	$: $searchEndorsedCandidatesStore.filtered.forEach((candidate: CandidateWithImage) => {
 		if (candidate.government_level === "federal") {
 			candidatesFederal = [...candidatesFederal, candidate];
@@ -344,7 +340,7 @@
 
 			// use zip code to load county from parsed address
 
-			county = USCities.find((location) => location.zip_code.toString() === zipcode).county;
+			county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
 
 		} else {
 
@@ -391,7 +387,7 @@
 			data: {
 				user: data.streamed.user,
 				endorsed_amendments: endorsedAmendments, 
-				endorsed_candidates: endorsedCandidates,
+				endorsed_candidates: $searchEndorsedCandidatesStore.filtered,
 				endorsed_legislation: endorsedLegislation,
 				endorsed_referendums: endorsedReferendums
 			}
