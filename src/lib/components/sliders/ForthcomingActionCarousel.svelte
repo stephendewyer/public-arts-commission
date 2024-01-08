@@ -46,6 +46,14 @@
         max-width: 30rem;
     }
 
+    :global(.splide__slide .is-active .is-visible .splide__slide--clone .is-prev) {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+    }
+
     .slide_container {
         display: flex;
         flex-direction: column;
