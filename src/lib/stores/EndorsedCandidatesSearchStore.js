@@ -7,6 +7,7 @@ export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => 
         data: data,
         filtered: data,
         search: {
+            government_level: "",
             state: "",
             county: "",
             city: ""
@@ -55,9 +56,11 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
         searchState = store.search.state?.toLowerCase();
 
     };
+
+    const searchGovernmentLevel = store.search.government_level?.toLowerCase();
     // filter the endorsed candidates data
 
-    console.log(`search state: ${searchState}, search county: ${searchCounty}, search city: ${searchCity}`)
+    console.log(`search federal: ${searchGovernmentLevel}, search state: ${searchState}, search county: ${searchCounty}, search city: ${searchCity}`)
 
     store.filtered = store.data.filter((/** @type {any} */ item) => {
 
@@ -81,12 +84,25 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
             return item;
 
         } else if (
+
+            item.searchTerms.government_level.toLowerCase().includes("federal")
+
+        ) {
+
+            return item;
+
+        } else if (
             store.search.state &&
             store.search.county &&
             store.search.city
         ) {
 
             if (
+                (
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                    item.searchTerms.city.toLowerCase().includes(searchCity)
+                ) ||
                 (
                     item.searchTerms.state.toLowerCase().includes(searchState) &&
                     item.searchTerms.county.toLowerCase().includes(searchCounty) &&
@@ -116,6 +132,66 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
                     item.searchTerms.city.toLowerCase().includes(searchCity)
                 )       
 
+            ) {
+
+                return item;
+
+            };
+
+        }  else if (
+            !store.search.state &&
+            store.search.county &&
+            store.search.city
+        ) {
+
+            if (
+                (   
+                    item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                    item.searchTerms.city.toLowerCase().includes(searchCity)
+                ) ||
+                (   
+                    item.searchTerms.county.toLowerCase().includes(searchCounty)
+                )
+            ) {
+
+                return item;
+
+            };
+
+        } else if (
+            store.search.state &&
+            store.search.county &&
+            !store.search.city
+        ) {
+
+            if (
+                (   
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.county.toLowerCase().includes(searchCounty)
+                ),
+                (   
+                    item.searchTerms.state.toLowerCase().includes(searchState)
+                )         
+            ) {
+
+                return item;
+
+            };
+
+        }  else if (
+            store.search.state &&
+            !store.search.county &&
+            store.search.city
+        ) {
+
+            if (
+                (   
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.city.toLowerCase().includes(searchCity)
+                ),
+                (   
+                    item.searchTerms.state.toLowerCase().includes(searchState)
+                )         
             ) {
 
                 return item;

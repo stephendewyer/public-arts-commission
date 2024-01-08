@@ -84,6 +84,7 @@
 		// let endorsedCandidates: CandidateWithImage[] = [];
 
 		$searchEndorsedCandidatesStore.search = {
+			government_level: "federal",
 			state: state,
 			county: county,
 			city: city
@@ -137,6 +138,7 @@
 	$: searchEndorsedCandidates = endorsedCandidates.map((candidate: CandidateWithImage) => ({
 		...candidate,
 		searchTerms: {
+			government_level: `${candidate.government_level}`,
 			state: `${candidate.state}`,
 			county: `${candidate.county}`,
 			city: `${candidate.city}`
@@ -183,6 +185,7 @@
 	const searchEndorsedLegislation = endorsedLegislation.map((legislation: LegislationWithSponsorsAndImage) => ({
 		...legislation,
 		searchTerms: {
+			government_level: `${legislation.government_level}`,
 			state: `${legislation.state}`,
 			county: `${legislation.county}`,
 			city: `${legislation.city}`
@@ -218,6 +221,7 @@
 	const searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
 		...amendment,
 		searchTerms: {
+			government_level: `${amendment.government_level}`,
 			state: `${amendment.state}`,
 			county: `${amendment.county}`,
 			city: `${amendment.city}`
@@ -252,6 +256,7 @@
 	const searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
 		...referendum,
 		searchTerms: {
+			government_level: `${referendum.government_level}`,
 			state: `${referendum.state}`,
 			county: `${referendum.county}`,
 			city: `${referendum.city}`
@@ -368,6 +373,7 @@
 		// let endorsedCandidates: CandidateWithImage[] = [];
 
 		$searchEndorsedCandidatesStore.search = {
+			government_level: "federal",
 			state: state,
 			county: county,
 			city: city
