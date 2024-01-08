@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy, afterUpdate } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -13,7 +13,7 @@
 	import AllEndorsementPanel from '$lib/components/endorsements/endorsementPanels/AllEndorsementPanel.svelte';
 	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 	import Years from '$lib/data/years.json';
-	import SelectInput from '$lib/components/inputs/SelectInput.svelte';
+	import SelectSearchInput from '$lib/components/inputs/SelectSearchInput.svelte';;
 	import { parse } from "@universe/address-parser";
 	import USCities from '$lib/data/USCities.json';
   	import { createEndorsedCandidatesSearchStore, searchEndorsedCandidatesHandler } from '$lib/stores/EndorsedCandidatesSearchStore.js';
@@ -40,6 +40,22 @@
 	let city: string | any = "";
 	let street: string | any = "";
 	let streetNumber: string | any = "";
+
+	let yearInputValue: number | any = "";
+
+	$: console.log("selected year: ", yearInputValue);
+
+    let searchByStreetAddressInputValue: string;
+
+    let useCurrentLocationChecked: boolean;
+
+	let activeEndorsementsTab: number;
+
+	$: activeEndorsementsTab = 0;
+
+    // get string from url of whether get current location checkbox checked and address
+
+    let searchQueries: string[];
 
 	// set the latitude and longitude with user's position.coords
 
@@ -81,9 +97,8 @@
 		candidatesCounty = [];
 		candidatesCity = [];
 
-		// let endorsedCandidates: CandidateWithImage[] = [];
-
 		$searchEndorsedCandidatesStore.search = {
+			year: yearInputValue,
 			government_level: "federal",
 			state: state,
 			county: county,
@@ -138,12 +153,15 @@
 	$: searchEndorsedCandidates = endorsedCandidates.map((candidate: CandidateWithImage) => ({
 		...candidate,
 		searchTerms: {
+			year: `${new Date(candidate.election_date_general).getFullYear()}`,
 			government_level: `${candidate.government_level}`,
 			state: `${candidate.state}`,
 			county: `${candidate.county}`,
 			city: `${candidate.city}`
 		}
 	}));
+
+	$: console.log("endorsed candidates: ",searchEndorsedCandidates )
 
 	$: searchEndorsedCandidatesStore = createEndorsedCandidatesSearchStore(searchEndorsedCandidates);
 
@@ -185,6 +203,7 @@
 	const searchEndorsedLegislation = endorsedLegislation.map((legislation: LegislationWithSponsorsAndImage) => ({
 		...legislation,
 		searchTerms: {
+			year: `${legislation.year_released}`,
 			government_level: `${legislation.government_level}`,
 			state: `${legislation.state}`,
 			county: `${legislation.county}`,
@@ -221,6 +240,7 @@
 	const searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
 		...amendment,
 		searchTerms: {
+			year: `${amendment.year_released}`,
 			government_level: `${amendment.government_level}`,
 			state: `${amendment.state}`,
 			county: `${amendment.county}`,
@@ -256,6 +276,7 @@
 	const searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
 		...referendum,
 		searchTerms: {
+			year: `${new Date(referendum.election_date).getFullYear()}`,
 			government_level: `${referendum.government_level}`,
 			state: `${referendum.state}`,
 			county: `${referendum.county}`,
@@ -277,21 +298,7 @@
 		};
 	});
 
-    let searchByStreetAddressInputValue: string;
-
-    let useCurrentLocationChecked: boolean;
-
-	let activeEndorsementsTab: number;
-
-	let yearInputValue: number;
-
-	$: activeEndorsementsTab = 0;
-
-    // get string from url of whether get current location checkbox checked and address
-
-    let searchQueries: string[];
-
-    // use onMount to get data from params after page is prerendered
+	// use onMount to get data from params after page is prerendered
 
     onMount(() => {
         if ($page.url.search !== "") {
@@ -360,9 +367,7 @@
 		};
 
 		// update the search filter stores
-
 		// update the candidate search filter store
-
 		// clear categories data
 
 		candidatesFederal = [];
@@ -373,6 +378,32 @@
 		// let endorsedCandidates: CandidateWithImage[] = [];
 
 		$searchEndorsedCandidatesStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+	};
+
+	const selectYearInputValueChangeHandler = () => {
+
+		console.log("year value changed: ", yearInputValue)
+
+		// update the search filter stores
+		// update the candidate search filter store
+		// clear categories data
+
+		candidatesFederal = [];
+		candidatesState = [];
+		candidatesCounty = [];
+		candidatesCity = [];
+
+		// let endorsedCandidates: CandidateWithImage[] = [];
+
+		$searchEndorsedCandidatesStore.search = {
+			year: yearInputValue,
 			government_level: "federal",
 			state: state,
 			county: county,
@@ -469,7 +500,7 @@
 		class="search_endorsements_by_address_form"
 	>
 		<h1>
-		    search endorsements by address
+		    search endorsements by street address
 		</h1>
 		<div class="search_endorsement_fields">
 			<div class="use_current_location_checkbox">
@@ -492,18 +523,16 @@
 		</div>
 	</form>
 	<div class="election_year_field">
-		<SelectInput 
+		<SelectSearchInput 
 			options={Years}
+			inputID="year"
+			inputName="year"
+			inputLabel={true}	
 			bind:selectInputValue={yearInputValue}
-			isValid={true}
-			required={false}
-			inputID="election_year"
-			inputName="election_year"
-			selectInputErrorMessage=""
-			inputLabel={true}
+			selectInputValueChange={() => selectYearInputValueChangeHandler()}	
 		>
 			election year
-		</SelectInput>
+		</SelectSearchInput>
 	</div>
 	<div class="endorsements_tabs_container">
 		<Tabs

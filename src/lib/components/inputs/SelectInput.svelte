@@ -69,6 +69,7 @@
         bind:value={selectInputValue}
         on:input={selectInputValueChangedHandler}
         on:change={selectInputValueChangedHandler}
+        on:keyup={selectInputValueChangedHandler}
         on:focus={selectInputFocusChangedHandler}
         on:blur={selectInputBlurChangedHandler}
     >

@@ -11,7 +11,7 @@
 	import { v4 as uuidv4 } from 'uuid';
 	import { goto } from '$app/navigation';
   	import { onMount } from 'svelte';
-  import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
+  	import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
 
 	export let data;
 
@@ -238,12 +238,14 @@
 		class="forthcoming actions"
 	>
 		<h2 class="forthcoming_actions_heading">forthcoming actions</h2>
-		{#if (futureEndorsedActions.length > 0)}
-			{#each futureEndorsedActions as action, i}
+		<div class="actions_container">
+			{#if (futureEndorsedActions.length > 0)}
+				{#each futureEndorsedActions as action, i}
 
-				<ActionEndorsementCard endorsedActionData={action} />
-			{/each}
-		{/if}
+					<ActionEndorsementCard endorsedActionData={action} />
+				{/each}
+			{/if}
+		</div>
 	</div>
 </section>
 
@@ -314,6 +316,12 @@
 
 	.forthcoming_actions_heading {
 		text-align: center;
+	}
+
+	.actions_container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
 	}
 
 	@media (max-width: 1140px) {

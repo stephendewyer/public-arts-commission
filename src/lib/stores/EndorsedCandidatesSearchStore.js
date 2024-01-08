@@ -7,6 +7,7 @@ export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => 
         data: data,
         filtered: data,
         search: {
+            year: "",
             government_level: "",
             state: "",
             county: "",
@@ -22,6 +23,8 @@ export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => 
 };
 
 export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
+
+    const searchYear = store.search.year.toString();
 
     let handledStateName;
 
@@ -60,171 +63,331 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
     const searchGovernmentLevel = store.search.government_level?.toLowerCase();
     // filter the endorsed candidates data
 
-    console.log(`search federal: ${searchGovernmentLevel}, search state: ${searchState}, search county: ${searchCounty}, search city: ${searchCity}`)
+    console.log(`search year: ${searchYear}, search federal: ${searchGovernmentLevel}, search state: ${searchState}, search county: ${searchCounty}, search city: ${searchCity}`)
 
     store.filtered = store.data.filter((/** @type {any} */ item) => {
 
-        // if endorsed candidate object does not include lower-case store search state AND search state is not empty, remove from filtered array
+        // apply year filter first
 
-        // if endorsed candidate object does not include lower-case store search county 
-        // AND store search county is not empty
-        // OR if store search county is not in store search state, remove from filtered array
+        // if search by year is empty, continue with search by street address
 
-        // if endorsed candidate object does not include lower-case store search city 
-        // AND store search city is not empty,
-        // OR if store search city is not in store search county
-        // OR if store search city is not in store search state
-        // remove from filtered array
-        if (
-            store.search.state === "" &&
-            store.search.county === "" &&
-            store.search.city === ""
-        ) {
+        if (searchYear === "") {
 
-            return item;
-
-        } else if (
-
-            item.searchTerms.government_level.toLowerCase().includes("federal")
-
-        ) {
-
-            return item;
-
-        } else if (
-            store.search.state &&
-            store.search.county &&
-            store.search.city
-        ) {
+            // if search state, county and city are empty, return item
 
             if (
-                (
-                    item.searchTerms.state.toLowerCase().includes(searchState) &&
-                    item.searchTerms.county.toLowerCase().includes(searchCounty) &&
-                    item.searchTerms.city.toLowerCase().includes(searchCity)
-                ) ||
-                (
-                    item.searchTerms.state.toLowerCase().includes(searchState) &&
-                    item.searchTerms.county.toLowerCase().includes(searchCounty) &&
-                    item.searchTerms.city.toLowerCase().includes(searchCity)
-                ) ||
-                (
-                    item.searchTerms.state.toLowerCase().includes(searchState) &&
-                    item.searchTerms.county.toLowerCase().includes(searchCounty)
-                ) ||
-                (
+                store.search.state === "" &&
+                store.search.county === "" &&
+                store.search.city === ""
+            ) {
+
+                return item;
+
+            } else if (
+
+                // if item government level is federal, return item
+
+                item.searchTerms.government_level.toLowerCase().includes("federal")
+
+            ) {
+
+                return item;
+
+            } else if (
+
+                // if search state, county and city are entered, return only items if values fit within values
+                store.search.state &&
+                store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    ) ||
+                    (
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.county.toLowerCase().includes(searchCounty)
+                    ) ||
+                    (
+                        item.searchTerms.state.toLowerCase().includes(searchState)
+                    )
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                !store.search.state &&
+                !store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    )       
+
+                ) {
+
+                    return item;
+
+                };
+
+            }  else if (
+                !store.search.state &&
+                store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (   
+                        item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    ) ||
+                    (   
+                        item.searchTerms.county.toLowerCase().includes(searchCounty)
+                    )
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                store.search.state &&
+                store.search.county &&
+                !store.search.city
+            ) {
+
+                if (
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.county.toLowerCase().includes(searchCounty)
+                    ),
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState)
+                    )         
+                ) {
+
+                    return item;
+
+                };
+
+            }  else if (
+                store.search.state &&
+                !store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    ),
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState)
+                    )         
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                store.search.state &&
+                !store.search.county &&
+                !store.search.city
+            ) {
+
+                if (
                     item.searchTerms.state.toLowerCase().includes(searchState)
-                )
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                !store.search.state &&
+                store.search.county &&
+                !store.search.city
             ) {
 
-                return item;
-
-            };
-
-        } else if (
-            !store.search.state &&
-            !store.search.county &&
-            store.search.city
-        ) {
-
-            if (
-                (
-                    item.searchTerms.city.toLowerCase().includes(searchCity)
-                )       
-
-            ) {
-
-                return item;
-
-            };
-
-        }  else if (
-            !store.search.state &&
-            store.search.county &&
-            store.search.city
-        ) {
-
-            if (
-                (   
-                    item.searchTerms.county.toLowerCase().includes(searchCounty) &&
-                    item.searchTerms.city.toLowerCase().includes(searchCity)
-                ) ||
-                (   
+                if (
                     item.searchTerms.county.toLowerCase().includes(searchCounty)
-                )
+                ) {
+
+                    return item;
+
+                };
+
+            };
+
+        // else if search year matches item searchTerm year, continue with filters
+
+        } else if (item.searchTerms.year === searchYear) {
+
+            // if search state, county and city are empty, return item
+
+            if (
+                store.search.state === "" &&
+                store.search.county === "" &&
+                store.search.city === ""
             ) {
 
                 return item;
 
-            };
+            } else if (
 
-        } else if (
-            store.search.state &&
-            store.search.county &&
-            !store.search.city
-        ) {
+                // if item government level is federal, return item
 
-            if (
-                (   
-                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                item.searchTerms.government_level.toLowerCase().includes("federal")
+
+            ) {
+
+                return item;
+
+            } else if (
+
+                // if search state, county and city are entered, return only items if values fit within values
+                store.search.state &&
+                store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    ) ||
+                    (
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.county.toLowerCase().includes(searchCounty)
+                    ) ||
+                    (
+                        item.searchTerms.state.toLowerCase().includes(searchState)
+                    )
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                !store.search.state &&
+                !store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    )       
+
+                ) {
+
+                    return item;
+
+                };
+
+            }  else if (
+                !store.search.state &&
+                store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (   
+                        item.searchTerms.county.toLowerCase().includes(searchCounty) &&
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    ) ||
+                    (   
+                        item.searchTerms.county.toLowerCase().includes(searchCounty)
+                    )
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                store.search.state &&
+                store.search.county &&
+                !store.search.city
+            ) {
+
+                if (
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.county.toLowerCase().includes(searchCounty)
+                    ),
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState)
+                    )         
+                ) {
+
+                    return item;
+
+                };
+
+            }  else if (
+                store.search.state &&
+                !store.search.county &&
+                store.search.city
+            ) {
+
+                if (
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState) &&
+                        item.searchTerms.city.toLowerCase().includes(searchCity)
+                    ),
+                    (   
+                        item.searchTerms.state.toLowerCase().includes(searchState)
+                    )         
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                store.search.state &&
+                !store.search.county &&
+                !store.search.city
+            ) {
+
+                if (
+                    item.searchTerms.state.toLowerCase().includes(searchState)
+                ) {
+
+                    return item;
+
+                };
+
+            } else if (
+                !store.search.state &&
+                store.search.county &&
+                !store.search.city
+            ) {
+
+                if (
                     item.searchTerms.county.toLowerCase().includes(searchCounty)
-                ),
-                (   
-                    item.searchTerms.state.toLowerCase().includes(searchState)
-                )         
-            ) {
+                ) {
 
-                return item;
+                    return item;
+
+                };
 
             };
 
-        }  else if (
-            store.search.state &&
-            !store.search.county &&
-            store.search.city
-        ) {
+        } else {
 
-            if (
-                (   
-                    item.searchTerms.state.toLowerCase().includes(searchState) &&
-                    item.searchTerms.city.toLowerCase().includes(searchCity)
-                ),
-                (   
-                    item.searchTerms.state.toLowerCase().includes(searchState)
-                )         
-            ) {
-
-                return item;
-
-            };
-
-        } else if (
-            store.search.state &&
-            !store.search.county &&
-            !store.search.city
-        ) {
-
-            if (
-                item.searchTerms.state.toLowerCase().includes(searchState)
-            ) {
-
-                return item;
-
-            };
-
-        } else if (
-            !store.search.state &&
-            store.search.county &&
-            !store.search.city
-        ) {
-
-            if (
-                item.searchTerms.county.toLowerCase().includes(searchCounty)
-            ) {
-
-                return item;
-
-            };
+            return;
 
         };
 

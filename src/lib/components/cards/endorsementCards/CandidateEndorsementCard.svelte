@@ -129,7 +129,7 @@
         <h4 class="card_heading_01">{endorsedCandidateData.campaign_name}</h4>
         <h5 class="card_heading_02"><span class="data_category">electorate: </span>{endorsedCandidateData.electorate}</h5>
         {#if (primaryIsValid)}
-            <h5 class="card_heading_02">primary election date: {primaryElectionDate}</h5>
+            <h5 class="card_heading_02"><span class="data_category">primary election date: </span>{primaryElectionDate}</h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">general election date: </span>{generalElectionDate}</h5>
         <h5 class="card_heading_02"><span class="data_category">status:</span>
