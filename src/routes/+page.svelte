@@ -187,7 +187,7 @@
 		class="search_endorsements_by_address_form"
 	>
 		<h2>
-		search endorsements by address
+		search endorsements by street address
 		</h2>
 		<div class="search_endorsement_fields">
 			<div class="use_current_location_checkbox">
