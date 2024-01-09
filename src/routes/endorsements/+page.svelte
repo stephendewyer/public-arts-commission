@@ -20,7 +20,8 @@
 	import { createEndorsedLegislationSearchStore, searchEndorsedLegislationHandler } from '$lib/stores/EndorsedLegislationSearchStore.js';
 	import { createEndorsedReferendumsSearchStore, searchEndorsedReferendumsHandler } from '$lib/stores/EndorsedReferendumsSearchStore.js';
 	import { createEndorsedAmendmentsSearchStore, searchEndorsedAmendmentsHandler } from '$lib/stores/EndorsedAmendmentsSearchStore.js';
-
+	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+	
 	export let data;
 
 	$: data;
@@ -61,6 +62,12 @@
 
 	// use the user's geolocation to get the user's address
 
+	// after submit
+
+	let addressLoadSuccess: boolean | null = null;
+
+	let pending: boolean = false;
+
 	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string> {
 
 		const response = await fetch("/api/reverseGeocode", {
@@ -75,6 +82,20 @@
 		});
 
 		reversedGeolocation = await response.json();
+
+		if (response.ok) {
+
+			pending = false;
+
+			addressLoadSuccess = true;
+
+		} else if (!response.ok) {
+
+			pending = false;
+
+			addressLoadSuccess = false;
+
+		};
 
 		// show the user's address as the value in the searchEndorsements searchInput
 
@@ -161,6 +182,10 @@
 
 	const error = (error: any) => {
 
+		pending = false;
+
+		addressLoadSuccess = false;
+
 		console.log("Unable to retrieve your location!" + error);
 	};
 
@@ -174,7 +199,13 @@
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
-	$: if (useCurrentLocationChecked) { findUserLocation() };
+	$: if (useCurrentLocationChecked) { 
+
+		pending = true;
+
+		findUserLocation();
+
+	};
 
 	let candidatesFederal: CandidateWithImage[] = [];
 	let candidatesState: CandidateWithImage[] = [];
@@ -654,14 +685,31 @@
 				</Checkbox>
 			</div>
 			<div class="search_endorsements_by_address_input">
-				<SearchInput 
-					placeholder="1000 MyStreet, MyCity, MyState  10000"
-					inputID="address"
-					inputName="address"
-					inputLabel={false}
-					bind:searchInputValue={searchByStreetAddressInputValue}
-					searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
-				/>
+				{#if useCurrentLocationChecked}
+					{#if pending}
+						<LoaderAnimation />
+					{:else if addressLoadSuccess}
+						<SearchInput 
+							placeholder="1000 MyStreet, MyCity, MyState  10000"
+							inputID="address"
+							inputName="address"
+							inputLabel={false}
+							bind:searchInputValue={searchByStreetAddressInputValue}
+							searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+						/>
+					{:else if !addressLoadSuccess}
+						<p>failed to load address</p>
+					{/if}
+				{:else}
+					<SearchInput 
+						placeholder="1000 MyStreet, MyCity, MyState  10000"
+						inputID="address"
+						inputName="address"
+						inputLabel={false}
+						bind:searchInputValue={searchByStreetAddressInputValue}
+						searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+					/>
+				{/if}
 			</div>
 		</div>
 	</form>

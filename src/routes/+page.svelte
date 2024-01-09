@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
   	import { onMount } from 'svelte';
   	import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
+	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
 
 	export let data;
 
@@ -66,6 +67,12 @@
 
 	let reversedGeolocation: ReverseGeoLocation;
 
+	// after submit
+
+	let addressLoadSuccess: boolean | null = null;
+
+	let pending: boolean = false;
+
 	// use the user's geolocation to get the user's address
 
 	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string> {
@@ -82,6 +89,20 @@
 		});
 
 		reversedGeolocation = await response.json();
+
+		if (response.ok) {
+
+			pending = false;
+
+			addressLoadSuccess = true;
+
+		} else if (!response.ok) {
+
+			pending = false;
+
+			addressLoadSuccess = false;
+
+		};
 
 		// show the user's address as the value in the searchEndorsements searchInput
 
@@ -106,6 +127,10 @@
 
 	const error = (error: any) => {
 
+		pending = false;
+
+		addressLoadSuccess = false;
+
 		console.log("Unable to retrieve your location!" + error);
 
 	};
@@ -120,13 +145,18 @@
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
-	$: if (useCurrentLocationChecked) { findUserLocation() } 
+	$: if (useCurrentLocationChecked) { 
+
+		pending = true;
+
+		findUserLocation() 
+	} 
 
 	const searchInputValueChangeHandler = () => {
 
-		if (searchValue !== "" ) {
+		if (searchValue !== "") {
 			disableButton = false;
-		} else if (searchValue == "") {
+		} else if (searchValue === "") {
 			disableButton = true;
 		};
 
@@ -197,15 +227,33 @@
 					use my current location
 				</Checkbox>
 			</div>
+			
 			<div class="search_endorsements_by_address_input">
-				<SearchInput 
-					placeholder="1000 MyStreet, MyCity, MyState  10000"
-					inputID="address"
-					inputName="address"
-					inputLabel={false}
-					bind:searchInputValue={searchValue}
-					searchInputValueChange={() => searchInputValueChangeHandler()}
-				/>
+				{#if useCurrentLocationChecked}
+					{#if pending}
+						<LoaderAnimation />
+					{:else if addressLoadSuccess}
+						<SearchInput 
+							placeholder="1000 MyStreet, MyCity, MyState  10000"
+							inputID="address"
+							inputName="address"
+							inputLabel={false}
+							bind:searchInputValue={searchValue}
+							searchInputValueChange={() => searchInputValueChangeHandler()}
+						/>
+					{:else if !addressLoadSuccess}
+						<p>failed to load address</p>
+					{/if}
+				{:else}
+					<SearchInput 
+						placeholder="1000 MyStreet, MyCity, MyState  10000"
+						inputID="address"
+						inputName="address"
+						inputLabel={false}
+						bind:searchInputValue={searchValue}
+						searchInputValueChange={() => searchInputValueChangeHandler()}
+					/>
+				{/if}
 			</div>
 			
 		</div>
