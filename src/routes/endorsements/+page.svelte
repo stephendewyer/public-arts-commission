@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import { onMount, onDestroy, afterUpdate } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -17,9 +17,9 @@
 	import { parse } from "@universe/address-parser";
 	import USCities from '$lib/data/USCities.json';
   	import { createEndorsedCandidatesSearchStore, searchEndorsedCandidatesHandler } from '$lib/stores/EndorsedCandidatesSearchStore.js';
-	import { createEndorsedLegislationSearchStore } from '$lib/stores/EndorsedLegislationSearchStore.js';
-	import { createEndorsedReferendumsSearchStore } from '$lib/stores/EndorsedReferendumsSearchStore.js';
-	import { createEndorsedAmendmentsSearchStore } from '$lib/stores/EndorsedAmendmentsSearchStore.js';
+	import { createEndorsedLegislationSearchStore, searchEndorsedLegislationHandler } from '$lib/stores/EndorsedLegislationSearchStore.js';
+	import { createEndorsedReferendumsSearchStore, searchEndorsedReferendumsHandler } from '$lib/stores/EndorsedReferendumsSearchStore.js';
+	import { createEndorsedAmendmentsSearchStore, searchEndorsedAmendmentsHandler } from '$lib/stores/EndorsedAmendmentsSearchStore.js';
 
 	export let data;
 
@@ -42,8 +42,6 @@
 	let streetNumber: string | any = "";
 
 	let yearInputValue: number | any = "";
-
-	$: console.log("selected year: ", yearInputValue);
 
     let searchByStreetAddressInputValue: string;
 
@@ -97,7 +95,46 @@
 		candidatesCounty = [];
 		candidatesCity = [];
 
+		legislationFederal = [];
+		legislationState = [];
+		legislationCounty = [];
+		legislationCity = [];
+
+		amendmentsFederal = [];
+		amendmentsState = [];
+		amendmentsCounty = [];
+		amendmentsCity = [];
+
+		referendumsFederal = [];
+		referendumsState = [];
+		referendumsCounty = [];
+		referendumsCity = [];
+
 		$searchEndorsedCandidatesStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedLegislationStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedAmendmentsStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedReferendumsStore.search = {
 			year: yearInputValue,
 			government_level: "federal",
 			state: state,
@@ -161,8 +198,6 @@
 		}
 	}));
 
-	$: console.log("endorsed candidates: ",searchEndorsedCandidates )
-
 	$: searchEndorsedCandidatesStore = createEndorsedCandidatesSearchStore(searchEndorsedCandidates);
 
 	$: unsubscribeSearchEndorsedCandidatesStore = searchEndorsedCandidatesStore.subscribe((model) => {
@@ -200,7 +235,7 @@
 
 	// use the parsed address from seach by address input to filter endorsed legislation 
 
-	const searchEndorsedLegislation = endorsedLegislation.map((legislation: LegislationWithSponsorsAndImage) => ({
+	$: searchEndorsedLegislation = endorsedLegislation.map((legislation: LegislationWithSponsorsAndImage) => ({
 		...legislation,
 		searchTerms: {
 			year: `${legislation.year_released}`,
@@ -211,7 +246,19 @@
 		}
 	}));
 
-	const searchEndorsedLegislationStore = createEndorsedLegislationSearchStore(searchEndorsedLegislation);
+	$: searchEndorsedLegislationStore = createEndorsedLegislationSearchStore(searchEndorsedLegislation);
+
+	$: unsubscribeSearchEndorsedLegislationStore = searchEndorsedLegislationStore.subscribe((model) => {
+
+		searchEndorsedLegislationHandler(model)
+
+	});
+
+	onDestroy(() => {
+
+		unsubscribeSearchEndorsedLegislationStore();
+		
+	});
 
 	$: $searchEndorsedLegislationStore.filtered.forEach((legislation: LegislationWithSponsorsAndImage) => {
 		if (legislation.government_level === "federal") {
@@ -237,7 +284,7 @@
 
 	// use the parsed address from seach by address input to filter endorsed amendments 
 
-	const searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
+	$: searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
 		...amendment,
 		searchTerms: {
 			year: `${amendment.year_released}`,
@@ -248,7 +295,19 @@
 		}
 	}));
 
-	const searchEndorsedAmendmentsStore = createEndorsedAmendmentsSearchStore(searchEndorsedAmendments);
+	$: searchEndorsedAmendmentsStore = createEndorsedAmendmentsSearchStore(searchEndorsedAmendments);
+
+	$: unsubscribeSearchEndorsedAmendmentsStore = searchEndorsedAmendmentsStore.subscribe((model) => {
+
+		searchEndorsedAmendmentsHandler(model)
+
+	});
+
+	onDestroy(() => {
+
+		unsubscribeSearchEndorsedAmendmentsStore();
+		
+	});
 
 	$: $searchEndorsedAmendmentsStore.filtered.forEach((amendment: AmendmentWithSponsorsAndImage) => {
 		if (amendment.government_level === "federal") {
@@ -273,7 +332,7 @@
 
 	// use the parsed address from seach by address input to filter endorsed referendums 
 
-	const searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
+	$: searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
 		...referendum,
 		searchTerms: {
 			year: `${new Date(referendum.election_date).getFullYear()}`,
@@ -284,7 +343,19 @@
 		}
 	}));
 
-	const searchEndorsedReferendumsStore = createEndorsedReferendumsSearchStore(searchEndorsedReferendums);
+	$: searchEndorsedReferendumsStore = createEndorsedReferendumsSearchStore(searchEndorsedReferendums);
+
+	$: unsubscribeSearchEndorsedReferendumsStore = searchEndorsedReferendumsStore.subscribe((model) => {
+
+		searchEndorsedReferendumsHandler(model)
+
+	});
+
+	onDestroy(() => {
+
+		unsubscribeSearchEndorsedReferendumsStore();
+		
+	});
 
 	$: $searchEndorsedReferendumsStore.filtered.forEach((referendum: ReferendumWithImage) => {
 		if (referendum.government_level === "federal") {
@@ -375,9 +446,46 @@
 		candidatesCounty = [];
 		candidatesCity = [];
 
-		// let endorsedCandidates: CandidateWithImage[] = [];
+		legislationFederal = [];
+		legislationState = [];
+		legislationCounty = [];
+		legislationCity = [];
+
+		amendmentsFederal = [];
+		amendmentsState = [];
+		amendmentsCounty = [];
+		amendmentsCity = [];
+
+		referendumsFederal = [];
+		referendumsState = [];
+		referendumsCounty = [];
+		referendumsCity = [];
 
 		$searchEndorsedCandidatesStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedLegislationStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedAmendmentsStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedReferendumsStore.search = {
 			year: yearInputValue,
 			government_level: "federal",
 			state: state,
@@ -389,8 +497,6 @@
 
 	const selectYearInputValueChangeHandler = () => {
 
-		console.log("year value changed: ", yearInputValue)
-
 		// update the search filter stores
 		// update the candidate search filter store
 		// clear categories data
@@ -400,9 +506,46 @@
 		candidatesCounty = [];
 		candidatesCity = [];
 
-		// let endorsedCandidates: CandidateWithImage[] = [];
+		legislationFederal = [];
+		legislationState = [];
+		legislationCounty = [];
+		legislationCity = [];
+
+		amendmentsFederal = [];
+		amendmentsState = [];
+		amendmentsCounty = [];
+		amendmentsCity = [];
+
+		referendumsFederal = [];
+		referendumsState = [];
+		referendumsCounty = [];
+		referendumsCity = [];
 
 		$searchEndorsedCandidatesStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedLegislationStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedAmendmentsStore.search = {
+			year: yearInputValue,
+			government_level: "federal",
+			state: state,
+			county: county,
+			city: city
+		};
+
+		$searchEndorsedReferendumsStore.search = {
 			year: yearInputValue,
 			government_level: "federal",
 			state: state,
@@ -423,10 +566,10 @@
 			panel: AllEndorsementPanel,
 			data: {
 				user: data.streamed.user,
-				endorsed_amendments: endorsedAmendments, 
+				endorsed_amendments: $searchEndorsedAmendmentsStore.filtered, 
 				endorsed_candidates: $searchEndorsedCandidatesStore.filtered,
-				endorsed_legislation: endorsedLegislation,
-				endorsed_referendums: endorsedReferendums
+				endorsed_legislation: $searchEndorsedLegislationStore.filtered,
+				endorsed_referendums: $searchEndorsedReferendumsStore.filtered
 			}
 		},
 		{
@@ -531,7 +674,7 @@
 			bind:selectInputValue={yearInputValue}
 			selectInputValueChange={() => selectYearInputValueChangeHandler()}	
 		>
-			election year
+			election year or release year
 		</SelectSearchInput>
 	</div>
 	<div class="endorsements_tabs_container">

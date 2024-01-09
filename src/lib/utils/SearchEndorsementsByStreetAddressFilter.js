@@ -1,9 +1,43 @@
+import States from '$lib/data/states.titlecase.json';
+
 export const SearchEndorsementsByStreetAddressFilter = (
-    /** @type {string} */ searchState, 
-    /** @type {string} */ searchCounty, 
-    /** @type {string} */ searchCity, 
+    /** @type {{ search: { state: string; city: string; county: string; }; }} */ store, 
     /** @type {{ searchTerms: { government_level: string; state: string; county: string; city: string; }; }} */ item
 ) => {
+
+    let handledStateName;
+
+    let handleStateName = false;
+
+    States.forEach((state) => {
+
+        if (state.abbreviation === store.search.state) {
+
+            handleStateName = true;
+
+            handledStateName = state.name.toLowerCase();
+
+        };
+
+    });
+
+    const searchCity = store.search.city?.toLowerCase();
+    const searchCounty = store.search.county?.toLowerCase();
+
+    /**
+     * @type {string | any}
+     */
+    let searchState;
+
+    if (handleStateName) {
+
+        searchState = handledStateName;
+
+    } else {
+
+        searchState = store.search.state?.toLowerCase();
+
+    };
 
     // if search state, county and city are empty, return item
 
