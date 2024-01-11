@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter';
+import { SearchActionsByNameAndLocationFilter } from '$lib/utils/SearchActionsByNameAndLocationFilter';
 
 export const createEndorsedActionsSearchStore = (/** @type {any} */ data) => {
 
@@ -16,6 +16,7 @@ export const createEndorsedActionsSearchStore = (/** @type {any} */ data) => {
             zipcode: "",
 			state: "",
 			city: "",
+            county: "",
             government_level: ""
 		},
     });
@@ -46,7 +47,7 @@ export const searchEndorsedActionsHandler = (/** @type {any} */ store) => {
             searchYearDateEnd === ""
         ) {
 
-            return SearchEndorsementsByStreetAddressFilter(store, item);
+            return SearchActionsByNameAndLocationFilter(store, item);
 
         // else if search year matches item searchTerm year, continue with filters
 
@@ -56,7 +57,7 @@ export const searchEndorsedActionsHandler = (/** @type {any} */ store) => {
             item.searchTerms.year.date_end === searchYearDateEnd
         ) {
 
-            return SearchEndorsementsByStreetAddressFilter(store, item);
+            return SearchActionsByNameAndLocationFilter(store, item);
 
         } else {
 

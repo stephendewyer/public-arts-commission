@@ -68,7 +68,7 @@
             zipcode: `${action.action_zip_code}`,
 			state: `${action.action_state}`,
 			city: `${action.action_city}`,
-            government_level: `${action.government_level}`,
+            government_level: `${action.government_level}`
 		}
 	}));
 
@@ -169,7 +169,8 @@
             zipcode: zipcode,
             state: state,
             city: city,
-            government_level: "federal",
+            county: county,
+            government_level: "federal"
         };
 
         return searchByStreetAddressInputValue;
@@ -284,6 +285,7 @@
             zipcode: zipcode,
             state: state,
             city: city,
+            county: county,
             government_level: "federal"
         };
 
@@ -307,6 +309,7 @@
             zipcode: zipcode,
             state: state,
             city: city,
+            county: county,
             government_level: "federal"
         };
 
@@ -377,9 +380,11 @@
             <h3>
                 forthcoming actions
             </h3>
-            {#each futureEndorsedActions as endorsedAction, i}
-                <ActionEndorsementCard endorsedActionData={endorsedAction} />
-            {/each}
+            <div class="action_cards_container">
+                {#each futureEndorsedActions as endorsedAction, i}
+                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                {/each}
+            </div>
             <div class="propose_an_action_button_container">
                 <ProposeActionButton
                     category="actions" 
@@ -393,9 +398,11 @@
             <h3>
                 actions history
             </h3>
-            {#each pastEndorsedActions as endorsedAction, i}
-                <ActionEndorsementCard endorsedActionData={endorsedAction} />
-            {/each}
+            <div class="action_cards_container">
+                {#each pastEndorsedActions as endorsedAction, i}
+                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                {/each}
+            </div>
         </li>
     </ul>
 </section>
@@ -473,6 +480,15 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
+    }
+
+    .action_cards_container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;      
+        gap: 1rem;
+        padding: 0 1rem 1rem 1rem;
         width: 100%;
     }
 
