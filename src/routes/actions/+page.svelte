@@ -1,13 +1,44 @@
 <script lang="ts">
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import type { User } from '@auth/core/types.js';
     import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
+    import { onDestroy } from 'svelte';
+    import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+    import Years from '$lib/data/years.json';
+	import SelectSearchInput from '$lib/components/inputs/SelectSearchInput.svelte';
+    import { createEndorsedActionsSearchStore, searchEndorsedActionsHandler } from '$lib/stores/EndorsedActionSearchStore.js';
+	import { parse } from "@universe/address-parser";
+	import USCities from '$lib/data/USCities.json';
+    import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
 
     export let data;
 
     $: data;
+
+    // once user clicks "use my current location" checkbox, 
+
+	// define the latitude and longitude variables
+	let latitude: number | null = null;
+	let longitude: number | null = null;
+
+	// define the location variables
+
+	let country: string | any = "";
+	let zipcode: string | any = "";
+	let state: string | any = "";
+	let county: string | any = "";
+	let city: string | any = "";
+	let street: string | any = "";
+	let streetNumber: string | any = "";
+
+	let yearInputValue: number | any = "";
+
+    let actionName: string | any = "";
+
+    let searchByStreetAddressInputValue: string;
+
+    let useCurrentLocationChecked: boolean;
 
     const user: User | undefined = data.streamed.user;
 
@@ -23,7 +54,39 @@
 
     const currentDate = new Date();
 
-    $: endorsedActions.forEach((action: ActionWithImage) => {
+    // use the parsed address from seach by address input to filter endorsed candidates 
+
+    $: searchEndorsedActions = endorsedActions.map((action: ActionWithImage) => ({
+		...action,
+		searchTerms: {
+            year: {
+                all_day_event_date: `${new Date(action.all_day_event_date).getFullYear()}`,
+                date_start: `${new Date(action.date_start).getFullYear()}`,
+                date_end: `${new Date(action.date_end).getFullYear()}`
+            },
+            action_name: `${action.action_name}`,
+            zipcode: `${action.action_zip_code}`,
+			state: `${action.action_state}`,
+			city: `${action.action_city}`,
+            government_level: `${action.government_level}`,
+		}
+	}));
+
+	$: searchEndorsedActionsStore = createEndorsedActionsSearchStore(searchEndorsedActions);
+
+	$: unsubscribeSearchEndorsedActionsStore = searchEndorsedActionsStore.subscribe((model) => {
+
+		searchEndorsedActionsHandler(model)
+
+	});
+
+	onDestroy(() => {
+
+		unsubscribeSearchEndorsedActionsStore();
+		
+	});
+
+    $: $searchEndorsedActionsStore.filtered.forEach((action: ActionWithImage) => {
 
         const actionEndDate = new Date(action.date_end);
         const actionAllDayDate = new Date(action.all_day_event_date);
@@ -39,23 +102,213 @@
         };
     });
 
-    let searchValue: string;
+    // after submit
 
-    let disableButton: boolean = true;
+    let reversedGeolocation: ReverseGeoLocation;
 
-    const searchInputValueChangeHandler = () => {
+	// use the user's geolocation to get the user's address
 
-        if (searchValue !== "" ) {
+	let addressLoadSuccess: boolean | null = null;
 
-            disableButton = false;
+    let pending: boolean = false;
 
-        } else if (searchValue == "") {
+    async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string> {
 
-            disableButton = true;
+        const response = await fetch("/api/reverseGeocode", {
+            method: 'POST',
+            body: JSON.stringify({
+                latitude,
+                longitude
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        reversedGeolocation = await response.json();
+
+        if (response.ok) {
+
+            pending = false;
+
+            addressLoadSuccess = true;
+
+        } else if (!response.ok) {
+
+            pending = false;
+
+            addressLoadSuccess = false;
+
         };
+
+        // show the user's address as the value in the searchEndorsements searchInput
+
+        searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
+
+        country = reversedGeolocation.addresses[0].address.country;
+        zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
+        state = reversedGeolocation.addresses[0].address.countrySubdivision;
+        county = reversedGeolocation.addresses[0].address.countrySecondarySubdivision;
+        city = reversedGeolocation.addresses[0].address.municipality;
+        street= reversedGeolocation.addresses[0].address.street;
+        streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
+
+        // clear categories data
+
+        // update the search filter stores
+        futureEndorsedActions = [];
+        pastEndorsedActions = [];
+
+        $searchEndorsedActionsStore.search = {
+            year:  {
+                all_day_event_date: yearInputValue,
+                date_start: yearInputValue,
+                date_end: yearInputValue
+            },
+            action_name: actionName,
+            zipcode: zipcode,
+            state: state,
+            city: city,
+            government_level: "federal",
+        };
+
+        return searchByStreetAddressInputValue;
+
     };
 
-        const searchSubmitHandler = () => {
+    // if getCurrentPosition is a success, 
+
+	const success = (position: GeoLocationPosition) => {
+
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+
+        reverseGeocode(latitude, longitude);
+
+        };
+
+        // log an error if getCurrentPosition fails
+
+        const error = (error: any) => {
+
+        pending = false;
+
+        addressLoadSuccess = false;
+
+        console.log("Unable to retrieve your location!" + error);
+    };
+
+        // get user's location using JavaScript geolocation
+
+    const findUserLocation = () => {
+
+        navigator.geolocation.getCurrentPosition(success, error);
+
+    };
+
+        // if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
+
+    $: if (useCurrentLocationChecked) { 
+
+        pending = true;
+
+        findUserLocation();
+
+    };
+
+    // handle changes to search endorsements by address input
+
+	const searchByNameOrLocationInputValueChangeHandler = () => {
+
+        // uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
+
+        if (
+            useCurrentLocationChecked && 
+            (reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
+        ) {
+
+            useCurrentLocationChecked = false;
+
+        };
+
+        // IMPORTANT: street address parser must have an input length greater than zero
+
+        // if search by address input value is greater than zero and use my current location is not checked, 
+        // use address-parser to parse search by address input value
+
+        if (
+            (searchByStreetAddressInputValue.length > 0) &&
+            !useCurrentLocationChecked
+        ) {
+
+            // parse the search by address input value
+
+            const parsed = parse(searchByStreetAddressInputValue);
+
+            // load the parsed properties
+
+            country = parsed.country;
+            zipcode = parsed.zip;
+            state = parsed.state;
+            city = parsed.city;
+            street= parsed.streetName;
+            streetNumber = parsed.number;
+
+            // use zip code to load county from parsed address
+
+            county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
+
+        } else {
+
+            country = "";
+            zipcode = "";
+            state = "";
+            city = "";
+            street= "";
+            streetNumber = "";
+            county = "";
+
+        };
+
+        // update the search filter stores
+        futureEndorsedActions = [];
+        pastEndorsedActions = [];
+
+        $searchEndorsedActionsStore.search = {
+            year:  {
+                all_day_event_date: yearInputValue,
+                date_start: yearInputValue,
+                date_end: yearInputValue
+            },
+            action_name: actionName,
+            zipcode: zipcode,
+            state: state,
+            city: city,
+            government_level: "federal"
+        };
+
+    };
+
+    const selectYearInputValueChangeHandler = () => {
+
+        // update the search filter stores
+        // clear categories data
+
+        futureEndorsedActions = [];
+        pastEndorsedActions = [];
+
+        $searchEndorsedActionsStore.search = {
+            year:  {
+                all_day_event_date: yearInputValue,
+                date_start: yearInputValue,
+                date_end: yearInputValue
+            },
+            action_name: actionName,
+            zipcode: zipcode,
+            state: state,
+            city: city,
+            government_level: "federal"
+        };
 
     };
 
@@ -63,27 +316,61 @@
 
 <section class="actions">
     <form 
-        class="actions_search_form"
-        on:submit|preventDefault={searchSubmitHandler}
+        class="search_endorsements_by_address_form"
     >
         <h1>
-            search actions by name, date or location
+            search actions by action name, state, city, zip code or street address
         </h1>
-        <div class="search_endorsements_by_address_input">
-            <SearchInput 
-                placeholder="1000 MyStreet, MyCity, MyState  10000"
-                inputID="address"
-                inputName="address"
-                inputLabel={false}
-                bind:searchInputValue={searchValue}
-                searchInputValueChange={() => searchInputValueChangeHandler()}
-            />
-        </div>
-        <ActionButton
-			bind:disable={disableButton}
-		>
-			search actions
-		</ActionButton>
+        <div class="search_endorsement_fields">
+            <div class="name_and_location_search_fields">
+                <div class="use_current_location_checkbox">
+                    <Checkbox 
+                        bind:checked={useCurrentLocationChecked}
+                    >
+                        use my current location
+                    </Checkbox>
+                </div>
+                <div class="search_endorsements_by_address_input">
+                    {#if useCurrentLocationChecked}
+                        {#if pending}
+                            <LoaderAnimation />
+                        {:else if addressLoadSuccess}
+                            <SearchInput 
+                                placeholder="1000 MyStreet, MyCity, MyState  10000"
+                                inputID="address"
+                                inputName="address"
+                                inputLabel={false}
+                                bind:searchInputValue={searchByStreetAddressInputValue}
+                                searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                            />
+                        {:else if !addressLoadSuccess}
+                            <p>failed to load address</p>
+                        {/if}
+                    {:else}
+                        <SearchInput 
+                            placeholder="1000 MyStreet, MyCity, MyState  10000"
+                            inputID="address"
+                            inputName="address"
+                            inputLabel={false}
+                            bind:searchInputValue={searchByStreetAddressInputValue}
+                            searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                        />
+                    {/if}
+                </div>
+            </div>
+            <div class="year_field">
+                <SelectSearchInput 
+                    options={Years}
+                    inputID="year"
+                    inputName="year"
+                    inputLabel={true}	
+                    bind:selectInputValue={yearInputValue}
+                    selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+                >
+                    election year or release year
+                </SelectSearchInput>
+            </div>
+		</div>
     </form>
     <ul class="actions_categories_container">
         <li class="forthcoming_actions_container">
@@ -121,23 +408,52 @@
         align-items: center;
     }
 
-    .actions_search_form {
+    .search_endorsements_by_address_form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+        justify-content: center;
+		padding: 0 1rem 0 1rem;
+	}
+
+	.search_endorsement_fields {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+        justify-content: flex-start;
+        padding: 1rem 0;
+        gap: 1rem;
+	}
+
+    .name_and_location_search_fields {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        max-width: 40rem;
-        padding: 0 1rem 1rem 1rem;
-
+		flex-direction: row;
+		width: 100%;
+        justify-content: center;
     }
 
-    .search_endorsements_by_address_input {
-        width: 100%;
-    }
+	.use_current_location_checkbox {
+		width:20rem;
+		display: inline;
+		margin: 0 1rem 0 0;
+	}
+
+	.search_endorsements_by_address_input {
+		width: 40rem;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.year_field {
+		width: 100%;
+		max-width: 10rem;
+		margin: 0 auto 1rem auto;
+	}
 
     .actions_categories_container {
         list-style: none;
-        padding: 2rem 0 0 0;
+        padding: 0;
         margin: 0;
         width: 100%;
     }
@@ -160,11 +476,61 @@
         width: 100%;
     }
 
-    .propose_an_action_button_container{
+    .propose_an_action_button_container {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
         width: 100%;
+    }
+
+    @media (max-width: 1140px) {
+
+        .search_endorsement_fields {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
+
+        .name_and_location_search_fields {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .use_current_location_checkbox {
+            width: 20rem;
+            display: block;
+            margin: 0;
+        }
+
+        .search_endorsements_by_address_input {
+            width: 40rem;
+            display: flex;
+        }
+
+    }
+
+    @media (max-width: 720px) {
+
+        .search_endorsement_fields {
+            gap: 0.5rem;
+        }
+
+        .search_endorsements_by_address_form {
+            width: 100%;
+        }
+
+        .search_endorsements_by_address_input {
+            width: 100%;
+        }
+
+        .name_and_location_search_fields {
+            gap: 0.5rem;
+        }
+
     }
 
 </style>

@@ -665,7 +665,7 @@
 
 <svelte:head>
 	<title>endorsements - public arts commission</title>
-	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums, amendments and actions" />
+	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums and amendments" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
 
@@ -677,18 +677,31 @@
 		    search endorsements by street address
 		</h1>
 		<div class="search_endorsement_fields">
-			<div class="use_current_location_checkbox">
-				<Checkbox 
-					bind:checked={useCurrentLocationChecked}
-				>
-					use my current location
-				</Checkbox>
-			</div>
-			<div class="search_endorsements_by_address_input">
-				{#if useCurrentLocationChecked}
-					{#if pending}
-						<LoaderAnimation />
-					{:else if addressLoadSuccess}
+			<div class="search_by_location_fields">
+				<div class="use_current_location_checkbox">
+					<Checkbox 
+						bind:checked={useCurrentLocationChecked}
+					>
+						use my current location
+					</Checkbox>
+				</div>
+				<div class="search_endorsements_by_address_input">
+					{#if useCurrentLocationChecked}
+						{#if pending}
+							<LoaderAnimation />
+						{:else if addressLoadSuccess}
+							<SearchInput 
+								placeholder="1000 MyStreet, MyCity, MyState  10000"
+								inputID="address"
+								inputName="address"
+								inputLabel={false}
+								bind:searchInputValue={searchByStreetAddressInputValue}
+								searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+							/>
+						{:else if !addressLoadSuccess}
+							<p>failed to load address</p>
+						{/if}
+					{:else}
 						<SearchInput 
 							placeholder="1000 MyStreet, MyCity, MyState  10000"
 							inputID="address"
@@ -697,34 +710,23 @@
 							bind:searchInputValue={searchByStreetAddressInputValue}
 							searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
 						/>
-					{:else if !addressLoadSuccess}
-						<p>failed to load address</p>
 					{/if}
-				{:else}
-					<SearchInput 
-						placeholder="1000 MyStreet, MyCity, MyState  10000"
-						inputID="address"
-						inputName="address"
-						inputLabel={false}
-						bind:searchInputValue={searchByStreetAddressInputValue}
-						searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
-					/>
-				{/if}
+				</div>
+			</div>
+			<div class="year_search_field">
+				<SelectSearchInput 
+					options={Years}
+					inputID="year"
+					inputName="year"
+					inputLabel={true}	
+					bind:selectInputValue={yearInputValue}
+					selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+				>
+					election year or release year
+				</SelectSearchInput>
 			</div>
 		</div>
 	</form>
-	<div class="election_year_field">
-		<SelectSearchInput 
-			options={Years}
-			inputID="year"
-			inputName="year"
-			inputLabel={true}	
-			bind:selectInputValue={yearInputValue}
-			selectInputValueChange={() => selectYearInputValueChangeHandler()}	
-		>
-			election year or release year
-		</SelectSearchInput>
-	</div>
 	<div class="endorsements_tabs_container">
 		<Tabs
 			tabPanels={endorsementTabPanels} 
@@ -750,10 +752,18 @@
 
 	.search_endorsement_fields {
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		width: 100%;
         justify-content: center;
         padding: 1rem 0;
+		gap: 1rem;
+	}
+
+	.search_by_location_fields {
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+        justify-content: center;
 	}
 
 	.use_current_location_checkbox {
@@ -764,30 +774,38 @@
 
 	.search_endorsements_by_address_input {
 		width: 40rem;
-		display: inline;
-	}
-
-	.endorsements_tabs_container {
-		display: flex;
+		display: inline-flex;
 		justify-content: center;
+		align-items: center;
 	}
 
-	.election_year_field {
+	.year_search_field {
 		width: 100%;
 		max-width: 10rem;
 		margin: 0 auto 1rem auto;
 	}
 
+	.endorsements_tabs_container {
+		display: flex;
+		justify-content: center;
+	}	
+
     @media (max-width: 1140px) {
 
 		.search_endorsement_fields {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 1rem;
-			width: 100%;
-			padding: 0.5rem 0;
-		}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 0.5rem 0;
+        }
+
+        .search_by_location_fields {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
 
 		.use_current_location_checkbox {
 			width: 20rem;
@@ -797,23 +815,29 @@
 
 		.search_endorsements_by_address_input {
 			width: 40rem;
-			display: block;
+			display: flex;
 		}
+
 	}
 
 	@media (max-width: 720px) {
 
-		.search_endorsements_by_address_form {
-			width: 100%;
-		}
-
 		.search_endorsement_fields {
-			flex-direction: column;
-		}
+            gap: 0.5rem;
+        }
 
-		.search_endorsements_by_address_input {
-			width: 100%;
-		}
+        .search_endorsements_by_address_form {
+            width: 100%;
+        }
+
+        .search_endorsements_by_address_input {
+            width: 100%;
+        }
+
+        .search_by_location_fields {
+            gap: 0.5rem;
+        }
+
 	}
 
 </style>

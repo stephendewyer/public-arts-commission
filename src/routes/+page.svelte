@@ -338,7 +338,9 @@
 
 	.search_endorsements_by_address_input {
 		width: 40rem;
-		display: inline;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.login_container {
@@ -383,13 +385,13 @@
 
 		.use_current_location_checkbox {
 			width:20rem;
-			display: block;
+			display: flex;
 			margin: 0;
 		}
 
 		.search_endorsements_by_address_input {
 			width: 40rem;
-			display: block;
+			display: flex;
 		}
 	}
 
