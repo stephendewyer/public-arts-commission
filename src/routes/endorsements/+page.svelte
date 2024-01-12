@@ -21,6 +21,7 @@
 	import { createEndorsedReferendumsSearchStore, searchEndorsedReferendumsHandler } from '$lib/stores/EndorsedReferendumsSearchStore.js';
 	import { createEndorsedAmendmentsSearchStore, searchEndorsedAmendmentsHandler } from '$lib/stores/EndorsedAmendmentsSearchStore.js';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+	import States from '$lib/data/states.titlecase.json';
 	
 	export let data;
 
@@ -439,22 +440,114 @@
 			!useCurrentLocationChecked
 		) {
 
-			// parse the search by address input value
+			// if user has entered only numbers, filter actions using zipcode
 
-			const parsed = parse(searchByStreetAddressInputValue);
+            if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
-			// load the parsed properties
+				// check if entered value matches zipcode in USCities
 
-			country = parsed.country;
-			zipcode = parsed.zip;
-			state = parsed.state;
-			city = parsed.city;
-			street= parsed.streetName;
-			streetNumber = parsed.number;
+				USCities.filter((cityObj: CityObject) => {
 
-			// use zip code to load county from parsed address
+					if (cityObj.zip_code.toString() === searchByStreetAddressInputValue) {
 
-			county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
+						zipcode = cityObj.zip_code;
+						state = cityObj.state;
+						city = cityObj.city;
+
+						return;
+
+					} else {
+
+						return;
+
+					};
+
+				});
+
+				} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+
+				// if the first entered value by user is a letter, filter actions by state, city and action name
+
+				// first, check if value includes state
+
+				States.filter((stateObj) => {
+
+					if (
+						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
+						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
+					) {
+
+						state = stateObj.name;
+
+					};
+
+				});
+
+				// second, check if value includes city
+
+				USCities.filter((cityObj: CityObject) => {
+
+					if (
+						searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())
+					) {
+
+						// if no state, set city as cityObj.city
+
+						if (!state) {
+
+							city = cityObj.city;
+
+						} else if (state) {
+
+							// check to see if cityObj.state matches state
+
+							// make sure state is abbreviation
+
+							States.filter((stateObj) => {
+
+								if (
+									stateObj.name === state
+								) {
+
+									state = stateObj.abbreviation;
+
+								};
+
+							});
+
+							if (state === cityObj.state) {
+
+								city = cityObj.city;
+
+							};
+
+						};
+
+					};
+
+				});
+
+				} else {
+
+				// if user has entered numbers followed by letters, filter actions using street address
+				// parse the search by address input value
+
+				const parsed = parse(searchByStreetAddressInputValue);
+
+				// load the parsed properties
+
+				country = parsed.country;
+				zipcode = parsed.zip;
+				state = parsed.state;
+				city = parsed.city;
+				street= parsed.streetName;
+				streetNumber = parsed.number;
+
+				// use zip code to load county from parsed address
+
+				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
+
+			};
 
 		} else {
 
@@ -674,7 +767,7 @@
 		class="search_endorsements_by_address_form"
 	>
 		<h1>
-		    search endorsements by street address
+		    search endorsements by street address, city, state or zip code
 		</h1>
 		<div class="search_endorsement_fields">
 			<div class="search_by_location_fields">
