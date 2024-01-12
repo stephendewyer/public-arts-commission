@@ -2,7 +2,7 @@ import States from '$lib/data/states.titlecase.json';
 
 export const SearchActionsByNameAndLocationFilter = (
     /** @type {{ search: { action_name: string; zip_code: string; state: string; city: string; county: string; }; }} */ store, 
-    /** @type {{ searchTerms: { government_level: string; state: string; city: string; }; }} */ item
+    /** @type {{ searchTerms: { government_level: string; action_name: string; state: string; city: string; }; }} */ item
 ) => {
 
     let handledStateName;
@@ -46,9 +46,21 @@ export const SearchActionsByNameAndLocationFilter = (
     // if search state and city are empty, return item
 
     if (
+        searchName === "" &&
         searchState === "" &&
         searchCity === ""
     ) {
+
+        return item;
+
+    } else if (item.searchTerms.action_name.toLowerCase().includes(searchName)) {
+
+        return item;
+
+    } else if (
+        item.searchTerms.government_level === "federal" &&
+        !item.searchTerms.action_name.toLowerCase().includes(searchName)
+    ) { 
 
         return item;
 

@@ -419,6 +419,14 @@
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
 
+		country = "";
+        zipcode = "";
+        state = "";
+        city = "";
+        street= "";
+        streetNumber = "";
+        county = "";
+
 		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
 
 		if (
@@ -436,7 +444,6 @@
 		// use address-parser to parse search by address input value
 
 		if (
-			(searchByStreetAddressInputValue.length > 0) &&
 			!useCurrentLocationChecked
 		) {
 
@@ -527,7 +534,7 @@
 
 				});
 
-				} else {
+				} else if (searchByStreetAddressInputValue.length > 0) {
 
 				// if user has entered numbers followed by letters, filter actions using street address
 				// parse the search by address input value

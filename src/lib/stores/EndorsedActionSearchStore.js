@@ -30,6 +30,7 @@ export const createEndorsedActionsSearchStore = (/** @type {any} */ data) => {
 
 export const searchEndorsedActionsHandler = (/** @type {any} */ store) => {
 
+
     const searchYearAllDayEvent = store.search.year.all_day_event_date.toString();
     const searchYearDateStart = store.search.year.date_start.toString();
     const searchYearDateEnd = store.search.year.date_end.toString();
