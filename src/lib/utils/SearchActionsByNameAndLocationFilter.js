@@ -53,77 +53,88 @@ export const SearchActionsByNameAndLocationFilter = (
 
         return item;
 
-    } else if (item.searchTerms.action_name.toLowerCase().includes(searchName)) {
-
-        return item;
-
     } else if (
-        item.searchTerms.government_level === "federal" &&
-        !item.searchTerms.action_name.toLowerCase().includes(searchName)
-    ) { 
-
-        return item;
-
-    } else if (
-        searchState &&
-        searchCity
+        item.searchTerms.action_name.toLowerCase().includes(searchName)
     ) {
 
-        if (
-            (   
-                item.searchTerms.state.toLowerCase().includes(searchState) &&
+        return item;
+
+    } else if (
+        searchName !== "" &&
+        !item.searchTerms.action_name.toLowerCase().includes(searchName) &&
+        !searchState &&
+        !searchCity
+    ) {
+
+        return
+
+    } else { 
+
+        if (item.searchTerms.government_level === "federal") {
+
+            return item;
+
+        } else if (
+            searchState &&
+            searchCity
+        ) {
+    
+            if (
+                (   
+                    item.searchTerms.state.toLowerCase().includes(searchState) &&
+                    item.searchTerms.city.toLowerCase().includes(searchCity)
+                ) ||
+                (   
+                    item.searchTerms.state.toLowerCase().includes(searchState)
+                ) ||
+                (
+                    !item.searchTerms.state &&
+                    !item.searchTerms.city
+                ) || (
+                    !item.searchTerms.state
+                )
+            ) {
+    
+                return item;
+    
+            };
+    
+        } else if (
+            !searchState &&
+            searchCity
+        ) {
+    
+            if (
+    
                 item.searchTerms.city.toLowerCase().includes(searchCity)
-            ) ||
-            (   
+    
+            ) {
+    
+                return item;
+    
+            };
+    
+        } else if (
+            searchState &&
+            !searchCity
+        ) {
+    
+            if (
                 item.searchTerms.state.toLowerCase().includes(searchState)
-            ) ||
-            (
-                !item.searchTerms.state &&
-                !item.searchTerms.city
-            ) || (
-                !item.searchTerms.state
-            )
+            ) {
+    
+                return item;
+    
+            };
+    
+        } else if (
+            !searchState &&
+            !searchCity
         ) {
-
-            return item;
-
+    
+            return;
+    
         };
-
-    } else if (
-        !searchState &&
-        searchCity
-    ) {
-
-        if (
-
-            item.searchTerms.city.toLowerCase().includes(searchCity)
-
-        ) {
-
-            return item;
-
-        };
-
-    } else if (
-        searchState &&
-        !searchCity
-    ) {
-
-        if (
-            item.searchTerms.state.toLowerCase().includes(searchState)
-        ) {
-
-            return item;
-
-        };
-
-    } else if (
-        !searchState &&
-        !searchCity
-    ) {
-
-        return;
-
     };
-
+    
 };
