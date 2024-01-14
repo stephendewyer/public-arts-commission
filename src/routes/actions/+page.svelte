@@ -73,6 +73,8 @@
 		}
 	}));
 
+    
+
 	$: searchEndorsedActionsStore = createEndorsedActionsSearchStore(searchEndorsedActions);
 
 	$: unsubscribeSearchEndorsedActionsStore = searchEndorsedActionsStore.subscribe((model) => {
@@ -145,7 +147,6 @@
         // show the user's address as the value in the searchEndorsements searchInput
 
         searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
-
         country = reversedGeolocation.addresses[0].address.country;
         zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
         state = reversedGeolocation.addresses[0].address.countrySubdivision;
@@ -153,7 +154,7 @@
         city = reversedGeolocation.addresses[0].address.municipality;
         street= reversedGeolocation.addresses[0].address.street;
         streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
-
+        actionName = searchByStreetAddressInputValue.toLowerCase();
         // clear categories data
 
         // update the search filter stores
@@ -187,11 +188,11 @@
 
         reverseGeocode(latitude, longitude);
 
-        };
+    };
 
-        // log an error if getCurrentPosition fails
+    // log an error if getCurrentPosition fails
 
-        const error = (error: any) => {
+    const error = (error: any) => {
 
         pending = false;
 
@@ -221,7 +222,7 @@
     // handle changes to search endorsements by address input
 
 	const searchByNameOrLocationInputValueChangeHandler = () => {
-
+        actionName = "";
         country = "";
         zipcode = "";
         state = "";
@@ -364,7 +365,7 @@
             };            
 
         } else {
-
+            actionName = "";
             country = "";
             zipcode = "";
             state = "";
@@ -372,7 +373,6 @@
             street= "";
             streetNumber = "";
             county = "";
-
         };
 
         // update the search filter stores

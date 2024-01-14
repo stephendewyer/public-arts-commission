@@ -471,7 +471,7 @@
 
 				});
 
-				} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
 				// if the first entered value by user is a letter, filter actions by state, city and action name
 
@@ -534,7 +534,7 @@
 
 				});
 
-				} else if (searchByStreetAddressInputValue.length > 0) {
+			} else if (searchByStreetAddressInputValue.length > 0) {
 
 				// if user has entered numbers followed by letters, filter actions using street address
 				// parse the search by address input value

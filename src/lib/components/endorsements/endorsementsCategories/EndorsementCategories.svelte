@@ -5,7 +5,7 @@
     import EndorsedLegislationCard from '$lib/components/cards/endorsementCards/LegislationEndorsementCard.svelte';
     import EndorsedReferendumCard from '$lib/components/cards/endorsementCards/ReferendumEndorsementCard.svelte';
     import type { User } from '@auth/core/types.js';
-    
+    import Pagination from '$lib/components/pagination/Pagination.svelte';
     export let categories_data: any;
 
     $: categories_data;
@@ -22,6 +22,56 @@
 
     const user: User | undefined = categories_data.user;
 
+    // set the amount of items to appear in each category on the page
+    let pageSize: number = 4;
+
+    let candidatesCurrentPage: number;
+    let legislationCurrentPage: number;
+    let referendumsCurrentPage: number;
+    let amendmentsCurrentPage: number;
+
+    $: candidatesCurrentPage = 1;
+    $: legislationCurrentPage = 1;
+    $: referendumsCurrentPage = 1;
+    $: amendmentsCurrentPage = 1;
+
+    // set the index of the first item to appear on the page for each category
+    let firstPageIndexAmendments: number;
+    $: firstPageIndexAmendments = (amendmentsCurrentPage -1) * pageSize;
+    
+    let firstPageIndexCandidates: number;
+    $: firstPageIndexCandidates = (candidatesCurrentPage -1) * pageSize;
+
+    let firstPageIndexLegislation: number;
+    $: firstPageIndexLegislation = (legislationCurrentPage -1) * pageSize;
+
+    let firstPageIndexReferendums: number;
+    $: firstPageIndexReferendums = (referendumsCurrentPage -1) * pageSize;
+
+    // set the index for the page after the first page for each category
+    let lastPageIndexAmendments: number;
+    $: lastPageIndexAmendments = firstPageIndexAmendments + pageSize;
+
+    let lastPageIndexCandidates: number;
+    $: lastPageIndexCandidates = firstPageIndexCandidates + pageSize;
+
+    let lastPageIndexLegislation: number;
+    $: lastPageIndexLegislation = firstPageIndexLegislation + pageSize;
+
+    let lastPageIndexReferendums: number;
+    $: lastPageIndexReferendums = firstPageIndexReferendums + pageSize;
+
+    let paginatedEndorsedAmendments: AmendmentWithSponsorsAndImage[];
+    let paginatedEndorsedCandidates: CandidateWithImage[];
+    let paginatedEndorsedLegislation: LegislationWithSponsorsAndImage[];
+    let paginatedEndorsedReferendums: ReferendumWithImage[];
+
+    // use the first page index and last page index to slice the correct items to appear on the page for each category
+    $: paginatedEndorsedAmendments = endorsedAmendments.slice(firstPageIndexAmendments, lastPageIndexAmendments);
+    $: paginatedEndorsedCandidates = endorsedCandidates.slice(firstPageIndexCandidates, lastPageIndexCandidates);
+    $: paginatedEndorsedLegislation = endorsedLegislation.slice(firstPageIndexLegislation, lastPageIndexLegislation);
+    $: paginatedEndorsedReferendums = endorsedReferendums.slice(firstPageIndexReferendums, lastPageIndexReferendums);
+
 </script>
 
 <ul class="endorsement_categories_container">
@@ -30,10 +80,15 @@
             candidates
         </h3>
         <div class="endorsement_cards_container">
-            {#each endorsedCandidates as candidate, i}
+            {#each paginatedEndorsedCandidates as candidate, i}
                 <EndorsedCandidateCard endorsedCandidateData={candidate}/>
             {/each}
         </div>
+        <Pagination 
+            bind:currentPage={candidatesCurrentPage}
+            totalCount={endorsedCandidates.length}
+            pageSize={pageSize}
+        />
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="candidate" 
@@ -48,10 +103,15 @@
             referendums
         </h3>
         <div class="endorsement_cards_container">
-            {#each endorsedReferendums as referendum, i}
+            {#each paginatedEndorsedReferendums as referendum, i}
                 <EndorsedReferendumCard endorsedReferendumData={referendum} />
             {/each}
         </div>
+        <Pagination 
+            bind:currentPage={referendumsCurrentPage}
+            totalCount={endorsedReferendums.length}
+            pageSize={pageSize}
+        />
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="referendum"
@@ -66,10 +126,15 @@
             legislation
         </h3>
         <div class="endorsement_cards_container">
-            {#each endorsedLegislation as legislation, i}
+            {#each paginatedEndorsedLegislation as legislation, i}
                 <EndorsedLegislationCard endorsedLegislationData={legislation} />
             {/each}
         </div>
+        <Pagination 
+            bind:currentPage={legislationCurrentPage}
+            totalCount={endorsedLegislation.length}
+            pageSize={pageSize}
+        />
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="legislation"
@@ -84,11 +149,15 @@
             amendments
         </h3>
         <div class="endorsement_cards_container">
-            {#each endorsedAmendments as amendment, i}
+            {#each paginatedEndorsedAmendments as amendment, i}
                 <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
             {/each}
         </div>
-        
+        <Pagination 
+            bind:currentPage={amendmentsCurrentPage}
+            totalCount={endorsedAmendments.length}
+            pageSize={pageSize}
+        />
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="amendment"

@@ -5,6 +5,7 @@ export const SearchActionsByNameAndLocationFilter = (
     /** @type {{ searchTerms: { government_level: string; action_name: string; state: string; city: string; }; }} */ item
 ) => {
 
+    console.log("search in store: ", store.search)
     let handledStateName;
 
     let handleStateName = false;
@@ -21,10 +22,7 @@ export const SearchActionsByNameAndLocationFilter = (
 
     });
 
-
     const searchName = store.search.action_name.toLowerCase();
-
-    const searchZipcode = store.search.zip_code;
 
     const searchCity = store.search.city?.toLowerCase();
 
@@ -62,11 +60,11 @@ export const SearchActionsByNameAndLocationFilter = (
     } else if (
         searchName !== "" &&
         !item.searchTerms.action_name.toLowerCase().includes(searchName) &&
-        !searchState &&
-        !searchCity
+        searchState === "" &&
+        searchCity === ""
     ) {
 
-        return
+        return;
 
     } else { 
 
@@ -75,8 +73,8 @@ export const SearchActionsByNameAndLocationFilter = (
             return item;
 
         } else if (
-            searchState &&
-            searchCity
+            searchState !== "" &&
+            searchCity !== ""
         ) {
     
             if (
@@ -86,13 +84,7 @@ export const SearchActionsByNameAndLocationFilter = (
                 ) ||
                 (   
                     item.searchTerms.state.toLowerCase().includes(searchState)
-                ) ||
-                (
-                    !item.searchTerms.state &&
-                    !item.searchTerms.city
-                ) || (
-                    !item.searchTerms.state
-                )
+                ) 
             ) {
     
                 return item;
