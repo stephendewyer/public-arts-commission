@@ -2,13 +2,13 @@
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
     import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
-    import { onDestroy, onMount} from 'svelte';
-
+    
     export let endorsedCandidateData: CandidateWithImage;
 
     let candidateStatus: string[] = [];
 
     $: if (endorsedCandidateData) {
+
         candidateStatus = [];
 
         if (endorsedCandidateData.running_in_primary === 1) {
@@ -53,7 +53,7 @@
 
         };
     };
-    
+
     let primaryIsValid: boolean = true;
 
     let primaryElectionDate: Date | string;

@@ -7,23 +7,29 @@
 
     let referendumStatus: string[] = [];
 
-    if (endorsedReferendumData.elected === 1) {
+    $: if (referendumStatus) {
 
-        referendumStatus = [...referendumStatus, " elected by voters"];
+        referendumStatus = [];
 
-    };
-    
-    if (endorsedReferendumData.rejected === 1) {
+        if (endorsedReferendumData.elected === 1) {
 
-        referendumStatus = [...referendumStatus, " rejected by voters"];
+            referendumStatus = [...referendumStatus, " elected by voters"];
 
-    };
-    
-    if (endorsedReferendumData.pending_election === 1) {
+        };
+        
+        if (endorsedReferendumData.rejected === 1) {
 
-        referendumStatus = [...referendumStatus, " pending election by voters"];
+            referendumStatus = [...referendumStatus, " rejected by voters"];
 
-    };
+        };
+        
+        if (endorsedReferendumData.pending_election === 1) {
+
+            referendumStatus = [...referendumStatus, " pending election by voters"];
+
+        };
+
+    };    
     
     let rawElectionDate: Date;
 
