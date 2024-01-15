@@ -6,58 +6,54 @@
 
     export let endorsedCandidateData: CandidateWithImage;
 
-    onDestroy(() => {
-        candidateStatus = [];
-    });
     let candidateStatus: string[] = [];
 
-    // beforeUpdate(() => {
-    //     candidateStatus = [];
-    // });
+    $: if (endorsedCandidateData) {
+        candidateStatus = [];
 
-    // onMount(() => {
-    //     if (endorsedCandidateData.running_in_primary === 1) {
+        if (endorsedCandidateData.running_in_primary === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " running in the primary"];
+            candidateStatus = [ ...candidateStatus, " running in the primary"];
 
-    //     };
+        };
         
-    //     if (endorsedCandidateData.elected_in_primary === 1) {
+        if (endorsedCandidateData.elected_in_primary === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " elected in the primary"];
+            candidateStatus = [ ...candidateStatus, " elected in the primary"];
 
-    //     };
+        };
         
-    //     if (endorsedCandidateData.rejected_in_primary === 1) {
+        if (endorsedCandidateData.rejected_in_primary === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " rejected in the primary"];
+            candidateStatus = [ ...candidateStatus, " rejected in the primary"];
 
-    //     };
+        };
         
-    //     if (endorsedCandidateData.running_in_general === 1) {
+        if (endorsedCandidateData.running_in_general === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " running in the general"];
+            candidateStatus = [ ...candidateStatus, " running in the general"];
 
-    //     };
+        };
         
-    //     if (endorsedCandidateData.rejected_in_general === 1) {
+        if (endorsedCandidateData.rejected_in_general === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " rejected in the general"];
+            candidateStatus = [ ...candidateStatus, " rejected in the general"];
 
-    //     };
+        };
         
-    //     if (endorsedCandidateData.elected_in_general === 1) {
+        if (endorsedCandidateData.elected_in_general === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " elected in the general"];
+            candidateStatus = [ ...candidateStatus, " elected in the general"];
 
-    //     };
+        };
 
-    //     if (endorsedCandidateData.campaign_ended === 1) {
+        if (endorsedCandidateData.campaign_ended === 1) {
 
-    //         candidateStatus = [ ...candidateStatus, " campaign ended"];
+            candidateStatus = [ ...candidateStatus, " campaign ended"];
 
-    //     };
-    // })
+        };
+    };
+    
     let primaryIsValid: boolean = true;
 
     let primaryElectionDate: Date | string;
