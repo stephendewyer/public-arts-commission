@@ -107,11 +107,11 @@
                 <EndorsedReferendumCard endorsedReferendumData={referendum} />
             {/each}
         </div>
-        <Pagination 
+        <!-- <Pagination 
             bind:currentPage={referendumsCurrentPage}
             totalCount={endorsedReferendums.length}
             pageSize={pageSize}
-        />
+        /> -->
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="referendum"
@@ -130,11 +130,11 @@
                 <EndorsedLegislationCard endorsedLegislationData={legislation} />
             {/each}
         </div>
-        <Pagination 
+        <!-- <Pagination 
             bind:currentPage={legislationCurrentPage}
             totalCount={endorsedLegislation.length}
             pageSize={pageSize}
-        />
+        /> -->
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="legislation"
@@ -153,11 +153,11 @@
                 <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
             {/each}
         </div>
-        <Pagination 
+        <!-- <Pagination 
             bind:currentPage={amendmentsCurrentPage}
             totalCount={endorsedAmendments.length}
             pageSize={pageSize}
-        />
+        /> -->
         <div class="nominate_a_candidate_button_container">
             <NominateButton 
                 category="amendment"

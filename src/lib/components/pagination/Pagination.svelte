@@ -27,14 +27,9 @@
     let totalPageCount: number;
     $: totalPageCount = Math.ceil(totalCount / pageSize);
 
-    $: console.log("total count: ", totalCount)
-    $: console.log("total page count: ", totalPageCount)
-
     // pages count is determined as siblingCount + firstPage + lastPage + currentPage + 2*DOTS
     let totalPageNumbers: number;
     $: totalPageNumbers = siblingCount + 5;
-
-    $: console.log("total page numbers: ", totalPageNumbers)
 
     /*
         if the number of pages is less than the page numbers, show in 
@@ -63,15 +58,22 @@
         component size
     */
     let shouldShowLeftDots: boolean;
-    $: shouldShowLeftDots = leftSiblingIndex > 2;
+
+    // do not show left dots
+    $: shouldShowLeftDots = leftSiblingIndex > 2 && totalPageCount >= 6;
 
     let shouldShowRightDots: boolean;
-    $: shouldShowRightDots = rightSiblingIndex < totalPageCount - 2;
+    $: shouldShowRightDots = totalPageCount - 2 >= rightSiblingIndex  && totalPageCount >= 6;
 
     const firstPageIndex = 1;
     let lastPageIndex: number;
     $: lastPageIndex = totalPageCount;
 
+    $: console.log("right sibling index: ", rightSiblingIndex);
+
+    $: console.log("left sibilng index: ", leftSiblingIndex);
+
+    $: console.log("total page count: ", totalPageCount);
 
     let lastPage: number;
 
@@ -79,7 +81,7 @@
 
     $: if (!shouldShowLeftDots && shouldShowRightDots) {
 
-        let leftItemCount = 3 + 2 * siblingCount;
+        let leftItemCount = (2 + 1) * siblingCount;
 
         let leftRange = range(1, leftItemCount);
 
@@ -89,12 +91,13 @@
 
     $: if (shouldShowLeftDots && !shouldShowRightDots) {
 
-        let rightItemCount = 3 + 2 * siblingCount;
+        let rightItemCount = (2 + 1) * siblingCount;
 
         let rightRange = range(
 
-            totalPageCount - (rightItemCount + 1),
+            (totalPageCount - rightItemCount + 1),
             totalPageCount
+
         );
         paginationRange = [firstPageIndex, DOTS, ...rightRange];
     }
@@ -145,19 +148,19 @@
                 >
                     &#8230;
                 </li>
+            {:else}
+                <div
+                    role={"paginated number"}
+                    class={pageNumber === currentPage ? "pagination_item selected" : "pagination_item"}
+                    on:click={() => currentPage = pageNumber}
+                    on:keyup={() => currentPage = pageNumber}
+                >
+                    <li>
+                        {pageNumber}
+                    </li>
+                </div>
             {/if}
             <!-- render the page buttons -->
-            <div
-                role={"paginated number"}
-                class={pageNumber === currentPage ? "pagination_item selected" : "pagination_item"}
-                on:click={() => currentPage = pageNumber}
-                on:keyup={() => currentPage = pageNumber}
-            >
-                <li>
-                    {pageNumber}
-                </li>
-            </div>
-            
         {/each}
         <div 
             role={"next button"}
@@ -179,6 +182,7 @@
     .pagination_container {
         display: flex;
         list-style-type: none;
+        padding: 0;
     }
 
     .pagination_item {
