@@ -59,21 +59,17 @@
     */
     let shouldShowLeftDots: boolean;
 
-    // do not show left dots
-    $: shouldShowLeftDots = leftSiblingIndex > 2 && totalPageCount >= 6;
+    // do not show left dots if left sibling index is less than 2 and total page count is less or equal to totalPageNumbers
+    $: shouldShowLeftDots = leftSiblingIndex > 2 && totalPageCount >= totalPageNumbers;
 
     let shouldShowRightDots: boolean;
-    $: shouldShowRightDots = totalPageCount - 2 >= rightSiblingIndex  && totalPageCount >= 6;
+
+    // do not show right dots if right sibling index is greater than or equal to totalPageCount -2 and totalPageCount is greater than or equal to totalPageNumbers
+    $: shouldShowRightDots = totalPageCount - 2 >= rightSiblingIndex  && totalPageCount >= totalPageNumbers;
 
     const firstPageIndex = 1;
     let lastPageIndex: number;
     $: lastPageIndex = totalPageCount;
-
-    $: console.log("right sibling index: ", rightSiblingIndex);
-
-    $: console.log("left sibilng index: ", leftSiblingIndex);
-
-    $: console.log("total page count: ", totalPageCount);
 
     let lastPage: number;
 
@@ -143,11 +139,33 @@
         {#each paginationRange as pageNumber, i}
             <!-- if the pageItem is a DOT, render the DOTS unicode character -->
             {#if (pageNumber === DOTS)}
-                <li 
-                    class="pagination_item"
-                >
-                    &#8230;
-                </li>
+                {#if (shouldShowLeftDots && i === 1)}
+                    <div
+                        role={"select previous"}
+                        on:click={onPrevious}
+                        on:keyup={onPrevious}
+                    >
+                        <li 
+                            class="pagination_item"
+                            
+                        >
+                            &#8230;
+                        </li>
+                    </div>
+                {:else if (shouldShowRightDots)}
+                    <div
+                        role={"select next"}
+                        on:click={onNext}
+                        on:keyup={onNext}
+                    >
+                        <li 
+                            class="pagination_item"
+                            
+                        >
+                            &#8230;
+                        </li>
+                    </div>
+                {/if}
             {:else}
                 <div
                     role={"paginated number"}
@@ -182,15 +200,16 @@
     .pagination_container {
         display: flex;
         list-style-type: none;
-        padding: 0;
+        padding: 1rem 0;
     }
 
     .pagination_item {
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 4rem;
-        padding: 0 1rem;
+        border-radius: 50%;
+        height: 3rem;
+        width: 3rem;
         text-align: center;
         margin: 0.5rem;
         min-width: 1rem;
@@ -198,18 +217,21 @@
         line-height: 2.75rem;
     }
 
-    .dots:hover {
-        background-color: transparent;
-        cursor: default;
-    }
-
     .pagination_item:hover {
-        background-color: rgba(113,157,125,0.30);
+        box-shadow:
+            0 1px 1px hsl(0deg 0% 0% / 0.075),
+            0 2px 2px hsl(0deg 0% 0% / 0.075),
+            0 4px 4px hsl(0deg 0% 0% / 0.075),
+            0 8px 8px hsl(0deg 0% 0% / 0.075),
+            0 16px 16px hsl(0deg 0% 0% / 0.075)
+        ;
         cursor: pointer;
+        color: #28387C;
+        fill: #28387C;
     }
 
     .pagination_item.selected {
-        background-color: rgba(113,157,125,0.60);
+        border: 2px solid #4C4239;
     }
 
     .arrow_right {
@@ -230,12 +252,12 @@
         color: rgba(224,217,217,0.5);
     }
 
-    .disabled > .arrow_right > svg {
-        opacity: 25%;
+    .disabled > li > .arrow_right {
+        fill: rgba(33,33,33,0.5);
     }
 
-    .disabled > .arrow_left > svg {
-        fill: #ffff;
+    .disabled > li > .arrow_left {
+        fill: rgba(33,33,33,0.5);
     }
 
     .pagination_item.disabled:hover {
@@ -243,15 +265,15 @@
         cursor: default;
     }
 
-    @media all and (max-width:900px){
+    @media all and (max-width:720px){
         .pagination_item {
-            border-radius: 2rem;
-            padding: 0 1rem;
+            height: 1.5rem;
+            width: 1.5rem;
             text-align: center;
             margin: 0.25rem;
             min-width: 1rem;
-            font-size: 1.125rem;
-            line-height: 2.75rem;
+            font-size: 1rem;
+            line-height: 1rem;
         }
 
         .arrow_left {
@@ -264,6 +286,10 @@
             display: flex;
             width: 0.5rem;
             height: auto;
+        }
+
+        .pagination_item.selected {
+            border: 1px solid #4C4239;
         }
     }
 </style>
