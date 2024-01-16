@@ -12,6 +12,7 @@
 	import USCities from '$lib/data/USCities.json';
     import States from '$lib/data/states.titlecase.json';
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
+    import Pagination from '$lib/components/pagination/Pagination.svelte';
 
     export let data;
 
@@ -73,8 +74,6 @@
 		}
 	}));
 
-    
-
 	$: searchEndorsedActionsStore = createEndorsedActionsSearchStore(searchEndorsedActions);
 
 	$: unsubscribeSearchEndorsedActionsStore = searchEndorsedActionsStore.subscribe((model) => {
@@ -104,6 +103,36 @@
 
         };
     });
+
+    // set the amount of items to appear in each category on the page
+    let pageSize: number = 4;
+
+    let actionsForthcomingCurrentPage: number;
+    let actionsHistoryCurrentPage: number;
+
+    $: actionsForthcomingCurrentPage = 1;
+    $: actionsHistoryCurrentPage = 1;
+
+    // set the index of the first item to appear on the page for each category
+    let firstPageIndexActionsForthcoming: number;
+    $: firstPageIndexActionsForthcoming = (actionsForthcomingCurrentPage -1) * pageSize;
+    
+    let firstPageIndexActionsHistory: number;
+    $: firstPageIndexActionsHistory = (actionsHistoryCurrentPage -1) * pageSize;
+
+    // set the index for the page after the first page for each category
+    let lastPageIndexActionsForthcoming: number;
+    $: lastPageIndexActionsForthcoming = firstPageIndexActionsForthcoming + pageSize;
+
+    let lastPageIndexActionsHistory: number;
+    $: lastPageIndexActionsHistory = firstPageIndexActionsHistory + pageSize;
+
+    let paginatedActionsForthcoming: ActionWithImage[];
+    let paginatedActionsHistory: ActionWithImage[];
+
+    // use the first page index and last page index to slice the correct items to appear on the page for each category
+    $: paginatedActionsForthcoming = futureEndorsedActions.slice(firstPageIndexActionsForthcoming, lastPageIndexActionsForthcoming);
+    $: paginatedActionsHistory = pastEndorsedActions.slice(firstPageIndexActionsHistory, lastPageIndexActionsHistory);
 
     // after submit
 
@@ -485,10 +514,15 @@
                 forthcoming actions
             </h3>
             <div class="action_cards_container">
-                {#each futureEndorsedActions as endorsedAction, i}
+                {#each paginatedActionsForthcoming as endorsedAction, i}
                     <ActionEndorsementCard endorsedActionData={endorsedAction} />
                 {/each}
             </div>
+            <Pagination 
+                bind:currentPage={actionsForthcomingCurrentPage}
+                totalCount={futureEndorsedActions.length}
+                pageSize={pageSize}
+            />
             <div class="propose_an_action_button_container">
                 <ProposeActionButton
                     category="actions" 
@@ -503,10 +537,15 @@
                 actions history
             </h3>
             <div class="action_cards_container">
-                {#each pastEndorsedActions as endorsedAction, i}
+                {#each paginatedActionsHistory as endorsedAction, i}
                     <ActionEndorsementCard endorsedActionData={endorsedAction} />
                 {/each}
             </div>
+            <Pagination 
+                bind:currentPage={actionsHistoryCurrentPage}
+                totalCount={pastEndorsedActions.length}
+                pageSize={pageSize}
+            />
         </li>
     </ul>
 </section>
