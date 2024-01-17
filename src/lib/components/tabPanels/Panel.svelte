@@ -2,8 +2,6 @@
     export let tabPanels: tabPanels[];
     export let activeTab: number;
 
-    // $: console.log(tabPanels);
-
 </script>
 
 {#each tabPanels as tabPanel, i}

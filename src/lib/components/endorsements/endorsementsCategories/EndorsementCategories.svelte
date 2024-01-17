@@ -6,6 +6,8 @@
     import EndorsedReferendumCard from '$lib/components/cards/endorsementCards/ReferendumEndorsementCard.svelte';
     import type { User } from '@auth/core/types.js';
     import Pagination from '$lib/components/pagination/Pagination.svelte';
+    import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+
     export let categories_data: any;
 
     $: categories_data;
@@ -80,9 +82,15 @@
             candidates
         </h3>
         <div class="endorsement_cards_container">
-            {#each paginatedEndorsedCandidates as candidate, i}
-                <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-            {/each}
+            {#if categories_data.pendingEndorsedCandidatesData}
+                <LoaderAnimation />
+            {:else if categories_data.getEndorsedCandidatesDataSuccess}
+                {#each paginatedEndorsedCandidates as candidate, i}
+                    <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+                {/each}
+            {:else if !categories_data.getEndorsedCandidatesDataSuccess}
+                <p>failed to load endorsed candidates</p>
+            {/if}
         </div>
         <Pagination 
             bind:currentPage={candidatesCurrentPage}
@@ -103,9 +111,15 @@
             referendums
         </h3>
         <div class="endorsement_cards_container">
-            {#each paginatedEndorsedReferendums as referendum, i}
-                <EndorsedReferendumCard endorsedReferendumData={referendum} />
-            {/each}
+            {#if categories_data.pendingEndorsedReferendumsData}
+                <LoaderAnimation />
+            {:else if categories_data.getEndorsedReferendumsDataSuccess}
+                {#each paginatedEndorsedReferendums as referendum, i}
+                    <EndorsedReferendumCard endorsedReferendumData={referendum} />
+                {/each}
+            {:else if !categories_data.getEndorsedReferendumsDataSuccess}
+                <p>failed to load endorsed referendums</p>
+            {/if}
         </div>
         <Pagination 
             bind:currentPage={referendumsCurrentPage}
@@ -126,9 +140,15 @@
             legislation
         </h3>
         <div class="endorsement_cards_container">
-            {#each paginatedEndorsedLegislation as legislation, i}
-                <EndorsedLegislationCard endorsedLegislationData={legislation} />
-            {/each}
+            {#if categories_data.pendingEndorsedLegislationData}
+                <LoaderAnimation />
+            {:else if categories_data.getEndorsedLegislationDataSuccess}
+                {#each paginatedEndorsedLegislation as legislation, i}
+                    <EndorsedLegislationCard endorsedLegislationData={legislation} />
+                {/each}
+            {:else if !categories_data.getEndorsedLegislationDataSuccess}
+                <p>failed to load endorsed legislation</p>
+            {/if}
         </div>
         <Pagination 
             bind:currentPage={legislationCurrentPage}
@@ -149,9 +169,15 @@
             amendments
         </h3>
         <div class="endorsement_cards_container">
-            {#each paginatedEndorsedAmendments as amendment, i}
-                <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-            {/each}
+            {#if categories_data.pendingEndorsedAmendmentsData}
+                <LoaderAnimation />
+            {:else if categories_data.getEndorsedAmendmentsDataSuccess}
+                {#each paginatedEndorsedAmendments as amendment, i}
+                    <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+                {/each}
+            {:else if !categories_data.getEndorsedAmendmentsDataSuccess}
+                <p>failed to load endorsed amendments</p>
+            {/if}
         </div>
         <Pagination 
             bind:currentPage={amendmentsCurrentPage}

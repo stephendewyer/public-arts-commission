@@ -208,14 +208,138 @@
 
 	};
 
+	// begin get endorsed candidates data from database
+
+	let endorsedCandidates: CandidateWithImage[] = [];
+
+	let pendingEndorsedCandidatesData: boolean = false;
+
+	let getEndorsedCandidatesDataSuccess: boolean | null = null;
+
+	async function getEndorsedCandidatesData() {
+
+		pendingEndorsedCandidatesData = true;
+		
+		const response = await fetch("/api/getEndorsedCandidates");
+
+		endorsedCandidates = await response.json();
+
+		if (response.ok) {
+
+			pendingEndorsedCandidatesData = false;
+
+			getEndorsedCandidatesDataSuccess = true;
+
+		} else if (!response.ok) {
+
+			pendingEndorsedCandidatesData = false;
+
+			getEndorsedCandidatesDataSuccess = false;
+
+		};
+
+	};
+
+	// begin get endorsed legislation data from database
+
+	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
+
+	let pendingEndorsedLegislationData: boolean = false;
+
+	let getEndorsedLegislationDataSuccess: boolean | null = null;
+
+	async function getEndorsedLegislationData() {
+
+		pendingEndorsedLegislationData = true;
+
+		const response = await fetch("/api/getEndorsedLegislation");
+
+		endorsedLegislation = await response.json();
+
+		if (response.ok) {
+
+			pendingEndorsedLegislationData = false;
+
+			getEndorsedLegislationDataSuccess = true;
+
+		} else if (!response.ok) {
+
+			pendingEndorsedLegislationData = false;
+
+			getEndorsedCandidatesDataSuccess = false;
+
+		};
+
+	};
+
+	// begin get endorsed amendments data from database
+
+	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
+
+	let pendingEndorsedAmendmentsData: boolean = false;
+
+	let getEndorsedAmendmentsDataSuccess: boolean | null = null;
+
+	async function getEndorsedAmendmentsData() {
+
+		pendingEndorsedAmendmentsData = true;
+
+		const response = await fetch("/api/getEndorsedAmendments");
+
+		endorsedAmendments = await response.json();
+
+		if (response.ok) {
+
+			pendingEndorsedAmendmentsData = false;
+
+			getEndorsedAmendmentsDataSuccess = true;
+
+		} else if (!response.ok) {
+
+			pendingEndorsedAmendmentsData = false;
+
+			getEndorsedAmendmentsDataSuccess = false;
+
+		};
+
+	};
+	
+	// begin get endorsed referendums data from database
+
+	let endorsedReferendums: ReferendumWithImage[] = [];
+
+	let pendingEndorsedReferendumsData: boolean = false;
+
+	let getEndorsedReferendumsDataSuccess: boolean | null = null;
+
+	async function getEndorsedReferendums() {
+
+		pendingEndorsedReferendumsData = true;
+
+		const response = await fetch("/api/getEndorsedReferendums");
+
+		endorsedReferendums = await response.json();
+
+		if (response.ok) {
+
+			pendingEndorsedReferendumsData = false;
+
+			getEndorsedReferendumsDataSuccess = true;
+
+		} else if (!response.ok) {
+
+			pendingEndorsedReferendumsData = false;
+
+			getEndorsedReferendumsDataSuccess = false;
+
+		};
+
+	};
+
 	let candidatesFederal: CandidateWithImage[] = [];
 	let candidatesState: CandidateWithImage[] = [];
 	let candidatesCounty: CandidateWithImage[] = [];
 	let candidatesCity: CandidateWithImage[] = [];
-
-	let endorsedCandidates: CandidateWithImage[] = [];
-
-	$: endorsedCandidates = [...data.streamed.endorsed_candidates];
 
 	// use the parsed address from seach by address input to filter endorsed candidates 
 
@@ -260,10 +384,6 @@
 	let legislationState: LegislationWithSponsorsAndImage[] = [];
 	let legislationCounty: LegislationWithSponsorsAndImage[] = [];
 	let legislationCity: LegislationWithSponsorsAndImage[] = [];
-
-	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
-
-	$: endorsedLegislation = [...data.streamed.endorsed_legislation];
 
 	// use the parsed address from seach by address input to filter endorsed legislation 
 
@@ -310,10 +430,6 @@
 	let amendmentsCounty: Amendment[] = [];
 	let amendmentsCity: Amendment[] = [];
 
-	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
-
-	$: endorsedAmendments = [...data.streamed.endorsed_amendments];
-
 	// use the parsed address from seach by address input to filter endorsed amendments 
 
 	$: searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
@@ -358,10 +474,6 @@
 	let referendumsCounty: ReferendumWithImage[] = [];
 	let referendumsCity: ReferendumWithImage[] = [];
 
-	let endorsedReferendums: ReferendumWithImage[] = [];
-
-	$: endorsedReferendums = [...data.streamed.endorsed_referendums];
-
 	// use the parsed address from seach by address input to filter endorsed referendums 
 
 	$: searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
@@ -401,9 +513,14 @@
 		};
 	});
 
-	// use onMount to get data from params after page is prerendered
+	// use onMount to get data from params after page is prerendered and to get data from database for endorsed candidates, legislation, amendments and referendums
 
     onMount(() => {
+		getEndorsedReferendums();
+		getEndorsedCandidatesData();
+		getEndorsedLegislationData();
+		getEndorsedAmendmentsData();
+
         if ($page.url.search !== "") {
             searchQueries = $page.url.search.split("?");
             console.log(searchQueries);
@@ -700,8 +817,17 @@
 				endorsed_amendments: $searchEndorsedAmendmentsStore.filtered, 
 				endorsed_candidates: $searchEndorsedCandidatesStore.filtered,
 				endorsed_legislation: $searchEndorsedLegislationStore.filtered,
-				endorsed_referendums: $searchEndorsedReferendumsStore.filtered
-			}
+				endorsed_referendums: $searchEndorsedReferendumsStore.filtered,
+				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
+			},
+			
 		},
 		{
 			id: uuidv4(),
@@ -714,7 +840,15 @@
 				endorsed_amendments: amendmentsFederal,
 				endorsed_candidates: candidatesFederal,
 				endorsed_legislation: legislationFederal,
-				endorsed_referendums: referendumsFederal
+				endorsed_referendums: referendumsFederal,
+				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
 			}
 		},
 		{
@@ -728,7 +862,15 @@
 				endorsed_amendments: amendmentsState,
 				endorsed_candidates: candidatesState,
 				endorsed_legislation: legislationState,
-				endorsed_referendums: referendumsState
+				endorsed_referendums: referendumsState,
+				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
 			}
 		},
 		{
@@ -742,7 +884,15 @@
 				endorsed_amendments: amendmentsCounty,
 				endorsed_candidates: candidatesCounty,
 				endorsed_legislation: legislationCounty,
-				endorsed_referendums: referendumsCounty
+				endorsed_referendums: referendumsCounty,
+				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
 			}
 		},
 		{
@@ -756,7 +906,15 @@
 				endorsed_amendments: amendmentsCity,
 				endorsed_candidates: candidatesCity,
 				endorsed_legislation: legislationCity,
-				endorsed_referendums: referendumsCity
+				endorsed_referendums: referendumsCity,
+				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
 			}
 		}
 	];
