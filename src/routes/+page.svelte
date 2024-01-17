@@ -24,13 +24,38 @@
 
 	let endorsedActions: ActionWithImage[] = [];
 
-	$: endorsedActions = [...data.streamed.endorsed_actions];
-
 	// load all the future actions
 
 	let futureEndorsedActions: ActionWithImage[] = [];
 
-	onMount(() => {
+	// begin get endorsed candidates data from database
+
+	let pendingEndorsedActionsData: boolean = false;
+
+	let getEndorsedActionsDataSuccess: boolean | null = null;
+
+	async function getEndorsedActionsData() {
+
+		pendingEndorsedActionsData = true;
+		
+		const response = await fetch("/api/getEndorsedActions");
+
+		endorsedActions= await response.json();
+
+		if (response.ok) {
+
+			pendingEndorsedActionsData = false;
+
+			getEndorsedActionsDataSuccess = true;
+
+		} else if (!response.ok) {
+
+			pendingEndorsedActionsData = false;
+
+			getEndorsedActionsDataSuccess = false;
+
+		};
+
 		endorsedActions.forEach((action: ActionWithImage) => {
 
 			const actionEndDate = new Date(action.date_end);
@@ -43,6 +68,13 @@
 			};
 
 		});
+
+	};
+
+	onMount(() => {
+
+		getEndorsedActionsData();
+
 	});
 	
 	let activeLoginTab: number;
@@ -287,12 +319,16 @@
 	>
 		<h2 class="forthcoming_actions_heading">forthcoming actions</h2>
 		<div class="actions_container">
-			{#if (futureEndorsedActions.length > 0)}
+			{#if pendingEndorsedActionsData}
+                <LoaderAnimation />
+            {:else if getEndorsedActionsDataSuccess}
 				{#each futureEndorsedActions as action, i}
-
 					<ActionEndorsementCard endorsedActionData={action} />
 				{/each}
-			{/if}
+            {:else if !getEndorsedActionsDataSuccess}
+                <p>failed to load endorsed forthcoming actions</p>
+            {/if}
+				
 		</div>
 	</div>
 </section>

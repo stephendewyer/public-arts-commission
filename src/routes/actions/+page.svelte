@@ -3,7 +3,7 @@
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import type { User } from '@auth/core/types.js';
     import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
-    import { onDestroy } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import Years from '$lib/data/years.json';
 	import SelectSearchInput from '$lib/components/inputs/SelectSearchInput.svelte';
@@ -44,15 +44,53 @@
 
     const user: User | undefined = data.streamed.user;
 
-	let endorsedActions: ActionWithImage[] = [];
+    // load all the endorsed actions
 
-    $: endorsedActions = [...data.streamed.endorsed_actions];
+	let endorsedActions: ActionWithImage[] = [];
 
     // load all the future actions
 
-	let futureEndorsedActions: ActionWithImage[] = [];
+    let futureEndorsedActions: ActionWithImage[] = [];
+
+    // load all the past actions
 
     let pastEndorsedActions: ActionWithImage[] = [];
+
+    // begin get endorsed candidates data from database
+
+    let pendingEndorsedActionsData: boolean = false;
+
+    let getEndorsedActionsDataSuccess: boolean | null = null;
+
+    async function getEndorsedActionsData() {
+
+        pendingEndorsedActionsData = true;
+        
+        const response = await fetch("/api/getEndorsedActions");
+
+        endorsedActions= await response.json();
+
+        if (response.ok) {
+
+            pendingEndorsedActionsData = false;
+
+            getEndorsedActionsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingEndorsedActionsData = false;
+
+            getEndorsedActionsDataSuccess = false;
+
+        };
+
+    };
+
+    onMount(() => {
+
+        getEndorsedActionsData();
+
+    });
 
     const currentDate = new Date();
 
@@ -514,9 +552,15 @@
                 forthcoming actions
             </h3>
             <div class="action_cards_container">
-                {#each paginatedActionsForthcoming as endorsedAction, i}
-                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                {/each}
+                {#if pendingEndorsedActionsData}
+                    <LoaderAnimation />
+                {:else if getEndorsedActionsDataSuccess}
+                    {#each paginatedActionsForthcoming as endorsedAction, i}
+                        <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                    {/each}
+                {:else if !getEndorsedActionsDataSuccess}
+                    <p>failed to load endorsed forthcoming actions</p>
+                {/if}
             </div>
             <Pagination 
                 bind:currentPage={actionsForthcomingCurrentPage}
@@ -537,9 +581,15 @@
                 actions history
             </h3>
             <div class="action_cards_container">
-                {#each paginatedActionsHistory as endorsedAction, i}
-                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                {/each}
+                {#if pendingEndorsedActionsData}
+                    <LoaderAnimation />
+                {:else if getEndorsedActionsDataSuccess}
+                    {#each paginatedActionsHistory as endorsedAction, i}
+                        <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                    {/each}
+                {:else if !getEndorsedActionsDataSuccess}
+                    <p>failed to load endorsed actions history</p>
+                {/if}
             </div>
             <Pagination 
                 bind:currentPage={actionsHistoryCurrentPage}
