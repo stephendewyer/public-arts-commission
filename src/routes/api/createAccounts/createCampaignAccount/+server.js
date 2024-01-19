@@ -72,8 +72,6 @@ export async function POST({request}) {
 
   };
 
-
-
   // hash the password
 
   const hashedPassword = await hashPassword(password);
@@ -128,13 +126,8 @@ export async function POST({request}) {
 
   // insert the campaign information in the campaign_information table
 
-  const insertCampaignInformationStatement = `INSERT INTO campaign_information (
+  const insertCampaignUserInformationStatement = `INSERT INTO campaign_users_information (
     user_ID,
-    campaign_name,
-    electorate,
-    party,
-    primary_election_date,
-    general_election_date,
     name_first,
     name_last,
     phone_number,
@@ -142,16 +135,9 @@ export async function POST({request}) {
     street_address_02,
     city,
     state,
-    zip_code,
-    authorized_campaign_representative,
-    website_URL
+    zip_code
   ) VALUES (
     "${campaignUserID}",
-    "${campaignName}",
-    "${electorate}",
-    "${party}",
-    "${primaryElectionDate}",
-    "${generalElectionDate}",
     "${nameFirst}",
     "${nameLast}",
     "${phoneNumber}",
@@ -159,14 +145,40 @@ export async function POST({request}) {
     "${streetAddress02}",
     "${city}",
     "${state}",
-    "${zipCode}",
-    "${authorizedRepresentativeINT}",
-    "${websiteURL}"
+    "${zipCode}"
   )`;
 
-  await res.query(insertCampaignInformationStatement)
+  await res.query(insertCampaignUserInformationStatement)
   .then(() => {
-    console.log(`campaign information for ${campaignName} created`);
+    console.log(`campaign user information for ${email} created`);
+  })
+  .catch(error => {
+    throw error;
+  });
+
+  const insertCampaignApplicationStatement = `INSERT INTO campaign_applications (
+    user_ID,
+    campaign_name,
+    electorate,
+    party,
+    primary_election_date,
+    general_election_date,
+    website_URL,
+    authorized_campaign_representative
+  ) VALUES (
+    "${campaignUserID}",
+    "${campaignName}",
+    "${electorate}",
+    "${party}",
+    "${primaryElectionDate}",
+    "${generalElectionDate}",
+    "${websiteURL}",
+    "${authorizedRepresentativeINT}"
+  )`;
+
+  await res.query(insertCampaignApplicationStatement)
+  .then(() => {
+    console.log(`campaign application information added for ${campaignName}`);
   })
   .catch(error => {
     throw error;

@@ -3,7 +3,7 @@
 
 </script>
 
-<button class="cancel_button">
+<button class="cancel_button" type="button">
     <div class="arrow">
         {@html Arrow}
     </div>
@@ -13,21 +13,21 @@
 <style>
 
     .cancel_button {
-            font-size: 1rem;
-            background: transparent;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 0.5rem;
-            border: 2px solid #1C2226;
-            outline: none;
-            border-radius: 3rem;
-            color: #1C2226;
-            transition: gap 0.2s ease-out;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            fill: #1C2226;
-            margin: 0.5rem auto;
+        font-size: 1rem;
+        background: transparent;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        border: 2px solid #1C2226;
+        outline: none;
+        border-radius: 3rem;
+        color: #1C2226;
+        transition: gap 0.2s ease-out;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        fill: #1C2226;
+        margin: 0.5rem auto;
     }
     
     .arrow {

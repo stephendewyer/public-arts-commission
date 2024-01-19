@@ -626,6 +626,42 @@ declare global {
 		county: string;
 	}
 
+	interface CampaignUserInformation {
+		campaign_user_information_ID: number;
+		user_ID: number;
+		name_first: string;
+		name_last: string;
+		phone_number: E164Number | null;
+		street_address: string;
+		street_address_02: string;
+		city: string;
+		state: string;
+		zip_code: number;
+	}
+
+	interface CampaignApplication {
+		campaign_application_ID: number;
+		user_ID: number;
+		image_ID: number;
+		campaign_name: string;
+		electorate: string;
+		party: string;
+		primary_election_date: Date;
+		general_election_date: Date;
+		starting_year_for_office_sought: number;
+		website_URL: string;
+		excellent_public_art_for_all: number;
+		excellent_public_art_for_all_02: string;
+		art_government_seat: number;
+		art_government_seat_02: string;
+		application_status: string;
+		campaign_registered: number;
+		campaign_questionnaire_completed: number;
+		campaign_application_submitted: number;
+		date_submitted: Date;
+		authorized_campaign_representative: number;
+	}
+
 }
 
 export {};
