@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy, afterUpdate } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -168,6 +168,8 @@
 
 	};
 
+	$: console.log("store from page: ", $searchEndorsedAmendmentsStore)
+
 	// if getCurrentPosition is a success, 
 
 	const success = (position: GeoLocationPosition) => {
@@ -198,9 +200,15 @@
 
 	};
 
-	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
+	// if user activates the get current location checkbox AND after fetching data, set pending as true and find user location
 
-	$: if (useCurrentLocationChecked) { 
+	$: if (
+		useCurrentLocationChecked && 
+		getEndorsedCandidatesDataSuccess && 
+		getEndorsedLegislationDataSuccess && 
+		getEndorsedAmendmentsDataSuccess &&
+		getEndorsedReferendumsDataSuccess
+	) { 
 
 		pending = true;
 
@@ -362,12 +370,6 @@
 
 	});
 
-	onDestroy(() => {
-
-		unsubscribeSearchEndorsedCandidatesStore();
-		
-	});
-
 	$: $searchEndorsedCandidatesStore.filtered.forEach((candidate: CandidateWithImage) => {
 		if (candidate.government_level === "federal") {
 			candidatesFederal = [...candidatesFederal, candidate];
@@ -404,12 +406,6 @@
 
 		searchEndorsedLegislationHandler(model)
 
-	});
-
-	onDestroy(() => {
-
-		unsubscribeSearchEndorsedLegislationStore();
-		
 	});
 
 	$: $searchEndorsedLegislationStore.filtered.forEach((legislation: LegislationWithSponsorsAndImage) => {
@@ -449,12 +445,6 @@
 
 		searchEndorsedAmendmentsHandler(model)
 
-	});
-
-	onDestroy(() => {
-
-		unsubscribeSearchEndorsedAmendmentsStore();
-		
 	});
 
 	$: $searchEndorsedAmendmentsStore.filtered.forEach((amendment: AmendmentWithSponsorsAndImage) => {
@@ -497,6 +487,9 @@
 
 	onDestroy(() => {
 
+		unsubscribeSearchEndorsedCandidatesStore();
+		unsubscribeSearchEndorsedLegislationStore();
+		unsubscribeSearchEndorsedAmendmentsStore();
 		unsubscribeSearchEndorsedReferendumsStore();
 		
 	});
@@ -516,6 +509,7 @@
 	// use onMount to get data from params after page is prerendered and to get data from database for endorsed candidates, legislation, amendments and referendums
 
     onMount(() => {
+		
 		getEndorsedReferendums();
 		getEndorsedCandidatesData();
 		getEndorsedLegislationData();
@@ -531,7 +525,7 @@
             };
         };
     });
-
+	
 	// handle changes to search endorsements by address input
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
@@ -821,7 +815,7 @@
 				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
 				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
 				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
 				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
 				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
 				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
@@ -844,7 +838,7 @@
 				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
 				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
 				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
 				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
 				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
 				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
@@ -866,7 +860,7 @@
 				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
 				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
 				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
 				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
 				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
 				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
@@ -888,7 +882,7 @@
 				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
 				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
 				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
 				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
 				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
 				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
@@ -910,7 +904,7 @@
 				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
 				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
 				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedReferendumsData,
+				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
 				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
 				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
 				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
