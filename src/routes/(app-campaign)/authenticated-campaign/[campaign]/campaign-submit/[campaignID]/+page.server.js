@@ -1,5 +1,5 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 export const load = async ({params, locals}) => {
 
@@ -13,6 +13,9 @@ export const load = async ({params, locals}) => {
         FROM campaign_applications
         WHERE campaign_application_ID = '${campaignApplicationID}'`;
 
+    /**
+     * @type {number | undefined}
+     */
     let userCampaignApplicationID;
 
     let res = await mysqlConnection();
@@ -80,6 +83,15 @@ export const load = async ({params, locals}) => {
     .then(([ rows ]) => {
 
         campaignApplication = JSON.parse(JSON.stringify(rows))[0];
+
+        if (campaignApplication?.campaign_application_submitted === 1) {
+
+            throw redirect(
+                302, 
+                `http://localhost:5173/authenticated-campaign/campaign/campaign-submit-confirmation/campaign=${campaignApplication?.campaign_application_ID}`
+            );
+    
+        };
 
     })
     .catch(error => {

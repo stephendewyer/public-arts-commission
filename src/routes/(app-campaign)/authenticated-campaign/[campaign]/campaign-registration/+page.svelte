@@ -159,19 +159,19 @@
                 authorizedRepresentativeInputValue
             );
             if (responseItem.success) {
-                imageFileInputValue = "",
-                imageAltTextInputValue = "",
-                image = "",
-                campaignNameInputValue = "",
-                yearOfficeSoughtInputValue = null,
-                electionDatePrimaryInputValue = "",
-                electionDateGeneralInputValue = "",
-                governmentLevelInputValue = "",
-                stateInputValue = "",
-                countyInputValue = "",
-                cityInputValue = "",
-                partyInputValue = "",
-                websiteURLInputValue = "",
+                imageFileInputValue = "";
+                imageAltTextInputValue = "";
+                image = "";
+                campaignNameInputValue = "";
+                yearOfficeSoughtInputValue = null;
+                electionDatePrimaryInputValue = "";
+                electionDateGeneralInputValue = "";
+                governmentLevelInputValue = "";
+                stateInputValue = "";
+                countyInputValue = "";
+                cityInputValue = "";
+                partyInputValue = "";
+                websiteURLInputValue = "";
                 authorizedRepresentativeInputValue = false;
                 goto(`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${responseItem.success.campaign_application_ID}`);
             };
@@ -225,17 +225,20 @@
         {
             id: "registration",
             name: "registration",
-            path: `/authenticated-campaign/campaign/campaign-registration`
+            path: `/authenticated-campaign/campaign/campaign-registration`,
+            completed: false
         },
         {
             id: "questionnaire",
             name: "questionnaire",
-            path: `/authenticated-campaign/campaign/campaign-questionnaire`
+            path: `/authenticated-campaign/campaign/campaign-questionnaire`,
+            completed: false
         },
         {
             id: "submit",
             name: "submit",
-            path: `/authenticated-campaign/campaign/campaign-submit`
+            path: `/authenticated-campaign/campaign/campaign-submit`,
+            completed: false
         }
     ];
 

@@ -1,8 +1,5 @@
 <script lang="ts">
-    import CampaignApplicationProgressBar from '$lib/components/campaignApplicationProgressBar/CampaignProgressBar.svelte';
-
-    let navPaths: NavPath[];
-
+    import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     export let data;
 
     let campaignApplication: CampaignApplicationWithImageRow | any = null;
@@ -12,24 +9,10 @@
         campaignApplication = data.campaignApplication;
 
     };
-    
-    $: navPaths = [
-        {
-            id: "registration",
-            name: "registration",
-            path: `/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`
-        },
-        {
-            id: "questionnaire",
-            name: "questionnaire",
-            path: `/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`
-        },
-        {
-            id: "submit",
-            name: "submit",
-            path: `/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`
-        }
-    ];
+
+    let campaignApplicationSubmissionDate: string;
+
+    $: campaignApplicationSubmissionDate = new Date(campaignApplication.date_submitted).toUTCString();
 
 </script>
 
@@ -37,7 +20,18 @@
     <h2>
         campaign endorsement application
     </h2>
-    <CampaignApplicationProgressBar nav_paths={navPaths}/>
+    <h4 style="margin: 0;">
+        {campaignApplication.campaign_name}
+    </h4>
+    <p style="margin: 1rem 0 0 0">
+        Thank you for submitting an application to have your campaign endorsed by public arts commission.<br /><br />
+        We will carefully review your application and contact you should your campaign meet our endorsement criteria.<br /><br />
+        If you have any questions, please contact public arts commission Founder stephen dewyer at sdewyer@publicartscommission.org.
+    </p>
+    <h3>Your application submitted on {campaignApplicationSubmissionDate} has been received.</h3>
+    <a href={`/authenticated-campaign/campaign`}>
+        <ActionButton>return to my campaigns</ActionButton>
+    </a>
 </div>
 
 <style>
@@ -45,5 +39,10 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 1rem;
+        max-width: 40rem;
+        width: 100%;
+        padding: 0 1rem;
+        margin: 0 auto;
     }
 </style>

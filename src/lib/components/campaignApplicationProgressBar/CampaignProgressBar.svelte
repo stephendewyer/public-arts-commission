@@ -1,4 +1,5 @@
 <script lang="ts">
+    import CheckMark from '$lib/images/icons/checkmark.svg?raw';
 
     export let nav_paths: NavPath[];
 
@@ -8,16 +9,62 @@
 >
     {#each nav_paths as navTab, i}
         <li class="progress_nav_tab_container">
-            <a 
-                href={navTab.path}
-                class="progress_nav_tab"
-            >
+            {#if 
+                (navTab.id === "questionnaire" || navTab.id === "submit") &&
+                !nav_paths[0].completed
+            }
                 <div 
-                    id={navTab.id}
-                    class="circle_checkbox"
+                    class="progress_nav_tab"
                 >
+                    <div 
+                        id={navTab.id}
+                        class="circle_checkbox"
+                        style="background-color: gray;"
+                    >
+                        {#if (navTab.completed)}
+                            <div class="checkmark">
+                                {@html CheckMark}
+                            </div>
+                        {/if}
+                    </div>
                 </div>
-            </a>
+            {:else if 
+                (navTab.id === "submit") &&
+                !nav_paths[1].completed
+            }
+                <div 
+                    class="progress_nav_tab"
+                >
+                    <div 
+                        id={navTab.id}
+                        class="circle_checkbox"
+                        style="background-color: gray;"
+                    >
+                        {#if (navTab.completed)}
+                            <div class="checkmark">
+                                {@html CheckMark}
+                            </div>
+                        {/if}
+                    </div>
+                </div>
+            {:else}
+                <a 
+                    href={navTab.path}
+                    class="progress_nav_tab"
+                >
+                    <div 
+                        id={navTab.id}
+                        class="circle_checkbox"
+                        style={navTab.completed ? "background-color: #D1E9D1;" : "background-color: #FDF6EF"}
+                    >
+                        {#if (navTab.completed)}
+                            <div class="checkmark">
+                                {@html CheckMark}
+                            </div>
+                        {/if}
+                    </div>
+                </a>
+            {/if}
         </li>
     {/each}
 </ul>
@@ -53,9 +100,13 @@
         z-index: 1;
     }
 
-    .progress_nav_heading {
-        margin: 0;
-        
+    .checkmark {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: 0.125rem;
     }
 
     #progress_nav_container:after {
@@ -127,6 +178,10 @@
 
         #submit::after {
             font-size: 0.8rem;
+        }
+
+        .checkmark {
+            margin: 0.2rem;
         }
   
 

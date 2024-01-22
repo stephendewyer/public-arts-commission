@@ -317,18 +317,21 @@
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
-		<h2 class="forthcoming_actions_heading">forthcoming actions</h2>
-		<div class="actions_container">
-			{#if pendingEndorsedActionsData}
-                <LoaderAnimation />
-            {:else if getEndorsedActionsDataSuccess}
-				{#each futureEndorsedActions as action, i}
-					<ActionEndorsementCard endorsedActionData={action} />
-				{/each}
-            {:else if !getEndorsedActionsDataSuccess}
-                <p>failed to load endorsed forthcoming actions</p>
-            {/if}
-				
+		<h2 class="forthcoming_actions_heading">
+			forthcoming actions
+		</h2>
+		<div class="action_cards_frame">
+			<div class="action_cards">
+				{#if pendingEndorsedActionsData}
+					<LoaderAnimation />
+				{:else if getEndorsedActionsDataSuccess}
+					{#each futureEndorsedActions as action, i}
+						<ActionEndorsementCard endorsedActionData={action} />
+					{/each}
+				{:else if !getEndorsedActionsDataSuccess}
+					<p>failed to load endorsed forthcoming actions</p>
+				{/if}
+			</div>
 		</div>
 	</div>
 </section>
@@ -404,11 +407,19 @@
 		text-align: center;
 	}
 
-	.actions_container {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1rem;
-	}
+	.action_cards_frame {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .action_cards {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;      
+        gap: 1rem;
+        padding: 0 1rem 1rem 1rem;
+        width: 100%;
+    }
 
 	@media (max-width: 1140px) {
 		.search_endorsement_fields {
@@ -429,6 +440,17 @@
 			width: 40rem;
 			display: flex;
 		}
+
+		.action_cards_frame {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .action_cards {
+            width: 100%;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
 	}
 
 	@media (max-width: 720px) {

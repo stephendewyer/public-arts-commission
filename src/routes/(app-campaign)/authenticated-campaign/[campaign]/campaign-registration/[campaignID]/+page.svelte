@@ -178,21 +178,21 @@
                 authorizedRepresentativeInputValue
             );
             if (responseItem.success) {
-                imageID = null,
-                imagePublicID = "",
-                imageFileInputValue = "",
-                imageAltTextInputValue = "",
-                image = "",
-                campaignNameInputValue = "",
-                yearOfficeSoughtInputValue = null,
-                electionDatePrimaryInputValue = "",
-                electionDateGeneralInputValue = "",
-                governmentLevelInputValue = "",
-                stateInputValue = "",
-                countyInputValue = "",
-                cityInputValue = "",
-                partyInputValue = "",
-                websiteURLInputValue = "",
+                imageID = null;
+                imagePublicID = "";
+                imageFileInputValue = "";
+                imageAltTextInputValue = "";
+                image = "";
+                campaignNameInputValue = "";
+                yearOfficeSoughtInputValue = null;
+                electionDatePrimaryInputValue = "";
+                electionDateGeneralInputValue = "";
+                governmentLevelInputValue = "";
+                stateInputValue = "";
+                countyInputValue = "";
+                cityInputValue = "";
+                partyInputValue = "";
+                websiteURLInputValue = "";
                 authorizedRepresentativeInputValue = false;
                 goto(`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`);
             };
@@ -246,17 +246,20 @@
         {
             id: "registration",
             name: "registration",
-            path: `/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`
+            path: `/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
+            completed: campaignApplication.campaign_registered
         },
         {
             id: "questionnaire",
             name: "questionnaire",
-            path: `/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`
+            path: `/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
+            completed: campaignApplication.campaign_questionnaire_completed
         },
         {
             id: "submit",
             name: "submit",
-            path: `/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`
+            path: `/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
+            completed: campaignApplication.campaign_application_submitted
         }
     ];
 
@@ -266,6 +269,9 @@
     <h2>
         campaign endorsement application
     </h2>
+    <h4 style="margin: 0;">
+        {campaignApplication.campaign_name}
+    </h4>
     <CampaignApplicationProgressBar nav_paths={navPaths} />
     <h1>
         campaign information
@@ -494,18 +500,6 @@
         </div>
         <SubmitButtonSecondary disable={false}>save changes</SubmitButtonSecondary>
     </form>
-    <div class="two_columns">
-            <a href="/authenticated-campaign/campaign" class="cancel_button_container">
-                <CancelButton>
-                    cancel
-                </CancelButton>
-            </a>
-            <a href={`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`}>
-                <ActionButton>
-                    campaign questionnaire
-                </ActionButton>
-            </a>
-        </div>
     {#if (pending)}
         <PendingFlashMessage >
             please wait while we validate your data
@@ -519,6 +513,18 @@
             {responseItem.success.message}
         </SuccessFlashMessage>
     {/if}
+    <div class="two_columns">
+        <a href="/authenticated-campaign/campaign" class="cancel_button_container">
+            <CancelButton>
+                cancel
+            </CancelButton>
+        </a>
+        <a href={`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`}>
+            <ActionButton>
+                campaign questionnaire
+            </ActionButton>
+        </a>
+    </div>
 </div>
 
 <style>
@@ -565,7 +571,7 @@
     }
 
     .cancel_button_container {
-        margin: auto;
+        margin: 0;
     }
 
     @media (max-width: 720px) {

@@ -671,6 +671,10 @@ declare global {
 		campaign_application_submitted: number;
 		date_submitted: Date;
 		authorized_campaign_representative: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
 	}
 
 	interface CampaignApplicationWithImageRow {
@@ -697,12 +701,17 @@ declare global {
 		image_URL: string;
 		alt_text: string;
 		public_ID: string;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
 	}
 
 	interface NavPath {
 		id: string;
 		name: string;
 		path: string;
+		completed: boolean;
 	}
 
 }

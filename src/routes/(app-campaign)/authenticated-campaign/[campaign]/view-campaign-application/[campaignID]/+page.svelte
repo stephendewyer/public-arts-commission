@@ -1,19 +1,8 @@
 <script lang="ts">
-    import CampaignApplicationProgressBar from '$lib/components/campaignApplicationProgressBar/CampaignProgressBar.svelte';
-    import EditButton from '$lib/components/buttons/EditButton.svelte';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
-    import CancelButton from '$lib/components/buttons/CancelButton.svelte';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
-    import PendingFlashMessage from "$lib/components/flashMessages/PendingFlashMessage.svelte";
-    import SuccessFlashMessage from "$lib/components/flashMessages/SuccessFlashMessage.svelte";
-    import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
-    import { goto } from '$app/navigation';
 
     export let data;
-
-    let userEmail: string | any;
-
-    $: userEmail = data.streamed.user?.email;
 
     let campaignApplication: CampaignApplicationWithImageRow | any = null;
 
@@ -35,125 +24,23 @@
 
     };
 
-    let currentDate: Date = new Date();
-
-    let navPaths: NavPath[];
+    let parsedDate: string;
     
-    $: navPaths = [
-        {
-            id: "registration",
-            name: "registration",
-            path: `/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_registered
-        },
-        {
-            id: "questionnaire",
-            name: "questionnaire",
-            path: `/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_questionnaire_completed
-        },
-        {
-            id: "submit",
-            name: "submit",
-            path: `/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_application_submitted
-        }
-    ];
-
-    let responseItem: ResponseObjWithData = {
-        success: {
-            message: "",
-            campaign_application_ID: null
-        },
-        error: "",
-        status: null
-    };
-
-    $: if((responseItem.success) || (responseItem.error)) {
-        setTimeout(() => {
-            responseItem.success = {
-                message: "",
-                campaign_application_ID: null
-            };
-            responseItem.error = "";
-            status: null;
-        }, 4000)
-    };
-
-    let pending: boolean = false;
-
-    $: if((responseItem.success) || (responseItem.error)) {
-        pending = false;
-    };
-
-    const submitApplication = async (
-        campaignApplicationID: number,
-        campaignUserID: number,
-        campaignName: string,
-        currentDate: Date,
-        userEmail: string
-    ) => {
-        const response = await fetch("/authenticated-campaign/api/submitCampaignApplication", {
-            method: 'POST',
-            body: JSON.stringify({
-                campaignApplicationID,
-                campaignUserID,
-                campaignName,
-                currentDate,
-                userEmail
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
-
-        responseItem = await response.json();
-
-        return responseItem;
-
-    };
-
-    const submitApplicationHandler = async () => {
-
-        pending = true;
-
-        // add the submitted form data to and image URL from Cloudinary to the database
-
-        try {
-            
-            await submitApplication(
-                campaignApplication.campaign_application_ID,
-                campaignApplication.user_ID,
-                campaignApplication.campaign_name,
-                currentDate,
-                userEmail
-            );
-
-            if (responseItem.success) {
-
-                goto(`/authenticated-campaign/campaign/campaign-submit-confirmation/campaign=${campaignApplication.campaign_application_ID}`);
-
-            };
-
-        } catch (error) {
-
-            console.log(error);
-
-        };
-        
-    };
+    $: parsedData = new Date(campaignApplication.date_submitted).toUTCString();
 
 </script>
 
 <div class="campaign_questionnaire_container">
     <h2>
-        campaign endorsement application
+        submitted campaign endorsement application
     </h2>
     <h4 style="margin: 0;">
         {campaignApplication.campaign_name}
     </h4>
-    <CampaignApplicationProgressBar nav_paths={navPaths}/>
-    <h2 style="margin: 1rem 0 0 0;">
+    <h4 style="margin: 0;">
+        date submitted: {parsedData}
+    </h4>
+    <h2 style="margin: 0;">
         campaign registration
     </h2>
     <div class="campaign_image_container">
@@ -290,11 +177,6 @@
             </tbody>
         </table>
     </div>
-    <div class="edit_button_container">
-        <a href={`/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`}>
-            <EditButton>edit registration information</EditButton>
-        </a>
-    </div>
     <h2 style="margin: 1rem 0 0 0;">campaign questionnaire</h2>
     <ol>
         <li>
@@ -374,40 +256,11 @@
             </li>
         {/if}
     </ol>
-    <div class="edit_button_container">
-        <a href={`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`}>
-            <EditButton>edit questionnaire responses</EditButton>
-        </a>
-    </div>
-    {#if (pending)}
-        <PendingFlashMessage >
-            please wait while we validate your data
-        </PendingFlashMessage>
-    {:else if (responseItem.error)}
-        <ErrorFlashMessage >
-            {responseItem.error}
-        </ErrorFlashMessage>
-    {:else if (responseItem.success.message)}
-        <SuccessFlashMessage>
-            {responseItem.success.message}
-        </SuccessFlashMessage>
-    {/if}
-    <div class="two_columns">
-        <a href={`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`} class="cancel_button_container">
-            <CancelButton>
-                quesionnaire
-            </CancelButton>
-        </a>
-        <div
-            role={"button"}
-            on:click={() => submitApplicationHandler()}
-            on:keyup={() => submitApplicationHandler()}
-        >
-            <ActionButton>
-                submit application
-            </ActionButton>
-        </div>
-    </div>
+    <a href="/authenticated-campaign/campaign">
+        <ActionButton>
+            return to my campaigns
+        </ActionButton>
+    </a>
 </div>
 
 <style>
@@ -503,14 +356,6 @@
 
     table {
         width: 100%;
-    }
-
-    .two_columns {
-        display: flex;
-        justify-content: space-evenly;
-        width: 100%;
-        gap: 1rem;
-        align-items: center;
     }
 
     @media (max-width: 1440px) {

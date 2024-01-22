@@ -239,9 +239,6 @@
                             </h5>
                         </th>
                         <th>
-                            <h5 class="table_column_header">
-                                delete
-                            </h5>
                         </th>
                     </tr>
                     {#each userCampaignApplications as campaignApplication, i}
@@ -267,9 +264,11 @@
                             </td>
                             <td>
                                 {#if (campaignApplication.application_status === "submitted")}
-                                    <div class="more_info_container">
-                                        <MoreInfoButton />
-                                    </div>
+                                    <a href={`/authenticated-campaign/campaign/view-campaign-application/campaign=${campaignApplication.campaign_application_ID}`}> 
+                                        <div class="more_info_container">
+                                            <MoreInfoButton />
+                                        </div>
+                                    </a>
                                 {:else if (
                                     campaignApplication.application_status === "started" ||
                                     !campaignApplication.application_status

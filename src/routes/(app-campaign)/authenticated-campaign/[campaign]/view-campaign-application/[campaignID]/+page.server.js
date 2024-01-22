@@ -1,6 +1,5 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
 import { error } from '@sveltejs/kit';
-import { redirect } from "@sveltejs/kit";
 
 export const load = async ({params, locals}) => {
 
@@ -85,28 +84,12 @@ export const load = async ({params, locals}) => {
 
         campaignApplication = JSON.parse(JSON.stringify(rows))[0];
 
-        // if campaign application has been submitted, redirect user to campaign submit confirmation page
-
-        if (campaignApplication?.campaign_application_submitted === 1) {
-
-            console.log("true")
-
-            throw redirect(
-                302, 
-                `http://localhost:5173/authenticated-campaign/campaign/campaign-submit-confirmation/campaign=${campaignApplication?.campaign_application_ID}`
-            );
-
-        };
-
     })
     .catch(error => {
 
         throw error;
 
     });  
-
-    // if campaign application has been submitted, redirect user to campaign-submit-confirmation
-
 
     res.end();
 
