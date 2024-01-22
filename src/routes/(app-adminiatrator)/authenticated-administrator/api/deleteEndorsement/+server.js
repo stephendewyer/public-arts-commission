@@ -119,11 +119,9 @@ export const DELETE = async ({request}) => {
 
     };
 
-    let deleteResponse;
-
     try {
 
-        deleteResponse = await cloudinary.uploader.destroy(deleteItemImagePublicID, {});
+        await cloudinary.uploader.destroy(deleteItemImagePublicID, {});
     
       } catch (err) {
     

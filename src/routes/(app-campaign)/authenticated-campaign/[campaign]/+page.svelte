@@ -1,12 +1,14 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import Meatballs from '$lib/images/icons/meaballs.svg?raw';
-    import Arrow from '$lib/images/icons/arrow.svg?raw';
+    import MoreInfoButton from '$lib/components/buttons/MoreInfoButton.svelte';
     import EditIcon from '$lib/images/icons/edit_icon.svg?raw';
-    import SubtractItemButton from "$lib/components/buttons/SubtractItemButton.svelte";
+    import DeleteIcon from '$lib/images/icons/delete_icon.svg?raw';
     import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import TableActionButton from '$lib/components/buttons/TableActionButton.svelte';
+    import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore.js';
+    import { DeleteConfirmedStore } from '$lib/stores/DeleteConfirmedStore.js';
+    import { ModalOpenStore } from '$lib/stores/ModelOpenStore.js';
 
     export let data;
 
@@ -112,6 +114,81 @@
         return electionYear;
 
     };
+
+    let deleteItem: CampaignApplication;
+
+    const DeleteCampaignApplication = async (
+        deleteItem: CampaignApplication
+    ) => {        
+
+        const response = await fetch("/authenticated-campaign/api/deleteCampaignApplication", {
+            method: 'DELETE',
+            body: JSON.stringify({
+                deleteItem
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (response) {
+
+            console.log(response);
+
+        };
+
+    };
+
+    const ConfirmedDelete = async () => {
+
+        try {
+
+            await DeleteCampaignApplication(
+                deleteItem
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    const deleteClickHandler = async (
+        campaignApplication: CampaignApplication
+    ) => {
+
+        const campaignName: string | any = campaignApplication.campaign_name;
+
+        // set the values for the open modal stores
+
+        DeleteConfirmationStore.update((value) => value = campaignName);
+
+        ModalOpenStore.update((value) => value = true);
+
+        // set the values for the item to be deleted
+
+        deleteItem = campaignApplication;
+
+    };
+    
+
+    $: if ($DeleteConfirmedStore === true) {
+
+        // delete the campaign row from the database
+
+        ConfirmedDelete();  
+
+        // load new data from campaign_applications table in database
+
+        getUserCampaignApplicationsData();
+
+        // load the DeleteConfirmedStore to false
+
+        DeleteConfirmedStore.update(value => value = false);
+
+    };
     
 </script>
 
@@ -190,14 +267,16 @@
                             </td>
                             <td>
                                 {#if (campaignApplication.application_status === "submitted")}
-                                    <div class="icon_container">
-                                        {@html Meatballs}
+                                    <div class="more_info_container">
+                                        <MoreInfoButton />
                                     </div>
                                 {:else if (
                                     campaignApplication.application_status === "started" ||
                                     !campaignApplication.application_status
                                 )}
-                                    <TableActionButton>complete</TableActionButton>
+                                    <a href={`/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`}>
+                                        <TableActionButton>complete</TableActionButton>
+                                    </a>
                                 {/if}
                             </td>
                             <td>
@@ -205,7 +284,17 @@
                                     campaignApplication.application_status === "started" ||
                                     !campaignApplication.application_status
                                 )}
-                                    <SubtractItemButton index={i} />
+                                    <button 
+                                        on:click={() => deleteClickHandler(
+                                            campaignApplication
+                                        )}
+                                        on:keyup={() => deleteClickHandler(
+                                            campaignApplication
+                                        )}
+                                        class="icon_container"
+                                    >
+                                        {@html DeleteIcon}
+                                    </button>
                                 {/if}
                             </td>
                         </tr>
@@ -320,6 +409,7 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+        align-items: center;
         margin: 0 auto;
     }
 
@@ -339,18 +429,40 @@
         margin: 1rem auto;
     }
 
-    .table {
-        margin: 0 0 1rem 0;
+    
+
+    .more_info_container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
     }
 
     .icon_container {
+        max-width: 1.5rem;
+        min-width: 1.5rem;
         width: 100%;
         height: 100%;
-        max-width: 1.5rem;
-        max-height: 1.5rem;
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: center;
+        fill: #4C4239;
+        margin: 0 auto;
+        transition: fill 0.2s linear;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container:hover {
+        fill: #28387C;
     }
 
     .frame_table {
@@ -358,12 +470,13 @@
         overflow-x: hidden;
     }
 
-    table {
+    .table {
+        margin: 0 0 1rem 0;
         border-spacing: 0;
         min-width: 100%;
         width: auto;
     }
-
+    
     tbody tr:nth-child(even) {
         background-color: #FBF4F9;
     }
@@ -391,6 +504,7 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
+        margin: 0 0 0 auto;
         gap: 0.5rem;
         padding: 1rem;
     }
@@ -405,6 +519,12 @@
             font-size: 0.9rem;
             padding: 0.4rem;
         }
+
+        .icon_container {
+            max-width: 1.25rem;
+            min-width: 1.25rem;
+        }
+
 	}
 
 	@media (max-width: 720px) {
@@ -421,6 +541,11 @@
         tbody > tr > td {
             font-size: 0.8rem;
             padding: 0.25rem;
+        }
+
+        .icon_container {
+            max-width: 1rem;
+            min-width: 1rem;
         }
 
 	}

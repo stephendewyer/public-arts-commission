@@ -135,6 +135,14 @@
 
     @media (max-width: 1440px) {
 
+        .tabs_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            list-style: none;
+        }
+
         .active_tab {
             font-size: 1.35rem;
         }
@@ -145,14 +153,6 @@
     }
   
     @media (max-width: 720px) {
-
-        .tabs_container {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            list-style: none;
-        }
 
         .tab {
             font-size: 1rem;

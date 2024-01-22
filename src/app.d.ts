@@ -12,15 +12,26 @@ declare global {
 	}
 
 	interface SessionUser {
-		email: string,
-		name: string,
+		email: string;
+		name: string;
 	}
 
 	interface ResponseObj {
         success: string;
         error: string;
-        status: number | null
+        status: number | null;
     };
+
+	interface Success {
+        message: string;
+        campaign_application_ID: number | null;
+    }
+
+	interface ResponseObjWithData {
+		success: Success;
+		error: string;
+        status: number | null;
+	}
 
 	interface TimeZone {
 		name: string;
@@ -660,6 +671,38 @@ declare global {
 		campaign_application_submitted: number;
 		date_submitted: Date;
 		authorized_campaign_representative: number;
+	}
+
+	interface CampaignApplicationWithImageRow {
+		campaign_application_ID: number;
+		user_ID: number;
+		image_ID: number;
+		campaign_name: string;
+		electorate: string;
+		party: string;
+		primary_election_date: Date;
+		general_election_date: Date;
+		starting_year_for_office_sought: number;
+		website_URL: string;
+		excellent_public_art_for_all: number;
+		excellent_public_art_for_all_02: string;
+		art_government_seat: number;
+		art_government_seat_02: string;
+		application_status: string;
+		campaign_registered: number;
+		campaign_questionnaire_completed: number;
+		campaign_application_submitted: number;
+		date_submitted: Date;
+		authorized_campaign_representative: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+	}
+
+	interface NavPath {
+		id: string;
+		name: string;
+		path: string;
 	}
 
 }

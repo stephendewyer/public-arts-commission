@@ -81,16 +81,18 @@
         <h3>
             candidates
         </h3>
-        <div class="endorsement_cards_container">
-            {#if categories_data.pendingEndorsedCandidatesData}
-                <LoaderAnimation />
-            {:else if categories_data.getEndorsedCandidatesDataSuccess}
-                {#each paginatedEndorsedCandidates as candidate, i}
-                    <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-                {/each}
-            {:else if !categories_data.getEndorsedCandidatesDataSuccess}
-                <p>failed to load endorsed candidates</p>
-            {/if}
+        <div class="endorsement_cards_frame">
+            <div class="endorsement_cards">
+                {#if categories_data.pendingEndorsedCandidatesData}
+                    <LoaderAnimation />
+                {:else if categories_data.getEndorsedCandidatesDataSuccess}
+                    {#each paginatedEndorsedCandidates as candidate, i}
+                        <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+                    {/each}
+                {:else if !categories_data.getEndorsedCandidatesDataSuccess}
+                    <p>failed to load endorsed candidates</p>
+                {/if}
+            </div>
         </div>
         <Pagination 
             bind:currentPage={candidatesCurrentPage}
@@ -110,16 +112,18 @@
         <h3>
             referendums
         </h3>
-        <div class="endorsement_cards_container">
-            {#if categories_data.pendingEndorsedReferendumsData}
-                <LoaderAnimation />
-            {:else if categories_data.getEndorsedReferendumsDataSuccess}
-                {#each paginatedEndorsedReferendums as referendum, i}
-                    <EndorsedReferendumCard endorsedReferendumData={referendum} />
-                {/each}
-            {:else if !categories_data.getEndorsedReferendumsDataSuccess}
-                <p>failed to load endorsed referendums</p>
-            {/if}
+        <div class="endorsement_cards_frame">
+            <div class="endorsement_cards">
+                {#if categories_data.pendingEndorsedReferendumsData}
+                    <LoaderAnimation />
+                {:else if categories_data.getEndorsedReferendumsDataSuccess}
+                    {#each paginatedEndorsedReferendums as referendum, i}
+                        <EndorsedReferendumCard endorsedReferendumData={referendum} />
+                    {/each}
+                {:else if !categories_data.getEndorsedReferendumsDataSuccess}
+                    <p>failed to load endorsed referendums</p>
+                {/if}
+            </div>
         </div>
         <Pagination 
             bind:currentPage={referendumsCurrentPage}
@@ -139,16 +143,18 @@
         <h3>
             legislation
         </h3>
-        <div class="endorsement_cards_container">
-            {#if categories_data.pendingEndorsedLegislationData}
-                <LoaderAnimation />
-            {:else if categories_data.getEndorsedLegislationDataSuccess}
-                {#each paginatedEndorsedLegislation as legislation, i}
-                    <EndorsedLegislationCard endorsedLegislationData={legislation} />
-                {/each}
-            {:else if !categories_data.getEndorsedLegislationDataSuccess}
-                <p>failed to load endorsed legislation</p>
-            {/if}
+        <div class="endorsement_cards_frame">
+            <div class="endorsement_cards">
+                {#if categories_data.pendingEndorsedLegislationData}
+                    <LoaderAnimation />
+                {:else if categories_data.getEndorsedLegislationDataSuccess}
+                    {#each paginatedEndorsedLegislation as legislation, i}
+                        <EndorsedLegislationCard endorsedLegislationData={legislation} />
+                    {/each}
+                {:else if !categories_data.getEndorsedLegislationDataSuccess}
+                    <p>failed to load endorsed legislation</p>
+                {/if}
+            </div>
         </div>
         <Pagination 
             bind:currentPage={legislationCurrentPage}
@@ -168,16 +174,18 @@
         <h3>
             amendments
         </h3>
-        <div class="endorsement_cards_container">
-            {#if categories_data.pendingEndorsedAmendmentsData}
-                <LoaderAnimation />
-            {:else if categories_data.getEndorsedAmendmentsDataSuccess}
-                {#each paginatedEndorsedAmendments as amendment, i}
-                    <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-                {/each}
-            {:else if !categories_data.getEndorsedAmendmentsDataSuccess}
-                <p>failed to load endorsed amendments</p>
-            {/if}
+        <div class="endorsement_cards_frame">
+            <div class="endorsement_cards">
+                {#if categories_data.pendingEndorsedAmendmentsData}
+                    <LoaderAnimation />
+                {:else if categories_data.getEndorsedAmendmentsDataSuccess}
+                    {#each paginatedEndorsedAmendments as amendment, i}
+                        <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+                    {/each}
+                {:else if !categories_data.getEndorsedAmendmentsDataSuccess}
+                    <p>failed to load endorsed amendments</p>
+                {/if}
+            </div>
         </div>
         <Pagination 
             bind:currentPage={amendmentsCurrentPage}
@@ -240,7 +248,12 @@
         width: 100%;
     }
 
-    .endorsement_cards_container {
+    .endorsement_cards_frame {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .endorsement_cards {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;      
@@ -254,13 +267,27 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
+        padding: 1rem 0 0 0;
     }
 
     @media (max-width: 1140px) {
 
+        .endorsement_cards_frame {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .endorsement_cards {
+            width: 100%;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
+        }
+
 	}
 
 	@media (max-width: 720px) {
+
+        
         
 	}
 

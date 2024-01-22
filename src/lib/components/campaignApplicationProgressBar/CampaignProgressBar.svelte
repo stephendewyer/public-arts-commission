@@ -1,45 +1,25 @@
 <script lang="ts">
 
+    export let nav_paths: NavPath[];
+
 </script>
 <ul 
     id="progress_nav_container"
 >
-    <li class="progress_nav_tab_container">
-        <a 
-            href="/authenticated-campaign/campaign/campaign-registration"
-            class="progress_nav_tab"
-        >
-            <div 
-                id="registration"
-                class="circle_checkbox"
+    {#each nav_paths as navTab, i}
+        <li class="progress_nav_tab_container">
+            <a 
+                href={navTab.path}
+                class="progress_nav_tab"
             >
-            </div>
-        </a>
-    </li>
-    <li class="progress_nav_tab_container">
-        <a 
-            href="/authenticated-campaign/campaign/campaign-questionnaire"
-            class="progress_nav_tab"
-        >
-            <div 
-                id="questionnaire"
-                class="circle_checkbox"
-            >
-            </div>
-        </a>
-    </li>
-    <li class="progress_nav_tab_container">
-        <a
-            href="/authenticated-campaign/campaign/campaign-submit"
-            class="progress_nav_tab"
-        >
-            <div 
-                id="submit"
-                class="circle_checkbox"
-            >
-            </div>
-        </a>
-    </li>
+                <div 
+                    id={navTab.id}
+                    class="circle_checkbox"
+                >
+                </div>
+            </a>
+        </li>
+    {/each}
 </ul>
 
 <style>

@@ -22,8 +22,6 @@ export const POST = async ({request}) => {
 
   const data = await request.json();
 
-  console.log(data)
-
   const { 
     userEmail,
     imageFile,
@@ -173,7 +171,8 @@ export const POST = async ({request}) => {
     party,
     website_URL,
     electorate,
-    authorized_campaign_representative
+    authorized_campaign_representative,
+    campaign_registered
   ) VALUES (
     "${campaignUserID}",
     "${imageID}",
@@ -188,12 +187,17 @@ export const POST = async ({request}) => {
     "${party}",
     "${websiteURL}",
     "${electorate}",
-    "${authorizedCampaignRepresentativeINT}"
+    "${authorizedCampaignRepresentativeINT}",
+    "${1}"
   )`;
 
+  let campaignApplicationID;
+
   await res.query(insertCampaignInformationStatement)
-  .then(() => {
+  .then(([rows]) => {
     console.log(`campaign registration completed for ${campaignName}`);
+    const rowsJSON = JSON.parse(JSON.stringify(rows));
+    campaignApplicationID = rowsJSON.insertId;
   })
   .catch(error => {
     throw error;
@@ -201,6 +205,9 @@ export const POST = async ({request}) => {
 
   res.end();
 
-  return new Response(JSON.stringify({success: `campaign registration completed for ${campaignName}`}), {status: 200});
+  return new Response(JSON.stringify({success: {
+    message: `campaign registration completed for ${campaignName}`,
+    campaign_application_ID: campaignApplicationID
+  }}), {status: 200});
 
 };

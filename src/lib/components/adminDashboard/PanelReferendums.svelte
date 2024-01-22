@@ -1,7 +1,8 @@
 <script lang="ts">
-    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    import MoreInfoButton from "../buttons/MoreInfoButton.svelte";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import Pagination from "../pagination/Pagination.svelte";
     import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
     import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
     import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
@@ -18,6 +19,26 @@
     let endorsedReferendums: ReferendumWithImage[] = [];
 
     $: endorsedReferendums = [...panel_data];
+
+    // set the amount of items to appear on the page
+    let pageSize: number = 10;
+
+    let endorsedReferendumsCurrentPage: number;
+
+    $: endorsedReferendumsCurrentPage = 1;
+
+    // set the index of the first item to appear on the page
+    let firstPageIndexEndorsedReferendums: number;
+    $: firstPageIndexEndorsedReferendums = (endorsedReferendumsCurrentPage -1) * pageSize;
+
+    // set the index for the page after the first page
+    let lastPageIndexEndorsedReferendums: number;
+    $: lastPageIndexEndorsedReferendums = firstPageIndexEndorsedReferendums + pageSize;
+
+    let paginatedEndorsedReferendums: ReferendumWithImage[];
+
+    // use the first page index and last page index to slice the correct items to appear on the page
+    $: paginatedEndorsedReferendums = endorsedReferendums.slice(firstPageIndexEndorsedReferendums, lastPageIndexEndorsedReferendums);
 
     const editClickHandler = (referendumID: number | undefined) => {
 
@@ -183,109 +204,123 @@
         </a>
     </div>
     {#if (activeTab === 0)}
-        <table>
-            <tbody>
-                <tr>
-                    <th>
-                        <h5>
-                            referendum name
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            election date
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            electorate/jurisdiction
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            edit
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            delete
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            more info
-                        </h5>
-                    </th>
-                </tr>
-                {#each endorsedReferendums as referendum, i}
+        <div class="frame_table">
+            <table class="table">
+                <tbody>
                     <tr>
-                        <td>
-                            {referendum?.referendum_name}
-                        </td>
-                        <td>
-                            {new Date(referendum?.election_date).toUTCString().substring(0, 16)}
-                        </td>
-                        <td>
-                            {#if (referendum.city)}
-                                {referendum.city}
-                            {/if}
-                            {#if (referendum.county)}
-                                {referendum.county}
-                            {/if}
-                            {#if (referendum.state)}
-                                {referendum.state}
-                            {/if}
-                            United States of America
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => editClickHandler(referendum.referendum_ID)}
-                                on:keyup={() => editClickHandler(referendum.referendum_ID)}
-                                class="icon_container"
-                            >
-                                {@html EditIcon}
-                            </button>
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => deleteClickHandler(
-                                    referendum.referendum_ID, 
-                                    referendum.referendum_name,
-                                    referendum.image_ID,
-                                    referendum.public_ID
-                                )}
-                                on:keyup={() => deleteClickHandler(
-                                    referendum.referendum_ID, 
-                                    referendum.referendum_name,
-                                    referendum.image_ID,
-                                    referendum.public_ID
-                                )}
-                                class="icon_container"
-                            >
-                                {@html DeleteIcon}
-                            </button>
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => moreInfoClickHandler(referendum.referendum_ID, i)}
-                                on:keyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
-                                class="icon_container"
-                            >
-                                {@html MeatballsIcon}
-                            </button>
-                        </td>
+                        <th>
+                            <h5>
+                                referendum name
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                election date
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                electorate/jurisdiction
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                edit
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                delete
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                more info
+                            </h5>
+                        </th>
                     </tr>
-                {/each}
-            </tbody>
-        </table>
+                    {#each paginatedEndorsedReferendums as referendum, i}
+                        <tr>
+                            <td>
+                                {referendum?.referendum_name}
+                            </td>
+                            <td>
+                                {new Date(referendum?.election_date).toUTCString().substring(0, 16)}
+                            </td>
+                            <td>
+                                {#if (referendum.city)}
+                                    {referendum.city}
+                                {/if}
+                                {#if (referendum.county)}
+                                    {referendum.county}
+                                {/if}
+                                {#if (referendum.state)}
+                                    {referendum.state}
+                                {/if}
+                                United States of America
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => editClickHandler(referendum.referendum_ID)}
+                                    on:keyup={() => editClickHandler(referendum.referendum_ID)}
+                                    class="icon_container"
+                                >
+                                    {@html EditIcon}
+                                </button>
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => deleteClickHandler(
+                                        referendum.referendum_ID, 
+                                        referendum.referendum_name,
+                                        referendum.image_ID,
+                                        referendum.public_ID
+                                    )}
+                                    on:keyup={() => deleteClickHandler(
+                                        referendum.referendum_ID, 
+                                        referendum.referendum_name,
+                                        referendum.image_ID,
+                                        referendum.public_ID
+                                    )}
+                                    class="icon_container"
+                                >
+                                    {@html DeleteIcon}
+                                </button>
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                                    on:keyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                                    class="more_info_container"
+                                >
+                                    <MoreInfoButton />
+                                </button>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+        
+        <Pagination 
+            bind:currentPage={endorsedReferendumsCurrentPage}
+            totalCount={endorsedReferendums.length}
+            pageSize={pageSize}
+        />
     {:else if (activeTab === 1)}
         nominated referendums
     {/if}
 </div>
 <style>
-    table {
-        border-spacing: 0;
+    .frame_table {
         width: 100%;
+        overflow-x: hidden;
+    }
+
+    .table {
+        width: 100%;
+        margin: 0 0 1rem 0;
+        border-spacing: 0;
     }
 
     tbody tr:nth-child(even) {
@@ -380,11 +415,24 @@
 		overflow: visible;
 	}
 
-    .icon_container {
-        max-width: 1.5rem;
+    .more_info_container {
         width: 100%;
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container {
+        max-width: 1.5rem;
+        min-width: 1.5rem;
         width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -402,6 +450,16 @@
     }
 
     @media (max-width: 1440px) {
+
+        .frame_table {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .table {
+            width: auto;
+            min-width: 40rem;
+        }
 
         .active_tab {
             font-size: 1.1rem;
@@ -429,6 +487,7 @@
 
         .icon_container {
             max-width: 1.25rem;
+            min-width: 1.25rem;
         }
     }
 
@@ -452,6 +511,11 @@
             padding: 0 0.5rem;
         }
 
+        .frame_table {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
         tbody > tr > th {
             padding: 0.25rem;
             font-size: 0.8rem;
@@ -470,6 +534,7 @@
 
         .icon_container {
             max-width: 1rem;
+            min-width: 1rem;
         }
 
     }

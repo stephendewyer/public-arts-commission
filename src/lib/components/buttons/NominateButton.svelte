@@ -4,7 +4,7 @@
   import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
   import type { User } from '@auth/core/types.js';
 
-  export let category: string = "";
+  export let category: string | any = "";
 
   export let authorized_user: User | undefined;
 

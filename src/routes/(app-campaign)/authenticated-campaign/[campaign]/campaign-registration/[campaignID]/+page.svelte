@@ -16,28 +16,38 @@
     import AnimatedCheckbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
     import { goto } from '$app/navigation';
+    import { ConvertDateInputFormat } from '$lib/utils/ConvertDateInputFormat.js';
+    import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
 
     export let data;
 
-    let userEmail: string | undefined | null;
+    let campaignApplication: CampaignApplicationWithImageRow | any = null;
+    
+    if (data.campaignApplication) {
 
-    $: userEmail = data.streamed.user?.email;
+        campaignApplication = data.campaignApplication;
 
+    };
+
+    let campaignApplicationID: number | any = campaignApplication.campaign_application_ID;
+    let campaignUserID: number | any = campaignApplication.user_ID;
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = "";
-    let image: any;
-    let campaignNameInputValue: string = "";
-    let electorateInputValue: string = "";
-    let yearOfficeSoughtInputValue: number | null = null;
-    let electionDatePrimaryInputValue: string = "";
-    let electionDateGeneralInputValue: string = "";
-    let governmentLevelInputValue: string = "";
-    let stateInputValue: string = "";
-    let countyInputValue: string = "";
-    let cityInputValue: string = "";
-    let partyInputValue: string = "";
-    let websiteURLInputValue: string = "";
-    let authorizedRepresentativeInputValue: boolean = false;
+    let imageAltTextInputValue: string | any = campaignApplication.alt_text;
+    let image: string = campaignApplication.image_URL;
+    let imageID: number | any = campaignApplication.image_ID;
+    let imagePublicID: string = campaignApplication.public_ID;
+    let campaignNameInputValue: string = campaignApplication.campaign_name;
+    let electorateInputValue: string = campaignApplication.electorate;
+    let yearOfficeSoughtInputValue: number | null = campaignApplication.starting_year_for_office_sought;
+    let electionDatePrimaryInputValue: string = ConvertDateInputFormat(new Date(campaignApplication.primary_election_date));
+    let electionDateGeneralInputValue: string = ConvertDateInputFormat(new Date(campaignApplication.general_election_date));
+    let governmentLevelInputValue: string = campaignApplication.government_level;
+    let stateInputValue: string = campaignApplication.state;
+    let countyInputValue: string = campaignApplication.county;
+    let cityInputValue: string = campaignApplication.city;
+    let partyInputValue: string = campaignApplication.party;
+    let websiteURLInputValue: string = campaignApplication.website_URL;
+    let authorizedRepresentativeInputValue: boolean = campaignApplication.authorized_campaign_representative;
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
@@ -83,8 +93,11 @@
         }, 4000)
     };
 
-    const registerCampaignInformation = async (
-        userEmail: string | null | undefined,
+    const updateCampaignRegistrationInformation = async (
+        campaignApplicationID: number,
+        campaignUserID: number,
+        imageID: number,
+        imagePublicID: string,
         imageFile: string,
         imageAltText: string,
         image: any,
@@ -101,10 +114,13 @@
         websiteURL: string,
         authorizedRepresentative: boolean
     ) => {
-        const response = await fetch("/authenticated-campaign/api/addCampaignRegistration", {
-            method: 'POST',
+        const response = await fetch("/authenticated-campaign/api/updateCampaignRegistration", {
+            method: 'PATCH',
             body: JSON.stringify({
-                userEmail,
+                campaignApplicationID,
+                campaignUserID,
+                imageID,
+                imagePublicID,
                 imageFile,
                 imageAltText,
                 image,
@@ -130,9 +146,9 @@
 
         return responseItem;
 
-    }
+    };
 
-    const submitCampaignRegistrationHandler = async () => {
+    const updateCampaignRegistrationHandler = async () => {
 
         pending = true;
 
@@ -140,8 +156,11 @@
 
         try {
             
-            await registerCampaignInformation(
-                userEmail,
+            await updateCampaignRegistrationInformation(
+                campaignApplicationID,
+                campaignUserID,
+                imageID,
+                imagePublicID,
                 imageFileInputValue,
                 imageAltTextInputValue,
                 image,
@@ -159,6 +178,8 @@
                 authorizedRepresentativeInputValue
             );
             if (responseItem.success) {
+                imageID = null,
+                imagePublicID = "",
                 imageFileInputValue = "",
                 imageAltTextInputValue = "",
                 image = "",
@@ -173,7 +194,7 @@
                 partyInputValue = "",
                 websiteURLInputValue = "",
                 authorizedRepresentativeInputValue = false;
-                goto(`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${responseItem.success.campaign_application_ID}`);
+                goto(`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`);
             };
 
             if (responseItem.error) {
@@ -225,17 +246,17 @@
         {
             id: "registration",
             name: "registration",
-            path: `/authenticated-campaign/campaign/campaign-registration`
+            path: `/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`
         },
         {
             id: "questionnaire",
             name: "questionnaire",
-            path: `/authenticated-campaign/campaign/campaign-questionnaire`
+            path: `/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`
         },
         {
             id: "submit",
             name: "submit",
-            path: `/authenticated-campaign/campaign/campaign-submit`
+            path: `/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`
         }
     ];
 
@@ -245,13 +266,13 @@
     <h2>
         campaign endorsement application
     </h2>
-    <CampaignApplicationProgressBar nav_paths={navPaths}/>
+    <CampaignApplicationProgressBar nav_paths={navPaths} />
     <h1>
         campaign information
     </h1>
     <form 
         class="form_container"
-        on:submit|preventDefault={submitCampaignRegistrationHandler}
+        on:submit|preventDefault={updateCampaignRegistrationHandler}
         enctype="multipart/form-data"
     >
         <h3 class="select_image_heading">
@@ -471,17 +492,20 @@
                 <InputErrorMessage>{authorizedRepresentativeInputErrorMessage}</InputErrorMessage>
             {/if}
         </div>
-        <div class="two_columns">
+        <SubmitButtonSecondary disable={false}>save changes</SubmitButtonSecondary>
+    </form>
+    <div class="two_columns">
             <a href="/authenticated-campaign/campaign" class="cancel_button_container">
                 <CancelButton>
                     cancel
                 </CancelButton>
             </a>
-            <ActionButton>
-                campaign questionnaire
-            </ActionButton>
+            <a href={`/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`}>
+                <ActionButton>
+                    campaign questionnaire
+                </ActionButton>
+            </a>
         </div>
-    </form>
     {#if (pending)}
         <PendingFlashMessage >
             please wait while we validate your data

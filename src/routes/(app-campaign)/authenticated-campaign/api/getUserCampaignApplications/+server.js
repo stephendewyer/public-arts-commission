@@ -35,9 +35,13 @@ export const POST = async ({request}) => {
      * @type {any[]}
      */
     let userCampaignApplications = [];
+
+    // select campaign applications and corresponding image rows for the user
     
     const loadUserCampaignApplicationsStatement = `SELECT * 
         FROM campaign_applications
+        INNER JOIN image_collection
+        ON campaign_applications.image_ID=image_collection.image_ID
         WHERE user_ID = '${userID}'`;
 
     await res.query(loadUserCampaignApplicationsStatement)

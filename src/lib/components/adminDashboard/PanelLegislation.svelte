@@ -1,7 +1,8 @@
 <script lang="ts">
-    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    import MoreInfoButton from "../buttons/MoreInfoButton.svelte";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import Pagination from "../pagination/Pagination.svelte";
     import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
     import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
     import { EndorsedLegislationSelectedStore } from "$lib/stores/EndorsedLegislationSelectedStore";
@@ -15,7 +16,25 @@
 
     $: endorsedLegislation = [...panel_data];
 
-    // $: console.log(endorsedLegislation);
+    // set the amount of items to appear on the page
+    let pageSize: number = 10;
+
+    let endorsedLegislationCurrentPage: number;
+
+    $: endorsedLegislationCurrentPage = 1;
+
+    // set the index of the first item to appear on the page
+    let firstPageIndexEndorsedLegislation: number;
+    $: firstPageIndexEndorsedLegislation = (endorsedLegislationCurrentPage -1) * pageSize;
+
+    // set the index for the page after the first page
+    let lastPageIndexEndorsedLegislation: number;
+    $: lastPageIndexEndorsedLegislation = firstPageIndexEndorsedLegislation + pageSize;
+
+    let paginatedEndorsedLegislation: LegislationWithSponsorsAndImage[];
+
+    // use the first page index and last page index to slice the correct items to appear on the page
+    $: paginatedEndorsedLegislation = endorsedLegislation.slice(firstPageIndexEndorsedLegislation, lastPageIndexEndorsedLegislation);
 
     let activeTab: number = 0;
 
@@ -185,109 +204,122 @@
         </a>
     </div>
     {#if (activeTab === 0)}
-        <table>
-            <tbody>
-                <tr>
-                    <th>
-                        <h5>
-                            legislation name
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            year released
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            electorate/jurisdiction
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            edit
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            delete
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            more info
-                        </h5>
-                    </th>
-                </tr>
-                {#each endorsedLegislation as legislation, i}
+        <div class="frame_table">
+            <table class="table">
+                <tbody>
                     <tr>
-                        <td>
-                            {legislation?.legislation_name}
-                        </td>
-                        <td>
-                            {legislation?.year_released}
-                        </td>
-                        <td>
-                            {#if (legislation.city)}
-                                {legislation.city}
-                            {/if}
-                            {#if (legislation.county)}
-                                {legislation.county}
-                            {/if}
-                            {#if (legislation.state)}
-                                {legislation.state}
-                            {/if}
-                            United States of America
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => editClickHandler(legislation.legislation_ID)}
-                                on:keyup={() => editClickHandler(legislation.legislation_ID)}
-                                class="icon_container"
-                            >
-                                {@html EditIcon}
-                            </button>
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => deleteClickHandler(
-                                    legislation.legislation_ID, 
-                                    legislation.legislation_name,
-                                    legislation.image_ID,
-                                    legislation.public_ID
-                                )}
-                                on:keyup={() => deleteClickHandler(
-                                    legislation.legislation_ID, 
-                                    legislation.legislation_name,
-                                    legislation.image_ID,
-                                    legislation.public_ID
-                                )}
-                                class="icon_container"
-                            >
-                                {@html DeleteIcon}
-                            </button>
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => moreInfoClickHandler(legislation.legislation_ID, i)}
-                                on:keyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
-                                class="icon_container"
-                            >
-                                {@html MeatballsIcon}
-                            </button>
-                        </td>
+                        <th>
+                            <h5>
+                                legislation name
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                year released
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                electorate/jurisdiction
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                edit
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                delete
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                more info
+                            </h5>
+                        </th>
                     </tr>
-                {/each}
-            </tbody>
-        </table>
+                    {#each paginatedEndorsedLegislation as legislation, i}
+                        <tr>
+                            <td>
+                                {legislation?.legislation_name}
+                            </td>
+                            <td>
+                                {legislation?.year_released}
+                            </td>
+                            <td>
+                                {#if (legislation.city)}
+                                    {legislation.city}
+                                {/if}
+                                {#if (legislation.county)}
+                                    {legislation.county}
+                                {/if}
+                                {#if (legislation.state)}
+                                    {legislation.state}
+                                {/if}
+                                United States of America
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => editClickHandler(legislation.legislation_ID)}
+                                    on:keyup={() => editClickHandler(legislation.legislation_ID)}
+                                    class="icon_container"
+                                >
+                                    {@html EditIcon}
+                                </button>
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => deleteClickHandler(
+                                        legislation.legislation_ID, 
+                                        legislation.legislation_name,
+                                        legislation.image_ID,
+                                        legislation.public_ID
+                                    )}
+                                    on:keyup={() => deleteClickHandler(
+                                        legislation.legislation_ID, 
+                                        legislation.legislation_name,
+                                        legislation.image_ID,
+                                        legislation.public_ID
+                                    )}
+                                    class="icon_container"
+                                >
+                                    {@html DeleteIcon}
+                                </button>
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                                    on:keyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                                    class="more_info_container"
+                                >
+                                    <MoreInfoButton />
+                                </button>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+        <Pagination 
+            bind:currentPage={endorsedLegislationCurrentPage}
+            totalCount={endorsedLegislation.length}
+            pageSize={pageSize}
+        />
     {:else if (activeTab === 1)}
-        nominated candidates
+        nominated legislation
     {/if}
 </div>
 <style>
-table {
-        border-spacing: 0;
+    .frame_table {
         width: 100%;
+        overflow-x: hidden;
+    }
+
+    .table {
+        width: 100%;
+        margin: 0 0 1rem 0;
+        border-spacing: 0;
     }
 
     tbody tr:nth-child(even) {
@@ -382,11 +414,24 @@ table {
 		overflow: visible;
 	}
 
-    .icon_container {
-        max-width: 1.5rem;
+    .more_info_container {
         width: 100%;
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container {
+        max-width: 1.5rem;
+        min-width: 1.5rem;
         width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -431,10 +476,21 @@ table {
 
         .icon_container {
             max-width: 1.25rem;
+            min-width: 1.25rem;
         }
     }
 
     @media (max-width: 720px) {
+
+        .frame_table {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .table {
+            width: auto;
+            min-width: 40rem;
+        }
 
         .tabs_container {
             display: flex;
@@ -452,6 +508,11 @@ table {
         .active_tab {
             font-size: 0.8rem;
             padding: 0 0.5rem;
+        }
+
+        .frame_table {
+            width: 100%;
+            overflow-x: scroll;
         }
 
         tbody > tr > th {
@@ -472,6 +533,7 @@ table {
 
         .icon_container {
             max-width: 1rem;
+            min-width: 1rem;
         }
 
     }

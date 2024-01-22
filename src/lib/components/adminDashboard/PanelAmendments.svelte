@@ -1,7 +1,8 @@
 <script lang="ts">
-    import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
+    import MoreInfoButton from "../buttons/MoreInfoButton.svelte";
     import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import DeleteIcon from "$lib/images/icons/delete_icon.svg?raw";
+    import Pagination from "../pagination/Pagination.svelte";
     import { DeleteConfirmationStore } from "$lib/stores/DeleteConfirmationStore";
     import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
     import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
@@ -19,7 +20,25 @@
 
     $: endorsedAmendments = [...panel_data];
 
-    $: console.log(endorsedAmendments);
+    // set the amount of items to appear on the page
+    let pageSize: number = 10;
+
+    let endorsedAmendmentsCurrentPage: number;
+
+    $: endorsedAmendmentsCurrentPage = 1;
+
+    // set the index of the first item to appear on the page
+    let firstPageIndexEndorsedAmendments: number;
+    $: firstPageIndexEndorsedAmendments = (endorsedAmendmentsCurrentPage -1) * pageSize;
+
+    // set the index for the page after the first page
+    let lastPageIndexEndorsedAmendments: number;
+    $: lastPageIndexEndorsedAmendments = firstPageIndexEndorsedAmendments + pageSize;
+
+    let paginatedEndorsedAmendments: AmendmentWithSponsorsAndImage[];
+
+    // use the first page index and last page index to slice the correct items to appear on the page
+    $: paginatedEndorsedAmendments = endorsedAmendments.slice(firstPageIndexEndorsedAmendments, lastPageIndexEndorsedAmendments);
 
     const editClickHandler = (amendmentID: number | undefined) => {
 
@@ -185,109 +204,124 @@
         </a>
     </div>
     {#if (activeTab === 0)}
-        <table>
-            <tbody>
-                <tr>
-                    <th>
-                        <h5>
-                            amendment name
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            year released
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            electorate/jurisdiction
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            edit
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            delete
-                        </h5>
-                    </th>
-                    <th>
-                        <h5>
-                            more info
-                        </h5>
-                    </th>
-                </tr>
-                {#each endorsedAmendments as amendment, i}
+        <div class="frame_table">
+            <table class="table">
+                <tbody>
                     <tr>
-                        <td>
-                            {amendment?.amendment_name}
-                        </td>
-                        <td>
-                            {amendment?.year_released}
-                        </td>
-                        <td>
-                            {#if (amendment.city)}
-                                {amendment.city}
-                            {/if}
-                            {#if (amendment.county)}
-                                {amendment.county}
-                            {/if}
-                            {#if (amendment.state)}
-                                {amendment.state}
-                            {/if}
-                            United States of America
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => editClickHandler(amendment.amendment_ID)}
-                                on:keyup={() => editClickHandler(amendment.amendment_ID)}
-                                class="icon_container"
-                            >
-                                {@html EditIcon}
-                            </button>
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => deleteClickHandler(
-                                    amendment.amendment_ID, 
-                                    amendment.amendment_name,
-                                    amendment.image_ID,
-                                    amendment.public_ID
-                                )}
-                                on:keyup={() => deleteClickHandler(
-                                    amendment.amendment_ID, 
-                                    amendment.amendment_name,
-                                    amendment.image_ID,
-                                    amendment.public_ID
-                                )}
-                                class="icon_container"
-                            >
-                                {@html DeleteIcon}
-                            </button>
-                        </td>
-                        <td>
-                            <button 
-                                on:click={() => moreInfoClickHandler(amendment.amendment_ID, i)}
-                                on:keyup={() => moreInfoClickHandler(amendment.amendment_ID, i)}
-                                class="icon_container"
-                            >
-                                {@html MeatballsIcon}
-                            </button>
-                        </td>
+                        <th>
+                            <h5>
+                                amendment name
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                year released
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                electorate/jurisdiction
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                edit
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                delete
+                            </h5>
+                        </th>
+                        <th>
+                            <h5>
+                                more info
+                            </h5>
+                        </th>
                     </tr>
-                {/each}
-            </tbody>
-        </table>
+                    {#each paginatedEndorsedAmendments as amendment, i}
+                        <tr>
+                            <td>
+                                {amendment?.amendment_name}
+                            </td>
+                            <td>
+                                {amendment?.year_released}
+                            </td>
+                            <td>
+                                {#if (amendment.city)}
+                                    {amendment.city}
+                                {/if}
+                                {#if (amendment.county)}
+                                    {amendment.county}
+                                {/if}
+                                {#if (amendment.state)}
+                                    {amendment.state}
+                                {/if}
+                                United States of America
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => editClickHandler(amendment.amendment_ID)}
+                                    on:keyup={() => editClickHandler(amendment.amendment_ID)}
+                                    class="icon_container"
+                                >
+                                    {@html EditIcon}
+                                </button>
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => deleteClickHandler(
+                                        amendment.amendment_ID, 
+                                        amendment.amendment_name,
+                                        amendment.image_ID,
+                                        amendment.public_ID
+                                    )}
+                                    on:keyup={() => deleteClickHandler(
+                                        amendment.amendment_ID, 
+                                        amendment.amendment_name,
+                                        amendment.image_ID,
+                                        amendment.public_ID
+                                    )}
+                                    class="icon_container"
+                                >
+                                    {@html DeleteIcon}
+                                </button>
+                            </td>
+                            <td>
+                                <button 
+                                    on:click={() => moreInfoClickHandler(amendment.amendment_ID, i)}
+                                    on:keyup={() => moreInfoClickHandler(amendment.amendment_ID, i)}
+                                    class="more_info_container"
+                                >
+                                    <MoreInfoButton />
+                                </button>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+        
+        <Pagination 
+            bind:currentPage={endorsedAmendmentsCurrentPage}
+            totalCount={endorsedAmendments.length}
+            pageSize={pageSize}
+        />
     {:else if (activeTab === 1)}
-        nominated candidates
+        nominated amendments
     {/if}
 </div>
 <style>
-    table {
-        border-spacing: 0;
+
+    .frame_table {
         width: 100%;
+        overflow-x: hidden;
+    }
+
+    .table {
+        width: 100%;
+        margin: 0 0 1rem 0;
+        border-spacing: 0;
     }
 
     tbody tr:nth-child(even) {
@@ -382,11 +416,24 @@
 		overflow: visible;
 	}
 
-    .icon_container {
-        max-width: 1.5rem;
+    .more_info_container {
         width: 100%;
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0 auto;
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .icon_container {
+        max-width: 1.5rem;
+        min-width: 1.5rem;
         width: 100%;
+        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -431,6 +478,7 @@
 
         .icon_container {
             max-width: 1.25rem;
+            min-width: 1.25rem;
         }
     }
 
@@ -454,6 +502,16 @@
             padding: 0 0.5rem;
         }
 
+        .frame_table {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .table {
+            width: auto;
+            min-width: 40rem;
+        }
+
         tbody > tr > th {
             padding: 0.25rem;
             font-size: 0.8rem;
@@ -472,6 +530,7 @@
 
         .icon_container {
             max-width: 1rem;
+            min-width: 1rem;
         }
 
     }
