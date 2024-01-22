@@ -551,16 +551,18 @@
             <h3>
                 forthcoming actions
             </h3>
-            <div class="action_cards_container">
-                {#if pendingEndorsedActionsData}
-                    <LoaderAnimation />
-                {:else if getEndorsedActionsDataSuccess}
-                    {#each paginatedActionsForthcoming as endorsedAction, i}
-                        <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                    {/each}
-                {:else if !getEndorsedActionsDataSuccess}
-                    <p>failed to load endorsed forthcoming actions</p>
-                {/if}
+            <div class="action_cards_frame">
+                <div class="action_cards">
+                    {#if pendingEndorsedActionsData}
+                        <LoaderAnimation />
+                    {:else if getEndorsedActionsDataSuccess}
+                        {#each paginatedActionsForthcoming as endorsedAction, i}
+                            <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                        {/each}
+                    {:else if !getEndorsedActionsDataSuccess}
+                        <p>failed to load endorsed forthcoming actions</p>
+                    {/if}
+                </div>
             </div>
             <Pagination 
                 bind:currentPage={actionsForthcomingCurrentPage}
@@ -580,16 +582,18 @@
             <h3>
                 actions history
             </h3>
-            <div class="action_cards_container">
-                {#if pendingEndorsedActionsData}
-                    <LoaderAnimation />
-                {:else if getEndorsedActionsDataSuccess}
-                    {#each paginatedActionsHistory as endorsedAction, i}
-                        <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                    {/each}
-                {:else if !getEndorsedActionsDataSuccess}
-                    <p>failed to load endorsed actions history</p>
-                {/if}
+            <div class="action_cards_frame">
+                <div class="action_cards">
+                    {#if pendingEndorsedActionsData}
+                        <LoaderAnimation />
+                    {:else if getEndorsedActionsDataSuccess}
+                        {#each paginatedActionsHistory as endorsedAction, i}
+                            <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                        {/each}
+                    {:else if !getEndorsedActionsDataSuccess}
+                        <p>failed to load endorsed actions history</p>
+                    {/if}
+                </div>
             </div>
             <Pagination 
                 bind:currentPage={actionsHistoryCurrentPage}
@@ -652,10 +656,9 @@
 	}
 
     .actions_categories_container {
-        list-style: none;
         padding: 0;
-        margin: 0;
         width: 100%;
+        margin: 0;
     }
 
     .forthcoming_actions_container {
@@ -676,7 +679,12 @@
         width: 100%;
     }
 
-    .action_cards_container {
+    .action_cards_frame {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    .action_cards {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;      
@@ -685,11 +693,13 @@
         width: 100%;
     }
 
+    
     .propose_an_action_button_container {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
         width: 100%;
+        padding: 1rem 0 0 0;
     }
 
     @media (max-width: 1140px) {
@@ -718,6 +728,17 @@
         .search_endorsements_by_address_input {
             width: 40rem;
             display: flex;
+        }
+
+        .action_cards_frame {
+            width: 100%;
+            overflow-x: scroll;
+        }
+
+        .action_cards {
+            width: 100%;
+            flex-wrap: nowrap;
+            justify-content: flex-start;
         }
 
     }
