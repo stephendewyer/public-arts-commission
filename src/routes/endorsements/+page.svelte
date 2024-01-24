@@ -214,6 +214,18 @@
 
 		findUserLocation();
 
+	} else if (
+		useCurrentLocationChecked && addressLoadSuccess === null &&
+		(
+			!getEndorsedCandidatesDataSuccess || 
+			!getEndorsedLegislationDataSuccess || 
+			!getEndorsedAmendmentsDataSuccess ||
+			!getEndorsedReferendumsDataSuccess
+		)
+	) {
+
+		pending = true;
+
 	};
 
 	// begin get endorsed candidates data from database

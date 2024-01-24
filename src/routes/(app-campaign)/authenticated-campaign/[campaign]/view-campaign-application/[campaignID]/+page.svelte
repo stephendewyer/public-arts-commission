@@ -303,12 +303,6 @@
         font-weight: 600;
     }
 
-    .edit_button_container {
-        display: flex;
-        justify-content: flex-end;
-        width: 100%;
-    }
-
     tbody > tr > td {
         padding: 1rem;
         font-size: 1.25rem;
