@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import { onMount, onDestroy, afterUpdate } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -168,8 +168,6 @@
 
 	};
 
-	$: console.log("store from page: ", $searchEndorsedAmendmentsStore)
-
 	// if getCurrentPosition is a success, 
 
 	const success = (position: GeoLocationPosition) => {
@@ -201,6 +199,8 @@
 	};
 
 	// if user activates the get current location checkbox AND after fetching data, set pending as true and find user location
+
+	// else if user activates get current location checkbox AND address has not yet loaded and endorsement data has not loaded, set pending as true
 
 	$: if (
 		useCurrentLocationChecked && 

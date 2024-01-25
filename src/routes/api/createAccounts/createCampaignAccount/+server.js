@@ -94,9 +94,9 @@ export async function POST({request}) {
 
   };
 
-  // check to see if campaign name already exist in campaign_information
+  // check to see if campaign name already exist in campaign_applications
 
-  const checkCampaignNameQuery = `SELECT campaign_name FROM campaign_information WHERE campaign_name = '${campaignName}'`;
+  const checkCampaignNameQuery = `SELECT campaign_name FROM campaign_applications WHERE campaign_name = '${campaignName}'`;
 
   const [campaignNameRows, campaignNameFields] = await res.query(checkCampaignNameQuery);
 
@@ -124,7 +124,7 @@ export async function POST({request}) {
     throw error;
   });
 
-  // insert the campaign information in the campaign_information table
+  // insert the campaign information in the campaign_applications table
 
   const insertCampaignUserInformationStatement = `INSERT INTO campaign_users_information (
     user_ID,

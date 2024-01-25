@@ -20,6 +20,8 @@
 
 	let userCampaignApplications: CampaignApplication[] = [];
 
+    $: console.log(userCampaignApplications)
+
     let pendingUserCampaignApplicationsData: boolean = false;
 
     let getUserCampaignApplicationsDataSuccess: boolean | null = null;
