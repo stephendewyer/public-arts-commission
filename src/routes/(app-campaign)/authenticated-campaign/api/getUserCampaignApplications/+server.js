@@ -32,16 +32,14 @@ export const POST = async ({request}) => {
     });
 
     /**
-     * @type {any[]}
+     * @type {CampaignApplication[]}
      */
     let userCampaignApplications = [];
 
-    // select campaign applications and corresponding image rows for the user
+    // load campaign applications for the user
     
     const loadUserCampaignApplicationsStatement = `SELECT * 
         FROM campaign_applications
-        INNER JOIN image_collection
-        ON campaign_applications.image_ID=image_collection.image_ID
         WHERE user_ID = '${userID}'`;
 
     await res.query(loadUserCampaignApplicationsStatement)
@@ -56,12 +54,65 @@ export const POST = async ({request}) => {
 
     });
 
-    res.end();
+    // load all image rows where campaign_ID = userID
 
+    /**
+     * @type {Image[]}
+     */
+    let userImageRows = [];
+
+    const loadImageRowsStatement = `SELECT * 
+        FROM image_collection
+        WHERE campaign_ID = '${userID}'`;
+
+    await res.query(loadImageRowsStatement)
+    .then(([ rows ]) => {
+
+        userImageRows = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
+
+    // for each campaign application, select corresponding image row if any
+    /**
+     * @type {CampaignApplicationWithImageRow[] | CampaignApplication[]}
+     */
+    let campaignApplicationsWithImages = [];
+
+    userCampaignApplications.forEach((campaignApplication, i) => {
+
+        if (campaignApplication.image_ID) {
+
+            userImageRows.filter((imageRow, i) => {
+                if (campaignApplication.image_ID === imageRow.image_ID) {
+                    return (
+                        campaignApplicationsWithImages = [...campaignApplicationsWithImages, {...campaignApplication, ...imageRow}]
+                    );
+                };
+                
+            });
+
+        } else if (!campaignApplication.image_ID) {
+
+            return (
+
+                campaignApplicationsWithImages = [...campaignApplicationsWithImages, {...campaignApplication}]
+
+            );
+
+        };
+        
+    });
+
+    res.end();
 
     return new Response(
 
-        JSON.stringify(userCampaignApplications), {status: 200}
+        JSON.stringify(campaignApplicationsWithImages), {status: 200}
         
     );
 

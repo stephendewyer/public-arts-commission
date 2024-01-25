@@ -68,15 +68,15 @@ export const load = async ({params, locals}) => {
     };
 
     // load the campaign application using campaign application ID
-
-    let campaignApplication;
+    /**
+     * @type {CampaignApplication | any}
+     */
+    let campaignApplication = {};
 
     // select campaign applications and corresponding image rows for the user
     
     const loadUserCampaignApplicationStatement = `SELECT * 
         FROM campaign_applications
-        INNER JOIN image_collection
-        ON campaign_applications.image_ID=image_collection.image_ID
         WHERE campaign_application_ID = '${campaignApplicationID}'`;
 
     await res.query(loadUserCampaignApplicationStatement)
@@ -100,13 +100,54 @@ export const load = async ({params, locals}) => {
 
         throw error;
 
-    });  
+    });
+
+    // if campaign application has no image id, return just the campaign application object as campaignApplicationWithImage
+    // else get image row with corresponding image_ID and combine campaign application with image row as campaignApplicationWithImage
+
+    /**
+     * @type {CampaignApplicationWithImageRow | any}
+     */
+    let campaignApplicationWithImage = {};
+
+    if (campaignApplication.image_ID) {
+        /**
+         * @type {Image[]}
+         */
+        let userImageRow = [];
+
+        const loadImageRowsStatement = `SELECT * 
+            FROM image_collection
+            WHERE image_ID = '${campaignApplication.image_ID}'`;
+
+        await res.query(loadImageRowsStatement)
+        .then(([ rows ]) => {
+
+            userImageRow = JSON.parse(JSON.stringify(rows))[0]
+
+        })
+        .catch(error => {
+
+            throw error;
+
+        });
+
+        campaignApplicationWithImage = {...campaignApplication, ...userImageRow};
+
+    } else if (!campaignApplication.image_ID) {
+
+        campaignApplicationWithImage = {...campaignApplication};
+
+    };
+
+    // load the corresponding image row and add to campaign application object
+    
 
     res.end();
 
     return {
 
-        campaignApplication
+        campaignApplicationWithImage
 
     };
 

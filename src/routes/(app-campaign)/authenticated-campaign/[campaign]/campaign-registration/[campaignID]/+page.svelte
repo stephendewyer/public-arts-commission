@@ -23,9 +23,9 @@
 
     let campaignApplication: CampaignApplicationWithImageRow | any = null;
     
-    if (data.campaignApplication) {
+    if (data.campaignApplicationWithImage) {
 
-        campaignApplication = data.campaignApplication;
+        campaignApplication = data.campaignApplicationWithImage;
 
     };
 
