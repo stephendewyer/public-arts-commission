@@ -55,7 +55,7 @@ const authorization = async ({ event, resolve }) => {
         session?.user?.name === "campaign"
     ) {
 
-        throw redirect(303, "/authenticated-campaign/campaign");
+        throw redirect(303, "/authenticated-campaign/");
 
     };
 

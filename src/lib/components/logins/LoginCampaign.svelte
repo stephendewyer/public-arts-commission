@@ -69,7 +69,7 @@
                 responseItem.success = "Valid email and password.";
                 passwordInputValue = "";
                 emailInputValue = "";
-                goto(`/authenticated-campaign/campaign`);
+                goto(`/authenticated-campaign`);
 
             };
 

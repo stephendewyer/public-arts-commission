@@ -87,60 +87,111 @@ export const PATCH = async ({request}) => {
     // if local image file:
     
     if (imageFile) {
-        // delete the image associated with the action from Cloudinary 
-        try {
 
-            await cloudinary.uploader.destroy(imagePublicID);
+        // delete the image associated with the action from Cloudinary and update the image row if any 
 
-        } catch(error) {
+        if (imageID) {
 
-            console.log(error);
+            try {
 
-            return new Response(JSON.stringify({error: "problem with deleting image from Cloudinary"}), {status: 500});
+                await cloudinary.uploader.destroy(imagePublicID);
+
+            } catch(error) {
+
+                console.log(error);
+
+                return new Response(JSON.stringify({error: "problem with deleting image from Cloudinary"}), {status: 500});
+
+            };
+
+            // upload a new image to cloudinary 
+
+            try {
+
+                const uploadImageResponse = await cloudinary.uploader.upload(image, {});
+
+                uploadedImageURL = uploadImageResponse.secure_url;
+
+                uploadedImagePublicID = uploadImageResponse.public_id;
+
+            } catch (err) {
+
+                console.log(err);
+
+                return new Response(JSON.stringify({error: "problem with the image upload to Cloudinary"}), {status: 500});
+
+            };
+
+            // save the image data in the database
+
+            // insert image URL, campaign_ID and image alt text into image_collection  
+
+            const updateImageStatement = `UPDATE image_collection
+            SET
+                campaign_ID = "${campaignUserID}", 
+                image_URL = "${uploadedImageURL}",
+                alt_text = "${imageAltText}",
+                public_ID = "${uploadedImagePublicID}",
+                timestamp = "${Date.now()}"
+            WHERE image_ID = "${imageID}"`;
+
+            // insert the image_URL and adminID into the image_collection table and get the image_ID
+            await res.query(updateImageStatement)
+            .then(([ rows ]) => {
+                const rowsJSON = JSON.parse(JSON.stringify(rows));
+                imageID = rowsJSON.insertId;
+            })
+            .catch(error => {
+                throw error;
+            });
+
+        } else if (!imageID) {
+
+            // upload image to Cloudinary
+
+            try {
+
+                const uploadImageResponse = await cloudinary.uploader.upload(image, {});
+
+                uploadedImageURL = uploadImageResponse.secure_url;
+
+                uploadedImagePublicID = uploadImageResponse.public_id;
+
+
+            } catch (err) {
+
+                console.log(err);
+
+                return new Response(JSON.stringify({error: "problem with the image upload to Cloudinary"}), {status: 500});
+
+            };
+
+            // create the image row for the added image
+
+            const insertImageStatement = `INSERT INTO image_collection (
+                campaign_ID, 
+                image_URL,
+                alt_text,
+                public_ID
+            ) VALUES (
+                "${campaignUserID}", 
+                "${uploadedImageURL}",
+                "${imageAltText}",
+                "${uploadedImagePublicID}"
+            )`;
+
+            // insert the image_URL and adminID into the image_collection table and get the image_ID
+            await res.query(insertImageStatement)
+            .then(([ rows ]) => {
+                const rowsJSON = JSON.parse(JSON.stringify(rows));
+                imageID = rowsJSON.insertId;
+            })
+            .catch(error => {
+                throw error;
+            });
 
         };
-
-        // upload a new image to cloudinary 
-
-        try {
-
-            const uploadImageResponse = await cloudinary.uploader.upload(image, {});
-
-            uploadedImageURL = uploadImageResponse.secure_url;
-
-            uploadedImagePublicID = uploadImageResponse.public_id;
-
-        } catch (err) {
-
-            console.log(err);
-
-            return new Response(JSON.stringify({error: "problem with the image upload to Cloudinary"}), {status: 500});
-
-        };
-
-        // save the image data in the database
-
-        // insert image URL, campaign_ID and image alt text into image_collection  
-
-        const updateImageStatement = `UPDATE image_collection
-        SET
-            campaign_ID = "${campaignUserID}", 
-            image_URL = "${uploadedImageURL}",
-            alt_text = "${imageAltText}",
-            public_ID = "${uploadedImagePublicID}",
-            timestamp = "${Date.now()}"
-        WHERE image_ID = "${imageID}"`;
-
-        // insert the image_URL and adminID into the image_collection table and get the image_ID
-        await res.query(updateImageStatement)
-        .then(([ rows ]) => {
-            const rowsJSON = JSON.parse(JSON.stringify(rows));
-            imageID = rowsJSON.insertId;
-        })
-        .catch(error => {
-            throw error;
-        });
-
+        
     };
 
     // update the campaign registration information in the campaign_applications table

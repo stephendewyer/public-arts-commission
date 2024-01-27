@@ -42,19 +42,19 @@
         {
             id: "registration",
             name: "registration",
-            path: `/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
+            path: `/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
             completed: campaignApplication.campaign_registered
         },
         {
             id: "questionnaire",
             name: "questionnaire",
-            path: `/authenticated-campaign/campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
+            path: `/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
             completed: campaignApplication.campaign_questionnaire_completed
         },
         {
             id: "submit",
             name: "submit",
-            path: `/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
+            path: `/authenticated-campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
             completed: campaignApplication.campaign_application_submitted
         }
     ];
@@ -126,7 +126,7 @@
                 howArtSeatTableGovernmentValue
             );
             if (responseItem.success) {
-                goto(`/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`);
+                goto(`/authenticated-campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`);
             };
 
             if (responseItem.error) {
@@ -308,13 +308,13 @@
         </SuccessFlashMessage>
     {/if}
     <div class="two_columns">
-        <a href={`/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`} class="cancel_button_container">
+        <a href={`/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`} class="cancel_button_container">
             <CancelButton>
                 campaign registration
             </CancelButton>
         </a>
         {#if (campaignApplication.campaign_questionnaire_completed === 1)}
-            <a href={`/authenticated-campaign/campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`}>
+            <a href={`/authenticated-campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`}>
                 <ActionButton>
                     view and submit
                 </ActionButton>

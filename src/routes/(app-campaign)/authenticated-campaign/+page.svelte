@@ -9,6 +9,7 @@
     import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore.js';
     import { DeleteConfirmedStore } from '$lib/stores/DeleteConfirmedStore.js';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore.js';
+  import EditButton from '$lib/components/buttons/EditButton.svelte';
 
     export let data;
 
@@ -19,8 +20,6 @@
     // begin get user campaign applications
 
 	let userCampaignApplications: CampaignApplication[] = [];
-
-    $: console.log(userCampaignApplications)
 
     let pendingUserCampaignApplicationsData: boolean = false;
 
@@ -202,7 +201,7 @@
         my campaigns
     </h2>
     <div class="add_campaign_button_container">
-        <a href="/authenticated-campaign/campaign/campaign-registration">
+        <a href="/authenticated-campaign/campaign-registration">
             <AddItemButton>
                 campaign
             </AddItemButton>
@@ -266,7 +265,7 @@
                             </td>
                             <td>
                                 {#if (campaignApplication.application_status === "submitted")}
-                                    <a href={`/authenticated-campaign/campaign/view-campaign-application/campaign=${campaignApplication.campaign_application_ID}`}> 
+                                    <a href={`/authenticated-campaign/view-campaign-application/campaign=${campaignApplication.campaign_application_ID}`}> 
                                         <div class="more_info_container">
                                             <MoreInfoButton />
                                         </div>
@@ -275,7 +274,7 @@
                                     campaignApplication.application_status === "started" ||
                                     !campaignApplication.application_status
                                 )}
-                                    <a href={`/authenticated-campaign/campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`}>
+                                    <a href={`/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`}>
                                         <TableActionButton>complete</TableActionButton>
                                     </a>
                                 {/if}
@@ -393,10 +392,9 @@
             </table>
         </div>
         <div class="edit_button">
-            <span>edit contact information</span>
-            <div class="icon_container">
-                {@html EditIcon}
-            </div>
+            <a href="/authenticated-campaign/edit-campaign-user-contact-information">
+                <EditButton>edit contact information</EditButton>
+            </a>
         </div>
     {:else if !getCampaignUserInformationDataSuccess}
         failed to load campaign user information

@@ -256,7 +256,7 @@
             </li>
         {/if}
     </ol>
-    <a href="/authenticated-campaign/campaign">
+    <a href="/authenticated-campaign">
         <ActionButton>
             return to my campaigns
         </ActionButton>

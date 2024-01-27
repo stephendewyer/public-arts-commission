@@ -16,6 +16,19 @@ declare global {
 		name: string;
 	}
 
+	interface userID {
+		user_ID: number;
+	}
+
+	interface CampaignUser {
+		date: string;
+		email: string;
+		password: string;
+		reset_token: null | string;
+		reset_token_expiration: null | string;
+		user_ID: number;
+	};
+
 	interface ResponseObj {
         success: string;
         error: string;
@@ -622,10 +635,8 @@ declare global {
 	}
 
 	interface CoSponsorInputValue {
-
         co_sponsor: string;
         isValid: boolean;
-
     };
 
 	interface CityObject {

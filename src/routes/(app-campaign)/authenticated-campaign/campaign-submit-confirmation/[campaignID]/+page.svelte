@@ -29,7 +29,7 @@
         If you have any questions, please contact public arts commission Founder stephen dewyer at sdewyer@publicartscommission.org.
     </p>
     <h3>Your application submitted on {campaignApplicationSubmissionDate} has been received.</h3>
-    <a href={`/authenticated-campaign/campaign`}>
+    <a href={`/authenticated-campaign`}>
         <ActionButton>return to my campaigns</ActionButton>
     </a>
 </div>

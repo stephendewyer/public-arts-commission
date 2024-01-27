@@ -21,7 +21,7 @@
 		logoURL = "/authenticated-administrator/admin";
 	} else if (user?.name === "campaign") {
 		callbackURL = "/login-campaign";
-		logoURL = "/authenticated-campaign/campaign";
+		logoURL = "/authenticated-campaign";
 	} else {
 		callbackURL = "/";
 		logoURL = "/";
@@ -96,7 +96,7 @@
 				aria-current={
 					(
 						$page.url.pathname === '/' || 
-						$page.url.pathname === "/authenticated-campaign/campaign" ||
+						$page.url.pathname === "/authenticated-campaign" ||
 						$page.url.pathname === "/authenticated-administrator/admin" ||
 						$page.url.pathname === "/authenticated-voter/voter"
 					)

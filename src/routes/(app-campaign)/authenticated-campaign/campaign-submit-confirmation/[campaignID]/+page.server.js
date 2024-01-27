@@ -14,16 +14,16 @@ export const load = async ({params, locals}) => {
         WHERE campaign_application_ID = '${campaignApplicationID}'`;
 
     /**
-     * @type {number | undefined}
+     * @type {userID[]}
      */
-    let userCampaignApplicationID;
+    let userCampaignApplicationID = [];
 
     let res = await mysqlConnection();
 
     await res.query(loadCampaignApplicationUserIDStatement)
     .then(([ rows ]) => {
 
-        userCampaignApplicationID = JSON.parse(JSON.stringify(rows))[0];
+        userCampaignApplicationID = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
@@ -39,13 +39,15 @@ export const load = async ({params, locals}) => {
     const loadSessionUserCampaignID = `SELECT user_ID
         FROM users_campaigns
         WHERE email = '${session?.user?.email}'`;
-
-    let sessionUserCampaignID;
+    /**
+     * @type {userID[]}
+     */
+    let sessionUserCampaignID = [];
 
     await res.query(loadSessionUserCampaignID)
     .then(([rows]) => {
 
-        sessionUserCampaignID = JSON.parse(JSON.stringify(rows))[0];
+        sessionUserCampaignID = JSON.parse(JSON.stringify(rows));
 
     })
     .catch(error => {
@@ -57,9 +59,9 @@ export const load = async ({params, locals}) => {
     // check if userID matches session user ID
     // if session user ID does not match campaign application user ID, return invalid user
 
-    if (sessionUserCampaignID !== userCampaignApplicationID) {
+    if (sessionUserCampaignID[0]?.user_ID !== userCampaignApplicationID[0]?.user_ID) {
 
-        error(422, {
+        throw error(422, {
 
             message: "invalid user!"
 
