@@ -91,9 +91,7 @@
 </script>
 
 <div id="campaign">
-    <h3>
-        apply for an endorsement
-    </h3>
+    <h4 style="text-align: center; line-height: 1.4;">apply and manage endorsement applications</h4>
     <form 
         on:submit|preventDefault={campaignLoginHandler} 
         class="login_form"

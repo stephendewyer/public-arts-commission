@@ -92,9 +92,7 @@
 </script>
 
 <div id="voter">
-    <h3>
-        organize with your community
-    </h3>
+    <h4 style="text-align: center; line-height: 1.4;">network, organize, nominate and connect</h4>
     <form 
         on:submit|preventDefault={voterLoginHandler}
         class="login_form"

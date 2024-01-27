@@ -251,7 +251,17 @@
         <h1>
             create a free campaign account
         </h1>
-        <h4 style="text-align: center; line-height: 1.4;">Apply and manage applications for endorsement by public arts commission using the campaign portal!</h4>
+        <h4 class="account_info">
+            create a free campaign account to: 
+            <ul>
+                <li>
+                    apply and manage applications for endorsement by public arts commission
+                </li>
+                <li>
+                    endorsed campaigns offered subscriptions to a network of public arts commission voters in their electorate (forthcoming)
+                </li>
+            </ul>
+        </h4>  
         <h3>*indicates required</h3>
         <form 
             on:submit|preventDefault={createAccountHandler}
@@ -544,6 +554,12 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
+    }
+
+    .account_info {
+        line-height: 1.4; 
+        max-width: 28rem; 
+        margin: 0 auto;
     }
 
     .create_account_container {

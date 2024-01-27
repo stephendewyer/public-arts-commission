@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import MinneapolisSculptureGarden from '$lib/images/backgrounds/Minneapolis_Sculpture_Garden_July_2023.jpg';
     import Mailbox from '$lib/images/mailbox/mailbox.svg';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
@@ -133,7 +134,11 @@
     };
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - contact</title>
+	<meta name="description" content="how to contact public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div 
 		class="contact_container"

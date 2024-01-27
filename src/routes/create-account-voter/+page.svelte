@@ -142,6 +142,25 @@
         <h1>
             create a free voter account
         </h1>
+        <h4 class="account_info">create a free voter account to: 
+            <ul>
+                <li>
+                    network with other voters
+                </li>
+                <li>
+                    organize actions and campaigns
+                </li>
+                <li>
+                    connect with actions and campaigns in network
+                </li>
+                <li>
+                    track elections
+                </li>
+                <li>
+                    manage nominations for endorsement by public arts commission
+                </li>
+            </ul>
+        </h4>
         <form 
             on:submit|preventDefault={createAccountHandler}
             class="create_account_form"
@@ -286,6 +305,12 @@
 		flex-direction: column;
 		align-items: center;
 	}
+
+    .account_info {
+        line-height: 1.4; 
+        max-width: 28rem; 
+        margin: 0 auto;
+    }
 
     .create_account_form {
         display: flex;
