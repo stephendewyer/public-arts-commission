@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import type { User } from '@auth/core/types.js';
@@ -487,7 +488,11 @@
     };
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - actions</title>
+	<meta name="description" content="forthcoming and past actions endorsed by public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section class="actions">
     <form 
         class="search_endorsements_by_address_form"

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import ImageFileInput from "$lib/components/inputs/ImageFileInput.svelte";
     import TextInput from "$lib/components/inputs/TextInput.svelte";
     import ActionButton from "$lib/components/buttons/ActionButton.svelte";
@@ -20,7 +21,6 @@
     import DateInput from "$lib/components/inputs/DateInput.svelte";
     import { goto } from '$app/navigation';
     import type { E164Number } from 'svelte-tel-input/types';
-
 
     export let data;
 
@@ -431,6 +431,11 @@
     };
 
 </script>
+<svelte:head>
+	<title>public arts commission - create an amendment endorsement</title>
+	<meta name="description" content="endorse an amendment by public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="add_endorsement_container">
     <h1>add amendment endorsement</h1>
     <form 

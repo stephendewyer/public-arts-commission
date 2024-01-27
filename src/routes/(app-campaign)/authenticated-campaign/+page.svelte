@@ -1,7 +1,7 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import { onMount } from 'svelte';
     import MoreInfoButton from '$lib/components/buttons/MoreInfoButton.svelte';
-    import EditIcon from '$lib/images/icons/edit_icon.svg?raw';
     import DeleteIcon from '$lib/images/icons/delete_icon.svg?raw';
     import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
@@ -9,7 +9,7 @@
     import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore.js';
     import { DeleteConfirmedStore } from '$lib/stores/DeleteConfirmedStore.js';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore.js';
-  import EditButton from '$lib/components/buttons/EditButton.svelte';
+    import EditButton from '$lib/components/buttons/EditButton.svelte';
 
     export let data;
 
@@ -20,6 +20,10 @@
     // begin get user campaign applications
 
 	let userCampaignApplications: CampaignApplication[] = [];
+
+    // make userCampaignApplications reactive to rerender applications after change
+
+    $: userCampaignApplications;
 
     let pendingUserCampaignApplicationsData: boolean = false;
 
@@ -192,7 +196,11 @@
     };
     
 </script>
-
+<svelte:head>
+	<title>public arts commission - manage campaign applications for endorsement</title>
+	<meta name="description" content="manage campaign applications for endorsement" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="tables_container">
     <h1 class="welcome_message">
         welcome, {campaignUserInformation?.name_first} {campaignUserInformation?.name_last}!

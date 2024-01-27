@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import CampaignApplicationProgressBar from '$lib/components/campaignApplicationProgressBar/CampaignProgressBar.svelte';
     import ImageFileInput from '$lib/components/inputs/ImageFileInput.svelte';
     import TextInput from '$lib/components/inputs/TextInput.svelte';
@@ -386,7 +387,11 @@
     ];
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - edit campaign registration</title>
+	<meta name="description" content="edit campaign registration" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="campaign_registration_container">
     <h2>
         campaign endorsement application

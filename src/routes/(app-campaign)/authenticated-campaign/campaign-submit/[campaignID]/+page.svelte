@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import CampaignApplicationProgressBar from '$lib/components/campaignApplicationProgressBar/CampaignProgressBar.svelte';
     import EditButton from '$lib/components/buttons/EditButton.svelte';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
@@ -144,7 +145,11 @@
     };
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - review and submit campaign application for endorsement</title>
+	<meta name="description" content="review and submit campaign application for endorsement" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="campaign_questionnaire_container">
     <h2>
         campaign endorsement application

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import ImageFileInput from "$lib/components/inputs/ImageFileInput.svelte";
     import TextInput from "$lib/components/inputs/TextInput.svelte";
     import ActionButton from "$lib/components/buttons/ActionButton.svelte";
@@ -305,6 +306,11 @@
     };
 
 </script>
+<svelte:head>
+	<title>public arts commission - edit an action endorsement</title>
+	<meta name="description" content="edit an action endorsement by public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="add_candidate_endorsement_container">
     <h1>edit action endorsement</h1>
     <form 

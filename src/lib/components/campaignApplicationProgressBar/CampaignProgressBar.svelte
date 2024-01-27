@@ -1,7 +1,29 @@
 <script lang="ts">
     import CheckMark from '$lib/images/icons/checkmark.svg?raw';
+    import { page } from '$app/stores';
 
     export let nav_paths: NavPath[];
+
+    let activePage: number = 0;
+
+    if ($page.url.pathname.split("/")[2] === "campaign-questionnaire") {
+
+        activePage = 2;
+
+    } else if ($page.url.pathname.split("/")[2] === "campaign-registration") {
+
+        activePage = 1;
+
+    } else if ($page.url.pathname.split("/")[2] === "campaign-submit") {
+
+        activePage = 3;
+
+    } else {
+
+        activePage = 0;
+
+    };
+
 
 </script>
 <ul 
@@ -37,7 +59,7 @@
                 >
                     <div 
                         id={navTab.id}
-                        class="circle_checkbox"
+                        class={activePage === (i + 1) ? "circle_checkbox_active" : "circle_checkbox"}
                         style="background-color: gray;"
                     >
                         {#if (navTab.completed)}
@@ -54,7 +76,7 @@
                 >
                     <div 
                         id={navTab.id}
-                        class="circle_checkbox"
+                        class={activePage === (i + 1) ? "circle_checkbox_active" : "circle_checkbox"}
                         style={navTab.completed ? "background-color: #D1E9D1;" : "background-color: #FDF6EF"}
                     >
                         {#if (navTab.completed)}
@@ -96,17 +118,30 @@
         height: 1.75rem;
         border-radius: 50%;
         background-color: #FDF6EF;
+        border: 1px #4C4239 solid;
+        z-index: 1;
+    }
+
+    .circle_checkbox_active {
+        position: relative;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 50%;
+        background-color: #FDF6EF;
         border: 2px #4C4239 solid;
         z-index: 1;
     }
 
     .checkmark {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: 0.125rem;
+        position: relative;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0.25rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     #progress_nav_container:after {
@@ -129,6 +164,7 @@
         left: 50%;
         /* move left by 50% of own width */
         transform: translateX(-50%);
+        font-size: 1.2rem;
     }
 
     #questionnaire::after {
@@ -140,6 +176,7 @@
         left: 50%;
         /* move left by 50% of own width */
         transform: translateX(-50%);
+        font-size: 1.2rem;
     }
 
     #submit::after {
@@ -151,6 +188,7 @@
         left: 50%;
         /* move left by 50% of own width */
         transform: translateX(-50%);
+        font-size: 1.2rem;
     }
 
     @media (max-width: 1140px) {
@@ -176,14 +214,9 @@
             font-size: 0.8rem;
         }
 
-        #submit::after {
+         #submit::after {
             font-size: 0.8rem;
-        }
-
-        .checkmark {
-            margin: 0.2rem;
-        }
-  
+        }  
 
     }
 

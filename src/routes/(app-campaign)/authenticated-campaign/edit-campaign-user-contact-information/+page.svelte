@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import NumberInput from '$lib/components/inputs/NumberInput.svelte';
@@ -173,6 +174,11 @@
         pending = false;
     };
 </script>
+<svelte:head>
+	<title>public arts commission - edit contact information</title>
+	<meta name="description" content="edit contact information" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="campaign_user_information_container">
     <h1>
         {userCampaignInformation.name_first} {userCampaignInformation.name_last}'s information

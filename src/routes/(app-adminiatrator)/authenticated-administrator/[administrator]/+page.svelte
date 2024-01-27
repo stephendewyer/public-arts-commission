@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import FilterToggleButton from '$lib/components/buttons/FilterToggleButton.svelte';
     import { v4 as uuidv4 } from 'uuid';
     import Tabs from '$lib/components/tabPanels/Tabs.svelte';
@@ -114,7 +115,11 @@
     };
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - {username} administrator</title>
+	<meta name="description" content="manage endorsements and nominations" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 {#if (username)}
     <h1>welcome, {username}!</h1>
 {/if}

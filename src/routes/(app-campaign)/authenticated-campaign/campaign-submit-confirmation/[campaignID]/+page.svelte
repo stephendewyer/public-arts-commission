@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
     export let data;
 
@@ -15,7 +16,11 @@
     $: campaignApplicationSubmissionDate = new Date(campaignApplication.date_submitted).toUTCString();
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - campaign application receipt</title>
+	<meta name="description" content="confirming receipt of campaign application for endorsement by public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="campaign_questionnaire_container">
     <h2>
         campaign endorsement application

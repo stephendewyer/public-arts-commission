@@ -16,6 +16,7 @@
 	import { goto } from '$app/navigation';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
     import States from '$lib/data/states.titlecase.json';
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
 
     let campaignNameInputValue: string = "";
     let electorateInputValue: string = "";
@@ -234,6 +235,11 @@
     };
 
 </script>
+<svelte:head>
+	<title>public arts commission - create a free campaign account</title>
+	<meta name="description" content="create a campaign account to apply and manage applications for endorsement by public arts commission using the campaign portal!" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div 
     class="create_account_container"
     style="background-image: url({createAccountBackground});"
@@ -245,6 +251,7 @@
         <h1>
             create a free campaign account
         </h1>
+        <h4 style="text-align: center; line-height: 1.4;">Apply and manage applications for endorsement by public arts commission using the campaign portal!</h4>
         <h3>*indicates required</h3>
         <form 
             on:submit|preventDefault={createAccountHandler}

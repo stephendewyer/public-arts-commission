@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import CampaignApplicationProgressBar from '$lib/components/campaignApplicationProgressBar/CampaignProgressBar.svelte';
     import AnimatedCheckbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import TextArea from '$lib/components/inputs/TextArea.svelte';
@@ -224,7 +225,11 @@
     };
 
 </script>
-
+<svelte:head>
+	<title>public arts commission - campaign questionnaire</title>
+	<meta name="description" content="edit and submit campaign questionnaire" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="campaign_questionnaire_container">
     <h2>
         campaign endorsement application
@@ -389,6 +394,12 @@
 
         li {
             font-size: 1rem;
+        }
+
+        .campaign_questionnaire_container {
+            width: auto;
+            padding: 0 2rem;
+            margin: 0;
         }
 
         .two_columns_checkbox {
