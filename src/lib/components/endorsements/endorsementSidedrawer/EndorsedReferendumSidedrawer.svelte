@@ -6,9 +6,15 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
-    let URLPathName = $page.url.pathname;
-
     let endorsedReferendumSelected: ReferendumWithImage | null = null;
+
+    let URLPathName: string;
+
+    $: if (endorsedReferendumSelected) {
+
+        URLPathName = $page.url.pathname;
+
+    };    
 
     const unsubscribeEndorsedReferendumSelectedStore = EndorsedReferendumSelectedStore.subscribe(value => {
 		endorsedReferendumSelected = value;

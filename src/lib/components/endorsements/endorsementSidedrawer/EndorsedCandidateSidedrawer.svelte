@@ -6,9 +6,15 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
-    let URLPathName = $page.url.pathname;
-
     let endorsedCandidateData: CandidateWithImage | null = null;
+
+    let URLPathName: string;
+
+    $: if (endorsedCandidateData) {
+
+        URLPathName = $page.url.pathname;
+
+    };    
 
     const unsubscribeEndorsedCandidateSelectedStore = EndorsedCandidateSelectedStore.subscribe(value => {
 		endorsedCandidateData = value;

@@ -6,9 +6,15 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
-    let URLPathName = $page.url.pathname;
-
     let endorsedAmendmentData: AmendmentWithSponsorsAndImage | null = null;
+
+    let URLPathName: string;
+
+    $: if (endorsedAmendmentData) {
+
+        URLPathName = $page.url.pathname;
+
+    };    
 
     const unsubscribeTeamMemberSelectedStore = EndorsedAmendmentSelectedStore.subscribe(value => {
 		endorsedAmendmentData =value;
@@ -100,7 +106,6 @@
     };
 
     $: if (endorsedAmendmentData === null) {
-
         amendmentStatus = [];
         sponsorsHouse = [];
         sponsorsSenate = [];

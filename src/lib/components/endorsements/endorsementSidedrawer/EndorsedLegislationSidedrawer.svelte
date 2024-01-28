@@ -6,11 +6,15 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
-    let URLPathName = $page.url.pathname;
-
     let endorsedLegislationData: LegislationWithSponsorsAndImage | null = null;
 
-    $: endorsedLegislationData;
+    let URLPathName: string;
+
+    $: if (endorsedLegislationData) {
+
+        URLPathName = $page.url.pathname;
+
+    };    
 
     // $: console.log(endorsedLegislationData)
 
