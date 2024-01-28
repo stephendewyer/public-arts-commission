@@ -206,7 +206,7 @@
 
 		const addressSlug = searchValue.replace(/ /g,"_");
 
-		goto(`/endorsements?current_address_checked=${useCurrentLocationChecked}?${addressSlug}`);
+		goto(`/endorsements?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`);
 
 	};
 

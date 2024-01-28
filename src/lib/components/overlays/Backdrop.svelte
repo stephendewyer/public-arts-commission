@@ -13,7 +13,8 @@
     import { EndorsedCandidateSelectedStore } from '$lib/stores/EndorsedCandidateSelectedStore';
     import { EndorsedLegislationSelectedStore } from '$lib/stores/EndorsedLegislationSelectedStore';
     import { EndorsedReferendumSelectedStore } from '$lib/stores/EndorsedReferendumSelectedStore';
-
+    import { page } from '$app/stores';
+ 
     export let openMobileNav: boolean = false;
 
     let openTeamMember: boolean = false;
@@ -34,7 +35,10 @@
 
     let selectedTeamMemberId: number | null = null;
 
+    let URLPathName = $page.url.pathname;
+
     const backdropClickedHandler = () => {
+        
         openMobileNav = false;
         ModalOpenStore.update((value) => value = false);
         TeamMemberSidedrawerOpenStore.update((value) => value = false);
@@ -106,12 +110,14 @@
 
 </script>
 
-<div 
-    class="backdrop"
-    on:click={() => backdropClickedHandler()} 
-    on:keydown={() => backdropClickedHandler()}
-    aria-hidden={!open}
-/>
+<a href={URLPathName} >
+    <div 
+        class="backdrop"
+        on:click={() => backdropClickedHandler()} 
+        on:keydown={() => backdropClickedHandler()}
+        aria-hidden={!open}
+    />
+</a>
 
 <style>
     .backdrop {

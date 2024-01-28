@@ -528,14 +528,32 @@
 		getEndorsedAmendmentsData();
 
         if ($page.url.search !== "") {
-            searchQueries = $page.url.search.split("?");
-            console.log(searchQueries);
-            if (searchQueries[1] === "current_address_checked=true") {
+
+			const searchParams = new URLSearchParams($page.url.search);
+
+			let searchAddress: string | null = null;
+			
+            if (searchParams.get("current_address_checked") === "true") {
+
                 useCurrentLocationChecked = true;
-            } else if (searchQueries[1] !== "current_address_checked=true") {
-                searchByStreetAddressInputValue = searchQueries[2].replace(/_/g, ' ');
+
+            } else if (
+				searchParams.get("current_address_checked") === "false" && 
+				searchParams.get("address")
+			) {
+
+				searchAddress = searchParams.get("address");
+
+				if (searchAddress !== null) {
+
+					searchByStreetAddressInputValue = searchAddress.replace(/_/g, ' ');
+
+				};
+
             };
+
         };
+
     });
 	
 	// handle changes to search endorsements by address input

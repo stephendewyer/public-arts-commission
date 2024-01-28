@@ -4,6 +4,9 @@
     import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
+    import { page } from '$app/stores';
+
+    let URLPathName = $page.url.pathname;
 
     let endorsedReferendumSelected: ReferendumWithImage | null = null;
 
@@ -74,13 +77,15 @@
     aria-hidden={ (endorsedReferendumSidedrawerOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
-        <button 
-            class="close_button"
-            on:click={() => closeClickHandler()}
-            on:keyup={() => closeClickHandler()}
-        >
-            {@html CloseIcon}
-        </button>
+        <a href={URLPathName}>
+            <button 
+                class="close_button"
+                on:click={() => closeClickHandler()}
+                on:keyup={() => closeClickHandler()}
+            >
+                {@html CloseIcon}
+            </button>
+        </a>
     </div>
     <div>
         <picture>
