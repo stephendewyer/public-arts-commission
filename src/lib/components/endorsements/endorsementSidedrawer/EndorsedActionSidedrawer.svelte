@@ -8,6 +8,7 @@
 
     let URLPathName: string = $page.url.pathname;
 
+    console.log(URLPathName)
     let endorsedActionData: ActionWithImage | null = null;
 
     const unsubscribeEndorsedActionSelectedStore = EndorsedActionSelectedStore.subscribe(value => {
