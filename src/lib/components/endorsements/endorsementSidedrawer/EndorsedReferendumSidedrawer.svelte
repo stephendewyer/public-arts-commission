@@ -1,12 +1,13 @@
 <script lang="ts">
     import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
     import { EndorsedReferendumSelectedStore } from '$lib/stores/EndorsedReferendumSelectedStore';
-    import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
     let endorsedReferendumSelected: ReferendumWithImage | null = null;
+
+    $: endorsedReferendumSelected = $EndorsedReferendumSelectedStore;
 
     let URLPathName: string;
 
@@ -14,31 +15,17 @@
 
         URLPathName = $page.url.pathname;
 
-    };    
-
-    const unsubscribeEndorsedReferendumSelectedStore = EndorsedReferendumSelectedStore.subscribe(value => {
-		endorsedReferendumSelected = value;
-    });
-
-    // set the value for the sidedrawer open value from store
+    };
 
     let endorsedReferendumSidedrawerOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
-
-	const unsubscribeEndorsedReferendumOpenStore = EndorsedReferendumOpenStore.subscribe((value) => {
-		endorsedReferendumSidedrawerOpen = value;
-	});
-
-    onDestroy(() => {
-        unsubscribeEndorsedReferendumSelectedStore();
-        unsubscribeEndorsedReferendumOpenStore();
-    });
+    $: endorsedReferendumSidedrawerOpen = $EndorsedReferendumOpenStore;
 
     const closeClickHandler = () => {
-        endorsedReferendumSidedrawerOpen = false;
-        EndorsedReferendumOpenStore.update((value) => value = endorsedReferendumSidedrawerOpen);
-        EndorsedReferendumSelectedStore.update((value) => value = null);
+
+        $EndorsedReferendumOpenStore = false;
+        $EndorsedReferendumSelectedStore = null;
+
     };
 
     let rawElectionDate: Date;

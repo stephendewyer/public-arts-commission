@@ -1,7 +1,5 @@
 <script lang="ts">
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
-    import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
-    import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     
     export let endorsedCandidateData: CandidateWithImage;
 
@@ -96,13 +94,6 @@
 
     };
 
-    const cardSelectedHandler = () => {
-
-        EndorsedCandidateSelectedStore.update((value) => value = endorsedCandidateData);
-        EndorsedCandidateOpenStore.update((value) => value = true);
-
-    };
-
 </script>
 <div 
     tabindex={endorsedCandidateData.campaign_ID}
@@ -114,8 +105,6 @@
     on:mouseover={() => cardHoverHandler()}
     on:mouseleave={() => cardExitHandler()}
     on:mouseout={() => cardExitHandler()}
-    on:click={() => cardSelectedHandler()}
-    on:keyup={() => cardSelectedHandler()}
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     <div class="image_container">

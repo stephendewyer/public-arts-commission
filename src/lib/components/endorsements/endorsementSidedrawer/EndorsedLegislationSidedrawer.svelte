@@ -1,12 +1,13 @@
 <script lang="ts">
     import { EndorsedLegislationSelectedStore } from '$lib/stores/EndorsedLegislationSelectedStore';
     import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
-    import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
     let endorsedLegislationData: LegislationWithSponsorsAndImage | null = null;
+
+    $: endorsedLegislationData = $EndorsedLegislationSelectedStore;
 
     let URLPathName: string;
 
@@ -14,9 +15,7 @@
 
         URLPathName = $page.url.pathname;
 
-    };    
-
-    // $: console.log(endorsedLegislationData)
+    }; 
 
     let sponsorsHouse: SponsorHouse[] = [];
     let sponsorsSenate: SponsorSenate[]  = [];
@@ -28,31 +27,15 @@
     let coSponsorsHouseNames: string[] = [];
     let coSponsorsSenateNames: string[] = [];
 
-    // $: console.log(endorsedLegislationData)
-
-    const unsubscribeEndorsedLegislationSelectedStore = EndorsedLegislationSelectedStore.subscribe(value => {
-		endorsedLegislationData = value;
-    });
-
-    // set the value for the sidedrawer open value from store
-
     let endorsedLegislationOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
-
-	const unsubscribeEndorsedLegislationOpenStore = EndorsedLegislationOpenStore.subscribe((value) => {
-		endorsedLegislationOpen = value;
-	});
-
-    onDestroy(() => {
-        unsubscribeEndorsedLegislationSelectedStore();
-        unsubscribeEndorsedLegislationOpenStore();
-    });
+    $: endorsedLegislationOpen = $EndorsedLegislationOpenStore;
 
     const closeClickHandler = () => {
-        endorsedLegislationOpen = false;
-        EndorsedLegislationOpenStore.update((value) => value = endorsedLegislationOpen);
-        EndorsedLegislationSelectedStore.update((value) => value = null);
+
+        $EndorsedLegislationOpenStore = false;
+        $EndorsedLegislationSelectedStore = null;
+
     };
 
     let legislationStatus: string[] = [];

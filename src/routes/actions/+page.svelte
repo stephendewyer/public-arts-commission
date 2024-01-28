@@ -14,10 +14,15 @@
     import States from '$lib/data/states.titlecase.json';
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import Pagination from '$lib/components/pagination/Pagination.svelte';
+    import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
+    import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
+    import { page } from '$app/stores';
 
     export let data;
 
     $: data;
+
+	let URLPathName: string = $page.url.pathname;
 
     // once user clicks "use my current location" checkbox, 
 
@@ -92,6 +97,27 @@
         getEndorsedActionsData();
 
     });
+
+    let searchParams: URLSearchParams;
+	
+	$: searchParams = new URLSearchParams($page.url.search);
+
+    $: if (searchParams.get("action_ID") !== null) {
+
+        const actionID: string | null = searchParams.get("action_ID");
+
+        endorsedActions.filter((action, i) => {
+
+            if (action.action_ID.toString() === actionID) {
+
+                $EndorsedActionSelectedStore = action;
+                $EndorsedActionOpenStore = true;
+
+            };
+
+        });
+
+    };
 
     const currentDate = new Date();
 
@@ -562,7 +588,9 @@
                         <LoaderAnimation />
                     {:else if getEndorsedActionsDataSuccess}
                         {#each paginatedActionsForthcoming as endorsedAction, i}
-                            <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                            <a href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}> 
+                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                            </a>
                         {/each}
                     {:else if !getEndorsedActionsDataSuccess}
                         <p>failed to load endorsed forthcoming actions</p>
@@ -593,7 +621,9 @@
                         <LoaderAnimation />
                     {:else if getEndorsedActionsDataSuccess}
                         {#each paginatedActionsHistory as endorsedAction, i}
-                            <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                            <a href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}> 
+                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                            </a>
                         {/each}
                     {:else if !getEndorsedActionsDataSuccess}
                         <p>failed to load endorsed actions history</p>

@@ -1,7 +1,5 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
-    import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
-    import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
 
     export let endorsedActionData: ActionWithImage;
 
@@ -27,13 +25,6 @@
 
     };
 
-    const cardSelectedHandler = () => {
-
-        EndorsedActionSelectedStore.update((value) => value = endorsedActionData);
-        EndorsedActionOpenStore.update((value) => value = true);
-        
-    };
-
 </script>
 
 <div 
@@ -46,8 +37,6 @@
     on:mouseover={() => cardHoverHandler()}
     on:mouseleave={() => cardExitHandler()}
     on:mouseout={() => cardExitHandler()}
-    on:click={() => cardSelectedHandler()}
-    on:keyup={() => cardSelectedHandler()}
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     

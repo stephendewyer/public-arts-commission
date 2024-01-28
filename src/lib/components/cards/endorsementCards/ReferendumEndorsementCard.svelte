@@ -1,7 +1,5 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
-    import { EndorsedReferendumSelectedStore } from '$lib/stores/EndorsedReferendumSelectedStore';
-    import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
 
     export let endorsedReferendumData: ReferendumWithImage;
 
@@ -52,13 +50,6 @@
         cardHovered = false;
 
     };
-
-    const cardSelectedHandler = () => {
-
-        EndorsedReferendumSelectedStore.update((value) => value = endorsedReferendumData);
-        EndorsedReferendumOpenStore.update((value) => value = true);
-        
-    };
     
 </script>
 <div 
@@ -71,8 +62,6 @@
     on:mouseover={() => cardHoverHandler()}
     on:mouseleave={() => cardExitHandler()}
     on:mouseout={() => cardExitHandler()}
-    on:click={() => cardSelectedHandler()}
-    on:keyup={() => cardSelectedHandler()}
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     <div class="image_container">

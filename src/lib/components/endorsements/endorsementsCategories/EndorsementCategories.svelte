@@ -7,8 +7,11 @@
     import type { User } from '@auth/core/types.js';
     import Pagination from '$lib/components/pagination/Pagination.svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+    import { page } from '$app/stores';
 
     export let categories_data: any;
+
+    let URLPathName: string = $page.url.pathname;
 
     $: categories_data;
 
@@ -87,7 +90,7 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedCandidatesDataSuccess}
                     {#each paginatedEndorsedCandidates as candidate, i}
-                        <a href={`/endorsements?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}> 
+                        <a href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}> 
                             <EndorsedCandidateCard endorsedCandidateData={candidate}/>
                         </a>
                     {/each}
@@ -120,7 +123,7 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedReferendumsDataSuccess}
                     {#each paginatedEndorsedReferendums as referendum, i}
-                        <a href={`/endorsements?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}> 
+                        <a href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}> 
                             <EndorsedReferendumCard endorsedReferendumData={referendum} />
                         </a>
                     {/each}
@@ -153,7 +156,7 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedLegislationDataSuccess}
                     {#each paginatedEndorsedLegislation as legislation, i}
-                        <a href={`/endorsements?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}> 
+                        <a href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}> 
                             <EndorsedLegislationCard endorsedLegislationData={legislation} />
                         </a>
                     {/each}
@@ -186,7 +189,8 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedAmendmentsDataSuccess}
                     {#each paginatedEndorsedAmendments as amendment, i}
-                        <a href={`/endorsements?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}>
+                        <a 
+                            href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}>
                             <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
                          </a>
                     {/each}

@@ -22,7 +22,15 @@
 	import { createEndorsedAmendmentsSearchStore, searchEndorsedAmendmentsHandler } from '$lib/stores/EndorsedAmendmentsSearchStore.js';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
 	import States from '$lib/data/states.titlecase.json';
-	
+	import { EndorsedAmendmentSelectedStore } from '$lib/stores/EndorsedAmendmentSelectedStore';
+	import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
+	import { EndorsedLegislationSelectedStore } from '$lib/stores/EndorsedLegislationSelectedStore';
+	import { EndorsedReferendumSelectedStore } from '$lib/stores/EndorsedReferendumSelectedStore';
+    import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
+    import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
+    import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
+    import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
+
 	export let data;
 
 	$: data;
@@ -52,10 +60,6 @@
 	let activeEndorsementsTab: number;
 
 	$: activeEndorsementsTab = 0;
-
-    // get string from url of whether get current location checkbox checked and address
-
-    let searchQueries: string[];
 
 	// set the latitude and longitude with user's position.coords
 
@@ -520,6 +524,10 @@
 
 	// use onMount to get data from params after page is prerendered and to get data from database for endorsed candidates, legislation, amendments and referendums
 
+	let searchParams: URLSearchParams;
+	
+	$: searchParams = new URLSearchParams($page.url.search);
+
     onMount(() => {
 		
 		getEndorsedReferendums();
@@ -528,8 +536,6 @@
 		getEndorsedAmendmentsData();
 
         if ($page.url.search !== "") {
-
-			const searchParams = new URLSearchParams($page.url.search);
 
 			let searchAddress: string | null = null;
 			
@@ -555,6 +561,70 @@
         };
 
     });
+
+	// handle opening sidedrawer after user selected card
+
+	$: if (searchParams.get("candidate_ID") !== null) {
+
+		const candidateID: string | null = searchParams.get("candidate_ID");
+
+		endorsedCandidates.filter((candidate, i) => {
+
+			if (candidate.candidate_ID.toString() === candidateID) {
+
+				$EndorsedCandidateSelectedStore = candidate;
+				$EndorsedCandidateOpenStore = true;
+
+			};
+
+		});
+
+	} else if (searchParams.get("legislation_ID") !== null) {
+
+		const legislationID: string | null = searchParams.get("legislation_ID");
+		
+		endorsedLegislation.filter((legislation, i) => {
+
+			if (legislation.legislation_ID.toString() === legislationID) {
+
+				$EndorsedLegislationSelectedStore = legislation;
+				$EndorsedLegislationOpenStore = true;
+
+			};
+
+		});
+
+	} else if (searchParams.get("referendum_ID") !== null) {
+
+		const referendumID: string | null = searchParams.get("referendum_ID");
+
+		endorsedReferendums.filter((referendum, i) => {
+
+			if (referendum.referendum_ID.toString() === referendumID) {
+
+				$EndorsedReferendumSelectedStore = referendum;
+				$EndorsedReferendumOpenStore = true;
+
+			};
+
+		});
+
+	} else if (searchParams.get("amendment_ID") !== null) {
+
+		const amendmentID: string | null = searchParams.get("amendment_ID");
+
+		endorsedAmendments.filter((amendment, i) => {
+
+			if (amendment.amendment_ID.toString() === amendmentID) {
+
+				$EndorsedAmendmentSelectedStore = amendment;
+				$EndorsedAmendmentOpenStore = true;
+
+			};
+
+		});
+
+	};
 	
 	// handle changes to search endorsements by address input
 

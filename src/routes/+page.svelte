@@ -13,10 +13,15 @@
   	import { onMount } from 'svelte';
   	import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
+	import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore.js';
+	import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore.js';
+	import { page } from '$app/stores';
 
 	export let data;
 
 	$: data;
+
+	let URLPathName: string = $page.url.pathname;
 
 	const currentDate = new Date();
 
@@ -76,6 +81,27 @@
 		getEndorsedActionsData();
 
 	});
+
+	let searchParams: URLSearchParams;
+	
+	$: searchParams = new URLSearchParams($page.url.search);
+
+    $: if (searchParams.get("action_ID") !== null) {
+
+        const actionID: string | null = searchParams.get("action_ID");
+
+        endorsedActions.filter((action, i) => {
+
+            if (action.action_ID.toString() === actionID) {
+
+                $EndorsedActionSelectedStore = action;
+                $EndorsedActionOpenStore = true;
+
+            };
+
+        });
+
+    };
 	
 	let activeLoginTab: number;
 
@@ -259,7 +285,6 @@
 					use my current location
 				</Checkbox>
 			</div>
-			
 			<div class="search_endorsements_by_address_input">
 				{#if useCurrentLocationChecked}
 					{#if pending}
@@ -326,7 +351,9 @@
 					<LoaderAnimation />
 				{:else if getEndorsedActionsDataSuccess}
 					{#each futureEndorsedActions as action, i}
-						<ActionEndorsementCard endorsedActionData={action} />
+						<a href={`${URLPathName}?action_ID=${action.action_ID}&action_name=${action.action_name.replace(/ /g,"_")}`}> 
+							<ActionEndorsementCard endorsedActionData={action} />
+						</a>
 					{/each}
 				{:else if !getEndorsedActionsDataSuccess}
 					<p>failed to load endorsed forthcoming actions</p>

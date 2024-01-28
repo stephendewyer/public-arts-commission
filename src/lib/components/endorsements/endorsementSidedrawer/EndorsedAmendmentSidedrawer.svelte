@@ -1,12 +1,13 @@
 <script lang="ts">
     import { EndorsedAmendmentSelectedStore } from '$lib/stores/EndorsedAmendmentSelectedStore';
     import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
-    import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
     let endorsedAmendmentData: AmendmentWithSponsorsAndImage | null = null;
+
+    $: endorsedAmendmentData = $EndorsedAmendmentSelectedStore;
 
     let URLPathName: string;
 
@@ -14,31 +15,17 @@
 
         URLPathName = $page.url.pathname;
 
-    };    
-
-    const unsubscribeTeamMemberSelectedStore = EndorsedAmendmentSelectedStore.subscribe(value => {
-		endorsedAmendmentData =value;
-    });
-
-    // set the value for the sidedrawer open value from store
+    };
 
     let endorsedAmendmentOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
-
-	const unsubscribeEndorsedAmendmentOpenStore = EndorsedAmendmentOpenStore.subscribe((value) => {
-		endorsedAmendmentOpen = value;
-	});
-
-    onDestroy(() => {
-        unsubscribeTeamMemberSelectedStore();
-        unsubscribeEndorsedAmendmentOpenStore();
-    });
+    $: endorsedAmendmentOpen = $EndorsedAmendmentOpenStore;
 
     const closeClickHandler = () => {
-        endorsedAmendmentOpen = false;
-        EndorsedAmendmentOpenStore.update((value) => value = endorsedAmendmentOpen);
-        EndorsedAmendmentSelectedStore.update((value) => value = null);
+
+        $EndorsedAmendmentOpenStore = false;
+        $EndorsedAmendmentSelectedStore = null;
+
     };
 
     let rawElectionDate: Date;

@@ -1,12 +1,13 @@
 <script lang="ts">
     import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
     import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
-    import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
     let endorsedActionData: ActionWithImage | null = null;
+
+    $: endorsedActionData = $EndorsedActionSelectedStore;
 
     let URLPathName: string;
 
@@ -16,29 +17,13 @@
 
     };
 
-    const unsubscribeEndorsedActionSelectedStore = EndorsedActionSelectedStore.subscribe(value => {
-		endorsedActionData = value;
-    });
-
-    // set the value for the sidedrawer open value from store
-
     let endorsedActionOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
-
-	const unsubscribeEndorsedActionOpenStore = EndorsedActionOpenStore.subscribe((value) => {
-		endorsedActionOpen = value;
-	});
-
-    onDestroy(() => {
-        unsubscribeEndorsedActionSelectedStore();
-        unsubscribeEndorsedActionOpenStore();
-    });
+    $: endorsedActionOpen = $EndorsedActionOpenStore;
 
     const closeClickHandler = () => {
-        endorsedActionOpen = false;
-        EndorsedActionOpenStore.update((value) => value = endorsedActionOpen);
-        EndorsedActionSelectedStore.update((value) => value = null);
+        $EndorsedActionOpenStore = false;
+        $EndorsedActionSelectedStore = null;
     };
 
     let actionIsAllDay: boolean;

@@ -1,12 +1,13 @@
 <script lang="ts">
     import { EndorsedCandidateOpenStore } from '$lib/stores/EndorsedCandidateOpenStore';
     import { EndorsedCandidateSelectedStore } from '$lib/stores/EndorsedCandidateSelectedStore';
-    import { onDestroy } from 'svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
     let endorsedCandidateData: CandidateWithImage | null = null;
+
+    $: endorsedCandidateData = $EndorsedCandidateSelectedStore;
 
     let URLPathName: string;
 
@@ -14,26 +15,15 @@
 
         URLPathName = $page.url.pathname;
 
-    };    
-
-    const unsubscribeEndorsedCandidateSelectedStore = EndorsedCandidateSelectedStore.subscribe(value => {
-		endorsedCandidateData = value;
-    });
-
-    // set the value for the sidedrawer open value from store
+    };
 
     let endorsedCandidateOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
-
-	const unsubscribeEndorsedCandidateOpenStore = EndorsedCandidateOpenStore.subscribe((value) => {
-		endorsedCandidateOpen = value;
-	});
+    $: endorsedCandidateOpen = $EndorsedCandidateOpenStore;
 
     const closeClickHandler = () => {
-        endorsedCandidateOpen = false;
-        EndorsedCandidateOpenStore.update((value) => value = endorsedCandidateOpen);
-        EndorsedCandidateSelectedStore.update((value) => value = null);
+        $EndorsedCandidateOpenStore = false;
+        $EndorsedCandidateSelectedStore = null;
     };
 
     let primaryElectionDate: Date | string;
@@ -103,11 +93,6 @@
         candidateStatus = [ ...candidateStatus, " campaign ended"];
 
     };
-
-    onDestroy(() => {
-        unsubscribeEndorsedCandidateSelectedStore();
-        unsubscribeEndorsedCandidateOpenStore();
-    });
 
     $: if (endorsedCandidateData === null) {
 

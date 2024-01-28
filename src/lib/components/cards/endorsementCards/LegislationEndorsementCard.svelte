@@ -1,7 +1,5 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
-    import { EndorsedLegislationSelectedStore } from '$lib/stores/EndorsedLegislationSelectedStore';
-    import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
 
     export let endorsedLegislationData: LegislationWithSponsorsAndImage;
 
@@ -62,13 +60,6 @@
         cardHovered = false;
 
     };
-
-    const cardSelectedHandler = () => {
-
-        EndorsedLegislationSelectedStore.update((value) => value = endorsedLegislationData);
-        EndorsedLegislationOpenStore.update((value)  => value = true);
-        
-    };
     
 </script>
 
@@ -82,8 +73,6 @@
     on:mouseover={() => cardHoverHandler()}
     on:mouseleave={() => cardExitHandler()}
     on:mouseout={() => cardExitHandler()}
-    on:click={() => cardSelectedHandler()}
-    on:keyup={() => cardSelectedHandler()}
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     <div class="image_container">
