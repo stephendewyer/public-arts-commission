@@ -171,7 +171,10 @@
     aria-hidden={ (endorsedAmendmentOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
-        <a href={URLPathName}>
+        <a 
+            href={URLPathName}
+            data-sveltekit-noscroll
+        >
             <button 
                 class="close_button"
                 on:click={() => closeClickHandler()}

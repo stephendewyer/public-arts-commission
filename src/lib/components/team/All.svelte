@@ -11,7 +11,10 @@
 
 <div class="members_container">
     {#each data as TeamMemberData, i}
-        <a href={`${URLPathName}?team_member_ID=${TeamMemberData.index}&team_member_name=${TeamMemberData.name.replace(/ /g,"_")}`}>
+        <a 
+            href={`${URLPathName}?team_member_ID=${TeamMemberData.index}&team_member_name=${TeamMemberData.name.replace(/ /g,"_")}`}
+            data-sveltekit-noscroll
+        >
             <TeamMemberCard 
                 memberData={TeamMemberData}
             />

@@ -110,7 +110,10 @@
 
 </script>
 
-<a href={URLPathName} >
+<a 
+    href={URLPathName} 
+    data-sveltekit-noscroll
+>
     <div 
         class="backdrop"
         on:click={() => backdropClickedHandler()} 

@@ -78,6 +78,7 @@
             href="/login-voter"
             on:click={() => closeClickHandler()}
             on:keyup={() => closeClickHandler()}
+
         >
             <ActionButton 
                 disable={false}

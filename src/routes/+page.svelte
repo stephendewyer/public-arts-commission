@@ -351,7 +351,10 @@
 					<LoaderAnimation />
 				{:else if getEndorsedActionsDataSuccess}
 					{#each futureEndorsedActions as action, i}
-						<a href={`${URLPathName}?action_ID=${action.action_ID}&action_name=${action.action_name.replace(/ /g,"_")}`}> 
+						<a 
+							href={`${URLPathName}?action_ID=${action.action_ID}&action_name=${action.action_name.replace(/ /g,"_")}`}
+							data-sveltekit-noscroll
+						> 
 							<ActionEndorsementCard endorsedActionData={action} />
 						</a>
 					{/each}

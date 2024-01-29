@@ -588,7 +588,10 @@
                         <LoaderAnimation />
                     {:else if getEndorsedActionsDataSuccess}
                         {#each paginatedActionsForthcoming as endorsedAction, i}
-                            <a href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}> 
+                            <a 
+                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                data-sveltekit-noscroll
+                            > 
                                 <ActionEndorsementCard endorsedActionData={endorsedAction} />
                             </a>
                         {/each}
@@ -621,7 +624,10 @@
                         <LoaderAnimation />
                     {:else if getEndorsedActionsDataSuccess}
                         {#each paginatedActionsHistory as endorsedAction, i}
-                            <a href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}> 
+                            <a 
+                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                data-sveltekit-noscroll
+                            > 
                                 <ActionEndorsementCard endorsedActionData={endorsedAction} />
                             </a>
                         {/each}

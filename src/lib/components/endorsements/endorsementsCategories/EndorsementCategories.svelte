@@ -90,7 +90,10 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedCandidatesDataSuccess}
                     {#each paginatedEndorsedCandidates as candidate, i}
-                        <a href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}> 
+                        <a 
+                            href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
+                            data-sveltekit-noscroll
+                        > 
                             <EndorsedCandidateCard endorsedCandidateData={candidate}/>
                         </a>
                     {/each}
@@ -123,7 +126,10 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedReferendumsDataSuccess}
                     {#each paginatedEndorsedReferendums as referendum, i}
-                        <a href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}> 
+                        <a 
+                            href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
+                            data-sveltekit-noscroll
+                        > 
                             <EndorsedReferendumCard endorsedReferendumData={referendum} />
                         </a>
                     {/each}
@@ -156,7 +162,10 @@
                     <LoaderAnimation />
                 {:else if categories_data.getEndorsedLegislationDataSuccess}
                     {#each paginatedEndorsedLegislation as legislation, i}
-                        <a href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}> 
+                        <a 
+                            href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
+                            data-sveltekit-noscroll
+                        > 
                             <EndorsedLegislationCard endorsedLegislationData={legislation} />
                         </a>
                     {/each}
@@ -190,7 +199,9 @@
                 {:else if categories_data.getEndorsedAmendmentsDataSuccess}
                     {#each paginatedEndorsedAmendments as amendment, i}
                         <a 
-                            href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}>
+                            href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
+                            data-sveltekit-noscroll
+                        >
                             <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
                          </a>
                     {/each}
