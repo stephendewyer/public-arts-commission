@@ -116,7 +116,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - {username} administrator</title>
+	<title>administrator dashboard for {username} - public arts commission</title>
 	<meta name="description" content="manage endorsements and nominations" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

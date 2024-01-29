@@ -271,7 +271,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - edit a referendum endorsement</title>
+	<title>edit a referendum endorsement - public arts commission</title>
 	<meta name="description" content="edit a referendum endorsement by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

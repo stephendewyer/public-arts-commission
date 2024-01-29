@@ -226,7 +226,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - campaign questionnaire</title>
+	<title>campaign questionnaire - public arts commission</title>
 	<meta name="description" content="edit and submit campaign questionnaire" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

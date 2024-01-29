@@ -5,11 +5,8 @@
 	import Backdrop from '$lib/components/overlays/Backdrop.svelte';
 	import TeamMemberSideDrawer from '$lib/components/team/teamMemberSidedrawer/TeamMemberSidedrawer.svelte'
 	import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
-	import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
-  	import { onDestroy } from 'svelte';
 	import './styles.css';
   	import CreateVoterAccountPromptModal from '$lib/components/modals/CreateVoterAccountPromptModal.svelte';
-  	import { CreateVoterAccountPromptStore } from '$lib/stores/CreateVoterAccountPromptStore';
 	import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
 	import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
 	import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
@@ -25,27 +22,37 @@
 	
 	let openMobileNav: boolean = false;
 
-	let openCreateVoterAccountPrompt: boolean = false;
-
-	let teamMemberSideDrawerOpen: boolean = false;
-
-	let endorsedCandidateSideDrawerOpen: boolean = false;
-
-	let endorsedAmendmentSideDrawerOpen: boolean = false;
-
-	let endorsedReferendumSideDrawerOpen: boolean = false;
-
-	let endorsedLegislationSideDrawerOpen: boolean = false;
-
-	let endorsedActionSideDrawerOpen: boolean = false;
-	
 	let footerElHeight: number = 0;
 
-	let selectedTeamMemberId: number | null = null;
-
-	let nominationCategory: string | null = "";
-
 	let backdrop: boolean = false;
+
+	let openCreateVoterAccountPrompt: boolean = $ModalOpenStore;
+
+	$: openCreateVoterAccountPrompt = $ModalOpenStore;
+
+	let teamMemberSideDrawerOpen: boolean;
+
+	$: teamMemberSideDrawerOpen = $TeamMemberSidedrawerOpenStore;
+
+	let endorsedCandidateSideDrawerOpen: boolean;
+
+	$: endorsedCandidateSideDrawerOpen = $EndorsedCandidateOpenStore;
+
+	let endorsedAmendmentSideDrawerOpen: boolean;
+
+	$: endorsedAmendmentSideDrawerOpen = $EndorsedAmendmentOpenStore;
+
+	let endorsedReferendumSideDrawerOpen: boolean;
+
+	$: endorsedReferendumSideDrawerOpen = $EndorsedReferendumOpenStore;
+
+	let endorsedLegislationSideDrawerOpen: boolean;
+
+	$: endorsedLegislationSideDrawerOpen = $EndorsedLegislationOpenStore;
+
+	let endorsedActionSideDrawerOpen: boolean;
+
+	$: endorsedActionSideDrawerOpen = $EndorsedActionOpenStore;
 
 	$: if (
 
@@ -75,75 +82,6 @@
 
 	};
 
-	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
-		
-		selectedTeamMemberId = value;
-
-	});
-
-	const unsubscribeCreateVoterAccountPromptStore = CreateVoterAccountPromptStore.subscribe((value) => {
-		
-		nominationCategory = value;
-
-	});
-
-	const unsubscribeTeamMemberSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
-		
-		teamMemberSideDrawerOpen = value;
-
-	});
-
-	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-
-		openCreateVoterAccountPrompt = value;
-
-	});
-
-	const unsubscripeEndorsedCandidateOpenStore = EndorsedCandidateOpenStore.subscribe((value => {
-
-		endorsedCandidateSideDrawerOpen = value;
-
-	}));
-
-	const unsubscribeEndorsedLegislationOpenStore = EndorsedLegislationOpenStore.subscribe((value) => {
-
-		endorsedLegislationSideDrawerOpen = value;
-
-	});
-
-	const unsubscribeEndorsedReferendumOpenStore = EndorsedReferendumOpenStore.subscribe((value) => {
-
-		endorsedReferendumSideDrawerOpen = value;
-
-	});
-
-	const unsubscribeEndorsedAmendmentOpenStore = EndorsedAmendmentOpenStore.subscribe((value) => {
-
-		endorsedAmendmentSideDrawerOpen = value;
-
-	});
-
-	const unsubscribeEndorsedActionOpenStore = EndorsedActionOpenStore.subscribe((value) => {
-
-		endorsedActionSideDrawerOpen = value;
-
-	})
-
-
-	onDestroy(() => {
-
-		unsubscribeTeamMemberSelectedStore();
-		unsubscribeCreateVoterAccountPromptStore();
-		unsubscribeTeamMemberSidedrawerOpenStore();
-		unsubscribeModalOpenStore();
-		unsubscripeEndorsedCandidateOpenStore();
-		unsubscribeEndorsedLegislationOpenStore();
-		unsubscribeEndorsedReferendumOpenStore();
-		unsubscribeEndorsedAmendmentOpenStore();
-		unsubscribeEndorsedActionOpenStore();
-
-	});
-
 </script>
 
 <div class="app">
@@ -151,7 +89,7 @@
 		bind:sideDrawer={openMobileNav}
 	/>
 
-	<main style="padding-bottom: {footerElHeight}px">
+	<main style="padding-bottom: {footerElHeight}px;">
 		<slot />
 	</main>
 

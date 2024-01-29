@@ -515,7 +515,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - actions</title>
+	<title>actions - public arts commission</title>
 	<meta name="description" content="forthcoming and past actions endorsed by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

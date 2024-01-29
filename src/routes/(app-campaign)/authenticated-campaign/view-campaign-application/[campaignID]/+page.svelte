@@ -31,8 +31,8 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - view campaign application</title>
-	<meta name="description" content="view campaign application" />
+	<title>view campaign application - public arts commission</title>
+	<meta name="description" content="view campaign application for endorsement by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
 <div class="campaign_questionnaire_container">

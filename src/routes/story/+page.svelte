@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import Tabs from '$lib/components/tabPanels/Tabs.svelte';
     import TabPanel from '$lib/components/tabPanels/Panel.svelte';
     import { v4 as uuidv4 } from 'uuid';
@@ -48,7 +49,11 @@
 	]
 
 </script>
-
+<svelte:head>
+	<title>story - public arts commission</title>
+	<meta name="description" content="public arts commission story" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <h2 class="story_section_heading">
         mission

@@ -9,7 +9,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - voter dashboard</title>
+	<title>voter dashboard - public arts commission</title>
 	<meta name="description" content="voter dashboard" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

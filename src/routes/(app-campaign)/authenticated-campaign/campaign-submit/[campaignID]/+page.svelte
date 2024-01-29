@@ -146,7 +146,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - review and submit campaign application for endorsement</title>
+	<title>review and submit campaign application for endorsement - public arts commission</title>
 	<meta name="description" content="review and submit campaign application for endorsement" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

@@ -197,7 +197,7 @@
     
 </script>
 <svelte:head>
-	<title>public arts commission - manage campaign applications for endorsement</title>
+	<title>campaign applications dashboard for {campaignUserInformation?.name_first} {campaignUserInformation?.name_last} - public arts commission</title>
 	<meta name="description" content="manage campaign applications for endorsement" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

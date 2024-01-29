@@ -432,7 +432,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - create an amendment endorsement</title>
+	<title>create an amendment endorsement - public arts commission</title>
 	<meta name="description" content="endorse an amendment by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

@@ -1,8 +1,13 @@
 <script lang="ts">
+	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import LoginBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import CampaignLoginPanel from '$lib/components/logins/LoginCampaign.svelte';
 </script>
-
+<svelte:head>
+	<title>login campaign - public arts commission</title>
+	<meta name="description" content="log into public arts commission campaign account" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div 
 		class="login_container"

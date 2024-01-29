@@ -1,4 +1,6 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
+
     import ActionButton from '$lib/components/buttons/ActionButton.svelte';
 
     export let data;
@@ -13,7 +15,7 @@
 
         donationAmount = paymentIntent.amount * 0.01;
 
-    }
+    };
 
     let paymentIntentCreated: number;
 
@@ -29,7 +31,11 @@
     };
 
 </script>
-
+<svelte:head>
+	<title>donation confirmation - public arts commission</title>
+	<meta name="description" content="donation to public arts commission confirmation" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="thank_you_container">
     <h1>thank you, {nameFirst} {nameLast} for your donation!</h1>
 

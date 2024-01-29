@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import DonateAmountButton from "$lib/components/buttons/DonateAmountButton.svelte";
     import ActionButton from "$lib/components/buttons/ActionButton.svelte";
     import TextInput from "$lib/components/inputs/TextInput.svelte";
@@ -48,7 +49,7 @@
     interface contributionAmount {
         id: number;
         amount: number;
-    }
+    };
 
     const contributionAmounts: contributionAmount[] = [
         {
@@ -131,7 +132,7 @@
 
     $: if((item.success) || (item.error)) {
         pending = false;
-    }
+    };
 
     async function submitPaymentIntentHandler() {
 
@@ -151,32 +152,36 @@
 
             if (!donationAmountInputValue) {
                 donationAmountIsValid = false;
-            }
+            };
 
             if (!nameFirstInputValue) {
                 nameFirstIsValid = false;
-            }
+            };
 
             if (!nameLastInputValue) {
                 nameLastIsValid = false;
-            }
+            };
 
             if (!emailInputValue) {
                 emailIsValid = false;
-            }
+            };
 
         } catch (error) {
             console.log(error);
-        }
+        };
 
         if (item.success) {
             goto(`/donate/payment?donation_occurence=${donationOccurenceInputValue}&donation_amount=${donationAmountInputValue}&checkout_user_nameFirst=${nameFirstInputValue}&checkout_user_nameLast=${nameLastInputValue}&email=${emailInputValue}`);
-        }
+        };
 
     };
 
 </script>
-
+<svelte:head>
+	<title>create donation intent - public arts commission</title>
+	<meta name="description" content="create intent to donate to public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div class="donate_section">
         <h1>

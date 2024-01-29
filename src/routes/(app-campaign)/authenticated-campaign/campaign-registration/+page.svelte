@@ -245,7 +245,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - start a campaign application by registering a campaign</title>
+	<title>register a campaign to start a campaign application - public arts commission</title>
 	<meta name="description" content="submit campaign registration to start a campaign application" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

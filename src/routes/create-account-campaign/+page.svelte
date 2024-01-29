@@ -236,7 +236,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - create a free campaign account</title>
+	<title>create a free campaign account - public arts commission</title>
 	<meta name="description" content="create a campaign account to apply and manage applications for endorsement by public arts commission using the campaign portal!" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

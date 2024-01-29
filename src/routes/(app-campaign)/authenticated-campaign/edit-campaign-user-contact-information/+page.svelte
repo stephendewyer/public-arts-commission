@@ -175,8 +175,8 @@
     };
 </script>
 <svelte:head>
-	<title>public arts commission - edit contact information</title>
-	<meta name="description" content="edit contact information" />
+	<title>edit contact information - public arts commission</title>
+	<meta name="description" content="edit campaign user contact information" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
 <div class="campaign_user_information_container">

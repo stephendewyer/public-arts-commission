@@ -288,7 +288,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - edit a candidate endorsement</title>
+	<title>edit a candidate endorsement - public arts commission</title>
 	<meta name="description" content="edit a candidate endorsement by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

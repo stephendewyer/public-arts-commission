@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import Tabs from '$lib/components/tabPanels/selectableItemTabPanel/Tabs.svelte';
     import Panel from '$lib/components/tabPanels/selectableItemTabPanel/Panel.svelte';
     import { v4 as uuidv4 } from 'uuid';
@@ -78,7 +79,11 @@
 	]
 
 </script>
-
+<svelte:head>
+	<title>team - public arts commission</title>
+	<meta name="description" content="public arts commission team including Staff, Board Directors and Board Emeritus" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div class="panels_container">
         <Tabs 

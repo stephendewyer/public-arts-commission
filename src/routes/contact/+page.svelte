@@ -135,7 +135,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - contact</title>
+	<title>contact - public arts commission</title>
 	<meta name="description" content="how to contact public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

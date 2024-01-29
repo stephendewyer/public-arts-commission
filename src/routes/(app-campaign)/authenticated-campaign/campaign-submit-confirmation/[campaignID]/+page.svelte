@@ -17,7 +17,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - campaign application receipt</title>
+	<title>campaign application receipt - public arts commission - </title>
 	<meta name="description" content="confirming receipt of campaign application for endorsement by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

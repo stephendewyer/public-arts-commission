@@ -291,7 +291,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - create an action endorsement</title>
+	<title>create an action endorsement - public arts commission</title>
 	<meta name="description" content="endorse an action by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

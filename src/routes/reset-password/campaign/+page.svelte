@@ -1,8 +1,13 @@
 <script lang="ts">
+	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import ResetPasswordBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
     import ResetPasswordCampaignPanel from '$lib/components/passwordResets/PasswordResetCampaign.svelte';
 </script>
-
+<svelte:head>
+	<title>reset campaign password - public arts commission</title>
+	<meta name="description" content="reset password for campaign account" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div 
 		class="reset_container"

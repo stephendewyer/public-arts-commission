@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import PriorityAccordion from '$lib/components/accordions/PriorityAccordion.svelte';
     import { onMount } from 'svelte';
     import { Scrollactive } from 'svelte-scrollactive';
@@ -32,6 +33,11 @@
     };
 
 </script>
+<svelte:head>
+	<title>priorities - public arts commission</title>
+	<meta name="description" content="priorities that guide public arts commission operations" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <svelte:window bind:scrollY={y} />
 <div class="priorities_container">
     <h1 class="priorities_heading">

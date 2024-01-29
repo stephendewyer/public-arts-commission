@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import UpdateBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan.jpg';
 	import PasswordUpdateCampaign from '$lib/components/passwordUpdates/PasswordUpdateCampaign.svelte';
 
@@ -8,7 +9,11 @@
 	const paramsTokenID = data.tokenID;
 
 </script>
-
+<svelte:head>
+	<title>update campaign password - public arts commission</title>
+	<meta name="description" content="update campaign password" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div 
 		class="update_container"

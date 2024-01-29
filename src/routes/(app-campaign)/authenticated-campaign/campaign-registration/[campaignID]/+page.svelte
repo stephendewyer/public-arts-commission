@@ -388,7 +388,7 @@
 
 </script>
 <svelte:head>
-	<title>public arts commission - edit campaign registration</title>
+	<title>edit campaign registration - public arts commission</title>
 	<meta name="description" content="edit campaign registration" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>

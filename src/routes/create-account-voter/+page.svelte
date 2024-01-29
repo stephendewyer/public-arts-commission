@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
     import ComparePasswords from '$lib/components/inputs/ComparePasswords.svelte';
@@ -131,6 +132,11 @@
     };
 
 </script>
+<svelte:head>
+	<title>create a free voter account - public arts commission</title>
+	<meta name="description" content="create a free public arts commission voter account" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div 
     class="create_account_container"
     style="background-image: url({createAccountBackground});"

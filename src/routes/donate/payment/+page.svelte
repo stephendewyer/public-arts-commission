@@ -1,10 +1,12 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import { PUBLIC_STRIPEPUBLISHABLEKey } from '$env/static/public';
     import { onMount } from 'svelte';
     import { loadStripe } from '@stripe/stripe-js';
     import { Elements, PaymentElement } from 'svelte-stripe';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import CancelButton from '$lib/components/buttons/CancelButton.svelte';
+
     // data from server
     export let data;
 
@@ -41,7 +43,7 @@
 
         stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
         
-    })
+    });
 
     // handle form submission
     const submitPayment = async () => {
@@ -68,11 +70,16 @@
             // handle error
 
             console.log(result.error);
-        }
+        };
+
     };
 
 </script>
-
+<svelte:head>
+	<title>donate - public arts commission</title>
+	<meta name="description" content="donate to public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <div class="payment_container">
     <h1>review payment intent</h1>
     <table>
@@ -112,7 +119,7 @@
                     {clientSecret}
                     bind:elements
                 >
-                    <PaymentElement />
+                    <PaymentElement/>
                 </Elements>
                 <div class="submit_button_container">
                     <SubmitButtonSecondary

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import productsBackground from '$lib/images/backgrounds/11_December_2012_take_Lansing,_Michigan_02.jpg';
 
     const poleParagraphs = () => {
@@ -72,7 +73,11 @@
 
 
 </script>
-
+<svelte:head>
+	<title>products - public arts commission</title>
+	<meta name="description" content="products developed or under development by public arts commission" />
+	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+</svelte:head>
 <section>
     <div 
 		class="login_container"
