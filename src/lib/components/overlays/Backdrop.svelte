@@ -1,6 +1,5 @@
 <script lang="ts">
     import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
-    import { onDestroy } from 'svelte';
     import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
     import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
@@ -19,81 +18,38 @@
 
     let openTeamMember: boolean = false;
 
-    let modalOpen: boolean = false;
+    let modalOpen: boolean = $ModalOpenStore;
 
-    let openEndorsedAction: boolean = false;
+    let openEndorsedAction: boolean = $EndorsedActionOpenStore;
 
-    let openEndorsedAmendment: boolean = false;
+    let openEndorsedAmendment: boolean = $EndorsedAmendmentOpenStore;
 
-    let openEndorsedCandidate: boolean = false;
+    let openEndorsedCandidate: boolean = $EndorsedCandidateOpenStore;
 
-    let openEndorsedLegislation: boolean = false;
+    let openEndorsedLegislation: boolean = $EndorsedLegislationOpenStore;
 
-    let openEndorsedReferendum: boolean = false;
+    let openEndorsedReferendum: boolean = $EndorsedReferendumOpenStore;
 
     let open: boolean = false;
-
-    let selectedTeamMemberId: number | null = null;
 
     let URLPathName = $page.url.pathname;
 
     const backdropClickedHandler = () => {
-        
         openMobileNav = false;
-        ModalOpenStore.update((value) => value = false);
-        TeamMemberSidedrawerOpenStore.update((value) => value = false);
-        TeamMemberSelectedStore.update((value) => value = null);
-        EndorsedActionOpenStore.update((value) => value = false);
-        EndorsedAmendmentOpenStore.update((value) => value = false);
-        EndorsedLegislationOpenStore.update((value) => value = false);
-        EndorsedCandidateOpenStore.update((value) => value = false);
-        EndorsedReferendumOpenStore.update((value) => value = false);
-        EndorsedActionSelectedStore.update((value => value = null));
-        EndorsedAmendmentSelectedStore.update((value => value = null));
-        EndorsedCandidateSelectedStore.update((value => value = null));
-        EndorsedLegislationSelectedStore.update((value => value = null));
-        EndorsedReferendumSelectedStore.update((value => value = null));
+        $ModalOpenStore = false;
+        $TeamMemberSidedrawerOpenStore = false;
+        $TeamMemberSelectedStore = null;
+        $EndorsedActionOpenStore = false;
+        $EndorsedAmendmentOpenStore = false;
+        $EndorsedLegislationOpenStore = false;
+        $EndorsedCandidateOpenStore = false;
+        $EndorsedReferendumOpenStore = false;
+        $EndorsedActionSelectedStore = null;
+        $EndorsedAmendmentSelectedStore = null;
+        $EndorsedCandidateSelectedStore = null;
+        $EndorsedLegislationSelectedStore = null;
+        $EndorsedReferendumSelectedStore = null;
     };
-
-    const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-		modalOpen = value;
-	});
-
-    const unsubscribeSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
-		openTeamMember = value;
-	});
-
-	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
-		selectedTeamMemberId = value;
-	});
-
-    const unsubscribeEndorsedActionOpenStore = EndorsedActionOpenStore.subscribe((value) => {
-		openEndorsedAction = value;
-	});
-    const unsubscribeEndorsedAmendmentOpenStore = EndorsedAmendmentOpenStore.subscribe((value) => {
-		openEndorsedAmendment = value;
-	});
-    const unsubscribeEndorsedCandidateOpenStore = EndorsedCandidateOpenStore.subscribe((value) => {
-		openEndorsedCandidate = value;
-	});
-    const unsubscribeEndorsedLegislationOpenStore = EndorsedLegislationOpenStore.subscribe((value) => {
-		openEndorsedLegislation = value;
-	});
-    const unsubscribeEndorsedReferendumOpenStore = EndorsedReferendumOpenStore.subscribe((value) => {
-		openEndorsedReferendum = value;
-	});
-
-
-	onDestroy(() => {
-        unsubscribeModalOpenStore();
-        unsubscribeSidedrawerOpenStore();
-		unsubscribeTeamMemberSelectedStore();
-        unsubscribeEndorsedActionOpenStore();
-        unsubscribeEndorsedAmendmentOpenStore();
-        unsubscribeEndorsedCandidateOpenStore();
-        unsubscribeEndorsedLegislationOpenStore();
-        unsubscribeEndorsedReferendumOpenStore();
-	});
 
     $: if (
         openMobileNav ||

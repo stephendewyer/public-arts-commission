@@ -30,6 +30,7 @@
 		"@splidejs/svelte-splide": "^0.2.9",
 		"@types/uuid": "^9.0.5",
 		"@universe/address-parser": "^3.2.0",
+		"@vercel/analytics": "^1.1.2",
 		"bcrypt": "^5.1.1",
 		"cloudinary": "^1.41.0",
 		"mysql2": "^3.6.1",
