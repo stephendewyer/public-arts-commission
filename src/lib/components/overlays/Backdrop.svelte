@@ -42,12 +42,12 @@
         openMobileNav = false;
         ModalOpenStore.update((value) => value = false);
         TeamMemberSidedrawerOpenStore.update((value) => value = false);
+        TeamMemberSelectedStore.update((value) => value = null);
         EndorsedActionOpenStore.update((value) => value = false);
         EndorsedAmendmentOpenStore.update((value) => value = false);
         EndorsedLegislationOpenStore.update((value) => value = false);
         EndorsedCandidateOpenStore.update((value) => value = false);
         EndorsedReferendumOpenStore.update((value) => value = false);
-        TeamMemberSelectedStore.update((value) => value = null);
         EndorsedActionSelectedStore.update((value => value = null));
         EndorsedAmendmentSelectedStore.update((value => value = null));
         EndorsedCandidateSelectedStore.update((value => value = null));

@@ -1,6 +1,9 @@
 <script lang="ts">
     import TeamMemberData from '$lib/data/teamMembers.json';
-    import TeamMemberCard from '$lib/components/team/TeamMemberCard.svelte';
+    import TeamMemberCard from '$lib/components/cards/teamCards/TeamMemberCard.svelte';
+    import { page } from '$app/stores';
+
+    let URLPathName: string = $page.url.pathname;
 
     const data: TeamMember[] = TeamMemberData;
 
@@ -8,9 +11,11 @@
 
 <div class="members_container">
     {#each data as TeamMemberData, i}
-        <TeamMemberCard 
-            memberData={TeamMemberData}
-        />
+        <a href={`${URLPathName}?team_member_ID=${TeamMemberData.index}&team_member_name=${TeamMemberData.name.replace(/ /g,"_")}`}>
+            <TeamMemberCard 
+                memberData={TeamMemberData}
+            />
+        </a>
     {/each}
 </div>
 

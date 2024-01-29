@@ -1,6 +1,5 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
-    import { TeamMemberSelectedStore } from "$lib/stores/TeamMemberSelectedStore";
 
     export let memberData: TeamMember;
 
@@ -16,16 +15,6 @@
         memberCardHovered = false;
     };
 
-    let memberCardSelectedId: number | null = null;
-
-    const memberCardSelectedHandler = (index: number) => {
-
-        memberCardSelectedId = index;
-
-        TeamMemberSelectedStore.update((value) => value = memberCardSelectedId);
-
-    };
-
 </script>
 
 <div 
@@ -39,8 +28,6 @@
     on:mouseover={() => memberCardActiveHandler()}
     on:mouseleave={() => memberCardHandler()}
     on:mouseout={() => memberCardHandler()}
-    on:click={() => memberCardSelectedHandler(memberData.index)}
-    on:keyup={() => memberCardSelectedHandler(memberData.index)}
 >
     <div 
         class="meatballs_container"

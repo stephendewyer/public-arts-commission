@@ -8,54 +8,53 @@
     import MemorialHallGalleryDoors from '$lib/images/backgrounds/Boston,_MA_30_October_2017_02.jpg';
     import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
     import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
-    import { onDestroy } from 'svelte';
+    import { page } from '$app/stores';
+    import TeamMembers from '$lib/data/teamMembers.json';
 
     // set the value for the active panel
 
     let activeTeamTab: number = 0;
 
-    // set the value for member Id of selected member card
-
-    let memberCardSelectId: number | null = null;
-
     // set the value for sidedrawer open
 
     let sidedrawerIsOpen: boolean = false;
 
-    // update the sidedrawer open store using sidedrawerIsOpen variable
-
-    $: TeamMemberSidedrawerOpenStore.update((value) => value = sidedrawerIsOpen);    
+    $: sidedrawerIsOpen = $TeamMemberSidedrawerOpenStore;
 
     // set the value for the selected team member id from store
 
     let selectedTeamMemberId: number | null = null;
 
-    // get the value for the selected team member id from store
-
-	const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe((value) => {
-		selectedTeamMemberId = value;
-	});
+    $: selectedTeamMemberId = $TeamMemberSelectedStore;
 
     // set the value for the sidedrawer open value from store
 
     let sideDrawerOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
+    $: sideDrawerOpen = $TeamMemberSidedrawerOpenStore;
 
-	const unsubscribeTeamMemberSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
-		sideDrawerOpen = value;
-	});
+    let searchParams: URLSearchParams;
+	
+	$: searchParams = new URLSearchParams($page.url.search);
 
-    onDestroy(() => {
-        unsubscribeTeamMemberSelectedStore();
-        unsubscribeTeamMemberSidedrawerOpenStore();
-    })
+    $: if (searchParams.get("team_member_ID") !== null) {
 
-    $: if ((selectedTeamMemberId) && (sidedrawerIsOpen == false)) {
-        sidedrawerIsOpen = true;
-    } else { 
-        sidedrawerIsOpen = false;
-    }
+        const teamMemberID: string | null = searchParams.get("team_member_ID");
+
+        TeamMembers.filter((teamMember, i) => {
+
+            if (
+                teamMember.index.toString() === teamMemberID
+            ) {
+                $TeamMemberSidedrawerOpenStore = true;
+                $TeamMemberSelectedStore = teamMember.index;
+
+            };
+
+        });
+
+    };
+
 
     const teamTabPanels: tabPanels[] = [
 		{
@@ -95,7 +94,7 @@
         <Panel 
             tabPanels={teamTabPanels} 
             bind:activeTab={activeTeamTab}
-            bind:selectedItemId={memberCardSelectId}
+            bind:selectedItemId={selectedTeamMemberId}
         />		
     </div>
     <div 
@@ -159,10 +158,6 @@
         display: flex;
         flex-direction: row;
         gap: 2rem;
-    }
-
-    @media (max-width: 1440px) {
-        
     }
 
     @media (max-width: 720px) {

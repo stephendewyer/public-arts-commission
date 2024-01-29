@@ -1,39 +1,28 @@
 <script lang="ts">
     import { TeamMemberSelectedStore } from '$lib/stores/TeamMemberSelectedStore';
     import { TeamMemberSidedrawerOpenStore } from '$lib/stores/TeamMemberSidedrawerOpenStore';
-    import { onDestroy } from 'svelte';
     import TeamMemberData from '$lib/data/teamMembers.json';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
+    import { page } from '$app/stores';
 
+    let URLPathName: string = $page.url.pathname;
 
     const data: TeamMember[] = TeamMemberData;
 
     let memberCardSelectId: number | null = null;
 
-    const unsubscribeTeamMemberSelectedStore = TeamMemberSelectedStore.subscribe(n => {
-		memberCardSelectId = n;
-    });
-
-    // set the value for the sidedrawer open value from store
+    $: memberCardSelectId = $TeamMemberSelectedStore;
 
     let teamMemberSidedrawerOpen: boolean = false;
 
-    // get the value for the sidedrawer open value from store
-
-	const unsubscribeTeamMemberSidedrawerOpenStore = TeamMemberSidedrawerOpenStore.subscribe((value) => {
-		teamMemberSidedrawerOpen = value;
-	});
-
-    onDestroy(() => {
-        unsubscribeTeamMemberSelectedStore();
-        unsubscribeTeamMemberSidedrawerOpenStore();
-    });
+    $: teamMemberSidedrawerOpen = $TeamMemberSidedrawerOpenStore;
 
     const closeClickHandler = () => {
-        teamMemberSidedrawerOpen = false;
-        TeamMemberSidedrawerOpenStore.update((value) => value = teamMemberSidedrawerOpen);
-        TeamMemberSelectedStore.update((value) => value = null);
-    }
+
+        $TeamMemberSidedrawerOpenStore = false;
+        $TeamMemberSelectedStore = null;
+
+    };
 
 </script>
 
@@ -42,13 +31,15 @@
     aria-hidden={ (teamMemberSidedrawerOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
-        <button 
-            class="close_button"
-            on:click={() => closeClickHandler()}
-            on:keyup={() => closeClickHandler()}
-        >
-            {@html CloseIcon}
-        </button>
+        <a href={URLPathName}>
+            <button 
+                class="close_button"
+                on:click={() => closeClickHandler()}
+                on:keyup={() => closeClickHandler()}
+            >
+                {@html CloseIcon}
+            </button>
+        </a>
     </div>
     {#each data as teamMember, i}
         {#if teamMember.index === memberCardSelectId}
