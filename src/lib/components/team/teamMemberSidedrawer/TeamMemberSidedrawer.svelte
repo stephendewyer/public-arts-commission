@@ -5,9 +5,15 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import { page } from '$app/stores';
 
-    let URLPathName: string = $page.url.pathname;
+    let URLPathName: string;
 
     const data: TeamMember[] = TeamMemberData;
+
+    $: if (data) {
+
+        URLPathName = $page.url.pathname;
+
+    };
 
     let memberCardSelectId: number | null = null;
 

@@ -15,12 +15,6 @@
 
     let activeTeamTab: number = 0;
 
-    // set the value for sidedrawer open
-
-    let sidedrawerIsOpen: boolean = false;
-
-    $: sidedrawerIsOpen = $TeamMemberSidedrawerOpenStore;
-
     // set the value for the selected team member id from store
 
     let selectedTeamMemberId: number | null = null;
