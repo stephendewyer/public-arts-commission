@@ -21,6 +21,7 @@
     import { goto } from '$app/navigation';
     import type { E164Number } from 'svelte-tel-input/types';
     import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat";
+    import CancelButton from '$lib/components/buttons/CancelButton.svelte';
 
     export let data;
 
@@ -700,6 +701,11 @@
             </SuccessFlashMessage>
         {/if}
     </form>
+    <a href="/authenticated-administrator/admin" class="cancel_button_container">
+        <CancelButton>
+            cancel
+        </CancelButton>
+    </a>
 </div>
 
 <style>

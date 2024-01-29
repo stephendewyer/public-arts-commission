@@ -369,81 +369,86 @@
         >
             government level*
         </SelectInput>
-        {#if (governmentLevelInputValue !== "")}
-            <div class="expandable_cells">
-                <div class="cell">
-                    <TextInputReadonly
-                        inputLabel={true}
-                        textInputValue={"United States"}
-                        bind:isValid={countryIsValid}
-                        placeholder="United States"
-                        inputName="country"
-                        inputID="country"
-                        required={true}
-                        textInputErrorMessage="country required"
-                    >
-                        country
-                    </TextInputReadonly>
-                </div>
-                
-                {#if (
+        <SelectInput 
+            options={governmentLevelOptions}
+            bind:selectInputValue={governmentLevelInputValue}
+            isValid={governmentLevelIsValid}
+            required={true}
+            inputID="government_level"
+            inputName="government_level"
+            selectInputErrorMessage="government level required"
+            inputLabel={true}
+        >
+            government level*
+        </SelectInput>
+        <div class="two_columns">
+            <TextInputReadonly
+                inputLabel={true}
+                textInputValue={"United States"}
+                bind:isValid={countryIsValid}
+                placeholder="United States"
+                inputName="country"
+                inputID="country"
+                required={true}
+                textInputErrorMessage="country required"
+            >
+                country*
+            </TextInputReadonly>
+            <SelectInput 
+                isValid={stateIsValid}
+                inputID="state"
+                inputName="state"
+                options={States}
+                bind:selectInputValue={stateInputValue}
+                inputLabel={true}
+                required={
+                    (governmentLevelInputValue === "state") ||
+                    (governmentLevelInputValue === "county") ||
+                    (governmentLevelInputValue === "city") 
+                    ? true : false
+                }
+                selectInputErrorMessage="state required"
+            >
+                state{#if 
                     (governmentLevelInputValue === "state") ||
                     (governmentLevelInputValue === "county") ||
                     (governmentLevelInputValue === "city")
-                )}
-                    <div class="cell">
-                        <SelectInput 
-                            isValid={stateIsValid}
-                            inputID="state"
-                            inputName="state"
-                            options={States}
-                            bind:selectInputValue={stateInputValue}
-                            inputLabel={true}
-                            required={true}
-                            selectInputErrorMessage="state required"
-                        >
-                            state
-                        </SelectInput>
-                    </div>
-                    {#if (
-                        (governmentLevelInputValue === "county") ||
-                        (governmentLevelInputValue === "city")
-                    )}
-                        <div class="cell">
-                            <TextInput
-                                inputLabel={true}
-                                bind:textInputValue={countyInputValue}
-                                bind:isValid={countyIsValid}
-                                placeholder="Oakland"
-                                inputName="county"
-                                inputID="county"
-                                required={true}
-                                textInputErrorMessage="county required"
-                            >
-                                county
-                            </TextInput>
-                        </div>
-                        
-                        {#if (governmentLevelInputValue === "city")}
-                            <div class="cell">
-                                <TextInput
-                                    inputLabel={true}
-                                    bind:textInputValue={cityInputValue}
-                                    bind:isValid={cityIsValid}
-                                    placeholder="Detroit"
-                                    inputName="city"
-                                    inputID="city"
-                                    required={true}
-                                    textInputErrorMessage="city required"
-                                >
-                                    city
-                                </TextInput>
-                            </div>
-                        {/if}
-                    {/if}
-                {/if}
-            </div>
-        {/if}
+                }*{/if}
+            </SelectInput>
+        </div>
+        <div class="two_columns">
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={countyInputValue}
+                bind:isValid={countyIsValid}
+                placeholder="Oakland"
+                inputName="county"
+                inputID="county"
+                required={
+                    (governmentLevelInputValue === "county") ||
+                    (governmentLevelInputValue === "city") 
+                    ? true : false
+                }
+                textInputErrorMessage="county required"
+            >
+                county{#if 
+                    (governmentLevelInputValue === "county") ||
+                    (governmentLevelInputValue === "city")
+                }*{/if}
+            </TextInput>
+            <TextInput
+                inputLabel={true}
+                bind:textInputValue={cityInputValue}
+                bind:isValid={cityIsValid}
+                placeholder="Detroit"
+                inputName="city"
+                inputID="city"
+                required={(governmentLevelInputValue === "city") ? true : false}
+                textInputErrorMessage="city required"
+            >
+                city{#if (governmentLevelInputValue === "city")}*{/if}
+            </TextInput>
+        </div>
         <TextInput
             inputLabel={true}
             bind:textInputValue={partyInputValue}

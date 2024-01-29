@@ -39,9 +39,16 @@ export const SearchEndorsementsByStreetAddressFilter = (
 
     };
 
-    // if search state, county and city are empty, return item
-
     if (
+        item.searchTerms.state === "" &&
+        item.searchTerms.county === "" &&
+        item.searchTerms.city === "" &&
+        item.searchTerms.government_level === "federal"
+    ) {
+
+        return item;
+
+    } else if (
         searchState === "" &&
         searchCounty === "" &&
         searchCity === ""
@@ -50,18 +57,6 @@ export const SearchEndorsementsByStreetAddressFilter = (
         return item;
 
     } else if (
-
-        // if item government level is federal, return item
-
-        item.searchTerms.government_level.toLowerCase().includes("federal")
-
-    ) {
-
-        return item;
-
-    } else if (
-
-        // if search state, county and city are entered, return only items if values fit within values
         searchState &&
         searchCounty &&
         searchCity
