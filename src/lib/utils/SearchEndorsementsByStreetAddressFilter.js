@@ -38,7 +38,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         searchState = store.search.state?.toLowerCase();
 
     };
-
+    
     if (
         item.searchTerms.state === "" &&
         item.searchTerms.county === "" &&
@@ -82,24 +82,19 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     } else if (
-        !searchState &&
-        !searchCounty &&
+        searchState === "" &&
+        searchCounty === "" &&
         searchCity
     ) {
 
-        if (
-            (
-                item.searchTerms.city.toLowerCase().includes(searchCity)
-            )       
-
-        ) {
+        if (item.searchTerms.city.toLowerCase().includes(searchCity)) {
 
             return item;
 
         };
 
     }  else if (
-        !searchState &&
+        searchState === "" &&
         searchCounty &&
         searchCity
     ) {
@@ -128,7 +123,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
             (   
                 item.searchTerms.state.toLowerCase().includes(searchState) &&
                 item.searchTerms.county.toLowerCase().includes(searchCounty)
-            ),
+            ) ||
             (   
                 item.searchTerms.state.toLowerCase().includes(searchState)
             )         
@@ -148,7 +143,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
             (   
                 item.searchTerms.state.toLowerCase().includes(searchState) &&
                 item.searchTerms.city.toLowerCase().includes(searchCity)
-            ),
+            ) ||
             (   
                 item.searchTerms.state.toLowerCase().includes(searchState)
             )         
@@ -164,9 +159,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         !searchCity
     ) {
 
-        if (
-            item.searchTerms.state.toLowerCase().includes(searchState)
-        ) {
+        if (item.searchTerms.state.toLowerCase().includes(searchState)) {
 
             return item;
 
@@ -178,9 +171,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         !searchCity
     ) {
 
-        if (
-            item.searchTerms.county.toLowerCase().includes(searchCounty)
-        ) {
+        if (item.searchTerms.county.toLowerCase().includes(searchCounty)) {
 
             return item;
 

@@ -24,6 +24,8 @@ export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => 
 
 export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
+    console.log(store);
+
     const searchYear = store.search.year.toString();
 
     // console.log("candidates store: ", store);
