@@ -11,7 +11,8 @@ export const createEndorsedReferendumsSearchStore = (/** @type {any} */ data) =>
             government_level: "",
             state: "",
             county: "",
-            city: ""
+            city: "",
+            name: ""
         },
     });
 

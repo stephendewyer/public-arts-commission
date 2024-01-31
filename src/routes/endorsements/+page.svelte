@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import { onMount, onDestroy, afterUpdate } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -50,6 +50,8 @@
 	let city: string | any = "";
 	let street: string | any = "";
 	let streetNumber: string | any = "";
+
+	let name: string = "";
 
 	let yearInputValue: number | any = "";
 
@@ -141,7 +143,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedLegislationStore.search = {
@@ -149,7 +152,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedAmendmentsStore.search = {
@@ -157,7 +161,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedReferendumsStore.search = {
@@ -165,7 +170,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		return searchByStreetAddressInputValue;
@@ -197,6 +203,8 @@
 	// get user's location using JavaScript geolocation
 
 	const findUserLocation = () => {
+
+		name = "";
 
 		navigator.geolocation.getCurrentPosition(success, error);
 
@@ -358,9 +366,7 @@
 
 		};
 
-	};
-
-	
+	};	
 
 	// handle changes to search endorsements by address input
 
@@ -368,7 +374,8 @@
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
 
-		console.log("search input value changed!");
+		let stateName: string = "";
+		let stateAbbreviation: string = "";
 
 		country = "";
 		zipcode = "";
@@ -377,6 +384,16 @@
 		street= "";
 		streetNumber = "";
 		county = "";
+		name = "";
+
+		let searchBarInputValueArray: string[] = searchByStreetAddressInputValue.split(" ");
+		let searchBarInputValueFirstWord: string = searchBarInputValueArray[0].replace(",", "");
+		let stateValueArray: string[] = [];
+		let stateValueFirstWord: string = "";
+		let cityValueArray: string[] = [];
+		let cityValueFirstWord: string = "";
+		let countyValueArray: string[] = [];
+		let countyValueFirstWord: string = "";
 
 		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
 
@@ -411,6 +428,12 @@
 						zipcode = cityObj.zip_code;
 						state = cityObj.state;
 						city = cityObj.city;
+						stateValueArray = [...state.split(" ")];
+						stateValueFirstWord = stateValueArray[0].replace(",", "");
+						cityValueArray = [...city.split(" ")];
+						cityValueFirstWord = cityValueArray[0].replace(",", "");
+						countyValueArray = [...county.split(" ")];
+						countyValueFirstWord = countyValueArray[0].replace(",", "");
 
 						return;
 
@@ -436,6 +459,10 @@
 					) {
 
 						state = stateObj.name;
+						stateName = stateObj.name.toLowerCase();
+						stateAbbreviation = stateObj.abbreviation.toLowerCase();
+						stateValueArray = [...state.split(" ")];
+						stateValueFirstWord = stateValueArray[0].replace(",", "");
 
 					};
 
@@ -468,6 +495,8 @@
 							if (state === cityObj.state) {
 
 								city = cityObj.city;
+								cityValueArray = [...city.split(" ")];
+								cityValueFirstWord = cityValueArray[0].replace(",", "");
 
 							};
 
@@ -484,10 +513,15 @@
 						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
 
 							city = cityObj.city;
+							cityValueArray = [...city.split(" ")];
+							cityValueFirstWord = cityValueArray[0].replace(",", "");
 
 							// check if city and state combination already is in statesWithCity and if false, add to statesWithCity
 
-							if (statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) {
+							if (
+								(statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) &&
+								(searchBarInputValueArray.length <= 2)
+							) {
 
 								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
 
@@ -498,6 +532,28 @@
 					});
 
 				};
+
+				if (
+
+					searchBarInputValueFirstWord.toLowerCase() !== stateName &&
+
+					searchBarInputValueFirstWord.toLowerCase() !== stateAbbreviation &&
+
+					searchBarInputValueFirstWord.toLowerCase() !== stateValueFirstWord && 
+
+					searchByStreetAddressInputValue.includes(",") === false &&
+
+					(
+						searchBarInputValueFirstWord.toLowerCase() !== cityValueFirstWord.toLowerCase() ||
+
+						searchBarInputValueArray.length >= 2
+
+					)
+				) {
+					
+					name = searchByStreetAddressInputValue.toLowerCase();
+					
+				};                
 
 			} else if (searchByStreetAddressInputValue.length > 0) {
 
@@ -530,6 +586,13 @@
 			street= "";
 			streetNumber = "";
 			county = "";
+			name = "";
+			stateValueArray = [];
+			stateValueFirstWord = "";
+			cityValueArray = [];
+			cityValueFirstWord = "";
+			countyValueArray = [];
+			countyValueFirstWord = "";
 
 		};
 
@@ -562,7 +625,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedLegislationStore.search = {
@@ -570,7 +634,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedAmendmentsStore.search = {
@@ -578,7 +643,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedReferendumsStore.search = {
@@ -586,7 +652,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 	};
@@ -760,7 +827,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedLegislationStore.search = {
@@ -768,7 +836,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedAmendmentsStore.search = {
@@ -776,7 +845,8 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 		$searchEndorsedReferendumsStore.search = {
@@ -784,10 +854,13 @@
 			government_level: "federal",
 			state: state,
 			county: county,
-			city: city
+			city: city,
+			name: name
 		};
 
 	};
+
+	// the different goverment level arrays need to start after the search inputs handlers
 
 	let candidatesFederal: CandidateWithImage[] = [];
 	let candidatesState: CandidateWithImage[] = [];
@@ -803,7 +876,8 @@
 			government_level: `${candidate.government_level}`,
 			state: `${candidate.state}`,
 			county: `${candidate.county}`,
-			city: `${candidate.city}`
+			city: `${candidate.city}`,
+			name: `${candidate.campaign_name}`
 		}
 	}));
 
@@ -841,7 +915,8 @@
 			government_level: `${legislation.government_level}`,
 			state: `${legislation.state}`,
 			county: `${legislation.county}`,
-			city: `${legislation.city}`
+			city: `${legislation.city}`,
+			name: `${legislation}`
 		}
 	}));
 
@@ -880,7 +955,8 @@
 			government_level: `${amendment.government_level}`,
 			state: `${amendment.state}`,
 			county: `${amendment.county}`,
-			city: `${amendment.city}`
+			city: `${amendment.city}`,
+			name: `${amendment.amendment_name}`
 		}
 	}));
 
@@ -918,7 +994,8 @@
 			government_level: `${referendum.government_level}`,
 			state: `${referendum.state}`,
 			county: `${referendum.county}`,
-			city: `${referendum.city}`
+			city: `${referendum.city}`,
+			name: `${referendum.referendum_name}`
 		}
 	}));
 
@@ -1080,7 +1157,7 @@
 		class="search_endorsements_by_address_form"
 	>
 		<h1>
-		    search endorsements by street address, city, state or zip code
+		    search endorsements by name, street address, city, state or zip code
 		</h1>
 		<div class="search_endorsement_fields">
 			<div class="search_by_location_fields">

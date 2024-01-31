@@ -1,8 +1,8 @@
 import States from '$lib/data/states.titlecase.json';
 
 export const SearchEndorsementsByStreetAddressFilter = (
-    /** @type {{ search: { state: string; city: string; county: string; }; }} */ store, 
-    /** @type {{ searchTerms: { government_level: string; state: string; county: string; city: string; }; }} */ item
+    /** @type {{ search: { state: string; city: string; county: string; name: string;}; }} */ store, 
+    /** @type {{ searchTerms: { government_level: string; state: string; county: string; city: string; name: string;}; }} */ item
 ) => {
 
     let handledStateName;
@@ -23,6 +23,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
 
     const searchCity = store.search.city?.toLowerCase();
     const searchCounty = store.search.county?.toLowerCase();
+    const searchName = store.search.name?.toLowerCase();
 
     /**
      * @type {string | any}
@@ -39,7 +40,15 @@ export const SearchEndorsementsByStreetAddressFilter = (
 
     };
     
-    if (
+    if (searchName) {
+
+        if (item.searchTerms.name.toLowerCase().includes(searchName)) {
+
+            return item;
+            
+        };
+
+    } else if (
         item.searchTerms.state === "" &&
         item.searchTerms.county === "" &&
         item.searchTerms.city === "" &&

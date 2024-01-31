@@ -11,7 +11,8 @@ export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => 
             government_level: "",
             state: "",
             county: "",
-            city: ""
+            city: "",
+            name: ""
         },
     });
 
@@ -24,7 +25,7 @@ export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => 
 
 export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
-    console.log(store);
+    console.log(store.search)
 
     const searchYear = store.search.year.toString();
 
