@@ -368,7 +368,7 @@
 
 	};	
 
-	// handle changes to search endorsements by address input
+	// handle changes to searchbar input value
 
 	let statesWithCity: string[] = [];
 
@@ -1181,6 +1181,7 @@
 								bind:searchInputValue={searchByStreetAddressInputValue}
 								searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
 								options={statesWithCity}
+								bind:optionSelected={searchbarOptionSelected}
 							/>
 						{:else if !addressLoadSuccess}
 							<p>failed to load address</p>

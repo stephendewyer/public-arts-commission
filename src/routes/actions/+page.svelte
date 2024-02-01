@@ -313,161 +313,232 @@
 
     };
 
-    // handle changes to search endorsements by address input
+    // handle changes to searchbar input value
+
+	let statesWithCity: string[] = [];
 
 	const searchByNameOrLocationInputValueChangeHandler = () => {
-        actionName = "";
-        country = "";
-        zipcode = "";
-        state = "";
-        city = "";
-        street= "";
-        streetNumber = "";
-        county = "";
+        let stateName: string = "";
+		let stateAbbreviation: string = "";
 
-        // uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
+		country = "";
+		zipcode = "";
+		state = "";
+		city = "";
+		street= "";
+		streetNumber = "";
+		county = "";
+		actionName = "";
 
-        if (
-            useCurrentLocationChecked && 
-            (reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
-        ) {
+		let searchBarInputValueArray: string[] = searchByStreetAddressInputValue.split(" ");
+		let searchBarInputValueFirstWord: string = searchBarInputValueArray[0].replace(",", "");
+		let stateValueArray: string[] = [];
+		let stateValueFirstWord: string = "";
+		let cityValueArray: string[] = [];
+		let cityValueFirstWord: string = "";
+		let countyValueArray: string[] = [];
+		let countyValueFirstWord: string = "";
 
-            useCurrentLocationChecked = false;
+		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
 
-        };
+		if (
+			useCurrentLocationChecked && 
+			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
+		) {
 
-        // IMPORTANT: street address parser must have an input length greater than zero
+			useCurrentLocationChecked = false;
 
-        // if search by address input value is greater than zero and use my current location is not checked, 
-        // use address-parser to parse search by address input value
+		};
 
-        if (
-            !useCurrentLocationChecked
-        ) {
+		// IMPORTANT: street address parser must have an input length greater than zero
 
-            // if user has entered only numbers, filter actions using zipcode
+		// if search by address input value is greater than zero and use my current location is not checked, 
+		// use address-parser to parse search by address input value
 
-            if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+		if (
+			!useCurrentLocationChecked
+		) {
 
-                // check if entered value matches zipcode in USCities
+			// if user has entered only numbers, filter actions using zipcode
 
-                USCities.filter((cityObj: CityObject) => {
+			if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
-                    if (cityObj.zip_code.toString() === searchByStreetAddressInputValue) {
+				// check if entered value matches zipcode in USCities
 
-                        zipcode = cityObj.zip_code;
-                        state = cityObj.state;
-                        city = cityObj.city;
+				USCities.filter((cityObj: CityObject) => {
 
-                        return;
+					if (cityObj.zip_code.toString() === searchByStreetAddressInputValue) {
 
-                    } else {
+						zipcode = cityObj.zip_code;
+						state = cityObj.state;
+						city = cityObj.city;
+						stateValueArray = [...state.split(" ")];
+						stateValueFirstWord = stateValueArray[0].replace(",", "");
+						cityValueArray = [...city.split(" ")];
+						cityValueFirstWord = cityValueArray[0].replace(",", "");
+						countyValueArray = [...county.split(" ")];
+						countyValueFirstWord = countyValueArray[0].replace(",", "");
 
-                        return;
+						return;
 
-                    };
+					} else {
 
-                });
+						return;
 
-            } else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+					};
 
-                // if the first entered value by user is a letter, filter actions by state, city and action name
+				});
 
-                // first, check if value includes state
+			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
-                States.filter((stateObj) => {
+				// if the first entered value by user is a letter, filter actions by state, city and name
 
-                    if (
-                        searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
-                        searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
-                    ) {
+				// check if search input value includes state
 
-                        state = stateObj.name;
+				States.filter((stateObj) => {
 
-                    };
+					if (
+						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
+						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
+					) {
 
-                });
+						state = stateObj.name;
+						stateName = stateObj.name.toLowerCase();
+						stateAbbreviation = stateObj.abbreviation.toLowerCase();
+						stateValueArray = [...state.split(" ")];
+						stateValueFirstWord = stateValueArray[0].replace(",", "");
 
-                // second, check if value includes city
+					};
 
-                USCities.filter((cityObj: CityObject) => {
+				});
 
-                    if (
-                        searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())
-                    ) {
+				// check if search input value includes city
 
-                        // if no state, set city as cityObj.city
+				statesWithCity = [];
 
-                        if (!state) {
+				if (state) {
 
-                            city = cityObj.city;
+					USCities.filter((cityObj: CityObject) => {
 
-                        } else if (state) {
+						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
 
-                            // check to see if cityObj.state matches state
+							// check to see if cityObj.state matches state
 
-                            // make sure state is abbreviation
+							// make sure state is abbreviation
 
-                            States.filter((stateObj) => {
+							States.filter((stateObj) => {
 
-                                if (
-                                    stateObj.name === state
-                                ) {
+								if (stateObj.name === state) {
 
-                                    state = stateObj.abbreviation;
+									state = stateObj.abbreviation;
 
-                                };
+								};
 
-                            });
+							});
 
-                            if (state === cityObj.state) {
+							if (state === cityObj.state) {
 
-                                city = cityObj.city;
+								city = cityObj.city;
+								cityValueArray = [...city.split(" ")];
+								cityValueFirstWord = cityValueArray[0].replace(",", "");
 
-                            };
+							};
 
-                        };
+						};
 
-                    };
+					});
 
-                });
+				} else if (!state) {
 
-                // third, check if entered value includes action name
+					// create an array of all possible states for city
 
-                actionName = searchByStreetAddressInputValue.toLowerCase();
+					USCities.forEach((cityObj: CityObject) => {
 
-            } else if (searchByStreetAddressInputValue.length > 0) {
+						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
 
-                // if user has entered numbers followed by letters, filter actions using street address
-                // parse the search by address input value
+							city = cityObj.city;
+							cityValueArray = [...city.split(" ")];
+							cityValueFirstWord = cityValueArray[0].replace(",", "");
 
-                const parsed = parse(searchByStreetAddressInputValue);
+							// check if city and state combination already is in statesWithCity and if false, add to statesWithCity
 
-                // load the parsed properties
+							if (
+								(statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) &&
+								(searchBarInputValueArray.length <= 2)
+							) {
 
-                country = parsed.country;
-                zipcode = parsed.zip;
-                state = parsed.state;
-                city = parsed.city;
-                street= parsed.streetName;
-                streetNumber = parsed.number;
+								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
 
-                // use zip code to load county from parsed address
+							};
 
-                county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
+						};
 
-            };            
+					});
 
-        } else {
-            actionName = "";
-            country = "";
-            zipcode = "";
-            state = "";
-            city = "";
-            street= "";
-            streetNumber = "";
-            county = "";
-        };
+				};
+
+				if (
+
+					searchBarInputValueFirstWord.toLowerCase() !== stateName &&
+
+					searchBarInputValueFirstWord.toLowerCase() !== stateAbbreviation &&
+
+					searchBarInputValueFirstWord.toLowerCase() !== stateValueFirstWord && 
+
+					searchByStreetAddressInputValue.includes(",") === false &&
+
+					(
+						searchBarInputValueFirstWord.toLowerCase() !== cityValueFirstWord.toLowerCase() ||
+
+						searchBarInputValueArray.length >= 2
+
+					)
+				) {
+					
+					actionName = searchByStreetAddressInputValue.toLowerCase();
+					
+				};                
+
+			} else if (searchByStreetAddressInputValue.length > 0) {
+
+				// if user has entered numbers followed by letters, filter actions using street address
+				// parse the search by address input value
+
+				const parsed = parse(searchByStreetAddressInputValue);
+
+				// load the parsed properties
+
+				country = parsed.country;
+				zipcode = parsed.zip;
+				state = parsed.state;
+				city = parsed.city;
+				street= parsed.streetName;
+				streetNumber = parsed.number;
+
+				// use zip code to load county from parsed address
+
+				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
+
+			};
+
+		} else {
+
+			country = "";
+			zipcode = "";
+			state = "";
+			city = "";
+			street= "";
+			streetNumber = "";
+			county = "";
+			actionName = "";
+			stateValueArray = [];
+			stateValueFirstWord = "";
+			cityValueArray = [];
+			cityValueFirstWord = "";
+			countyValueArray = [];
+			countyValueFirstWord = "";
+
+		};
 
         // update the search filter stores
         futureEndorsedActions = [];
@@ -486,6 +557,18 @@
             county: county,
             government_level: "federal"
         };
+
+    };
+
+    // if option is selected, run filters
+
+	let searchbarOptionSelected: boolean = false;
+
+    $: if (searchbarOptionSelected) {
+
+        searchByNameOrLocationInputValueChangeHandler();
+
+        searchbarOptionSelected = false;
 
     };
 
@@ -547,6 +630,8 @@
                                 inputLabel={false}
                                 bind:searchInputValue={searchByStreetAddressInputValue}
                                 searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+								options={statesWithCity}
+                                bind:optionSelected={searchbarOptionSelected}
                             />
                         {:else if !addressLoadSuccess}
                             <p>failed to load address</p>
@@ -559,6 +644,8 @@
                             inputLabel={false}
                             bind:searchInputValue={searchByStreetAddressInputValue}
                             searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                            options={statesWithCity}
+                            bind:optionSelected={searchbarOptionSelected}
                         />
                     {/if}
                 </div>
