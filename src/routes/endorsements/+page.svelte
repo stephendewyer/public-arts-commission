@@ -916,7 +916,7 @@
 			state: `${legislation.state}`,
 			county: `${legislation.county}`,
 			city: `${legislation.city}`,
-			name: `${legislation}`
+			name: `${legislation.legislation_name}`
 		}
 	}));
 
