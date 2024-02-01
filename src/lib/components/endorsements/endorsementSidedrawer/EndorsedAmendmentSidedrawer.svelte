@@ -309,7 +309,7 @@
                     </td>
                     <td style="padding-right: 0;">
                         <div class="y-scrollable_data_cell">
-                            <ol class="y-scrollable_data_cell_content">
+                            <ol class="y-scrollable_data_cell_content" style="margin: 0 0 0 1rem;">
                                 {#each coSponsorsHouseNames as coSponsorHouseName, i}
                                     <li>
                                         {coSponsorHouseName}
@@ -333,7 +333,7 @@
                     </td>
                     <td style="padding-right: 0;">
                         <div class="y-scrollable_data_cell">
-                            <ol class="y-scrollable_data_cell_content">
+                            <ol class="y-scrollable_data_cell_content" style="margin: 0 0 0 1rem;">
                                 {#each coSponsorsSenateNames as coSponsorSenateName, i}
                                     <li>
                                         {coSponsorSenateName}
