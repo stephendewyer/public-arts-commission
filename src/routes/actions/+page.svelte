@@ -248,7 +248,6 @@
         city = reversedGeolocation.addresses[0].address.municipality;
         street= reversedGeolocation.addresses[0].address.street;
         streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
-        actionName = searchByStreetAddressInputValue.toLowerCase();
         // clear categories data
 
         // update the search filter stores
@@ -298,6 +297,8 @@
         // get user's location using JavaScript geolocation
 
     const findUserLocation = () => {
+
+        actionName = "";
 
         navigator.geolocation.getCurrentPosition(success, error);
 
