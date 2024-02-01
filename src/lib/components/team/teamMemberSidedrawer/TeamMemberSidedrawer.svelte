@@ -4,6 +4,8 @@
     import TeamMemberData from '$lib/data/teamMembers.json';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import { page } from '$app/stores';
+    import EmailIcon from '$lib/images/icons/email_icon.svg?raw';
+    import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
 
     let URLPathName: string;
 
@@ -67,19 +69,32 @@
                         <h4 class="info_heading">
                             email
                         </h4>
-                        <a href={`mailto:${teamMember.email}`}>
-                            {teamMember.email}
+                        <a 
+                            class="external_link_container"
+                            href={`mailto:${teamMember.email}`}
+                        >
+                            <span class="email_icon">
+                                {@html EmailIcon}
+                            </span>
+                            <span>
+                                {teamMember.email}
+                            </span>
                         </a>
                     {/if}
                     {#if (teamMember.urlAddress !== null)}
                         <h4 class="info_heading">
                             website(s)
                         </h4>
-                        <ul>
+                        <ul class="external_links">
                             {#each teamMember.urlAddress as url, i}
                                 <a href={url} target="_blank">
-                                    <li class="urlAddress">
-                                        {url}
+                                    <li class="external_link_container">
+                                        <span class="external_link_icon">
+                                            {@html ExternalLinkIcon}
+                                        </span>
+                                        <span class="urlAddress">
+                                            {url}
+                                        </span>
                                     </li>
                                 </a>
                             {/each}
@@ -164,8 +179,43 @@
         font-size: 1.5rem;
     }
 
+    .external_links {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 1rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
     .urlAddress {
         overflow-wrap: break-word;
+    }
+
+    .external_link_container {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        margin-right: 2rem;
+    }
+
+    .external_link_icon {
+        min-width: 1.5rem;
+        width: 1.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .email_icon {
+        min-width: 2.5rem;
+        width: 2.5rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     @media (max-width: 1140px) {
@@ -193,6 +243,16 @@
 
         .info_heading {
             font-size: 1rem;
+        }
+
+        .external_link_icon {
+            width: 1rem;
+            min-width: 1rem;
+        }
+
+        .email_icon {
+            min-width: 1.5rem;
+            width: 1.5rem;
         }
 
     }

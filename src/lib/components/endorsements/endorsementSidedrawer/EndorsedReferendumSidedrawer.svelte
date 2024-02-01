@@ -159,10 +159,12 @@
                     <td>
                         details: 
                     </td>
-                    <td>
-                        {#if (endorsedReferendumSelected?.details)}
-                            {endorsedReferendumSelected?.details}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <p class="y-scrollable_data_cell_content">
+                                {endorsedReferendumSelected?.details}
+                            </p>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -315,6 +317,20 @@
         overflow-wrap: break-word;
         width: 100%;
         font-size: 1.25rem;
+    }
+
+    .y-scrollable_data_cell {
+        height: auto;
+        max-height: 20rem;
+        overflow-y: scroll;
+    }
+
+    .y-scrollable_data_cell_content {
+        height: auto;
+    }
+
+    ol {
+        margin: 0;
     }
     
     @media (max-width: 1140px) {

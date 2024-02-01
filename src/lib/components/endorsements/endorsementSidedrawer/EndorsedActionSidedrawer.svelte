@@ -202,8 +202,12 @@
                     <td>
                         details: 
                     </td>
-                    <td>
-                        {endorsedActionData?.details} 
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <p class="y-scrollable_data_cell_content">
+                                {endorsedActionData?.details} 
+                            </p>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -328,6 +332,16 @@
         overflow-wrap: break-word;
         width: 100%;
         font-size: 1.25rem;
+    }
+
+    .y-scrollable_data_cell {
+        height: auto;
+        max-height: 20rem;
+        overflow-y: scroll;
+    }
+
+    .y-scrollable_data_cell_content {
+        height: auto;
     }
     
     @media (max-width: 1140px) {

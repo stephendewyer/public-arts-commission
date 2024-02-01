@@ -307,10 +307,16 @@
                     <td>
                         House co-sponsor(s): 
                     </td>
-                    <td>
-                        {#if (coSponsorsHouseNames)}
-                            {coSponsorsHouseNames.join(', ').toString()}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <ol class="y-scrollable_data_cell_content">
+                                {#each coSponsorsHouseNames as coSponsorHouseName, i}
+                                    <li>
+                                        {coSponsorHouseName}
+                                    </li>
+                                {/each}
+                            </ol>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -318,29 +324,35 @@
                         Senate sponsor: 
                     </td>
                     <td>
-                        {#if (sponsorsSenateNames)}
-                            {sponsorsSenateNames.join(', ').toString()}
-                        {/if}
+                        {sponsorsSenateNames}
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Senate co-sponsor(s): 
                     </td>
-                    <td>
-                        {#if (coSponsorsSenateNames)}
-                            {coSponsorsSenateNames.join(', ').toString()}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <ol class="y-scrollable_data_cell_content">
+                                {#each coSponsorsSenateNames as coSponsorSenateName, i}
+                                    <li>
+                                        {coSponsorSenateName}
+                                    </li>
+                                {/each}
+                            </ol>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         details: 
                     </td>
-                    <td>
-                        {#if (endorsedAmendmentData?.details)}
-                            {endorsedAmendmentData?.details}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <p class="y-scrollable_data_cell_content">
+                                {endorsedAmendmentData?.details}
+                            </p>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -493,6 +505,20 @@
         overflow-wrap: break-word;
         width: 100%;
         font-size: 1.25rem;
+    }
+
+    .y-scrollable_data_cell {
+        height: auto;
+        max-height: 20rem;
+        overflow-y: scroll;
+    }
+
+    .y-scrollable_data_cell_content {
+        height: auto;
+    }
+
+    ol {
+        margin: 0;
     }
     
     @media (max-width: 1140px) {

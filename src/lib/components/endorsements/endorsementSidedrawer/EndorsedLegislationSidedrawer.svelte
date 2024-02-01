@@ -263,19 +263,23 @@
                         House sponsor: 
                     </td>
                     <td>
-                        {#if (sponsorsHouseNames)}
-                            {sponsorsHouseNames.join(', ').toString()}
-                        {/if}
+                        {sponsorsHouseNames}
                     </td>
                 </tr>
                 <tr>
                     <td>
                         House co-sponsor(s): 
                     </td>
-                    <td>
-                        {#if (coSponsorsHouseNames)}
-                            {coSponsorsHouseNames.join(', ').toString()}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <ol class="y-scrollable_data_cell_content">
+                                {#each coSponsorsHouseNames as coSponsorHouse, i}
+                                    <li>
+                                        {coSponsorHouse}
+                                    </li>
+                                {/each}
+                            </ol> 
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -283,29 +287,35 @@
                         Senate sponsor: 
                     </td>
                     <td>
-                        {#if (sponsorsSenateNames)}
-                            {sponsorsSenateNames.join(', ').toString()}
-                        {/if}
+                        {sponsorsSenateNames}
                     </td>
                 </tr>
                 <tr>
                     <td>
                         Senate co-sponsor(s): 
                     </td>
-                    <td>
-                        {#if (coSponsorsSenateNames)}
-                            {coSponsorsSenateNames.join(', ').toString()}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <ol class="y-scrollable_data_cell_content">
+                                {#each coSponsorsSenateNames as coSponsorName, i}
+                                    <li>
+                                        {coSponsorName}
+                                    </li>
+                                {/each}
+                            </ol>
+                        </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         details: 
                     </td>
-                    <td>
-                        {#if (endorsedLegislationData?.details)}
-                            {endorsedLegislationData?.details}
-                        {/if}
+                    <td style="padding-right: 0;">
+                        <div class="y-scrollable_data_cell">
+                            <p class="y-scrollable_data_cell_content">
+                                {endorsedLegislationData?.details}
+                            </p>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -437,6 +447,16 @@
         justify-content: flex-start;
     }
 
+    .y-scrollable_data_cell {
+        height: auto;
+        max-height: 20rem;
+        overflow-y: scroll;
+    }
+
+    .y-scrollable_data_cell_content {
+        height: auto;
+    }
+
     .external_link_container {
         display: flex;
         flex-direction: row;
@@ -458,6 +478,10 @@
         overflow-wrap: break-word;
         width: 100%;
         font-size: 1.25rem;
+    }
+
+    ol {
+        margin: 0;
     }
     
     @media (max-width: 1140px) {
@@ -482,6 +506,13 @@
             font-size: 1.125rem;
         }
 
+        .table_cell_heading {
+            padding: 0.75rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            font-size: 1.125rem;
+        }
+
         .website_URL {
             font-size: 1.125rem;
         }
@@ -492,8 +523,11 @@
 
         tbody > tr > td {
             padding: 0.5rem 1rem;
-            overflow-wrap: break-word;
-            hyphens: auto;
+            font-size: 1rem;
+        }
+
+        .table_cell_heading {
+            padding: 0.5rem 1rem;
             font-size: 1rem;
         }
 
