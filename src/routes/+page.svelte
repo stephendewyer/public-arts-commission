@@ -268,7 +268,8 @@
 		<img src={PublicArtsCommissionBanner} alt="public arts commission banner" />
 	</picture>
 	<h1 class="heading01">
-		Art for everyone is fundamental to democracy.  We help grow our political imagination to support a more egalitarian society.
+		Art for everyone is fundamental to democracy.  
+		We help grow our political imagination to support a more egalitarian society.  Our mission is to create a fairer economy for everyone including art workers.
 	</h1>
 	<form 
 		on:submit|preventDefault={searchSubmitHandler}
