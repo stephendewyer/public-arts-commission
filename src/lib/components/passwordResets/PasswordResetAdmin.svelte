@@ -49,7 +49,6 @@
             }
         });
         responseItem = await response.json();
-        console.log(responseItem);
         return responseItem;
     };
 

@@ -15,8 +15,6 @@ export async function PATCH({request}) {
 
     const {password, reenteredPassword, paramsTokenID, } = data;
 
-    console.log(paramsTokenID);
-
     // connect to the database
 
     let res = await mysqlConnection();

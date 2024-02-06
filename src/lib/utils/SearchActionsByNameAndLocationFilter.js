@@ -5,7 +5,6 @@ export const SearchActionsByNameAndLocationFilter = (
     /** @type {{ searchTerms: { government_level: string; action_name: string; state: string; county: string; city: string; }; }} */ item
 ) => {
 
-    // console.log("search in store: ", store.search)
     let handledStateName;
 
     let handleStateName = false;

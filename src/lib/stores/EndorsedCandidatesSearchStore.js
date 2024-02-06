@@ -27,8 +27,6 @@ export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
 
     const searchYear = store.search.year.toString();
 
-    // console.log("candidates store: ", store);
-
     // filter the endorsed candidates data
     store.filtered = store.data.filter((/** @type {any} */ item) => {
 

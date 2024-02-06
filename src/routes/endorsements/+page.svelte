@@ -254,7 +254,14 @@
 		
 		const response = await fetch("/api/getEndorsedCandidates");
 
-		endorsedCandidates = await response.json();
+		let endorsedCandidatesRaw = await response.json();
+
+		endorsedCandidates = endorsedCandidatesRaw.sort((a: any, b: any) => {
+			let dateA: any = new Date(a.election_date_general);
+			let dateB: any = new Date(b.election_date_general);
+
+			return dateB - dateA;
+		});
 
 		if (response.ok) {
 
@@ -286,7 +293,13 @@
 
 		const response = await fetch("/api/getEndorsedLegislation");
 
-		endorsedLegislation = await response.json();
+		let endorsedLegislationRaw = await response.json();
+		endorsedLegislation = endorsedLegislationRaw.sort((a: number | any, b: number | any) => {
+			let dateA: number = a.year_released;
+			let dateB: number = b.year_released;
+
+			return dateB - dateA;
+		});
 
 		if (response.ok) {
 
@@ -318,7 +331,14 @@
 
 		const response = await fetch("/api/getEndorsedAmendments");
 
-		endorsedAmendments = await response.json();
+		let endorsedAmendmentsRaw = await response.json();
+
+		endorsedAmendments = endorsedAmendmentsRaw.sort((a: any, b: any) => {
+			let dateA: any | number = a.year_released;
+			let dateB: any | number = b.year_released;
+
+			return dateB - dateA;
+		});
 
 		if (response.ok) {
 
@@ -350,7 +370,16 @@
 
 		const response = await fetch("/api/getEndorsedReferendums");
 
-		endorsedReferendums = await response.json();
+		let endorsedReferendumsRaw = await response.json();
+
+		endorsedReferendums = endorsedReferendumsRaw.sort((a: any, b: any) => {
+			let dateA: any = new Date(a.election_date);
+			let dateB: any = new Date(b.election_date);
+
+			return dateB - dateA;
+		});
+
+		// order referendums by most recent election_data
 
 		if (response.ok) {
 

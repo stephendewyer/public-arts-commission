@@ -33,8 +33,6 @@
 
 	$: endorsedLegislation = [...data.streamed.endorsed_legislation];
 
-    // $: console.log(endorsedLegislation);
-
     let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
 	$: endorsedAmendments = [...data.streamed.endorsed_amendments];

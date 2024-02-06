@@ -8,8 +8,6 @@ export const load = async ({params, locals}) => {
 
     const campaignApplicationID = params.campaignID.split("=")[1];
 
-    console.log(campaignApplicationID)
-
     // get the userID from campaign application row in campaign_applications
 
     const loadCampaignApplicationUserIDStatement = `SELECT user_ID 
