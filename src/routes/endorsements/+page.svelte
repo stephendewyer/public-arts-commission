@@ -1032,7 +1032,7 @@
 
 	$: unsubscribeSearchEndorsedReferendumsStore = searchEndorsedReferendumsStore.subscribe((model) => {
 
-		searchEndorsedReferendumsHandler(model)
+		searchEndorsedReferendumsHandler(model);
 
 	});
 

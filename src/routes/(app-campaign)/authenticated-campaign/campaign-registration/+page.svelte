@@ -262,11 +262,18 @@
         on:submit|preventDefault={submitCampaignRegistrationHandler}
         enctype="multipart/form-data"
     >
+    <h4 style="margin: 0 auto;">*indicates required</h4>
         <h3 class="select_image_heading">
-            select an image to represent the campaign*
+            select an image to represent the campaign
         </h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
+        <ul>
+            <li class="constraints">
+                file formats accepted: JPG, PNG, GIF
+            </li>
+            <li class="constraints">
+                maximum file size: 2MB
+            </li>
+        </ul>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
