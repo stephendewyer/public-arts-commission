@@ -231,6 +231,34 @@ declare global {
 		public_ID: string;
 	}
 
+	interface CandidateWithImageNominated {
+		candidate_ID: number;
+		user_ID: number;
+		image_ID: number;
+		campaign_name: string;
+		office_sought_starting_year: number;
+		election_date_primary: any;
+		election_date_general: any;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		party: string;
+		website_URL: string;
+		electorate: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+		date_nominated: Date;
+		status: string;
+		email: string;
+		name_first: string;
+		name_last: string;
+	}
+
 	interface Legislation {
 		legislation_ID: number;
 		image_ID: number;
@@ -340,7 +368,37 @@ declare global {
 		public_ID: string;
 	}
 
-	
+	interface LegislationWithSponsorsAndImageNominated {
+		legislation_ID: number;
+		image_ID: number;
+		legislation_name: string;
+		year_released: number;
+		year_introduced_House: number;
+		year_introduced_Senate: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		session_House: string;
+		session_Senate: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		sponsors_House: SponsorHouse[];
+		sponsors_Senate: SponsorsSenate[];
+		co_sponsors_House: CoSponsorHouse[];
+		co_sponsors_Senate: CoSponsorsSenate[];
+		public_ID: string;
+		date_nominated: Date;
+		status: string;
+		email: string;
+		name_first: string;
+		name_last: string;
+	}
 
 	interface Amendment {
 		amendment_ID: number;
@@ -460,6 +518,41 @@ declare global {
 		co_sponsors_Senate: CoSponsorsSenate[];
 	}
 
+	interface AmendmentWithSponsorsAndImageNominated {
+		amendment_ID: number;
+		image_ID: number;
+		amendment_name: string;
+		year_released: number;
+		year_introduced_House: number;
+		year_introduced_Senate: number;
+		election_date: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		introduced_in_House: number;
+		introduced_in_Senate: number;
+		session_House: string;
+		session_Senate: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+		sponsors_House: SponsorHouse[];
+		sponsors_Senate: SponsorsSenate[];
+		co_sponsors_House: CoSponsorHouse[];
+		co_sponsors_Senate: CoSponsorsSenate[];
+		date_nominated: Date;
+		status: string;
+		email: string;
+		name_first: string;
+		name_last: string;
+	}
+
 	interface Action {
 		action_ID: number;
 		image_ID: number;
@@ -526,6 +619,39 @@ declare global {
 		public_ID: string;
 	}
 
+	interface ActionWithImageNominated {
+		action_ID: number;
+		user_ID: number;
+		image_ID: number;
+		action_name: string;
+		all_day_event: boolean,
+		all_day_event_date: Date,
+		date_start: any;
+		date_end: any;
+		time_start: Date;
+		time_end: Date;
+		time_zone: string;
+		action_street_address: string;
+		action_street_address_02: string;
+		action_city: string;
+		action_state: string;
+		action_zip_code: number;
+		government_level: string;
+		website_URL: string;
+		details: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+		date_nominated: Date;
+		status: string;
+		email: string;
+		name_first: string;
+		name_last: string;
+	}
+
 	interface Referendum {
 		referendum_ID: number;
 		image_ID: number;
@@ -582,6 +708,43 @@ declare global {
 		image_URL: string;
 		alt_text: string;
 		public_ID: string;
+	}
+
+	interface ReferendumWithImageNominated {
+		referendum_ID: number;
+		image_ID: number;
+		referendum_name: string;
+		starting_year_if_enacted: number;
+		election_date: Date;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		elected: number;
+		rejected: number;
+		pending_election: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: E164Number | null;
+		contact_street_address: string;
+		contact_street_address_02: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		contact_email: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+		date_nominated: Date;
+		status: string;
+		email: string;
+		name_first: string;
+		name_last: string;
 	}
 
 	interface Image {

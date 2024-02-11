@@ -320,7 +320,7 @@
                         required={true}
                         dateInputErrorMessage="primary election date required"
                     >
-                        primary election date*
+                        primary election date
                     </DateInput>
                 </div>
                 <div class="create_account_input">

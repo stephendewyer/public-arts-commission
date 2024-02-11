@@ -38,7 +38,6 @@ export async function POST({request}) {
     !campaignName ||
     !electorate ||
     !party ||
-    !primaryElectionDate ||
     !generalElectionDate ||
     !nameFirst ||
     !nameLast ||

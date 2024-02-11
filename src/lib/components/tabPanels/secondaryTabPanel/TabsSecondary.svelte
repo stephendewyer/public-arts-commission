@@ -42,7 +42,7 @@
         cursor: pointer;
         background-color: transparent;
         border: none;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 600;
         display: flex;
         flex-direction: column;
@@ -67,7 +67,7 @@
         cursor: pointer;
         background-color: transparent;
         border: none;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-weight: 600;
         display: flex;
         flex-direction: column;
@@ -131,23 +131,23 @@
         }
 
         .active_tab {
-            font-size: 1.35rem;
+            font-size: 1.1rem;
         }
 
         .tab {
-            font-size: 1.35rem;
+            font-size: 1.1rem;
         }
     }
   
     @media (max-width: 720px) {
 
         .tab {
-            font-size: 1rem;
+            font-size: 0.85rem;
             padding: 0 0.5rem;
         }
 
         .active_tab {
-            font-size: 1rem;
+            font-size: 0.85rem;
             padding: 0 0.5rem;
         }
 

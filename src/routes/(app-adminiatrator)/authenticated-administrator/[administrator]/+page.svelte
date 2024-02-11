@@ -18,6 +18,7 @@
     import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
     import { page } from '$app/stores';
     import GovernmentLevels from '$lib/data/governmentLevel.json';
+    import { onMount } from 'svelte';
 
     const slug: string = $page.url.pathname;
 
@@ -25,25 +26,438 @@
 
     $: data;
 
-    let endorsedCandidates: CandidateWithImage[] = [];
+    // get endorsed candidates data from database
 
-	$: endorsedCandidates = [...data.streamed.endorsed_candidates];
+	let endorsedCandidates: CandidateWithImage[] = [];
+
+    let pendingEndorsedCandidatesData: boolean = false;
+
+    let getEndorsedCandidatesDataSuccess: boolean | null = null;
+
+    async function getEndorsedCandidatesData() {
+
+        pendingEndorsedCandidatesData = true;
+        
+        const response = await fetch(`/authenticated-administrator/api/loadCandidateEndorsements`);
+
+        let endorsedCandidatesRaw = await response.json();
+
+        endorsedCandidates = endorsedCandidatesRaw.sort((a: any, b: any) => {
+            let dateA: any = new Date(a.election_date_general);
+            let dateB: any = new Date(b.election_date_general);
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingEndorsedCandidatesData = false;
+
+            getEndorsedCandidatesDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingEndorsedCandidatesData = false;
+
+            getEndorsedCandidatesDataSuccess = false;
+
+        };
+
+    };
+
+    // get nominated candidates data from database
+
+    let nominatedCandidates: CandidateWithImageNominated[] = [];
+
+    let pendingNominatedCandidatesData: boolean = false;
+
+    let getNominatedCandidatesDataSuccess: boolean | null = null;
+
+    async function getNominatedCandidatesData() {
+
+        pendingNominatedCandidatesData = true;
+        
+        const response = await fetch(`/authenticated-administrator/api/loadCandidateNominations`);
+
+        let nominatedCandidatesRaw = await response.json();
+
+        nominatedCandidates = nominatedCandidatesRaw.sort((a: any, b: any) => {
+            let dateA: any = new Date(a.election_date_general);
+            let dateB: any = new Date(b.election_date_general);
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingNominatedCandidatesData = false;
+
+            getNominatedCandidatesDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingNominatedCandidatesData = false;
+
+            getNominatedCandidatesDataSuccess = false;
+
+        };
+
+    };
+
+    // begin get campaign applications data from database
+
+    let candidateApplications: CampaignApplication[] = [];
+
+    let pendingCandidateApplicationsData: boolean = false;
+
+    let getCandidateApplicationsDataSuccess: boolean | null = null;
+
+    async function getCandidateApplicationsData() {
+
+        pendingCandidateApplicationsData = true;
+        
+        const response = await fetch(`/authenticated-administrator/api/loadCandidateApplications`);
+
+        let candidateApplicationsRaw = await response.json();
+
+        candidateApplications = candidateApplicationsRaw.sort((a: any, b: any) => {
+            let dateA: any = new Date(a.election_date_general);
+            let dateB: any = new Date(b.election_date_general);
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingCandidateApplicationsData = false;
+
+            getCandidateApplicationsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingCandidateApplicationsData = false;
+
+            getCandidateApplicationsDataSuccess = false;
+
+        };
+
+    };
+
+    // get endorsed legislation data from database
 
     let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
 
-	$: endorsedLegislation = [...data.streamed.endorsed_legislation];
+    let pendingEndorsedLegislationData: boolean = false;
+
+    let getEndorsedLegislationDataSuccess: boolean | null = null;
+
+    async function getEndorsedLegislationData() {
+
+        pendingEndorsedLegislationData = true;
+
+        const response = await fetch(`/authenticated-administrator/api/loadLegislationEndorsements`);
+
+        let endorsedLegislationRaw = await response.json();
+        endorsedLegislation = endorsedLegislationRaw.sort((a: number | any, b: number | any) => {
+            let dateA: number = a.year_released;
+            let dateB: number = b.year_released;
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingEndorsedLegislationData = false;
+
+            getEndorsedLegislationDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingEndorsedLegislationData = false;
+
+            getEndorsedCandidatesDataSuccess = false;
+
+        };
+
+    };
+
+    // get legislation nominations data from database
+
+    let nominatedLegislation: LegislationWithSponsorsAndImageNominated[] = [];
+
+    let pendingNominatedLegislationData: boolean = false;
+
+    let getNominatedLegislationDataSuccess: boolean | null = null;
+
+    async function getNominatedLegislationData() {
+
+        pendingNominatedLegislationData = true;
+
+        const response = await fetch(`/authenticated-administrator/api/loadLegislationNominations`);
+
+        let nominatedLegislationRaw = await response.json();
+        nominatedLegislation = nominatedLegislationRaw.sort((a: number | any, b: number | any) => {
+            let dateA: number = a.year_released;
+            let dateB: number = b.year_released;
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingNominatedLegislationData = false;
+
+            getNominatedLegislationDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingNominatedLegislationData = false;
+
+            getNominatedCandidatesDataSuccess = false;
+
+        };
+
+    };
+
+    // get endorsed amendments data from database
 
     let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
-	$: endorsedAmendments = [...data.streamed.endorsed_amendments];
+    let pendingEndorsedAmendmentsData: boolean = false;
+
+    let getEndorsedAmendmentsDataSuccess: boolean | null = null;
+
+    async function getEndorsedAmendmentsData() {
+
+        pendingEndorsedAmendmentsData = true;
+
+        const response = await fetch(`/authenticated-administrator/api/loadAmendmentEndorsements`);
+
+        let endorsedAmendmentsRaw = await response.json();
+
+        endorsedAmendments = endorsedAmendmentsRaw.sort((a: any, b: any) => {
+            let dateA: any | number = a.year_released;
+            let dateB: any | number = b.year_released;
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingEndorsedAmendmentsData = false;
+
+            getEndorsedAmendmentsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingEndorsedAmendmentsData = false;
+
+            getEndorsedAmendmentsDataSuccess = false;
+
+        };
+
+    };
+
+    // get nominated amendments data from the database
+
+    let nominatedAmendments: AmendmentWithSponsorsAndImageNominated[] = [];
+
+    let pendingNominatedAmendmentsData: boolean = false;
+
+    let getNominatedAmendmentsDataSuccess: boolean | null = null;
+
+    async function getNominatedAmendmentsData() {
+
+        pendingNominatedAmendmentsData = true;
+
+        const response = await fetch(`/authenticated-administrator/api/loadAmendmentNominations`);
+
+        let nominatedAmendmentsRaw = await response.json();
+
+        nominatedAmendments = nominatedAmendmentsRaw.sort((a: any, b: any) => {
+            let dateA: any | number = a.year_released;
+            let dateB: any | number = b.year_released;
+
+            return dateB - dateA;
+        });
+
+        if (response.ok) {
+
+            pendingNominatedAmendmentsData = false;
+
+            getNominatedAmendmentsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingNominatedAmendmentsData = false;
+
+            getNominatedAmendmentsDataSuccess = false;
+
+        };
+
+    };
+
+    // get endorsed referendums from the database
 
     let endorsedReferendums: ReferendumWithImage[] = [];
 
-	$: endorsedReferendums = [...data.streamed.endorsed_referendums];
+    let pendingEndorsedReferendumsData: boolean = false;
+
+    let getEndorsedReferendumsDataSuccess: boolean | null = null;
+
+    async function getEndorsedReferendums() {
+
+        pendingEndorsedReferendumsData = true;
+
+        const response = await fetch(`/authenticated-administrator/api/loadReferendumEndorsements`);
+
+        let endorsedReferendumsRaw = await response.json();
+
+        endorsedReferendums = endorsedReferendumsRaw.sort((a: any, b: any) => {
+            let dateA: any = new Date(a.election_date);
+            let dateB: any = new Date(b.election_date);
+
+            return dateB - dateA;
+        });
+
+        // order referendums by most recent election_data
+
+        if (response.ok) {
+
+            console.log(endorsedReferendums)
+
+            pendingEndorsedReferendumsData = false;
+
+            getEndorsedReferendumsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingEndorsedReferendumsData = false;
+
+            getEndorsedReferendumsDataSuccess = false;
+
+        };
+
+    };	
+
+    // get nominated referendums from the database
+
+    let nominatedReferendums: ReferendumWithImageNominated[] = [];
+
+    let pendingNominatedReferendumsData: boolean = false;
+
+    let getNominatedReferendumsDataSuccess: boolean | null = null;
+
+    async function getNominatedReferendums() {
+
+        pendingNominatedReferendumsData = true;
+
+        const response = await fetch(`/authenticated-administrator/api/loadReferendumNominations`);
+
+        let nominatedReferendumsRaw = await response.json();
+
+        nominatedReferendums = nominatedReferendumsRaw.sort((a: any, b: any) => {
+            let dateA: any = new Date(a.election_date);
+            let dateB: any = new Date(b.election_date);
+
+            return dateB - dateA;
+        });
+
+        // order referendums by most recent election_data
+
+        if (response.ok) {
+
+            pendingNominatedReferendumsData = false;
+
+            getNominatedReferendumsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingNominatedReferendumsData = false;
+
+            getNominatedReferendumsDataSuccess = false;
+
+        };
+
+    };	
+
+    // get endorsed actions data
 
     let endorsedActions: ActionWithImage[] = [];
 
-	$: endorsedActions = [...data.streamed.endorsed_actions];
+    let pendingEndorsedActionsData: boolean = false;
+
+    let getEndorsedActionsDataSuccess: boolean | null = null;
+
+    async function getEndorsedActionsData() {
+
+        pendingEndorsedActionsData = true;
+        
+        const response = await fetch(`/authenticated-administrator/api/loadActionEndorsements`);
+
+        endorsedActions= await response.json();
+
+        if (response.ok) {
+
+            pendingEndorsedActionsData = false;
+
+            getEndorsedActionsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingEndorsedActionsData = false;
+
+            getEndorsedActionsDataSuccess = false;
+
+        };
+
+    };
+
+    // get nominated actions data
+
+    let nominatedActions: ActionWithImageNominated[] = [];
+
+    let pendingNominatedActionsData: boolean = false;
+
+    let getNominatedActionsDataSuccess: boolean | null = null;
+
+    async function getNominatedActionsData() {
+
+        pendingNominatedActionsData = true;
+        
+        const response = await fetch(`/authenticated-administrator/api/loadActionNominations`);
+
+        nominatedActions= await response.json();
+
+        if (response.ok) {
+
+            pendingNominatedActionsData = false;
+
+            getNominatedActionsDataSuccess = true;
+
+        } else if (!response.ok) {
+
+            pendingNominatedActionsData = false;
+
+            getNominatedActionsDataSuccess = false;
+
+        };
+
+    };
+
+    onMount(() => {
+        getEndorsedReferendums();
+        getNominatedReferendums();
+        getEndorsedActionsData();
+        getNominatedActionsData();
+        getEndorsedAmendmentsData();
+        getNominatedAmendmentsData();
+        getEndorsedLegislationData();
+        getNominatedLegislationData();
+        getEndorsedCandidatesData();
+        getNominatedCandidatesData();
+        getCandidateApplicationsData();
+    });
 
     let username = data.streamed.username;
 
@@ -63,16 +477,32 @@
 
     const governmentLevelOptions = GovernmentLevels;
 
-    let campaignAndActionsTabPanels: tabPanels[];
+    let tabPanels: tabPanels[];
 
-    $: campaignAndActionsTabPanels = [
+    $: tabPanels = [
         {
             id: uuidv4(),
             index: 0,
             label: "candidates",
             hasCapitol: false,
             panel: PanelCandidates,
-            data: endorsedCandidates
+            data: [
+                {
+                    table: endorsedCandidates,
+                    pending: pendingEndorsedCandidatesData,
+                    success: getEndorsedCandidatesDataSuccess
+                },
+                {
+                    table: nominatedCandidates,
+                    pending: pendingNominatedCandidatesData,
+                    success: getNominatedCandidatesDataSuccess
+                },
+                {
+                    table: candidateApplications,
+                    pending: pendingCandidateApplicationsData,
+                    success: getCandidateApplicationsDataSuccess
+                }
+            ]
         },
         {
             id: uuidv4(),
@@ -80,7 +510,18 @@
             label: "referendums",
             hasCapitol: false,
             panel: PanelReferendums,
-            data: endorsedReferendums
+            data: [
+                {
+                    table: endorsedReferendums,
+                    pending: pendingEndorsedReferendumsData,
+                    success: getEndorsedReferendumsDataSuccess
+                },
+                {
+                    table: nominatedReferendums,
+                    pending: pendingNominatedReferendumsData,
+                    success: getNominatedReferendumsDataSuccess
+                }
+            ]
         },
         {
             id: uuidv4(),
@@ -88,7 +529,18 @@
             label: "legislation",
             hasCapitol: false,
             panel: PanelLegislation,
-            data: endorsedLegislation
+            data: [
+                {
+                    table: endorsedLegislation,
+                    pending: pendingEndorsedLegislationData,
+                    success: getEndorsedLegislationDataSuccess
+                },
+                {
+                    table: nominatedLegislation,
+                    pending: pendingNominatedLegislationData,
+                    success: getNominatedLegislationDataSuccess
+                }
+            ]
         },
         {
             id: uuidv4(),
@@ -96,7 +548,18 @@
             label: "amendments",
             hasCapitol: false,
             panel: PanelAmendments,
-            data: endorsedAmendments
+            data: [
+                {
+                    table: endorsedAmendments,
+                    pending: pendingEndorsedAmendmentsData,
+                    success: getEndorsedAmendmentsDataSuccess
+                },
+                {
+                    table: nominatedAmendments,
+                    pending: pendingNominatedAmendmentsData,
+                    success: getNominatedAmendmentsDataSuccess
+                }
+            ]
         },
         {
             id: uuidv4(),
@@ -104,7 +567,18 @@
             label: "actions",
             hasCapitol: false,
             panel: PanelActions,
-            data: endorsedActions
+            data: [
+                {
+                    table: endorsedActions,
+                    pending: pendingEndorsedActionsData,
+                    success: getEndorsedActionsDataSuccess
+                },
+                {
+                    table: nominatedActions,
+                    pending: pendingNominatedActionsData,
+                    success: getNominatedActionsDataSuccess
+                }
+            ]
         }
     ];
 
@@ -242,11 +716,11 @@
     </div>
     <div class="panel">
         <Tabs
-            tabPanels={campaignAndActionsTabPanels} 
+            tabPanels={tabPanels} 
             bind:activeTab={activeTab}
         />
         <Panel
-            tabPanels={campaignAndActionsTabPanels} 
+            tabPanels={tabPanels} 
             bind:activeTab={activeTab}
         />
     </div>
