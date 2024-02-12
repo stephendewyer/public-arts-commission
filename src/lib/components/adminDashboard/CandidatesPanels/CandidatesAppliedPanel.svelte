@@ -3,6 +3,10 @@
     import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     import Pagination from "../../pagination/Pagination.svelte";
+    import TableActionButton from "$lib/components/buttons/TableActionButton.svelte";
+    import { page } from "$app/stores";
+
+    let pathName: string = $page.url.pathname;
 
     export let panel_data: any;
 
@@ -100,8 +104,10 @@
                         {campaign?.application_status}
                     </td>
                     <td>
-                        {#if !(campaign?.application_status)}
-                            endorse
+                        {#if (campaign?.application_status === "submitted")}
+                            <a href={`${pathName}/submitted-candidate-endorsement-application?candidate_application_ID=${campaign.campaign_application_ID}`}>
+                                <TableActionButton>pending</TableActionButton>
+                            </a>
                         {:else if (campaign?.application_status === "endorsed")}
                             withdraw endorsement
                         {/if}

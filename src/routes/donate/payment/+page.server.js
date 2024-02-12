@@ -37,14 +37,25 @@ export const load = async ({ url }) => {
     let res = await mysqlConnection();
 
     const customerIdQuery = `SELECT stripe_id FROM users_in_checkout WHERE Email = '${email}';`;
+    
+    /**
+     * @type {string | any[]}
+     */
+    let rowsJson = [];
 
-    const [rows, fields] = await res.query(customerIdQuery);
+    await res.query(customerIdQuery)
+    .then(([ rows ]) => {
+
+        rowsJson = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
 
     res.end();
-
-    // convert the rows into valid json to avoid OKPacket type
-
-    const rowsJson = JSON.parse(JSON.stringify(rows));
 
     const rowsLength = rowsJson.length -1;
 

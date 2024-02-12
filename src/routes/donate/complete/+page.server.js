@@ -59,13 +59,24 @@ export async function load({ url }) {
 
     const customerQuery = `SELECT * FROM users_in_checkout WHERE stripe_id = "${paymentIntent?.customer}";`
 
-    const [rows, fields] = await res.query(customerQuery);
+    /**
+     * @type {string | any[]}
+     */
+    let rowsJson = [];
+
+    await res.query(customerQuery)
+    .then(([ rows ]) => {
+
+        rowsJson = JSON.parse(JSON.stringify(rows));
+
+    })
+    .catch(error => {
+
+        throw error;
+
+    });
 
     res.end();
-
-    // convert the rows into valid json to avoid OKPacket type
-
-    const rowsJson = JSON.parse(JSON.stringify(rows));
 
     const nameFirst = rowsJson[0].NameFirst;
 

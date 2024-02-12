@@ -4,6 +4,7 @@
     import { EndorsedReferendumOpenStore } from "$lib/stores/EndorsedReferendumOpenStore";
     import { EndorsedReferendumSelectedStore } from "$lib/stores/EndorsedReferendumSelectedStore";
     import { goto } from "$app/navigation";
+    import TableActionButton from "$lib/components/buttons/TableActionButton.svelte";
 
     export let panel_data: any;
 
@@ -115,7 +116,7 @@
                         {referendum?.status}
                     </td>
                     <td>
-                        action
+                        <TableActionButton>action</TableActionButton>
                     </td>
                     <td>
                         <button 

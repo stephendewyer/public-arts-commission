@@ -1,9 +1,12 @@
 <script lang="ts">
     import MoreInfoButton from "../../buttons/MoreInfoButton.svelte";
-    import EditIcon from "$lib/images/icons/edit_icon.svg?raw";
     import { EndorsedCandidateSelectedStore } from "$lib/stores/EndorsedCandidateSelectedStore";
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     import Pagination from "../../pagination/Pagination.svelte";
+    import TableActionButton from "$lib/components/buttons/TableActionButton.svelte";
+    import { page } from "$app/stores";
+
+    let pathName: string = $page.url.pathname;
 
     export let panel_data: any;
 
@@ -110,7 +113,10 @@
                     </td>
                     <td>
                         {#if !(campaign?.status)}
-                            endorse
+                        <a href={`${pathName}`}>
+                            <TableActionButton>action</TableActionButton>
+                        </a>
+                            
                         {:else if (campaign?.status === "endorsed")}
                             withdraw endorsement
                         {/if}

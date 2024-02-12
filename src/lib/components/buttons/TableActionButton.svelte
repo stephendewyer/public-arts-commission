@@ -41,6 +41,11 @@
 
 	.arrow {
 		width: 0.6rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
 	}
 
     @media (max-width: 1140px) {
