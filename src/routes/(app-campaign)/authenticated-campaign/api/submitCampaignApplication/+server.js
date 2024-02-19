@@ -77,7 +77,7 @@ export const POST = async ({request}) => {
             text: `we received your application for endorsement by public arts commission submitted on ${parsedDate}.`,
             html: `<p>Hi ${userEmail},<br /><br />
             Thank you for submitting an application on behalf of ${campaignName} to receive an endorsement by public arts commission.<br /><br />
-            We will carefully review your application and contact you should ${campaignName} meet our endoresement criteria.<br /><br />
+            We will carefully review your application and contact you in the near future.<br /><br />
             If you have any questions, please contact stephen dewyer at sdewyer@publicartscommission.org.<br /><br />
             Kind regards,<br /><br />public arts commission<br />https://public-arts-commission.vercel.app/</p>`,
         },

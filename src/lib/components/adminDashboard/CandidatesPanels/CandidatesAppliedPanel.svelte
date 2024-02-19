@@ -105,7 +105,8 @@
                     </td>
                     <td>
                         {#if (campaign?.application_status === "submitted")}
-                            <a href={`${pathName}/submitted-candidate-endorsement-application?candidate_application_ID=${campaign.campaign_application_ID}`}>
+                        <!-- IMPORTANT! use underscore before campaign.campaign_application_ID to indicate campaign application ID -->
+                            <a href={`${pathName}/submitted-candidate-endorsement-application-candidate-application-ID_${campaign.campaign_application_ID}`}>
                                 <TableActionButton>pending</TableActionButton>
                             </a>
                         {:else if (campaign?.application_status === "endorsed")}

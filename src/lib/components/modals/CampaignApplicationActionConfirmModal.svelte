@@ -1,70 +1,65 @@
 <script lang="ts">
-    import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore';
-    import { DeleteConfirmedStore } from '$lib/stores/DeleteConfirmedStore';
+    import { CampaignActionConfirmationStore } from '$lib/stores/CampaignActionConfirmationStore';
+    import { CampaignActionConfirmedStore } from '$lib/stores/CampaignActionConfirmedStore';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
-    import { onDestroy } from 'svelte';
     import SubmitButtonSecondary from '../buttons/SubmitButtonSecondary.svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
-    let modalOpen = false;
-
-	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-
-		modalOpen = value;
-
-	});
-
-    onDestroy(() => {
-
-        unsubscribeModalOpenStore();
-
-    });
+    let campaignApplication: CampaignApplicationWithImageRow | any;
 
     const closeClickHandler = () => {
 
-        modalOpen = false;
+        $ModalOpenStore = false;
 
-        ModalOpenStore.update((value) => value = modalOpen);
-
-        DeleteConfirmationStore.update((value: DeleteItem | any) => value = null);
+        $CampaignActionConfirmationStore = {
+            candidate_application: null,
+            selected: null
+        };
 
     };    
 
-    const deleteSubmitHandler = async () => {
+    const actionSubmitHandler = async () => {
         // confirm delete in store
-        if ($DeleteConfirmationStore === null) {
+        if ($CampaignActionConfirmationStore.candidate_application === null) {
 
             return;
 
         };
 
-        DeleteConfirmedStore.update(value => value = true);
+        $CampaignActionConfirmedStore = true;
 
-        modalOpen = false;
+        $ModalOpenStore = false;
 
-        ModalOpenStore.update((value) => value = modalOpen);
-
-        DeleteConfirmationStore.update((value) => value = null);
+        $CampaignActionConfirmationStore = {
+            candidate_application: null,
+            selected: null
+        };
 
     };
 
-    let deleteConfirmationModalOpen: boolean = false;
+    let actionConfirmationModalOpen: boolean = false;
 
-    $: if (modalOpen && ($DeleteConfirmationStore !== null)) {
+    let campaignName: string;
 
-        deleteConfirmationModalOpen = true;
+    $: if ($ModalOpenStore && ($CampaignActionConfirmationStore.candidate_application !== null)) {
+
+        actionConfirmationModalOpen = true;
+
+        campaignApplication = $CampaignActionConfirmationStore.candidate_application;
+
+        campaignName = campaignApplication.campaign_name;
 
     } else {
 
-        deleteConfirmationModalOpen = false;
+        actionConfirmationModalOpen = false;
 
     };
 
 </script>
 
-<dialog open={deleteConfirmationModalOpen}
-    class={(deleteConfirmationModalOpen) ? "dialog_open" : "dialog_closed"}
-    aria-hidden={ (deleteConfirmationModalOpen) ? 'false' : 'true'}
+<dialog open={actionConfirmationModalOpen}
+    class={(actionConfirmationModalOpen) ? "dialog_open" : "dialog_closed"}
+    aria-hidden={ (actionConfirmationModalOpen) ? 'false' : 'true'}
 >
     <div class="close_button_container">
         <button 
@@ -76,13 +71,22 @@
         </button>
     </div>
     <div class="info_container">
-        <h1 class="modal_heading">confirm delete</h1>
-        <h2 class="modal_heading_02">do you want to delete {$DeleteConfirmationStore}?</h2>
-        <form on:submit|preventDefault={deleteSubmitHandler}>
+        <h1 class="modal_heading">
+            {#if $CampaignActionConfirmationStore.selected === "yes"}
+                confirm endorsement for {campaignName}
+            {:else if $CampaignActionConfirmationStore.selected === "no"}
+                confirm do not endorse {campaignName}
+            {/if}
+        </h1>
+        <form on:submit|preventDefault={actionSubmitHandler}>
             <SubmitButtonSecondary 
                 disable={false}
             >
-                delete
+                {#if $CampaignActionConfirmationStore.selected === "yes"}
+                    endorse
+                {:else if $CampaignActionConfirmationStore.selected === "no"}
+                    do not endorse
+                {/if}
             </SubmitButtonSecondary>
         </form>
     </div>

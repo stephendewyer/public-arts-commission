@@ -3,9 +3,17 @@
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import YesNoRadioButtons from "$lib/components/inputs/YesNoRadioButtons.svelte";
     import { ModalOpenStore } from "$lib/stores/ModelOpenStore.js";
+    import { CampaignActionConfirmationStore } from "$lib/stores/CampaignActionConfirmationStore.js";
+    import { CampaignActionConfirmedStore } from "$lib/stores/CampaignActionConfirmedStore.js";
+    import CancelButton from "$lib/components/buttons/CancelButton.svelte";
+    import { goto } from "$app/navigation";
+    import PendingFlashMessage from "$lib/components/flashMessages/PendingFlashMessage.svelte";
+    import SuccessFlashMessage from "$lib/components/flashMessages/SuccessFlashMessage.svelte";
+    import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
+
     export let data;
 
-    let endorse: string;
+    let endorse: string | any;
 
     $: endorse;
 
@@ -31,9 +39,85 @@
 
     const submitActionHandler = () => {
 
-        ModalOpenStore.update((value) => value = true);
+        $CampaignActionConfirmationStore = {
+            candidate_application: candidateApplication,
+            selected: endorse
+        }
 
-    }
+        $ModalOpenStore = true;
+
+    };
+
+    let responseItem: ResponseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        setTimeout(() => {
+            responseItem.success = "";
+            responseItem.error = "";
+            status: null;
+        }, 4000)
+    };
+
+    const campaignEndorsementAction = async (
+        candidateApplication: CampaignApplicationWithImageRow,
+        endorse: string
+    ) => {        
+
+        const response = await fetch("/authenticated-administrator/api/campaignEndorsementAction", {
+            method: 'POST',
+            body: JSON.stringify({
+                candidateApplication,
+                endorse
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        responseItem = await response.json();
+
+        if (responseItem.success) {
+
+            $CampaignActionConfirmedStore = false;
+
+            goto("/authenticated-administrator/admin");
+
+        };
+
+    };
+
+    const confirmedAction = async () => {
+
+        try {
+
+            await campaignEndorsementAction(
+                candidateApplication,
+                endorse
+            );
+
+        } catch (error) {
+
+            console.log(error);
+
+        };
+
+    };
+
+    $: if ($CampaignActionConfirmedStore === true) {
+
+        confirmedAction();
+
+    };
+
+    let pending: boolean = false;
+
+    $: if((responseItem.success) || (responseItem.error)) {
+        pending = false;
+    };
 
 </script>
 <div class="campaign_questionnaire_container">
@@ -47,8 +131,21 @@
             <span slot="yes">endorse</span>
             <span slot="no">not endorse</span>
         </YesNoRadioButtons>
-        <SubmitButtonSecondary disable={false}>confirm</SubmitButtonSecondary>
+        <SubmitButtonSecondary disable={(endorse === "yes" || endorse === "no") ? false : true}>confirm</SubmitButtonSecondary>
     </form>
+    {#if (pending)}
+        <PendingFlashMessage >
+            please wait while we validate your data
+        </PendingFlashMessage>
+    {:else if (responseItem.error)}
+        <ErrorFlashMessage >
+            {responseItem.error}
+        </ErrorFlashMessage>
+    {:else if (responseItem.success)}
+        <SuccessFlashMessage>
+            {responseItem.success}
+        </SuccessFlashMessage>
+    {/if}
     <h4 style="margin: 0;">
         {candidateApplication.campaign_name}
     </h4>
@@ -268,15 +365,12 @@
             </li>
         {/if}
     </ol>
+    <a href="/authenticated-administrator/admin">
+        <CancelButton>admin dashboard</CancelButton>
+    </a>
 </div>
 
 <style>
-
-    .radio_buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
 
     .campaign_questionnaire_container {
         display: flex;

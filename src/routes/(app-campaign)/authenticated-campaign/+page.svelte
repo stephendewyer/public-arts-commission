@@ -168,9 +168,9 @@
 
         // set the values for the open modal stores
 
-        DeleteConfirmationStore.update((value) => value = campaignName);
+        $DeleteConfirmationStore = campaignName;
 
-        ModalOpenStore.update((value) => value = true);
+        $ModalOpenStore = true;
 
         // set the values for the item to be deleted
 
@@ -191,7 +191,7 @@
 
         // load the DeleteConfirmedStore to false
 
-        DeleteConfirmedStore.update(value => value = false);
+        $DeleteConfirmedStore = false;
 
     };
     
@@ -262,17 +262,14 @@
                                 {getElectionYear(campaignApplication?.general_election_date)}
                             </td>
                             <td>
-                                {#if (campaignApplication.application_status === "submitted")}
-                                    submitted 
-                                {:else if (
-                                    campaignApplication.application_status === "started" ||
-                                    !campaignApplication.application_status
-                                )}
-                                    started 
+                                {#if !campaignApplication.application_status}
+                                    started
+                                {:else}
+                                    {campaignApplication?.application_status}
                                 {/if}
                             </td>
                             <td>
-                                {#if (campaignApplication.application_status === "submitted")}
+                                {#if (campaignApplication.application_status !== "started" && campaignApplication.application_status)}
                                     <a href={`/authenticated-campaign/view-campaign-application/campaign=${campaignApplication.campaign_application_ID}`}> 
                                         <div class="more_info_container">
                                             <MoreInfoButton />

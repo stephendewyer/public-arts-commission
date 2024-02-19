@@ -35,7 +35,7 @@
     </p>
     <h3>Your application submitted on {campaignApplicationSubmissionDate} has been received.</h3>
     <a href={`/authenticated-campaign`}>
-        <ActionButton>return to my campaigns</ActionButton>
+        <ActionButton>my campaigns</ActionButton>
     </a>
 </div>
 

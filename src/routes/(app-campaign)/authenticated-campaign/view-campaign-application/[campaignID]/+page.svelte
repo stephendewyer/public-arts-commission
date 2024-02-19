@@ -1,7 +1,7 @@
 <script lang="ts">
     import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
-    import ActionButton from '$lib/components/buttons/ActionButton.svelte';
+    import CancelButton from '$lib/components/buttons/CancelButton.svelte';
 
     export let data;
 
@@ -262,9 +262,9 @@
         {/if}
     </ol>
     <a href="/authenticated-campaign">
-        <ActionButton>
-            return to my campaigns
-        </ActionButton>
+        <CancelButton>
+            my campaigns
+        </CancelButton>
     </a>
 </div>
 

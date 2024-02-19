@@ -2,31 +2,14 @@
     import { DeleteConfirmationStore } from '$lib/stores/DeleteConfirmationStore';
     import { DeleteConfirmedStore } from '$lib/stores/DeleteConfirmedStore';
     import { ModalOpenStore } from '$lib/stores/ModelOpenStore';
-    import { onDestroy } from 'svelte';
     import SubmitButtonSecondary from '../buttons/SubmitButtonSecondary.svelte';
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
 
-    let modalOpen = false;
-
-	const unsubscribeModalOpenStore = ModalOpenStore.subscribe((value) => {
-
-		modalOpen = value;
-
-	});
-
-    onDestroy(() => {
-
-        unsubscribeModalOpenStore();
-
-    });
-
     const closeClickHandler = () => {
 
-        modalOpen = false;
+        $ModalOpenStore = false;
 
-        ModalOpenStore.update((value) => value = modalOpen);
-
-        DeleteConfirmationStore.update((value: DeleteItem | any) => value = null);
+        $DeleteConfirmationStore = null;
 
     };    
 
@@ -38,19 +21,17 @@
 
         };
 
-        DeleteConfirmedStore.update(value => value = true);
+        $DeleteConfirmedStore = true;
 
-        modalOpen = false;
+        $ModalOpenStore = false;
 
-        ModalOpenStore.update((value) => value = modalOpen);
-
-        DeleteConfirmationStore.update((value) => value = null);
+        $DeleteConfirmationStore = null;
 
     };
 
     let deleteConfirmationModalOpen: boolean = false;
 
-    $: if (modalOpen && ($DeleteConfirmationStore !== null)) {
+    $: if ($ModalOpenStore && ($DeleteConfirmationStore !== null)) {
 
         deleteConfirmationModalOpen = true;
 

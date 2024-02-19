@@ -1,12 +1,12 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
 
-export const load = async ({params, url}) => {
+export const load = async ({params}) => {
 
     // first, verify user corresponds with campaign application
 
-    const candidateApplicationID = url.searchParams.get("candidate_application_ID");
+    const splitSlug = params.submitted_candidate_endorsement_application.split("_");
 
-    console.log(candidateApplicationID);
+    const candidateApplicationID = splitSlug[1];
 
      // load all the endorsed candidates
 
