@@ -78,6 +78,14 @@
     <ul class="history_list">
         <li>
             <h3>
+                1979 - 1980
+            </h3>
+            <p>
+                dismantling of the New Deal begins as Ronald Reagan becomes President of the United States and Margaret Thatcher becomes Prime Minister of the United Kingdom.  Decades of privatization follow, weakening democracy and giving rise to oligarchy and authoritarianism.            
+            </p>
+        </li>
+        <li>
+            <h3>
                 2011
             </h3>
             <p>

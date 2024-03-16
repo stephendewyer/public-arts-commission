@@ -86,6 +86,17 @@
 				>
 					<a href="/priorities">priorities</a>
 				</li>
+			{:else if (user?.name === "voter")}
+				<li>
+					<a href="/authenticated-voter/voter/connections">
+						connections
+					</a>
+				</li>
+				<li>
+					<a href="/authenticated-voter/voter/endorsements">
+						endorsements
+					</a>
+				</li>
 			{/if}
 		</ul>
 		<ul id="nav_left_mobile">
@@ -111,8 +122,65 @@
 			</li>
 		</ul>
 		<ul id="nav_right">
-			{#if (user)}
+			{#if (user?.name === "campaign")}
 				<LogoutButton callbackUrl={callbackURL}>logout</LogoutButton>
+			{:else if (user?.name === "voter")}
+				<li>
+					<a href="/authenticated-voter/voter/actions">
+						actions
+					</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
+					on:mouseleave={() => collapseAboutTabHandler()}
+					on:mouseout={() => collapseAboutTabHandler()}
+					on:blur={() => collapseAboutTabHandler()}
+					on:mouseenter={() => expandAboutTabHandler()}
+					on:mouseover={() => expandAboutTabHandler()}
+					on:focus={() => expandAboutTabHandler()}
+				>
+					<div 
+						id="tab_header_about"
+						class="menu_tab_header"
+						role="tab"
+						aria-selected={aboutTabPanelIsActive}
+						aria-controls="tab_panel_about"
+						tabindex="0"
+					>
+						<div class="tabPanel_header_text">about</div>
+						<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
+							{@html Arrow}
+						</div>
+					</div>
+					<div>
+						<div
+							id="tab_panel_about"
+							role="tabpanel"
+							tabindex="0"
+							aria-labelledby="tab_header_about"
+							class="panel_container"
+							style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;' }
+						>
+							<div 
+								class="panel"
+								bind:clientHeight={about_panel_height}
+							>
+								<ul
+									class="panel_items"
+									style={ aboutTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+								>
+									<li>
+										<a href="/story">story</a>
+									</li>
+									<li>
+										<a href="/team">team</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</li>
 			{:else if (!user)}
 				<li 
 					class="nav_tab"
@@ -164,7 +232,6 @@
 							</div>
 						</div>
 					</div>
-					
 				</li>
 				<li 
 					class="nav_tab"

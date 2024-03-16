@@ -1,5 +1,5 @@
 <script lang="ts">
-  import MegaphoneIcon from "$lib/images/icons/megaphone_icon.svg?raw";
+  import NominateIcon from "$lib/images/icons/nominate_icon.svg?raw";
   import { CreateVoterAccountPromptStore } from "$lib/stores/CreateVoterAccountPromptStore";
   import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
   import type { User } from '@auth/core/types.js';
@@ -30,7 +30,7 @@
     class="nominate_button"
 >
     <div class="megaphone_icon">
-        {@html MegaphoneIcon}
+        {@html NominateIcon}
     </div>
     <slot />
 </button>
@@ -61,7 +61,7 @@
 
     .megaphone_icon {
         width: 100%;
-        max-width: 1.5rem;
+        max-width: 2rem;
         fill: #4C4239;
     }
 
@@ -74,7 +74,7 @@
         }
 
         .megaphone_icon {
-            max-width: 1.5rem;
+            max-width: 1.75rem;
         }
 	}
 
@@ -86,7 +86,7 @@
         }
 
         .megaphone_icon {
-            max-width: 1.25rem;
+            max-width: 1.5rem;
         }
 	}
 

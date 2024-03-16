@@ -5,7 +5,6 @@ export const load = async (event) => {
     return { 
 
         streamed: {
-            // username: await LoadAdminByEmail(session),
             user: session?.user
         }
 
