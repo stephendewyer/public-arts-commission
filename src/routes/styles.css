@@ -96,6 +96,11 @@ h5 {
 	margin: 0 0 1rem 0;
 }
 
+input[type="search"] {
+	-webkit-appearance: none;
+	appearance: none;
+}
+
 @media (max-width: 1440px) {
 	h1 {
 		font-size: 1.6rem;
