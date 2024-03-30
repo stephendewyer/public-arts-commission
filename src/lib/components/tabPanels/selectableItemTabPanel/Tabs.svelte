@@ -10,10 +10,10 @@
             class={activeTab === tab.index ? "active_tab" : "tab"}
             on:click={() => activeTab = tab.index} 
             on:keydown={() => activeTab = tab.index}
-            id="tabpanel_header_{tab.label}"
+            id={`tabpanel_header_${tab.label}`}
             role="tab"
             aria-selected={activeTab === i ? true : false}
-            aria-controls="{tab.label}_tabpanel"
+            aria-controls={`${tab.label}_tabpanel`}
             tabindex={-i}
         >
             {#if tab.hasCapitol}
