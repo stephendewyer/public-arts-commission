@@ -96,7 +96,7 @@
             </td>
             <td>
                 <p>
-                    dismantling of the New Deal begins as Ronald Reagan becomes President of the United States and Margaret Thatcher becomes Prime Minister of the United Kingdom.  Decades of privatization follow, weakening democracy and giving rise to oligarchy and authoritarianism.            
+                    Dismantling of the New Deal begins as Ronald Reagan becomes President of the United States and Margaret Thatcher becomes Prime Minister of the United Kingdom.  Decades of privatization follow, weakening democracy and giving rise to oligarchy and authoritarianism.            
                 </p>
             </td>
         </tr>
