@@ -75,56 +75,92 @@
     <h2 class="story_section_heading">
         history
     </h2>
-    <ul class="history_list">
-        <li>
-            <h3>
-                1979 - 1980
-            </h3>
-            <p>
-                dismantling of the New Deal begins as Ronald Reagan becomes President of the United States and Margaret Thatcher becomes Prime Minister of the United Kingdom.  Decades of privatization follow, weakening democracy and giving rise to oligarchy and authoritarianism.            
-            </p>
-        </li>
-        <li>
-            <h3>
-                2011
-            </h3>
-            <p>
-                public arts commission Founder stephen dewyer participates in Occupy Wall Street.  Many of the organizers of Occupy Wall Street are artists.  The protests evenually fizzle due to failure to translate popular support into government change.  A key learning lesson is to engage electoral politics with popular movements for democratic change organized by art workers.
-            </p>
-        </li>
-        <li>
-            <h3>
-                2017
-            </h3>
-            <p>
-                public arts commission launches to strengthen democracy by expanding the political imaginary.  public arts commission plans to strengthen the political imaginary by supporting democratic movements that support greater public art and by giving a platform for the art community participating in politics.
-            </p>
-        </li>
-        <li>
-            <h3>
-                2018
-            </h3>
-            <p>
-                First election featuring campaigns endorsed by public arts commission.  Elections have historic turnout with many of the campaigns endorsed by public arts commission winning in the primaries and general elections.  
-            </p>
-        </li>
-        <li>
-            <h3>
-                2020
-            </h3>
-            <p>
-                public arts commission debuts a web portal for campaigns to apply for endorsement.  Progressive turnout saves democracy by helping defeat authoritarian candidates and electing progressive, democratic office holders.
-            </p>
-        </li>
-        <li>
-            <h3>
-                2023
-            </h3>
-            <p>
-                public arts commission begins working on a web platform to better achieve goals using advanced technologies and artificial intelligence.
-            </p>
-        </li>
-    </ul>
+    <table class="history_list">
+        <tr>
+            <td>
+                <h3 style="white-space: nowrap;">
+                    1933 – 1938
+                </h3>
+            </td>
+            <td>
+                <p>
+                    The New Deal creates sweeping changes to the U.S. economy that strengthened trust in democracy and led to one of the largest expansions of income equality and the middle class in the history of the world.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3 style="white-space: nowrap;">
+                    1979 - 1980
+                </h3>
+            </td>
+            <td>
+                <p>
+                    dismantling of the New Deal begins as Ronald Reagan becomes President of the United States and Margaret Thatcher becomes Prime Minister of the United Kingdom.  Decades of privatization follow, weakening democracy and giving rise to oligarchy and authoritarianism.            
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>
+                    2011
+                </h3>
+            </td>
+            <td>
+                <p>
+                    public arts commission Founder stephen dewyer participates in Occupy Wall Street.  Many of the organizers of Occupy Wall Street are artists.  The protests evenually fizzle due to failure to translate popular support into government change.  A key learning lesson is to engage electoral politics with popular movements for democratic change organized by art workers.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>
+                    2017
+                </h3>
+            </td>
+            <td>
+                <p>
+                    public arts commission launches to strengthen democracy by expanding the political imaginary.  public arts commission plans to strengthen the political imaginary by supporting democratic movements that support greater public art and by giving a platform for the art community participating in politics.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>
+                    2018
+                </h3>
+            </td>
+            <td>
+                <p>
+                    First election featuring campaigns endorsed by public arts commission.  Elections have historic turnout with many of the campaigns endorsed by public arts commission winning in the primaries and general elections.  
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>
+                    2020
+                </h3>
+            </td>
+            <td>
+                <p>
+                    public arts commission debuts a web portal for campaigns to apply for endorsement.  Progressive turnout saves democracy by helping defeat authoritarian candidates and electing progressive, democratic office holders.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <h3>
+                    2023
+                </h3>
+            </td>
+            <td>
+                <p>
+                    public arts commission begins working on a web platform to better achieve goals using advanced technologies and artificial intelligence.
+                </p>
+            </td>
+        </tr>
+    </table>
     <h2 class="story_section_heading">
         impact
     </h2>
@@ -180,14 +216,19 @@
         padding: 0;
     }
 
-    .history_list > li {
-        display: flex;
-        gap: 2rem;
+    .history_list > tr {
         padding: 1rem;
-        align-items: flex-start;
     }
 
-    .history_list > li > h3 {
+    table {
+        border: none;
+    }
+
+    table, td {
+        padding: 1rem;
+    }
+
+    .history_list > tr > td > h3 {
         padding: 0;
         margin: 0;
     }
@@ -206,11 +247,15 @@
 
     @media (max-width: 720px) {
 
-        .history_list > li {
+        .history_list > tr > td {
+            display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            justify-content: flex-start;
         }
         
+        table, td {
+            padding: 0.5rem;
+        }
     }
 
 </style>
