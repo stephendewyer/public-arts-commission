@@ -397,7 +397,7 @@ export const PATCH = async ({request}) => {
     if (sponsorHouse && matchingHouseSponsors.length === 0) {
 
         const insertHouseSponsorStatement = `INSERT INTO sponsors_House (
-            sponsored_amendment_ID, 
+            sponsored_legislation_ID, 
             sponsor_name
         ) VALUES ("${legislationID}", "${sponsorHouse}")`;
     
