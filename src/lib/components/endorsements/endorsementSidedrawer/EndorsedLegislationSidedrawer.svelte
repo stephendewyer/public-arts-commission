@@ -302,14 +302,7 @@
                         </ol>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        details: 
-                    </td>
-                    <td>
-                        {endorsedLegislationData?.details}
-                    </td>
-                </tr>
+
                 <tr>
                     <td>
                         website: 
@@ -340,7 +333,13 @@
                     </td>
                 </tr>
             </tbody>
-        </table>                
+        </table>   
+        <div class="details_row">
+            <p class="details_header">details</p>
+            <p>
+                {endorsedLegislationData?.details} 
+            </p>
+        </div>              
     </div>
 </aside>
 
@@ -439,6 +438,22 @@
         justify-content: flex-start;
     }
 
+    .details_row {
+        padding: 1rem;
+        background-color: #CBC6C2;
+    }
+
+    .details_row > p {
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    .details_header {
+        font-weight: 600;
+        color: #28387C;
+        text-align: center;
+    }
+
     .co-sponsors {
         width: 100%;
         height: auto;
@@ -509,6 +524,10 @@
             font-size: 1.125rem;
         }
 
+        .details_row > p {
+            font-size: 1.125rem;
+        }
+
     }
 
     @media (max-width: 720px) {
@@ -519,6 +538,10 @@
         }
 
         .website_URL {
+            font-size: 1rem;
+        }
+
+        .details_row > p {
             font-size: 1rem;
         }
 

@@ -273,7 +273,11 @@
 
     .endorsement_cards_frame {
         width: 100%;
-        overflow-x: hidden;
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .endorsement_cards {
@@ -295,23 +299,11 @@
 
     @media (max-width: 1140px) {
 
-        .endorsement_cards_frame {
-            width: 100%;
-            overflow-x: scroll;
-        }
-
         .endorsement_cards {
-            width: 100%;
             flex-wrap: nowrap;
             justify-content: flex-start;
         }
 
-	}
-
-	@media (max-width: 720px) {
-
-        
-        
 	}
 
 </style>

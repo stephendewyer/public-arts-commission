@@ -440,7 +440,10 @@
 
 	.action_cards_frame {
         width: 100%;
-        overflow-x: hidden;
+        overflow-x: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
     }
 
     .action_cards {
@@ -472,13 +475,7 @@
 			display: flex;
 		}
 
-		.action_cards_frame {
-            width: 100%;
-            overflow-x: scroll;
-        }
-
         .action_cards {
-            width: 100%;
             flex-wrap: nowrap;
             justify-content: flex-start;
         }

@@ -126,28 +126,21 @@
 <style>
     aside {
         z-index: 50;
+        position: absolute;
+        height: 100%;
+        width: auto;
+        background-color: #3F5A72;
+        top: 0;
+        left: 2rem;
+        right: 0;
     }
 
     .side_drawer_closed {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        background-color: #3F5A72;
-        left: 2rem;
-        right: 0;
         transform: translateX(100%);
         transition: transform 0.3s ease-in-out;
     }
 
     .side_drawer_open {
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        background-color: #3F5A72;
-        top: 0;
-        right: 0;
-        left: 2rem;
-        width: auto;
         transform: translateX(0);
         transition: transform 0.3s ease-in-out;
     }

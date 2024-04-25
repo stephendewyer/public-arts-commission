@@ -357,6 +357,10 @@
         margin: 0 0 auto 0;
     }
 
+    .footer_info > p {
+        font-size: 1rem;
+    }
+
     @media (max-width: 1140px) {
 
         .logo_container_footer {
@@ -417,6 +421,10 @@
         .footer_info {
             width: 100%;
             padding: 0 0 1rem 0;
+            font-size: 0.8rem;
+        }
+
+        .footer_info > p {
             font-size: 0.8rem;
         }
 

@@ -154,15 +154,6 @@
                         </td>
                     </tr>
                 {/if}
-                
-                <tr>
-                    <td>
-                        details: 
-                    </td>
-                    <td >
-                        {endorsedReferendumSelected?.details}
-                    </td>
-                </tr>
                 <tr>
                     <td>
                         website: 
@@ -193,7 +184,13 @@
                     </td>
                 </tr>
             </tbody>
-        </table>   
+        </table>  
+        <div class="details_row">
+            <p class="details_header">details</p>
+            <p>
+                {endorsedReferendumSelected?.details} 
+            </p>
+        </div>    
     </div>
 </aside>
 
@@ -292,6 +289,22 @@
         justify-content: flex-start;
     }
 
+    .details_row {
+        background-color: #CBC6C2;
+        padding: 1rem;
+    }
+
+    .details_row > p {
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    .details_header {
+        font-weight: 600;
+        color: #28387C;
+        text-align: center;
+    }
+
     .external_link_container {
         display: flex;
         flex-direction: row;
@@ -337,6 +350,10 @@
             font-size: 1.125rem;
         }
 
+        .details_row > p {
+            font-size: 1.125rem;
+        }
+
         .website_URL {
             font-size: 1.125rem;
         }
@@ -353,6 +370,10 @@
         }
 
         .website_URL {
+            font-size: 1rem;
+        }
+
+        .details_row > p {
             font-size: 1rem;
         }
 

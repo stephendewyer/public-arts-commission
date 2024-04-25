@@ -199,6 +199,7 @@
 						aria-selected={aboutTabPanelIsActive}
 						aria-controls="tab_panel_about"
 						tabindex="0"
+						
 					>
 						<div class="tabPanel_header_text">about</div>
 						<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>

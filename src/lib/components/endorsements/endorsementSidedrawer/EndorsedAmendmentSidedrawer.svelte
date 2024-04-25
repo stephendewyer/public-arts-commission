@@ -341,14 +341,6 @@
                 </tr>
                 <tr>
                     <td>
-                        details: 
-                    </td>
-                    <td>
-                        {endorsedAmendmentData?.details}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         website: 
                     </td>
                     <td>
@@ -377,7 +369,13 @@
                     </td>
                 </tr>
             </tbody>
-        </table> 
+        </table>
+        <div class="details_row">
+            <p class="details_header">details</p>
+            <p>
+                {endorsedAmendmentData?.details} 
+            </p>
+        </div>   
     </div>
 </aside>
 
@@ -476,6 +474,21 @@
         justify-content: flex-start;
     }
 
+    .details_row {
+        padding: 1rem;
+    }
+
+    .details_row > p {
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    .details_header {
+        font-weight: 600;
+        color: #28387C;
+        text-align: center;
+    }
+
     .co-sponsors {
         width: 100%;
         height: auto;
@@ -542,6 +555,10 @@
             font-size: 1.125rem;
         }
 
+        .details_row > p {
+            font-size: 1.125rem;
+        }
+
         .website_URL {
             font-size: 1.125rem;
         }
@@ -558,6 +575,10 @@
         }
 
         .website_URL {
+            font-size: 1rem;
+        }
+
+        .details_row > p {
             font-size: 1rem;
         }
 
