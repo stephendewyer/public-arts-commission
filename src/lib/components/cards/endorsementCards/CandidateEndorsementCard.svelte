@@ -1,9 +1,9 @@
 <script lang="ts">
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
-    
+
     export let endorsedCandidateData: CandidateWithImage;
 
-    let candidateStatus: string[] = [];
+    let candidateStatus: string[] = [];    
 
     $: if (endorsedCandidateData) {
 

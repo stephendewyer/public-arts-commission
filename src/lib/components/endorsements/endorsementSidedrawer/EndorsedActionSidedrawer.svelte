@@ -5,6 +5,11 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
+    $: if (!$page.url.search) {
+        $EndorsedActionOpenStore = false;
+        $EndorsedActionSelectedStore = null;
+    };
+
     let endorsedActionData: ActionWithImage | null = null;
 
     $: endorsedActionData = $EndorsedActionSelectedStore;

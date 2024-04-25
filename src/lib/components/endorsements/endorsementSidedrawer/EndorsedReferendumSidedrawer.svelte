@@ -5,6 +5,11 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
+    $: if (!$page.url.search) {
+        $EndorsedReferendumOpenStore = false;
+        $EndorsedReferendumSelectedStore = null;
+    };
+
     let endorsedReferendumSelected: ReferendumWithImage | null = null;
 
     $: endorsedReferendumSelected = $EndorsedReferendumSelectedStore;
