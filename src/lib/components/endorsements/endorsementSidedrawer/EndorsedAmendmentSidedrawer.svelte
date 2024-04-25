@@ -307,16 +307,14 @@
                     <td>
                         House co-sponsor(s): 
                     </td>
-                    <td style="padding-right: 0;">
-                        <div class="y-scrollable_data_cell">
-                            <ol class="y-scrollable_data_cell_content" style="margin: 0 0 0 1rem;">
-                                {#each coSponsorsHouseNames as coSponsorHouseName, i}
-                                    <li>
-                                        {coSponsorHouseName}
-                                    </li>
-                                {/each}
-                            </ol>
-                        </div>
+                    <td>
+                        <ol class="co-sponsors">
+                            {#each coSponsorsHouseNames as coSponsorHouseName, i}
+                                <li>
+                                    {coSponsorHouseName}
+                                </li>
+                            {/each}
+                        </ol>
                     </td>
                 </tr>
                 <tr>
@@ -331,28 +329,22 @@
                     <td>
                         Senate co-sponsor(s): 
                     </td>
-                    <td style="padding-right: 0;">
-                        <div class="y-scrollable_data_cell">
-                            <ol class="y-scrollable_data_cell_content" style="margin: 0 0 0 1rem;">
-                                {#each coSponsorsSenateNames as coSponsorSenateName, i}
-                                    <li>
-                                        {coSponsorSenateName}
-                                    </li>
-                                {/each}
-                            </ol>
-                        </div>
+                    <td>
+                        <ol class="co-sponsors">
+                            {#each coSponsorsSenateNames as coSponsorSenateName, i}
+                                <li>
+                                    {coSponsorSenateName}
+                                </li>
+                            {/each}
+                        </ol>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         details: 
                     </td>
-                    <td style="padding-right: 0;">
-                        <div class="y-scrollable_data_cell">
-                            <p class="y-scrollable_data_cell_content">
-                                {endorsedAmendmentData?.details}
-                            </p>
-                        </div>
+                    <td>
+                        {endorsedAmendmentData?.details}
                     </td>
                 </tr>
                 <tr>
@@ -398,7 +390,7 @@
     .side_drawer_closed {
         position: fixed;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-width: 40rem;
         background-color: #F4F4DB;
@@ -412,7 +404,7 @@
     .side_drawer_open {
         position: fixed;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-width: 40rem;
         background-color: #F4F4DB;
@@ -484,6 +476,23 @@
         justify-content: flex-start;
     }
 
+    .co-sponsors {
+        width: 100%;
+        height: auto;
+        max-height: 16rem;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        overflow-x: auto;
+        list-style-position: inside;
+        padding: 0;
+    }
+
+    .co-sponsors > li {
+        margin: 0;
+        padding: 0 1rem 0 0;
+    }
+
     .external_link_container {
         display: flex;
         flex-direction: row;
@@ -505,16 +514,6 @@
         overflow-wrap: break-word;
         width: 100%;
         font-size: 1.25rem;
-    }
-
-    .y-scrollable_data_cell {
-        height: auto;
-        max-height: 20rem;
-        overflow-y: scroll;
-    }
-
-    .y-scrollable_data_cell_content {
-        height: auto;
     }
 
     ol {

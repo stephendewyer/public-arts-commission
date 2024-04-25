@@ -245,7 +245,7 @@
     .side_drawer_closed {
         position: fixed;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-width: 40rem;
         background-color: #FBEFF6;
@@ -259,7 +259,7 @@
     .side_drawer_open {
         position: fixed;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-width: 40rem;
         background-color: #FBEFF6;
@@ -292,7 +292,6 @@
         width: 3rem;
         margin: 1rem;
         cursor: pointer;
-        
     }
 
     .campaign_name {

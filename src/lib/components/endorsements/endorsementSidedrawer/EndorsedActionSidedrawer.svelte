@@ -198,21 +198,14 @@
                         {/if}
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        details: 
-                    </td>
-                    <td style="padding-right: 0;">
-                        <div class="y-scrollable_data_cell">
-                            <p class="y-scrollable_data_cell_content">
-                                {endorsedActionData?.details} 
-                            </p>
-                        </div>
-                    </td>
-                </tr>
             </tbody>
-            
-        </table>               
+        </table>
+        <div class="details_row">
+            <p class="details_header">details</p>
+            <p>
+                {endorsedActionData?.details} 
+            </p>
+        </div>       
     </div>
 </aside>
 
@@ -225,7 +218,7 @@
     .side_drawer_closed {
         position: fixed;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-width: 40rem;
         background-color: #F4F5FB;
@@ -239,7 +232,7 @@
     .side_drawer_open {
         position: fixed;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         width: 100%;
         max-width: 40rem;
         background-color: #F4F5FB;
@@ -311,6 +304,22 @@
         justify-content: flex-start;
     }
 
+    .details_row {
+        background-color: #CBC6C2;
+        padding: 1rem;
+    }
+
+    .details_row > p {
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    .details_header {
+        font-weight: 600;
+        color: #28387C;
+        text-align: center;
+    }
+
     .external_link_container {
         display: flex;
         flex-direction: row;
@@ -332,16 +341,6 @@
         overflow-wrap: break-word;
         width: 100%;
         font-size: 1.25rem;
-    }
-
-    .y-scrollable_data_cell {
-        height: auto;
-        max-height: 20rem;
-        overflow-y: scroll;
-    }
-
-    .y-scrollable_data_cell_content {
-        height: auto;
     }
     
     @media (max-width: 1140px) {
@@ -366,6 +365,10 @@
             font-size: 1.125rem;
         }
 
+        .details_row > p {
+            font-size: 1.125rem;
+        }
+
         .website_URL {
             font-size: 1.125rem;
         }
@@ -378,6 +381,10 @@
             padding: 0.5rem 1rem;
             overflow-wrap: break-word;
             hyphens: auto;
+            font-size: 1rem;
+        }
+
+        .details_row > p {
             font-size: 1rem;
         }
 
