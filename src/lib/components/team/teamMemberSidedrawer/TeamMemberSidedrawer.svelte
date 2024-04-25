@@ -6,7 +6,13 @@
     import { page } from '$app/stores';
     import EmailIcon from '$lib/images/icons/email_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
+    export let pageSearch;
 
+    $: if (!pageSearch) {
+        $TeamMemberSidedrawerOpenStore = false;
+        $TeamMemberSelectedStore = null;
+    };
+    
     let URLPathName: string;
 
     const data: TeamMember[] = TeamMemberData;

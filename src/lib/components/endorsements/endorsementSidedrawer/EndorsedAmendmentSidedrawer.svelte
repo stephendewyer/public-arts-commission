@@ -4,8 +4,10 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
+    
+    export let pageSearch;
 
-    $: if (!$page.url.search) {
+    $: if (!pageSearch) {
         $EndorsedAmendmentOpenStore = false;
         $EndorsedAmendmentSelectedStore = null;
     };

@@ -5,7 +5,9 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
 
-    $: if (!$page.url.search) {
+    export let pageSearch;
+
+    $: if (!pageSearch) {
         $EndorsedReferendumOpenStore = false;
         $EndorsedReferendumSelectedStore = null;
     };

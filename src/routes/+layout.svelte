@@ -20,7 +20,12 @@
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
 	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
   	import CampaignApplicationActionConfirmModal from '$lib/components/modals/CampaignApplicationActionConfirmModal.svelte';
-	
+	import { page } from '$app/stores';
+
+	let pageSearch: string = "";
+
+	$: pageSearch = $page.url.search;
+
 	let openMobileNav: boolean = false;
 
 	let footerElHeight: number = 0;
@@ -103,13 +108,13 @@
 		/>
 	{/if}
 	<SideDrawer bind:openMobileNav />
-	<TeamMemberSideDrawer />
+	<TeamMemberSideDrawer pageSearch={pageSearch}/>
 	<CreateVoterAccountPromptModal />
-	<EndorsedActionSidedrawer />
-	<EndorsedAmendmentSidedrawer />
-	<EndorsedCandidateSidedrawer />
-	<EndorsedLegislationSidedrawer />
-	<EndorsedReferendumSidedrawer />
+	<EndorsedActionSidedrawer pageSearch={pageSearch}/>
+	<EndorsedAmendmentSidedrawer pageSearch={pageSearch}/>
+	<EndorsedCandidateSidedrawer pageSearch={pageSearch}/>
+	<EndorsedLegislationSidedrawer pageSearch={pageSearch}/>
+	<EndorsedReferendumSidedrawer pageSearch={pageSearch}/>
 	<DeleteConfirmationModal />
 	<CampaignApplicationActionConfirmModal />
 </div>
