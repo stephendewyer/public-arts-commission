@@ -133,50 +133,56 @@
 				<li 
 					class="nav_tab"
 					aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
-					on:mouseleave={() => collapseAboutTabHandler()}
-					on:mouseout={() => collapseAboutTabHandler()}
-					on:blur={() => collapseAboutTabHandler()}
-					on:mouseenter={() => expandAboutTabHandler()}
-					on:mouseover={() => expandAboutTabHandler()}
-					on:focus={() => expandAboutTabHandler()}
+					
 				>
-					<div 
-						id="tab_header_about"
-						class="menu_tab_header"
-						role="tab"
-						aria-selected={aboutTabPanelIsActive}
-						aria-controls="tab_panel_about"
+					<div
+						class="tabpanel"
+						role="tabpanel"
 						tabindex="0"
+						on:mouseleave={() => collapseAboutTabHandler()}
+						on:mouseout={() => collapseAboutTabHandler()}
+						on:blur={() => collapseAboutTabHandler()}
+						on:mouseenter={() => expandAboutTabHandler()}
+						on:mouseover={() => expandAboutTabHandler()}
+						on:focus={() => expandAboutTabHandler()}
 					>
-						<div class="tabPanel_header_text">about</div>
-						<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
-							{@html Arrow}
-						</div>
-					</div>
-					<div>
-						<div
-							id="tab_panel_about"
-							role="tabpanel"
-							tabindex="0"
-							aria-labelledby="tab_header_about"
-							class="panel_container"
-							style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;' }
+						<div 
+							id="tab_header_about"
+							class="menu_tab_header"
+							role="tab"
+							aria-selected={aboutTabPanelIsActive}
+							aria-controls="tab_panel_about"
 						>
-							<div 
-								class="panel"
-								bind:clientHeight={about_panel_height}
+							<div class="tabPanel_header_text">about</div>
+							<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
+								{@html Arrow}
+							</div>
+						</div>
+						<div>
+							<div
+								id="tab_panel_about"
+								role="tabpanel"
+								tabindex="0"
+								aria-labelledby="tab_header_about"
+								class="panel_container"
+								style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;' }
 							>
-								<ul
-									class="panel_items"
-									style={ aboutTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+								<div 
+									class="panel"
+									bind:clientHeight={about_panel_height}
 								>
-									<li>
-										<a href="/story">story</a>
-									</li>
-									<li>
-										<a href="/team">team</a>
-									</li>
-								</ul>
+									<ul
+										class="panel_items"
+										style={ aboutTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+									>
+										<li>
+											<a href="/story">story</a>
+										</li>
+										<li>
+											<a href="/team">team</a>
+										</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -185,43 +191,47 @@
 				<li 
 					class="nav_tab"
 					aria-current={$page.url.pathname === '/story' || $page.url.pathname === '/team' ? 'page' : undefined}
-					on:mouseleave={() => collapseAboutTabHandler()}
-					on:mouseout={() => collapseAboutTabHandler()}
-					on:blur={() => collapseAboutTabHandler()}
-					on:mouseenter={() => expandAboutTabHandler()}
-					on:mouseover={() => expandAboutTabHandler()}
-					on:focus={() => expandAboutTabHandler()}
 				>
-					<div 
-						id="tab_header_about"
-						class="menu_tab_header"
-						role="tab"
-						aria-selected={aboutTabPanelIsActive}
-						aria-controls="tab_panel_about"
+					<div
+						class="tabpanel"
+						role="tabpanel"
 						tabindex="0"
-						
+						on:mouseleave={() => collapseAboutTabHandler()}
+						on:mouseout={() => collapseAboutTabHandler()}
+						on:blur={() => collapseAboutTabHandler()}
+						on:mouseenter={() => expandAboutTabHandler()}
+						on:mouseover={() => expandAboutTabHandler()}
+						on:focus={() => expandAboutTabHandler()}
 					>
-						<div class="tabPanel_header_text">about</div>
-						<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
-							{@html Arrow}
+						<div 
+							id="tab_header_about"
+							class="menu_tab_header"
+							role="tab"
+							aria-selected={aboutTabPanelIsActive}
+							aria-controls="tab_panel_about"
+							tabindex="0"
+							
+						>
+							<div class="tabPanel_header_text">about</div>
+							<div class={ aboutTabPanelIsActive ? "arrow_active" : "arrow" }>
+								{@html Arrow}
+							</div>
 						</div>
-					</div>
-					<div>
 						<div
 							id="tab_panel_about"
 							role="tabpanel"
 							tabindex="0"
 							aria-labelledby="tab_header_about"
 							class="panel_container"
-							style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;' }
 						>
 							<div 
 								class="panel"
-								bind:clientHeight={about_panel_height}
+								style={ aboutTabPanelIsActive ? `height: ${about_panel_height}px;` : 'height: 0px;'}
 							>
 								<ul
 									class="panel_items"
 									style={ aboutTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+									bind:clientHeight={about_panel_height}
 								>
 									<li>
 										<a href="/story">story</a>
@@ -233,6 +243,7 @@
 							</div>
 						</div>
 					</div>
+					
 				</li>
 				<li 
 					class="nav_tab"
@@ -249,49 +260,53 @@
 				<li 
 					class="nav_tab"
 					aria-current={$page.url.pathname === '/login-administrator' || $page.url.pathname === '/login-voter' || $page.url.pathname === '/login-campaign' ? 'page' : undefined}
-					on:mouseleave={() => collapseLoginTabHandler()}
-					on:mouseout={() => collapseLoginTabHandler()}
-					on:blur={() => collapseLoginTabHandler()}
-					on:mouseenter={() => expandLoginTabHandler()}
-					on:mouseover={() => expandLoginTabHandler()}
-					on:focus={() => expandLoginTabHandler()}
 				>
 					<div
-						id="tab_header_login"
-						class="menu_tab_header"
-						role="tab"
-						aria-selected={loginTabPanelIsActive}
-						aria-controls="tab_panel_login"
-						tabindex="-1"
+						class="tabpanel"
+						role="tabpanel"
+						tabindex="0"
+						on:mouseleave={() => collapseLoginTabHandler()}
+						on:mouseout={() => collapseLoginTabHandler()}
+						on:blur={() => collapseLoginTabHandler()}
+						on:mouseenter={() => expandLoginTabHandler()}
+						on:mouseover={() => expandLoginTabHandler()}
+						on:focus={() => expandLoginTabHandler()}
 					>
-						<div 
-							class="tabPanel_header_text"
+						<div
+							id="tab_header_login"
+							class="menu_tab_header"
+							role="tab"
+							aria-selected={loginTabPanelIsActive}
+							aria-controls="tab_panel_login"
+							tabindex="-1"
 						>
-							<div class="nav_icon">
-								{@html LoginIcon}
+							<div 
+								class="tabPanel_header_text"
+							>
+								<div class="nav_icon">
+									{@html LoginIcon}
+								</div>
+								login
 							</div>
-							login
+							<div class={ loginTabPanelIsActive ? "arrow_active" : "arrow" }>
+								{@html Arrow}
+							</div>
 						</div>
-						<div class={ loginTabPanelIsActive ? "arrow_active" : "arrow" }>
-							{@html Arrow}
-						</div>
-					</div>
-					<div>
 						<div
 							id="tab_panel_login"
 							role="tabpanel"
 							tabindex="-1"
 							aria-labelledby="tab_header_login"
 							class="panel_container"
-							style={ loginTabPanelIsActive ? `height: ${login_panel_height}px;` : 'height: 0px;' }
 						>
 							<div 
 								class="panel"
-								bind:clientHeight={login_panel_height}
+								style={ loginTabPanelIsActive ? `height: ${login_panel_height}px;` : 'height: 0px;' }
 							>
 								<ul
 									class="panel_items"
 									style={ loginTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+									bind:clientHeight={login_panel_height}
 								>
 									<li>
 										<a href="/login-voter">voter</a>
@@ -304,8 +319,9 @@
 									</li>
 								</ul>
 							</div>
-						<div>
+						</div>
 					</div>
+					
 				</li>
 			{/if}
 		</ul>
@@ -331,6 +347,7 @@
 	}
 
 	ul {
+		position: relative;
 		display: flex;
 		justify-content: space-evenly;
 		flex-direction: row;
@@ -369,6 +386,13 @@
 		font-size: 1.25rem;
 		letter-spacing: 0.1em;
 		text-decoration: none;
+	}
+
+	.tabpanel {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.tabPanel_header_text {
@@ -426,6 +450,7 @@
 
 	.nav_tab {
 		width: 100%;
+		height: auto;
 	}
 
 	.nav_icon {
@@ -433,25 +458,29 @@
 	}
 
 	.panel_container {
+		position: relative;
+		width: 100%;
+	}
+
+	.panel {
+		left: 0;
+		right: 0;
 		background-color: #DBE4D7;
+		position: absolute;
 		overflow: hidden;
         will-change: height;
         transition: height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
 		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		position: absolute;
-		left: 0;
-		right: 0;
-	}
-
-	.panel {
-		padding: 1rem;
 	}
 
 	.panel_items {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		will-change: opacity;
-        transition: opacity 0.6s ease-out;
+        transition: opacity 0.3s linear 0.18s;
+		height: auto;
+		padding: 1rem;
 	}
 
 	#logo_svg {
