@@ -243,8 +243,8 @@
             <div class="headquarters_info">
                 <p>
                     public arts commission<br />
-                    3136 Hennepin Avenue, #4<br />
-                    Minneapolis, Minnesota  55408<br />
+                    3750 E Via Palomita, #25103<br />
+                    Tucson, Arizona  85718<br />
                     United States
                 </p>
                 <div class="mailbox_container">
