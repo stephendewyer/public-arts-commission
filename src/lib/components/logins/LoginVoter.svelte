@@ -49,34 +49,24 @@
         pending = true;
 
         try {
-
             const response = await signIn('credentials', {
                 providerId: "voter-login",
                 email: emailInputValue,
                 password: passwordInputValue,
                 redirect: false
             });
-
+            console.log(response);
             if (!response?.ok) {
-
                 responseItem.error = "Incorrect email and/or password.";
                 throw new Error("Incorrect email and/or password.");
-
-            };
-
-            if (response?.ok) {
-
+            } else if (response?.ok) {
                 responseItem.success = "Valid email and password.";
                 emailInputValue = "";
                 passwordInputValue = "";
                 goto("/authenticated-voter/voter");
-                
             };
-
         } catch (error) {
-
             console.log(error);
-
         };
 
     };
@@ -84,9 +74,7 @@
     let pending: boolean = false;
 
     $: if((responseItem.error) || (!responseItem.error)) {
-
         pending = false;
-
     };
 
 </script>

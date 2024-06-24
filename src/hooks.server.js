@@ -6,7 +6,6 @@ import { adminAuthentication } from "./lib/server/authentication/admin-authentic
 import { campaignAuthentication } from "./lib/server/authentication/campaign-authentication";
 import { sequence } from '@sveltejs/kit/hooks';
 import { redirect } from '@sveltejs/kit';
-
 /** @type {import('@sveltejs/kit').Handle} */
 
 const authorization = async ({ event, resolve }) => {

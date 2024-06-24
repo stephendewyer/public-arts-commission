@@ -171,7 +171,7 @@
         organization
     </h2>
     <p class="story_paragraphs">
-        public arts commission is a grassroots, 501(c)(4) non-profit organization based in Minnesota.
+        public arts commission is a grassroots, 501(c)(4) non-profit organization.
     </p>
     <div class="organization_documents">
         <DownloadButton
@@ -189,7 +189,7 @@
         location
     </h2>
     <p class="story_paragraphs">
-        public arts commission combines art and politics across the United States at all levels of government and is currently headquartered in Minneapolis, Minnesota.
+        public arts commission combines art and politics across the United States at all levels of government and is currently headquartered in Tucson, Arizona.
     </p>
 </section>
 
