@@ -55,6 +55,10 @@
         };
     };
 
+    $: if (!isValid) {
+        errorMessage = dateInputErrorMessage;
+    };
+
 </script>
 
 <div class="input_and_label_container">

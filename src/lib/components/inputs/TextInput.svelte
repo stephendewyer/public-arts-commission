@@ -57,6 +57,12 @@
         };
     };
 
+    $: if (!isValid) {
+        if (textInputValue === "") {
+            errorMessage = textInputErrorMessage;
+        };
+    };
+
 </script>
 
 <div class="input_and_label_container">

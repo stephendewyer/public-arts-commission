@@ -53,6 +53,12 @@
             };
         };
     };
+
+    $: if (!isValid) {
+        if (numberInputValue === null) {
+            errorMessage = numberInputErrorMessage;
+        };
+    };
 </script>
 
 <div class="input_and_label_container">

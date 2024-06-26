@@ -888,6 +888,26 @@ declare global {
 		completed: boolean;
 	}
 
+	interface Endorsements {
+        currentPageAmendments: number;
+        currentPageCandidates: number;
+        currentPageLegislation: number;
+        currentPageReferendums: number;
+        endorsed_amendments: AmendmentWithSponsorsAndImage[];
+        endorsed_candidates: CandidateWithImage[];
+        endorsed_legislation: LegislationWithSponsorsAndImage[];
+        endorsed_referendums: ReferendumWithImage[];
+        getEndorsedAmendmentsDataSuccess: boolean;
+        getEndorsedCandidatesDataSuccess: boolean;
+        getEndorsedLegislationDataSuccess: boolean;
+        getEndorsedReferendumsDataSuccess: boolean;
+        pendingEndorsedAmendmentsData: boolean;
+        pendingEndorsedCandidatesData: boolean;
+        pendingEndorsedLegislationData: boolean;
+        pendingEndorsedReferendumsData: boolean;
+        user: User;
+    }
+
 }
 
 export {};

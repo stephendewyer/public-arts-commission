@@ -9,11 +9,9 @@
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import { page } from '$app/stores';
 
-    export let categories_data: any;
+    export let categories_data: Endorsements;
 
     let URLPathName: string = $page.url.pathname;
-
-    $: categories_data;
 
     let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
     let endorsedCandidates: CandidateWithImage[] = [];
@@ -25,33 +23,23 @@
     $: endorsedLegislation = [...categories_data.endorsed_legislation];
     $: endorsedReferendums = [...categories_data.endorsed_referendums];
 
-    const user: User | undefined = categories_data.user;
+    const user: User = categories_data.user;
 
     // set the amount of items to appear in each category on the page
     let pageSize: number = 4;
 
-    let candidatesCurrentPage: number;
-    let legislationCurrentPage: number;
-    let referendumsCurrentPage: number;
-    let amendmentsCurrentPage: number;
-
-    $: candidatesCurrentPage = 1;
-    $: legislationCurrentPage = 1;
-    $: referendumsCurrentPage = 1;
-    $: amendmentsCurrentPage = 1;
-
     // set the index of the first item to appear on the page for each category
     let firstPageIndexAmendments: number;
-    $: firstPageIndexAmendments = (amendmentsCurrentPage -1) * pageSize;
+    $: firstPageIndexAmendments = (categories_data.currentPageAmendments -1) * pageSize;
     
     let firstPageIndexCandidates: number;
-    $: firstPageIndexCandidates = (candidatesCurrentPage -1) * pageSize;
+    $: firstPageIndexCandidates = (categories_data.currentPageCandidates -1) * pageSize;
 
     let firstPageIndexLegislation: number;
-    $: firstPageIndexLegislation = (legislationCurrentPage -1) * pageSize;
+    $: firstPageIndexLegislation = (categories_data.currentPageLegislation -1) * pageSize;
 
     let firstPageIndexReferendums: number;
-    $: firstPageIndexReferendums = (referendumsCurrentPage -1) * pageSize;
+    $: firstPageIndexReferendums = (categories_data.currentPageReferendums -1) * pageSize;
 
     // set the index for the page after the first page for each category
     let lastPageIndexAmendments: number;
@@ -80,150 +68,156 @@
 </script>
 
 <ul class="endorsement_categories_container">
-    <li class="candidates_container">
-        <h3>
-            candidates
-        </h3>
-        <div class="endorsement_cards_frame">
-            <div class="endorsement_cards">
-                {#if categories_data.pendingEndorsedCandidatesData}
-                    <LoaderAnimation />
-                {:else if categories_data.getEndorsedCandidatesDataSuccess}
-                    {#each paginatedEndorsedCandidates as candidate, i}
-                        <a 
-                            href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
-                            data-sveltekit-noscroll
-                        > 
-                            <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-                        </a>
-                    {/each}
-                {:else if !categories_data.getEndorsedCandidatesDataSuccess}
-                    <p>failed to load endorsed candidates</p>
-                {/if}
+    {#if ( 
+        categories_data.pendingEndorsedCandidatesData || 
+        categories_data.pendingEndorsedReferendumsData ||
+        categories_data.pendingEndorsedLegislationData ||
+        categories_data.pendingEndorsedAmendmentsData 
+    )}
+        <LoaderAnimation />
+    {:else if (
+        categories_data.pendingEndorsedCandidatesData === false &&
+        categories_data.pendingEndorsedReferendumsData === false &&
+        categories_data.pendingEndorsedLegislationData === false &&
+        categories_data.pendingEndorsedAmendmentsData === false
+    )}
+        <li class="candidates_container">
+            <h3>
+                candidates
+            </h3>
+            <div class="endorsement_cards_frame">
+                <div class="endorsement_cards">
+                    {#if categories_data.getEndorsedCandidatesDataSuccess}
+                        {#each paginatedEndorsedCandidates as candidate, i}
+                            <a 
+                                href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
+                                data-sveltekit-noscroll
+                            > 
+                                <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+                            </a>
+                        {/each}
+                    {:else if (categories_data.getEndorsedCandidatesDataSuccess === false)}
+                        <p>failed to load endorsed candidates</p>
+                    {/if}
+                </div>
             </div>
-        </div>
-        <Pagination 
-            bind:currentPage={candidatesCurrentPage}
-            totalCount={endorsedCandidates.length}
-            pageSize={pageSize}
-        />
-        <div class="nominate_a_candidate_button_container">
-            <NominateButton 
-                category="candidate" 
-                authorized_user={user}
-            >
-                nominate a candidate
-            </NominateButton>
-        </div>
-    </li>
-    <li class="referendums_container">
-        <h3>
-            referendums
-        </h3>
-        <div class="endorsement_cards_frame">
-            <div class="endorsement_cards">
-                {#if categories_data.pendingEndorsedReferendumsData}
-                    <LoaderAnimation />
-                {:else if categories_data.getEndorsedReferendumsDataSuccess}
-                    {#each paginatedEndorsedReferendums as referendum, i}
-                        <a 
-                            href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
-                            data-sveltekit-noscroll
-                        > 
-                            <EndorsedReferendumCard endorsedReferendumData={referendum} />
-                        </a>
-                    {/each}
-                {:else if !categories_data.getEndorsedReferendumsDataSuccess}
-                    <p>failed to load endorsed referendums</p>
-                {/if}
+            <Pagination 
+                bind:currentPage={categories_data.currentPageCandidates}
+                totalCount={endorsedCandidates.length}
+                pageSize={pageSize}
+            />
+            <div class="nominate_a_candidate_button_container">
+                <NominateButton 
+                    category="candidate" 
+                    authorized_user={user}
+                >
+                    nominate a candidate
+                </NominateButton>
             </div>
-        </div>
-        <Pagination 
-            bind:currentPage={referendumsCurrentPage}
-            totalCount={endorsedReferendums.length}
-            pageSize={pageSize}
-        />
-        <div class="nominate_a_candidate_button_container">
-            <NominateButton 
-                category="referendum"
-                authorized_user={user}
-            >
-                nominate an initiative
-            </NominateButton>
-        </div>
-    </li>
-    <li class="legislation_container">
-        <h3>
-            legislation
-        </h3>
-        <div class="endorsement_cards_frame">
-            <div class="endorsement_cards">
-                {#if categories_data.pendingEndorsedLegislationData}
-                    <LoaderAnimation />
-                {:else if categories_data.getEndorsedLegislationDataSuccess}
-                    {#each paginatedEndorsedLegislation as legislation, i}
-                        <a 
-                            href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
-                            data-sveltekit-noscroll
-                        > 
-                            <EndorsedLegislationCard endorsedLegislationData={legislation} />
-                        </a>
-                    {/each}
-                {:else if !categories_data.getEndorsedLegislationDataSuccess}
-                    <p>failed to load endorsed legislation</p>
-                {/if}
+        </li>
+        <li class="referendums_container">
+            <h3>
+                referendums
+            </h3>
+            <div class="endorsement_cards_frame">
+                <div class="endorsement_cards">
+                    {#if categories_data.getEndorsedReferendumsDataSuccess}
+                        {#each paginatedEndorsedReferendums as referendum, i}
+                            <a 
+                                href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
+                                data-sveltekit-noscroll
+                            > 
+                                <EndorsedReferendumCard endorsedReferendumData={referendum} />
+                            </a>
+                        {/each}
+                    {:else if (categories_data.getEndorsedReferendumsDataSuccess === false)}
+                        <p>failed to load endorsed referendums</p>
+                    {/if}
+                </div>
             </div>
-        </div>
-        <Pagination 
-            bind:currentPage={legislationCurrentPage}
-            totalCount={endorsedLegislation.length}
-            pageSize={pageSize}
-        />
-        <div class="nominate_a_candidate_button_container">
-            <NominateButton 
-                category="legislation"
-                authorized_user={user}
-            >
-                nominate a bill
-            </NominateButton>
-        </div>
-    </li>
-    <li class="amendments_container">
-        <h3>
-            amendments
-        </h3>
-        <div class="endorsement_cards_frame">
-            <div class="endorsement_cards">
-                {#if categories_data.pendingEndorsedAmendmentsData}
-                    <LoaderAnimation />
-                {:else if categories_data.getEndorsedAmendmentsDataSuccess}
-                    {#each paginatedEndorsedAmendments as amendment, i}
-                        <a 
-                            href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
-                            data-sveltekit-noscroll
-                        >
-                            <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-                         </a>
-                    {/each}
-                {:else if !categories_data.getEndorsedAmendmentsDataSuccess}
-                    <p>failed to load endorsed amendments</p>
-                {/if}
+            <Pagination 
+                bind:currentPage={categories_data.currentPageReferendums}
+                totalCount={endorsedReferendums.length}
+                pageSize={pageSize}
+            />
+            <div class="nominate_a_candidate_button_container">
+                <NominateButton 
+                    category="referendum"
+                    authorized_user={user}
+                >
+                    nominate an initiative
+                </NominateButton>
             </div>
-        </div>
-        <Pagination 
-            bind:currentPage={amendmentsCurrentPage}
-            totalCount={endorsedAmendments.length}
-            pageSize={pageSize}
-        />
-        <div class="nominate_a_candidate_button_container">
-            <NominateButton 
-                category="amendment"
-                authorized_user={user}
-            >
-                nominate an amendment
-            </NominateButton>
-        </div>
-    </li>
+        </li>
+        <li class="legislation_container">
+            <h3>
+                legislation
+            </h3>
+            <div class="endorsement_cards_frame">
+                <div class="endorsement_cards">
+                    {#if categories_data.getEndorsedLegislationDataSuccess}
+                        {#each paginatedEndorsedLegislation as legislation, i}
+                            <a 
+                                href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
+                                data-sveltekit-noscroll
+                            > 
+                                <EndorsedLegislationCard endorsedLegislationData={legislation} />
+                            </a>
+                        {/each}
+                    {:else if (categories_data.getEndorsedLegislationDataSuccess === false)}
+                        <p>failed to load endorsed legislation</p>
+                    {/if}
+                </div>
+            </div>
+            <Pagination 
+                bind:currentPage={categories_data.currentPageLegislation}
+                totalCount={endorsedLegislation.length}
+                pageSize={pageSize}
+            />
+            <div class="nominate_a_candidate_button_container">
+                <NominateButton 
+                    category="legislation"
+                    authorized_user={user}
+                >
+                    nominate a bill
+                </NominateButton>
+            </div>
+        </li>
+        <li class="amendments_container">
+            <h3>
+                amendments
+            </h3>
+            <div class="endorsement_cards_frame">
+                <div class="endorsement_cards">
+                    {#if categories_data.getEndorsedAmendmentsDataSuccess}
+                        {#each paginatedEndorsedAmendments as amendment, i}
+                            <a 
+                                href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
+                                data-sveltekit-noscroll
+                            >
+                                <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+                             </a>
+                        {/each}
+                    {:else if (categories_data.getEndorsedAmendmentsDataSuccess === false)}
+                        <p>failed to load endorsed amendments</p>
+                    {/if}
+                </div>
+            </div>
+            <Pagination 
+                bind:currentPage={categories_data.currentPageAmendments}
+                totalCount={endorsedAmendments.length}
+                pageSize={pageSize}
+            />
+            <div class="nominate_a_candidate_button_container">
+                <NominateButton 
+                    category="amendment"
+                    authorized_user={user}
+                >
+                    nominate an amendment
+                </NominateButton>
+            </div>
+        </li>
+    {/if}
 </ul>
 
 <style>
@@ -232,6 +226,9 @@
         list-style: none;
         margin: 0;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .candidates_container {

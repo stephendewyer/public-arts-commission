@@ -53,6 +53,12 @@
             };
         };
     };
+
+    $: if (!isValid) {
+        if (selectInputValue === "") {
+            errorMessage = selectInputErrorMessage;
+        };
+    };
   
 </script>
 

@@ -54,6 +54,12 @@
         };
     };
 
+    $: if (!isValid) {
+        if (textareaInputValue === "") {
+            errorMessage = textAreaInputErrorMessage;
+        };
+    };
+
   </script>
   <div class="input_and_label_container">
     {#if inputLabel !== false}

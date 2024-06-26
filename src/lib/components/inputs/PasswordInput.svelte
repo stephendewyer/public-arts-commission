@@ -9,19 +9,20 @@
     export let required: boolean;
     export let passwordInputErrorMessage: string = "";
     export let passwordsMatch: boolean | null = null;
+    export let inputValueChanged = false;
 
     let passwordMatchValidation: boolean = true;
 
     let errorMessage: string = "";
 
-    let passwordInputTouched: boolean = false;
+    export let passwordInputTouched: boolean = false;
 
     const passwordInputValueChangedHandler = () => {
+        inputValueChanged = true;
         if (required) {
             if (passwordInputTouched) {
                 if (passwordInputValue === "") {
                     isValid = false;
-                    errorMessage = passwordInputErrorMessage;
                 } else if (passwordInputValue !== "") {
                     isValid = true;
                 };
@@ -35,7 +36,6 @@
         if (passwordInputTouched) {
             if (passwordInputValue === "") {
                 isValid = false;
-                errorMessage = passwordInputErrorMessage;
             } else if (passwordInputValue !== "") {
                 isValid = true;
             };
@@ -50,7 +50,6 @@
 
         if (passwordInputValue === "") {
             isValid = false;
-            errorMessage = passwordInputErrorMessage;
         } else if (passwordInputValue !== "") {
             isValid = true;
         };
@@ -60,6 +59,12 @@
         passwordMatchValidation = false;
     } else {
         passwordMatchValidation = true;
+    };
+
+    $: if (!isValid) {
+        if (passwordInputValue === "") {
+            errorMessage = passwordInputErrorMessage;
+        };
     };
   
 </script>

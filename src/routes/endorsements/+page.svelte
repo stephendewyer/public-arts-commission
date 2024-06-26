@@ -33,8 +33,6 @@
 
 	export let data;
 
-	$: data;
-
 	// once user clicks "use my current location" checkbox, 
 
 	// define the latitude and longitude variables
@@ -59,6 +57,11 @@
 
     let useCurrentLocationChecked: boolean;
 
+	let currentPageCandidates: number = 1;
+	let currentPageReferendums: number = 1;
+	let currentPageLegislation: number = 1;
+	let currentPageAmendments: number = 1;
+
 	let activeEndorsementsTab: number;
 
 	$: activeEndorsementsTab = 0;
@@ -73,9 +76,9 @@
 
 	let addressLoadSuccess: boolean | null = null;
 
-	let pending: boolean = false;
+	let pendingReverseGeocode: boolean | null = null;
 
-	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string> {
+	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string | undefined> {
 
 		const response = await fetch("/api/reverseGeocode", {
 			method: 'POST',
@@ -91,123 +94,112 @@
 		reversedGeolocation = await response.json();
 
 		if (response.ok) {
-
-			pending = false;
-
+			pendingReverseGeocode = false;
 			addressLoadSuccess = true;
+			// reset current pagination page for each category
+			currentPageAmendments = 1;
+			currentPageCandidates = 1;
+			currentPageLegislation = 1;
+			currentPageReferendums = 1;
+			// show the user's address as the value in the searchEndorsements searchInput
+			searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
+			country = reversedGeolocation.addresses[0].address.country;
+			zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
+			state = reversedGeolocation.addresses[0].address.countrySubdivision;
+			county = reversedGeolocation.addresses[0].address.countrySecondarySubdivision;
+			city = reversedGeolocation.addresses[0].address.municipality;
+			street= reversedGeolocation.addresses[0].address.street;
+			streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
+
+			// clear categories data
+
+			candidatesFederal = [];
+			candidatesState = [];
+			candidatesCounty = [];
+			candidatesCity = [];
+
+			legislationFederal = [];
+			legislationState = [];
+			legislationCounty = [];
+			legislationCity = [];
+
+			amendmentsFederal = [];
+			amendmentsState = [];
+			amendmentsCounty = [];
+			amendmentsCity = [];
+
+			referendumsFederal = [];
+			referendumsState = [];
+			referendumsCounty = [];
+			referendumsCity = [];
+
+			$searchEndorsedCandidatesStore.search = {
+				year: yearInputValue,
+				government_level: "federal",
+				state: state,
+				county: county,
+				city: city,
+				name: name
+			};
+
+			$searchEndorsedLegislationStore.search = {
+				year: yearInputValue,
+				government_level: "federal",
+				state: state,
+				county: county,
+				city: city,
+				name: name
+			};
+
+			$searchEndorsedAmendmentsStore.search = {
+				year: yearInputValue,
+				government_level: "federal",
+				state: state,
+				county: county,
+				city: city,
+				name: name
+			};
+
+			$searchEndorsedReferendumsStore.search = {
+				year: yearInputValue,
+				government_level: "federal",
+				state: state,
+				county: county,
+				city: city,
+				name: name
+			};
+
+			return searchByStreetAddressInputValue;
 
 		} else if (!response.ok) {
-
-			pending = false;
-
+			pendingReverseGeocode = false;
 			addressLoadSuccess = false;
-
+			return searchByStreetAddressInputValue = "";
 		};
-
-		// show the user's address as the value in the searchEndorsements searchInput
-
-		searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
-
-		country = reversedGeolocation.addresses[0].address.country;
-		zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
-		state = reversedGeolocation.addresses[0].address.countrySubdivision;
-		county = reversedGeolocation.addresses[0].address.countrySecondarySubdivision;
-		city = reversedGeolocation.addresses[0].address.municipality;
-		street= reversedGeolocation.addresses[0].address.street;
-		streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
-
-		// clear categories data
-
-		candidatesFederal = [];
-		candidatesState = [];
-		candidatesCounty = [];
-		candidatesCity = [];
-
-		legislationFederal = [];
-		legislationState = [];
-		legislationCounty = [];
-		legislationCity = [];
-
-		amendmentsFederal = [];
-		amendmentsState = [];
-		amendmentsCounty = [];
-		amendmentsCity = [];
-
-		referendumsFederal = [];
-		referendumsState = [];
-		referendumsCounty = [];
-		referendumsCity = [];
-
-		$searchEndorsedCandidatesStore.search = {
-			year: yearInputValue,
-			government_level: "federal",
-			state: state,
-			county: county,
-			city: city,
-			name: name
-		};
-
-		$searchEndorsedLegislationStore.search = {
-			year: yearInputValue,
-			government_level: "federal",
-			state: state,
-			county: county,
-			city: city,
-			name: name
-		};
-
-		$searchEndorsedAmendmentsStore.search = {
-			year: yearInputValue,
-			government_level: "federal",
-			state: state,
-			county: county,
-			city: city,
-			name: name
-		};
-
-		$searchEndorsedReferendumsStore.search = {
-			year: yearInputValue,
-			government_level: "federal",
-			state: state,
-			county: county,
-			city: city,
-			name: name
-		};
-
-		return searchByStreetAddressInputValue;
 
 	};
 
 	// if getCurrentPosition is a success, 
 
 	const success = (position: GeoLocationPosition) => {
-
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
-
 		reverseGeocode(latitude, longitude);
-
 	};
 
 	// log an error if getCurrentPosition fails
 
 	const error = (error: any) => {
-
-		pending = false;
-
+		pendingReverseGeocode = false;
 		addressLoadSuccess = false;
-
 		console.log("Unable to retrieve your location!" + error);
 	};
 
 	// get user's location using JavaScript geolocation
 
 	const findUserLocation = () => {
-
 		name = "";
-
 		navigator.geolocation.getCurrentPosition(success, error);
-
 	};
 
 	// if user activates the get current location checkbox AND after fetching data, set pending as true and find user location
@@ -222,7 +214,7 @@
 		getEndorsedReferendumsDataSuccess
 	) { 
 
-		pending = true;
+		pendingReverseGeocode = true;
 
 		findUserLocation();
 
@@ -236,7 +228,7 @@
 		)
 	) {
 
-		pending = true;
+		pendingReverseGeocode = true;
 
 	};
 
@@ -244,7 +236,7 @@
 
 	let endorsedCandidates: CandidateWithImage[] = [];
 
-	let pendingEndorsedCandidatesData: boolean = false;
+	let pendingEndorsedCandidatesData: boolean | null = null;
 
 	let getEndorsedCandidatesDataSuccess: boolean | null = null;
 
@@ -264,17 +256,11 @@
 		});
 
 		if (response.ok) {
-
 			pendingEndorsedCandidatesData = false;
-
 			getEndorsedCandidatesDataSuccess = true;
-
 		} else if (!response.ok) {
-
 			pendingEndorsedCandidatesData = false;
-
 			getEndorsedCandidatesDataSuccess = false;
-
 		};
 
 	};
@@ -283,7 +269,7 @@
 
 	let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
 
-	let pendingEndorsedLegislationData: boolean = false;
+	let pendingEndorsedLegislationData: boolean | null = null;
 
 	let getEndorsedLegislationDataSuccess: boolean | null = null;
 
@@ -302,17 +288,11 @@
 		});
 
 		if (response.ok) {
-
 			pendingEndorsedLegislationData = false;
-
 			getEndorsedLegislationDataSuccess = true;
-
 		} else if (!response.ok) {
-
 			pendingEndorsedLegislationData = false;
-
 			getEndorsedCandidatesDataSuccess = false;
-
 		};
 
 	};
@@ -321,7 +301,7 @@
 
 	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
 
-	let pendingEndorsedAmendmentsData: boolean = false;
+	let pendingEndorsedAmendmentsData: boolean | null = null;
 
 	let getEndorsedAmendmentsDataSuccess: boolean | null = null;
 
@@ -341,17 +321,11 @@
 		});
 
 		if (response.ok) {
-
 			pendingEndorsedAmendmentsData = false;
-
 			getEndorsedAmendmentsDataSuccess = true;
-
 		} else if (!response.ok) {
-
 			pendingEndorsedAmendmentsData = false;
-
 			getEndorsedAmendmentsDataSuccess = false;
-
 		};
 
 	};
@@ -360,7 +334,7 @@
 
 	let endorsedReferendums: ReferendumWithImage[] = [];
 
-	let pendingEndorsedReferendumsData: boolean = false;
+	let pendingEndorsedReferendumsData: boolean | null = null;
 
 	let getEndorsedReferendumsDataSuccess: boolean | null = null;
 
@@ -382,17 +356,11 @@
 		// order referendums by most recent election_data
 
 		if (response.ok) {
-
 			pendingEndorsedReferendumsData = false;
-
 			getEndorsedReferendumsDataSuccess = true;
-
 		} else if (!response.ok) {
-
 			pendingEndorsedReferendumsData = false;
-
 			getEndorsedReferendumsDataSuccess = false;
-
 		};
 
 	};	
@@ -402,6 +370,12 @@
 	let statesWithCity: string[] = [];
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
+
+		// reset current pagination page for each category
+		currentPageAmendments = 1;
+		currentPageCandidates = 1;
+		currentPageLegislation = 1;
+		currentPageReferendums = 1;
 
 		let stateName: string = "";
 		let stateAbbreviation: string = "";
@@ -430,9 +404,7 @@
 			useCurrentLocationChecked && 
 			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
 		) {
-
 			useCurrentLocationChecked = false;
-
 		};
 
 		// IMPORTANT: street address parser must have an input length greater than zero
@@ -829,6 +801,12 @@
 
 	const selectYearInputValueChangeHandler = () => {
 
+		// reset current pagination page for each category
+		currentPageAmendments = 1;
+		currentPageCandidates = 1;
+		currentPageLegislation = 1;
+		currentPageReferendums = 1;
+
 		// update the search filter stores
 
 		candidatesFederal = [];
@@ -913,9 +891,7 @@
 	$: searchEndorsedCandidatesStore = createEndorsedCandidatesSearchStore(searchEndorsedCandidates);
 
 	$: unsubscribeSearchEndorsedCandidatesStore = searchEndorsedCandidatesStore.subscribe((model) => {
-
-		searchEndorsedCandidatesHandler(model)
-
+		searchEndorsedCandidatesHandler(model);
 	});
 
 	$: $searchEndorsedCandidatesStore.filtered.forEach((candidate: CandidateWithImage) => {
@@ -952,9 +928,7 @@
 	$: searchEndorsedLegislationStore = createEndorsedLegislationSearchStore(searchEndorsedLegislation);
 
 	$: unsubscribeSearchEndorsedLegislationStore = searchEndorsedLegislationStore.subscribe((model) => {
-
-		searchEndorsedLegislationHandler(model)
-
+		searchEndorsedLegislationHandler(model);
 	});
 
 	$: $searchEndorsedLegislationStore.filtered.forEach((legislation: LegislationWithSponsorsAndImage) => {
@@ -1068,6 +1042,10 @@
 			panel: AllEndorsementPanel,
 			data: {
 				user: data.streamed.user,
+				currentPageCandidates: currentPageCandidates,
+				currentPageAmendments: currentPageAmendments,
+				currentPageReferendums: currentPageReferendums,
+				currentPageLegislation: currentPageLegislation,
 				endorsed_amendments: $searchEndorsedAmendmentsStore.filtered, 
 				endorsed_candidates: $searchEndorsedCandidatesStore.filtered,
 				endorsed_legislation: $searchEndorsedLegislationStore.filtered,
@@ -1091,6 +1069,10 @@
 			panel: FederalEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
+				currentPageCandidates: currentPageCandidates,
+				currentPageAmendments: currentPageAmendments,
+				currentPageReferendums: currentPageReferendums,
+				currentPageLegislation: currentPageLegislation,
 				endorsed_amendments: amendmentsFederal,
 				endorsed_candidates: candidatesFederal,
 				endorsed_legislation: legislationFederal,
@@ -1113,6 +1095,10 @@
 			panel: StateEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
+				currentPageCandidates: currentPageCandidates,
+				currentPageAmendments: currentPageAmendments,
+				currentPageReferendums: currentPageReferendums,
+				currentPageLegislation: currentPageLegislation,
 				endorsed_amendments: amendmentsState,
 				endorsed_candidates: candidatesState,
 				endorsed_legislation: legislationState,
@@ -1135,6 +1121,10 @@
 			panel: CountyEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
+				currentPageCandidates: currentPageCandidates,
+				currentPageAmendments: currentPageAmendments,
+				currentPageReferendums: currentPageReferendums,
+				currentPageLegislation: currentPageLegislation,
 				endorsed_amendments: amendmentsCounty,
 				endorsed_candidates: candidatesCounty,
 				endorsed_legislation: legislationCounty,
@@ -1157,6 +1147,10 @@
 			panel: CityEndorsementsPanel,
 			data: {
 				user: data.streamed.user,
+				currentPageCandidates: currentPageCandidates,
+				currentPageAmendments: currentPageAmendments,
+				currentPageReferendums: currentPageReferendums,
+				currentPageLegislation: currentPageLegislation,
 				endorsed_amendments: amendmentsCity,
 				endorsed_candidates: candidatesCity,
 				endorsed_legislation: legislationCity,
@@ -1199,7 +1193,7 @@
 				</div>
 				<div class="search_endorsements_by_address_input">
 					{#if useCurrentLocationChecked}
-						{#if pending}
+						{#if pendingReverseGeocode}
 							<LoaderAnimation />
 						{:else if addressLoadSuccess}
 							<SearchInput 
@@ -1251,7 +1245,7 @@
 	</div>
 	
 	<TabPanel
-		tabPanels={endorsementTabPanels} 
+		bind:tabPanels={endorsementTabPanels} 
 		bind:activeTab={activeEndorsementsTab}
 	/>
 </section>

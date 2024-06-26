@@ -55,6 +55,12 @@
         };
     };
 
+    $: if (!isValid) {
+        if (timeInputValue === "") {
+            errorMessage = timeInputErrorMessage;
+        };
+    };
+
 </script>
 
 <div class="input_and_label_container">

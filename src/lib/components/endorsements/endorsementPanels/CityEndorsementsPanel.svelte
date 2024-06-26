@@ -1,12 +1,10 @@
 <script lang="ts">
     import EndorsementCategories from '$lib/components/endorsements/endorsementsCategories/EndorsementCategories.svelte';
-    export let panel_data: any[];
-
-    $: panel_data;
+    export let panel_data: Endorsements;
     
 </script>
 <div>
-    <EndorsementCategories categories_data={panel_data}/>
+    <EndorsementCategories bind:categories_data={panel_data}/>
 </div>
 
 <style>
