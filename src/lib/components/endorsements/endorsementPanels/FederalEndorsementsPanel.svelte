@@ -4,7 +4,7 @@
     
 </script>
 <div>
-    <EndorsementCategories bind:categories_data={panel_data}/>
+    <EndorsementCategories categories_data={panel_data}/>
 </div>
 
 <style>
