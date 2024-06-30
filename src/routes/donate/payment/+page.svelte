@@ -2,10 +2,10 @@
     import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import { PUBLIC_STRIPEPUBLISHABLEKey } from '$env/static/public';
     import { onMount } from 'svelte';
-    import { loadStripe } from '@stripe/stripe-js';
-    import { Elements, PaymentElement } from 'svelte-stripe';
+    import { Elements, LinkAuthenticationElement, PaymentElement } from 'svelte-stripe';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import CancelButton from '$lib/components/buttons/CancelButton.svelte';
+    import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js';
 
     // data from server
     export let data;
@@ -31,18 +31,15 @@
     // };
 
     // Stripe instance
-    let stripe: any = null;
+    let stripe: Stripe | null = null;
 
     // Stripe Elements instance
-    let elements: any;
+    let elements: StripeElements;
 
     // when components mounts
     onMount(async () => {
-
         // load the Stripe client
-
         stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
-        
     });
 
     // handle form submission
@@ -50,7 +47,7 @@
 
         // ask Stripe to confirm the payment
         
-        const result = await stripe.confirmPayment({
+        const result = await stripe?.confirmPayment({
 
             // pass instance that was used to create the Payment Element
 
@@ -65,7 +62,7 @@
 
         });
 
-        if (result.error) {
+        if (result?.error) {
 
             // handle error
 
@@ -115,11 +112,15 @@
                 <!-- container for Stripe components -->
 
                 <Elements 
-                    {stripe} 
-                    {clientSecret}
+                    stripe={stripe} 
+                    clientSecret={clientSecret}
+                    theme="flat"
                     bind:elements
+                    rules={{ '.Input': { border: 'solid 2px #AEA89D' } }}
                 >
-                    <PaymentElement/>
+                
+                    <LinkAuthenticationElement />
+                    <PaymentElement />
                 </Elements>
                 <div class="submit_button_container">
                     <SubmitButtonSecondary
@@ -128,7 +129,6 @@
                         pay
                     </SubmitButtonSecondary>
                 </div>
-                
             </form>
             <div class="cancel_button_container">
                 <a href="/donate" >
