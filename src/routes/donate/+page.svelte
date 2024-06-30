@@ -17,14 +17,20 @@
     let donationAmountInputValue: number | undefined;
     let donationAmountIndexValue: number;
     let donateAnyAmountValue: number | undefined;
-
+    
     let donationAmountIsValid: boolean = true;
 
-    $: if (donationAmountInputValue !== undefined) { donationAmountIsValid = true}
-
-    // set the varibable for donation occurence value
+    $: if (donationAmountInputValue !== undefined) { 
+        donationAmountIsValid = true;
+    };
 
     let donationOccurenceInputValue: string;
+
+    let donationOccurenceIsValid: boolean = true;
+
+    $: if (donationOccurenceInputValue !== undefined) { 
+        donationOccurenceIsValid = true;
+    };    
 
     let nameFirstInputValue: string = "";
     let nameLastInputValue: string = "";
@@ -150,6 +156,10 @@
 
             pending = false;
 
+            if (!donationOccurenceInputValue) {
+                donationOccurenceIsValid = false;
+            };
+
             if (!donationAmountInputValue) {
                 donationAmountIsValid = false;
             };
@@ -190,7 +200,7 @@
         <h2>
             how often would like you like to donate?
         </h2>
-        <PaymentOccurence bind:activatedOccurence={donationOccurenceInputValue}/>
+        <PaymentOccurence bind:activatedOccurence={donationOccurenceInputValue} paymentOccurenceIsValid={donationOccurenceIsValid}/>
         <h2>
             how much would you like to donate at a time?
         </h2>

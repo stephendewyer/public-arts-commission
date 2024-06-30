@@ -1224,7 +1224,7 @@
 					<Checkbox 
 						bind:checked={useCurrentLocationChecked}
 					>
-						<div class="use_current_location_lable">
+						<div class="use_current_location_label">
 							<div class="geolocation_container">
 								{@html GeolocationIcon}
 							</div>
@@ -1290,11 +1290,12 @@
 		display: inline;
 	}
 
-    .use_current_location_lable {
+    .use_current_location_label {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
+		font-size: 1.4rem;
     }
 
     .geolocation_container {
@@ -1337,6 +1338,10 @@
             display: flex;
         }
 
+		.use_current_location_label {
+            font-size: 1.2rem;
+        }
+
 	}
 
 	@media (max-width: 720px) {
@@ -1358,6 +1363,10 @@
         .name_and_location_search_fields {
             gap: 0.5rem;
             width: 100%;
+        }
+
+		.use_current_location_label {
+            font-size: 1rem;
         }
 
         .geolocation_container {

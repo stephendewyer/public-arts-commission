@@ -14,9 +14,9 @@
 		} else {
 			clicked = !clicked;
 			activatedIndex = (index + 1);
-		}
+		};
 
-    }
+    };
 
 </script>
 
@@ -32,8 +32,9 @@
     .donate_amount_button {
 		color: #4C4239;
 		fill: #4C4239;
-		background-color: #D8EAC5;
-		border: solid 3px #4C4239;
+		background: none;
+		border-radius: 1rem;
+		border: solid 2px #4C4239;
 		padding: 0.5rem 1rem;
 		font-size: 1.5rem;
 		font-weight: 600;
@@ -50,10 +51,11 @@
 	}
 
     .donate_amount_button_active {
-		color: #D8EAC5;
+		color: #4C4239;
 		fill: #4C4239;
-		background-color: #4C4239;
-		border: solid 3px #4C4239;
+		background-color: #D8EAC5;
+		border-radius: 1rem;
+		border: solid 2px #4C4239;
 		padding: 0.5rem 1rem;
 		font-size: 1.5rem;
 		font-weight: 600;

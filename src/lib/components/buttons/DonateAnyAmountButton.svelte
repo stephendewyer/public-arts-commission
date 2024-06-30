@@ -90,8 +90,9 @@
     .donate_amount_button {
 		color: #4C4239;
 		fill: #4C4239;
-		background-color: #D8EAC5;
-		border: solid 3px #4C4239;
+		background: none;
+		border: solid 2px #4C4239;
+		border-radius: 1rem;
 		padding: 0.5rem 1rem;
 		font-size: 1.5rem;
 		font-weight: 600;
@@ -108,10 +109,11 @@
 	}
 
     .donate_amount_button_active {
-		color: #D8EAC5;
+		color: #4C4239;
 		fill: #4C4239;
-		background-color: #4C4239;
-		border: solid 3px #4C4239;
+		background-color: #D8EAC5;
+		border: solid 2px #4C4239;
+		border-radius: 1rem;
 		padding: 0.5rem 1rem;
 		font-size: 1.5rem;
 		font-weight: 600;
@@ -129,7 +131,7 @@
 		border-top: 0;
 		border-left: 0;
 		border-right: 0;
-		border-bottom: 3px #4C4239 solid;
+		border-bottom: 2px #4C4239 solid;
 		outline: none;
 		font-size: 1.5rem;
 		font-weight: 600;
@@ -137,11 +139,11 @@
 
 	.anyAmountInputActive {
 		background: transparent;
-		color: #D8EAC5;
+		color: #4C4239;
 		border-top: 0;
 		border-left: 0;
 		border-right: 0;
-		border-bottom: 3px #D8EAC5 solid;
+		border-bottom: 2px #4C4239 solid;
 		outline: none;
 		font-size: 1.5rem;
 		font-weight: 600;
