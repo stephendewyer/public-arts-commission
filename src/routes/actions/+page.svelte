@@ -17,6 +17,7 @@
     import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore';
     import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
     import { page } from '$app/stores';
+    import GeoLocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
 
     export let data;
 
@@ -254,6 +255,9 @@
         futureEndorsedActions = [];
         pastEndorsedActions = [];
 
+        actionsForthcomingCurrentPage = 1;
+        actionsHistoryCurrentPage = 1;
+
         $searchEndorsedActionsStore.search = {
             year:  {
                 all_day_event_date: yearInputValue,
@@ -319,6 +323,10 @@
 	let statesWithCity: string[] = [];
 
 	const searchByNameOrLocationInputValueChangeHandler = () => {
+
+        actionsForthcomingCurrentPage = 1;
+        actionsHistoryCurrentPage = 1;
+
         let stateName: string = "";
 		let stateAbbreviation: string = "";
 
@@ -581,6 +589,9 @@
         futureEndorsedActions = [];
         pastEndorsedActions = [];
 
+        actionsForthcomingCurrentPage = 1;
+        actionsHistoryCurrentPage = 1;
+
         $searchEndorsedActionsStore.search = {
             year:  {
                 all_day_event_date: yearInputValue,
@@ -608,47 +619,56 @@
         class="search_endorsements_by_address_form"
     >
         <h1>
-            search actions by action name, state, city, zip code or street address
+            search actions
         </h1>
         <div class="search_endorsement_fields">
             <div class="name_and_location_search_fields">
-                <div class="use_current_location_checkbox">
-                    <Checkbox 
-                        bind:checked={useCurrentLocationChecked}
-                    >
-                        use my current location
-                    </Checkbox>
-                </div>
                 <div class="search_endorsements_by_address_input">
                     {#if useCurrentLocationChecked}
                         {#if pending}
                             <LoaderAnimation />
                         {:else if addressLoadSuccess}
                             <SearchInput 
-                                placeholder="1000 MyStreet, MyCity, MyState  10000"
+                                placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
                                 inputID="address"
                                 inputName="address"
-                                inputLabel={false}
+                                inputLabel={true}
                                 bind:searchInputValue={searchByStreetAddressInputValue}
                                 searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
 								options={statesWithCity}
                                 bind:optionSelected={searchbarOptionSelected}
-                            />
+                            >
+                                action name, state, city, zip code or street address
+                            </SearchInput>
                         {:else if !addressLoadSuccess}
                             <p>failed to load address</p>
                         {/if}
                     {:else}
                         <SearchInput 
-                            placeholder="1000 MyStreet, MyCity, MyState  10000"
+                            placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
                             inputID="address"
                             inputName="address"
-                            inputLabel={false}
+                            inputLabel={true}
                             bind:searchInputValue={searchByStreetAddressInputValue}
                             searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
                             options={statesWithCity}
                             bind:optionSelected={searchbarOptionSelected}
-                        />
+                        >
+                            action name, state, city, zip code or street address
+                        </SearchInput>
                     {/if}
+                </div>
+                <div class="use_current_location_checkbox">
+                    <Checkbox 
+                        bind:checked={useCurrentLocationChecked}
+                    >
+                        <div class="use_current_location_lable">
+                            <div class="geolocation_container">
+                                {@html GeoLocationIcon}
+                            </div>
+                            use my current location
+                        </div>
+                    </Checkbox>
                 </div>
             </div>
             <div class="year_field">
@@ -666,15 +686,15 @@
 		</div>
     </form>
     <ul class="actions_categories_container">
-        <li class="forthcoming_actions_container">
-            <h3>
-                forthcoming actions
-            </h3>
-            <div class="action_cards_frame">
-                <div class="action_cards">
-                    {#if pendingEndorsedActionsData}
-                        <LoaderAnimation />
-                    {:else if getEndorsedActionsDataSuccess}
+        {#if pendingEndorsedActionsData}
+            <LoaderAnimation />
+        {:else if (pendingEndorsedActionsData === false && getEndorsedActionsDataSuccess === true)}
+            <li class="forthcoming_actions_container">
+                <h3>
+                    forthcoming actions
+                </h3>
+                <div class="action_cards_frame">
+                    <div class="action_cards">
                         {#each paginatedActionsForthcoming as endorsedAction, i}
                             <a 
                                 href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
@@ -683,57 +703,63 @@
                                 <ActionEndorsementCard endorsedActionData={endorsedAction} />
                             </a>
                         {/each}
-                    {:else if !getEndorsedActionsDataSuccess}
-                        <p>failed to load endorsed forthcoming actions</p>
-                    {/if}
+                    </div>
                 </div>
-            </div>
-            <Pagination 
-                bind:currentPage={actionsForthcomingCurrentPage}
-                totalCount={futureEndorsedActions.length}
-                pageSize={pageSize}
-            />
-            <div class="propose_an_action_button_container">
-                <ProposeActionButton
-                    category="actions" 
-                    authorized_user={user}
-                >
-                    propose an action
-                </ProposeActionButton>
-            </div>
-        </li>
-        <li class="actions_history_container">
-            <h3>
-                actions history
-            </h3>
-            <div class="action_cards_frame">
-                <div class="action_cards">
-                    {#if pendingEndorsedActionsData}
-                        <LoaderAnimation />
-                    {:else if getEndorsedActionsDataSuccess}
-                        {#each paginatedActionsHistory as endorsedAction, i}
-                            <a 
-                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
-                                data-sveltekit-noscroll
-                            > 
-                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                            </a>
-                        {/each}
-                    {:else if !getEndorsedActionsDataSuccess}
-                        <p>failed to load endorsed actions history</p>
-                    {/if}
+                <Pagination 
+                    bind:currentPage={actionsForthcomingCurrentPage}
+                    totalCount={futureEndorsedActions.length}
+                    pageSize={pageSize}
+                />
+                <div class="propose_an_action_button_container">
+                    <ProposeActionButton
+                        category="actions" 
+                        authorized_user={user}
+                    >
+                        propose an action
+                    </ProposeActionButton>
                 </div>
-            </div>
-            <Pagination 
-                bind:currentPage={actionsHistoryCurrentPage}
-                totalCount={pastEndorsedActions.length}
-                pageSize={pageSize}
-            />
-        </li>
+            </li>
+            <li class="actions_history_container">
+                <h3>
+                    actions history
+                </h3>
+                <div class="action_cards_frame">
+                    <div class="action_cards">
+                        {#if pendingEndorsedActionsData}
+                            <LoaderAnimation />
+                        {:else if getEndorsedActionsDataSuccess}
+                            {#each paginatedActionsHistory as endorsedAction, i}
+                                <a 
+                                    href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                    data-sveltekit-noscroll
+                                > 
+                                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                                </a>
+                            {/each}
+                        {:else if !getEndorsedActionsDataSuccess}
+                            <p>failed to load endorsed actions history</p>
+                        {/if}
+                    </div>
+                </div>
+                <Pagination 
+                    bind:currentPage={actionsHistoryCurrentPage}
+                    totalCount={pastEndorsedActions.length}
+                    pageSize={pageSize}
+                />
+            </li>
+        {:else if (getEndorsedActionsDataSuccess === false && pendingEndorsedActionsData === false)}
+            <p>failed to load endorsed forthcoming actions</p>
+        {/if}
     </ul>
 </section>
 
 <style>
+
+    .actions_categories_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
     .actions {
         display: flex;
@@ -746,42 +772,50 @@
 		flex-direction: column;
 		align-items: center;
         justify-content: center;
-		padding: 0 1rem 0 1rem;
+		padding: 0 1rem;
 	}
 
 	.search_endorsement_fields {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		width: 100%;
         justify-content: flex-start;
-        padding: 1rem 0;
-        gap: 1rem;
+        padding: 0 0 1rem 0;
+        gap: 2rem;
 	}
 
     .name_and_location_search_fields {
         display: flex;
-		flex-direction: row;
-		width: 100%;
-        justify-content: center;
+		flex-direction: column;
+		width: 40rem;
+        align-items: flex-start;
+        gap: 1rem;
     }
 
 	.use_current_location_checkbox {
-		width:20rem;
 		display: inline;
-		margin: 0 1rem 0 0;
 	}
 
+    .use_current_location_lable {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .geolocation_container {
+        width: 1.25rem;
+    }
+
 	.search_endorsements_by_address_input {
-		width: 40rem;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
+        width: 100%;
 	}
 
 	.year_field {
-		width: 100%;
-		max-width: 10rem;
-		margin: 0 auto 1rem auto;
+		width: 10rem;
 	}
 
     .actions_categories_container {
@@ -837,28 +871,20 @@
     @media (max-width: 1140px) {
 
         .search_endorsement_fields {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            padding: 0.5rem 0;
+            padding: 0 0 1rem 0;
+            gap: 1rem;
         }
 
         .name_and_location_search_fields {
-            flex-direction: column;
-            align-items: center;
+            width: 30rem;
             gap: 1rem;
-            width: 100%;
         }
 
-        .use_current_location_checkbox {
-            width: 20rem;
-            display: block;
-            margin: 0;
+        .geolocation_container {
+            width: 1.125rem;
         }
 
         .search_endorsements_by_address_input {
-            width: 40rem;
             display: flex;
         }
 
@@ -873,6 +899,8 @@
 
         .search_endorsement_fields {
             gap: 0.5rem;
+            flex-direction: column;
+            align-items: center;
         }
 
         .search_endorsements_by_address_form {
@@ -885,6 +913,11 @@
 
         .name_and_location_search_fields {
             gap: 0.5rem;
+            width: 100%;
+        }
+
+        .geolocation_container {
+            width: 1rem;
         }
 
     }

@@ -30,6 +30,7 @@
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
     import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
+	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
 
 	export let data;
 
@@ -1180,47 +1181,56 @@
 		class="search_endorsements_by_address_form"
 	>
 		<h1>
-		    search endorsements by name, street address, city, state or zip code
+		    search endorsements
 		</h1>
 		<div class="search_endorsement_fields">
-			<div class="search_by_location_fields">
-				<div class="use_current_location_checkbox">
-					<Checkbox 
-						bind:checked={useCurrentLocationChecked}
-					>
-						use my current location
-					</Checkbox>
-				</div>
+			<div class="name_and_location_search_fields">
 				<div class="search_endorsements_by_address_input">
 					{#if useCurrentLocationChecked}
 						{#if pendingReverseGeocode}
 							<LoaderAnimation />
 						{:else if addressLoadSuccess}
 							<SearchInput 
-								placeholder="1000 MyStreet, MyCity, MyState  10000"
+								placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
 								inputID="address"
 								inputName="address"
-								inputLabel={false}
+								inputLabel={true}
 								bind:searchInputValue={searchByStreetAddressInputValue}
 								searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
 								options={statesWithCity}
 								bind:optionSelected={searchbarOptionSelected}
-							/>
+							>
+								name, street address, city, state or zip code
+							</SearchInput>
 						{:else if !addressLoadSuccess}
 							<p>failed to load address</p>
 						{/if}
 					{:else}
 						<SearchInput 
-							placeholder="1000 MyStreet, MyCity, MyState  10000"
+							placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
 							inputID="address"
 							inputName="address"
-							inputLabel={false}
+							inputLabel={true}
 							bind:searchInputValue={searchByStreetAddressInputValue}
 							searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
 							options={statesWithCity}
 							bind:optionSelected={searchbarOptionSelected}
-						/>
+						>
+							name, street address, city, state or zip code
+						</SearchInput>
 					{/if}
+				</div>
+				<div class="use_current_location_checkbox">
+					<Checkbox 
+						bind:checked={useCurrentLocationChecked}
+					>
+						<div class="use_current_location_lable">
+							<div class="geolocation_container">
+								{@html GeolocationIcon}
+							</div>
+							use my current location
+						</div>
+					</Checkbox>
 				</div>
 			</div>
 			<div class="year_search_field">
@@ -1243,7 +1253,6 @@
 			bind:activeTab={activeEndorsementsTab}
 		/>
 	</div>
-	
 	<TabPanel
 		bind:tabPanels={endorsementTabPanels} 
 		bind:activeTab={activeEndorsementsTab}
@@ -1257,43 +1266,50 @@
 		flex-direction: column;
 		align-items: center;
         justify-content: center;
-		padding: 0 1rem 0 1rem;
+		padding: 0 1rem;
+		width: 100%;
 	}
 
 	.search_endorsement_fields {
 		display: flex;
-		flex-direction: column;
-		width: 100%;
-        justify-content: center;
-        padding: 1rem 0;
-		gap: 1rem;
+		flex-direction: row;
+        justify-content: flex-start;
+        padding: 0 0 1rem 0;
+        gap: 2rem;
 	}
 
-	.search_by_location_fields {
-		display: flex;
-		flex-direction: row;
-		width: 100%;
-        justify-content: center;
-	}
+    .name_and_location_search_fields {
+        display: flex;
+		flex-direction: column;
+		width: 40rem;
+        align-items: flex-start;
+        gap: 1rem;
+    }
 
 	.use_current_location_checkbox {
-		width:20rem;
 		display: inline;
-		margin: 0 1rem 0 0;
 	}
 
+    .use_current_location_lable {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .geolocation_container {
+        width: 1.25rem;
+    }
+
 	.search_endorsements_by_address_input {
-		width: 40rem;
 		display: inline-flex;
-		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+        width: 100%;
 	}
 
 	.year_search_field {
-		width: 100%;
-		max-width: 10rem;
-		margin: 0 auto 1rem auto;
+		width: 10rem;
 	}
 
 	.endorsements_tabs_container {
@@ -1304,30 +1320,22 @@
     @media (max-width: 1140px) {
 
 		.search_endorsement_fields {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            padding: 0.5rem 0;
-        }
-
-        .search_by_location_fields {
-            flex-direction: column;
-            align-items: center;
+            padding: 0 0 1rem 0;
             gap: 1rem;
-            width: 100%;
         }
 
-		.use_current_location_checkbox {
-			width: 20rem;
-			display: block;
-			margin: 0;
-		}
+        .name_and_location_search_fields {
+            width: 30rem;
+            gap: 1rem;
+        }
 
-		.search_endorsements_by_address_input {
-			width: 40rem;
-			display: flex;
-		}
+        .geolocation_container {
+            width: 1.125rem;
+        }
+
+        .search_endorsements_by_address_input {
+            display: flex;
+        }
 
 	}
 
@@ -1335,6 +1343,8 @@
 
 		.search_endorsement_fields {
             gap: 0.5rem;
+            flex-direction: column;
+            align-items: center;
         }
 
         .search_endorsements_by_address_form {
@@ -1345,10 +1355,14 @@
             width: 100%;
         }
 
-        .search_by_location_fields {
+        .name_and_location_search_fields {
             gap: 0.5rem;
+            width: 100%;
         }
 
+        .geolocation_container {
+            width: 1rem;
+        }
 	}
 
 </style>

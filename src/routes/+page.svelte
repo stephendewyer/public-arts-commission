@@ -16,6 +16,7 @@
 	import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore.js';
 	import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore.js';
 	import { page } from '$app/stores';
+	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
 
 	export let data;
 
@@ -279,13 +280,6 @@
 		search endorsements by street address
 		</h2>
 		<div class="search_endorsement_fields">
-			<div class="use_current_location_checkbox">
-				<Checkbox 
-					bind:checked={useCurrentLocationChecked}
-				>
-					use my current location
-				</Checkbox>
-			</div>
 			<div class="search_endorsements_by_address_input">
 				{#if useCurrentLocationChecked}
 					{#if pending}
@@ -313,7 +307,18 @@
 					/>
 				{/if}
 			</div>
-			
+			<div class="use_current_location_checkbox">
+				<Checkbox 
+					bind:checked={useCurrentLocationChecked}
+				>
+					<div class="use_current_location_lable">
+						<div class="geolocation_container">
+							{@html GeolocationIcon}
+						</div>
+						use my current location
+					</div>
+				</Checkbox>
+			</div>
 		</div>
 		<ActionButton
 			bind:disable={disableButton}
@@ -398,13 +403,24 @@
 		flex-direction: row;
 		width: 100%;
 		padding: 0 1rem;
+		gap: 1rem;
 	}
 
 	.use_current_location_checkbox {
 		width:20rem;
 		display: inline;
-		margin: 0 1rem 0 0;
 	}
+
+	.use_current_location_lable {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .geolocation_container {
+        width: 1.25rem;
+    }
 
 	.search_endorsements_by_address_input {
 		width: 40rem;
@@ -465,9 +481,13 @@
 		}
 
 		.use_current_location_checkbox {
-			width:20rem;
+			width:auto;
 			display: flex;
 			margin: 0;
+		}
+
+		.geolocation_container {
+			width: 1.125rem;
 		}
 
 		.search_endorsements_by_address_input {
@@ -493,6 +513,10 @@
 
 		.search_endorsements_by_address_input {
 			width: 100%;
+		}
+
+		.geolocation_container {
+			width: 1rem;
 		}
 	}
 
