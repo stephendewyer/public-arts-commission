@@ -22,14 +22,6 @@
         timeStamp
     } = data);
 
-    // const options = {
-    //     // passing the client secret key
-    //     clientSecret: clientSecret,
-
-    //     // fully customizable with appearance API
-    //     appearance: {/*...*/},
-    // };
-
     // Stripe instance
     let stripe: Stripe | null = null;
 
@@ -44,28 +36,18 @@
 
     // handle form submission
     const submitPayment = async () => {
-
         // ask Stripe to confirm the payment
-        
         const result = await stripe?.confirmPayment({
-
             // pass instance that was used to create the Payment Element
-
             elements,
-
             // specify where to send the user when payment succeeds
-
             confirmParams: {
-
                 return_url: returnUrl
             },
-
         });
 
         if (result?.error) {
-
             // handle error
-
             console.log(result.error);
         };
 
@@ -149,7 +131,7 @@
 
     .payment_container {
         width: 100%;
-        max-width: 40rem;
+        max-width: 50rem;
         margin: 0 auto;
         padding: 0 1rem;
         display: flex;
