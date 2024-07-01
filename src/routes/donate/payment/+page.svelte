@@ -5,13 +5,13 @@
     import { Elements, LinkAuthenticationElement, PaymentElement } from 'svelte-stripe';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import CancelButton from '$lib/components/buttons/CancelButton.svelte';
-    import { loadStripe, type Stripe, type StripeElements } from '@stripe/stripe-js';
+    import { loadStripe, type Stripe, type StripeElements, type StripePaymentElementOptions } from '@stripe/stripe-js';
 
     // data from server
     export let data;
 
     // destructure the server data
-    $: ({ 
+    const { 
         clientSecret, 
         returnUrl,
         donationOccurence, 
@@ -20,7 +20,7 @@
         nameLast,
         email,
         timeStamp
-    } = data);
+    } = data;
 
     // Stripe instance
     let stripe: Stripe | null = null;
@@ -28,11 +28,20 @@
     // Stripe Elements instance
     let elements: StripeElements;
 
-    // when components mounts
-    onMount(async () => {
-        // load the Stripe client
+    const loadStripeHandler = async () => {
         stripe = await loadStripe(PUBLIC_STRIPEPUBLISHABLEKey);
+    };
+
+    onMount(() => {
+        loadStripeHandler();
     });
+
+    const options: StripePaymentElementOptions = {
+        layout: {
+            type: 'tabs',
+            defaultCollapsed: false,
+        }
+    };
 
     // handle form submission
     const submitPayment = async () => {
@@ -102,7 +111,7 @@
                 >
                 
                     <LinkAuthenticationElement />
-                    <PaymentElement />
+                    <PaymentElement options={options}/>
                 </Elements>
                 <div class="submit_button_container">
                     <SubmitButtonSecondary
