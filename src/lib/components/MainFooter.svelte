@@ -3,6 +3,10 @@
     import PierreHuygheAfterDream from '$lib/images/theme/Pierre_Huyghe_Minneapolis_Sculpture_Garden_03_July_2023_02.jpg';
     import LogoSecondary from "$lib/images/logo/public_arts_commission_logo_secondary.svg?raw";
     import LogoutButtonSecondary from '$lib/components/buttons/LogoutButtonSecondary.svelte';
+    import LinkedInLogo from "$lib/images/social_media/LinkedIn_logo.svg?raw";
+    import XLogo from "$lib/images/social_media/X_logo.svg?raw";
+    import FacebookLogo from "$lib/images/social_media/Facebook_logo.svg?raw";
+    import InstagramLogo from "$lib/images/social_media/Instagram_logo.svg?raw";
 
     // IMPORTANT!  update user on page change using $page store
 
@@ -212,7 +216,36 @@
                     <br />
                     public arts commission © {year}.  All rights reserved.
                 </p>
-                
+                <ul class="social_media_links">
+                    <li>
+                        <a href="https://www.facebook.com/publicartscommission/" target="_blank">
+                            <div class="social_media_link">
+                                {@html FacebookLogo}
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/publicartscommission/" target="_blank">
+                            <div class="social_media_link">
+                                {@html InstagramLogo}
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/company/publicartscommission" target="_blank">
+                            <div class="social_media_link">
+                                {@html LinkedInLogo}
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://twitter.com/pubartscommiss" target="_blank">
+                            <div class="social_media_link">
+                                {@html XLogo}
+                            </div>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
         
@@ -360,6 +393,30 @@
     .footer_info > p {
         font-size: 1rem;
     }
+ 
+    .social_media_links {
+        padding: 1rem;
+        margin: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .social_media_link {
+        position: relative;
+        width: 3rem;
+        color: #E3CDB2;
+        fill: #E3CDB2;
+        transition: fill 0.2s linear, color 0.2s linear;
+    }
+
+    .social_media_link:hover {
+        fill: #DEF2F4;
+        color: #DEF2F4;
+    }
 
     @media (max-width: 1140px) {
 
@@ -426,6 +483,20 @@
 
         .footer_info > p {
             font-size: 0.8rem;
+        }
+
+        .social_media_links {
+            padding: 1rem;
+            margin: 0;
+            list-style: none;
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .social_media_link {
+            width: 2rem;
         }
 
     }
