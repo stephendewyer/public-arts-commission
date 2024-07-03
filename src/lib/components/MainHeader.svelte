@@ -559,6 +559,7 @@
 
 		#nav_right_mobile {
 			display: flex;
+			flex-direction: row;
 			justify-content: flex-end;
 			width: 40%;
 
