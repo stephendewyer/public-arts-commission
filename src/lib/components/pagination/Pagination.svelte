@@ -267,13 +267,13 @@
 
     @media all and (max-width:720px){
         .pagination_item {
-            height: 1.5rem;
-            width: 1.5rem;
+            height: 2rem;
+            width: 2rem;
             text-align: center;
-            margin: 0.25rem;
-            min-width: 1rem;
-            font-size: 1rem;
-            line-height: 1rem;
+            margin: 0.1rem;
+            min-width: 2rem;
+            font-size: 1.25rem;
+            line-height: 1.25rem;
         }
 
         .arrow_left {

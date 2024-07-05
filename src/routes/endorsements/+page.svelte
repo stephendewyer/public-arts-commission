@@ -153,7 +153,8 @@
 			};
 
 			$searchEndorsedAmendmentsStore.search = {
-				year: yearInputValue,
+				year_election: yearInputValue,
+				year_released: yearInputValue,
 				government_level: "federal",
 				state: state,
 				county: county,
@@ -641,7 +642,8 @@
 		};
 
 		$searchEndorsedAmendmentsStore.search = {
-			year: yearInputValue,
+			year_election: yearInputValue,
+			year_released: yearInputValue,
 			government_level: "federal",
 			state: state,
 			county: county,
@@ -849,7 +851,8 @@
 		};
 
 		$searchEndorsedAmendmentsStore.search = {
-			year: yearInputValue,
+			year_election: yearInputValue,
+			year_released: yearInputValue,
 			government_level: "federal",
 			state: state,
 			county: county,
@@ -955,7 +958,8 @@
 	$: searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
 		...amendment,
 		searchTerms: {
-			year: `${amendment.year_released}`,
+			year_election: `${amendment.election_date}`,
+			year_released: `${amendment.year_released}`,
 			government_level: `${amendment.government_level}`,
 			state: `${amendment.state}`,
 			county: `${amendment.county}`,

@@ -7,7 +7,8 @@ export const createEndorsedAmendmentsSearchStore = (/** @type {any} */ data) => 
         data: data,
         filtered: data,
         search: {
-            year: "",
+            year_released: "",
+            year_election: "",
             government_level: "",
             state: "",
             county: "",
@@ -25,22 +26,22 @@ export const createEndorsedAmendmentsSearchStore = (/** @type {any} */ data) => 
 
 export const searchEndorsedAmendmentsHandler = (/** @type {any} */ store) => {
 
-    const searchYear = store.search.year.toString();
-
+    const searchYearRelease = store.search.year_released?.toString();
+    const searchYearElection = store.search.year_election?.toString();
+    
     // filter the endorsed candidates data
     store.filtered = store.data.filter((/** @type {any} */ item) => {
-
         // apply year filter first
 
         // if search by year is empty, continue with search by street address
 
-        if (searchYear === "") {
+        if (searchYearElection === "" && searchYearRelease === "") {
 
             return SearchEndorsementsByStreetAddressFilter(store, item);
 
         // else if search year matches item searchTerm year, continue with filters
 
-        } else if (item.searchTerms.year === searchYear) {
+        } else if ((new Date(item.searchTerms.year_election).getFullYear().toString()) === searchYearElection || item.searchTerms.year_released === searchYearRelease) {
 
             return SearchEndorsementsByStreetAddressFilter(store, item);
 
