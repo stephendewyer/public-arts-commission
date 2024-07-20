@@ -15,19 +15,6 @@
     let passwordIsValid: boolean = true;
     let emailIsValid: boolean = true;
 
-    let loginVoterButtonDisabled: boolean = true;
-
-    $: if (
-        emailIsValid &&
-        passwordIsValid &&
-        (passwordInputValue !== "") &&
-        (emailInputValue !== "")
-    ) {
-        loginVoterButtonDisabled = false;
-    } else {
-        loginVoterButtonDisabled = true;
-    };
-
     // after submit
 
 	let responseItem: ResponseObj = {
@@ -124,7 +111,7 @@
             </PasswordInput>
         </div>
         <SubmitButton 
-            disable={loginVoterButtonDisabled}
+            disable={false}
         >
             log in
         </SubmitButton>
