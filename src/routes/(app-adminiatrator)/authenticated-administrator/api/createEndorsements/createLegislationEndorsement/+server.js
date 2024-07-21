@@ -5,6 +5,7 @@ import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
 import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -192,7 +193,7 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${adminID}", 
     "${uploadedImageURL}",
-    "${imageAltText}",
+    "${htmlEntities(imageAltText)}",
     "${uploadedImagePublicID}"
   )`;
 
@@ -246,16 +247,16 @@ export const POST = async ({request}) => {
     contact_email
   ) VALUES (
     "${imageID}",
-    "${legislationTitle}",
+    "${htmlEntities(legislationTitle)}",
     "${yearReleased}",
     "${yearIntroducedInHouse}",
     "${yearIntroducedInSenate}",
-    "${governmentLevel}",
-    "${state}",
-    "${county}",
-    "${city}",
-    "${websiteURL}",
-    "${details}",
+    "${htmlEntities(governmentLevel)}",
+    "${htmlEntities(state)}",
+    "${htmlEntities(county)}",
+    "${htmlEntities(city)}",
+    "${htmlEntities(websiteURL)}",
+    "${htmlEntities(details)}",
     "${houseSession}",
     "${senateSession}",
     "${passedInHouseINT}",
@@ -264,13 +265,13 @@ export const POST = async ({request}) => {
     "${rejectedBySenateINT}",
     "${vetoedByExecutiveINT}",
     "${ExecutiveSignedIntoLawINT}",
-    "${nameFirstContact}",
-    "${nameLastContact}",
+    "${htmlEntities(nameFirstContact)}",
+    "${htmlEntities(nameLastContact)}",
     "${phoneContact}",
-    "${streetAddressContact}",
-    "${streetAddress02Contact}",
-    "${cityContact}",
-    "${stateContact}",
+    "${htmlEntities(streetAddressContact)}",
+    "${htmlEntities(streetAddress02Contact)}",
+    "${htmlEntities(cityContact)}",
+    "${htmlEntities(stateContact)}",
     "${zipCodeContact}",
     "${emailContact}"
   )`;
@@ -292,7 +293,7 @@ export const POST = async ({request}) => {
     const insertHouseSponsorStatement = `INSERT INTO sponsors_House (
       sponsored_legislation_ID, 
       sponsor_name
-    ) VALUES ("${legislationID}", "${sponsorHouse}")`;
+    ) VALUES ("${legislationID}", "${htmlEntities(sponsorHouse)}")`;
 
     await res.query(insertHouseSponsorStatement)
     .then(() => {
@@ -311,7 +312,7 @@ export const POST = async ({request}) => {
     const insertSenateSponsorStatement = `INSERT INTO sponsors_Senate (
       sponsored_legislation_ID, 
       sponsor_name
-    ) VALUES ("${legislationID}", "${sponsorSenate}")`;
+    ) VALUES ("${legislationID}", "${htmlEntities(sponsorSenate)}")`;
 
     await res.query(insertSenateSponsorStatement)
     .then(() => {
@@ -331,7 +332,7 @@ export const POST = async ({request}) => {
 
       coSponsorsHouse.forEach((/** @type {any} */ coSponsorObj) => {
 
-        coSponsorsHouseValues = (coSponsorsHouseValues.concat(`("${legislationID}", "${coSponsorObj.co_sponsor}"),`))
+        coSponsorsHouseValues = (coSponsorsHouseValues.concat(`("${legislationID}", "${htmlEntities(coSponsorObj.co_sponsor)}"),`))
 
       });
 
@@ -358,7 +359,7 @@ export const POST = async ({request}) => {
 
       coSponsorsSenate.forEach((/** @type {any} */ coSponsorObj) => {
 
-          coSponsorsSenateValues = (coSponsorsSenateValues.concat(`("${legislationID}", "${coSponsorObj.co_sponsor}"),`))
+          coSponsorsSenateValues = (coSponsorsSenateValues.concat(`("${legislationID}", "${htmlEntities(coSponsorObj.co_sponsor)}"),`))
 
       });
 

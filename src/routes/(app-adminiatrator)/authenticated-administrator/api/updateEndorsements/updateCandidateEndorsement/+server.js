@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -207,7 +208,7 @@ export const PATCH = async ({request}) => {
         SET
             admin_ID = "${adminID}", 
             image_URL = "${uploadedImageURL}",
-            alt_text = "${imageAltText}",
+            alt_text = "${htmlEntities(imageAltText)}",
             public_ID = "${uploadedImagePublicID}",
             timestamp = "${Date.now()}"
         WHERE image_ID = "${imageID}"`;
@@ -228,16 +229,16 @@ export const PATCH = async ({request}) => {
 
     const updateEndorsedCandidateInformationStatement = `UPDATE endorsed_candidates 
         SET
-            campaign_name = "${campaignName}",
+            campaign_name = "${htmlEntities(campaignName)}",
             office_sought_starting_year = "${yearOfficeSought}",
             election_date_primary = "${electionDatePrimary}",
             election_date_general = "${electionDateGeneral}",
-            government_level = "${governmentLevel}",
-            state = "${state}",
-            county = "${county}",
-            city = "${city}",
-            party = "${party}",
-            website_URL = "${websiteURL}",
+            government_level = "${htmlEntities(governmentLevel)}",
+            state = "${htmlEntities(state)}",
+            county = "${htmlEntities(county)}",
+            city = "${htmlEntities(city)}",
+            party = "${htmlEntities(party)}",
+            website_URL = "${htmlEntities(websiteURL)}",
             running_in_primary = "${runningInPrimaryINT}",
             elected_in_primary = "${electedInPrimaryINT}",
             rejected_in_primary = "${rejectedInPrimaryINT}",
@@ -245,16 +246,16 @@ export const PATCH = async ({request}) => {
             elected_in_general = "${electedInGeneralINT}",
             rejected_in_general = "${rejectedInGeneralINT}",
             campaign_ended = "${campaignEndedINT}",
-            contact_name_first = "${nameFirstContact}",
-            contact_name_last = "${nameLastContact}",
+            contact_name_first = "${htmlEntities(nameFirstContact)}",
+            contact_name_last = "${htmlEntities(nameLastContact)}",
             contact_phone_number = "${phoneContact}",
-            contact_street_address = "${streetAddressContact}",
-            contact_street_address_02 = "${streetAddress02Contact}",
-            contact_city = "${cityContact}",
-            contact_state = "${stateContact}",
+            contact_street_address = "${htmlEntities(streetAddressContact)}",
+            contact_street_address_02 = "${htmlEntities(streetAddress02Contact)}",
+            contact_city = "${htmlEntities(cityContact)}",
+            contact_state = "${htmlEntities(stateContact)}",
             contact_zip_code = "${zipCodeContact}",
             contact_email = "${emailContact}",
-            electorate = "${electorate}"
+            electorate = "${htmlEntities(electorate)}"
         WHERE candidate_ID = "${candidateID}"
     `;
 

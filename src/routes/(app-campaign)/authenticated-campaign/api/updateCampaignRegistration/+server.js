@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -130,7 +131,7 @@ export const PATCH = async ({request}) => {
             SET
                 campaign_ID = "${campaignUserID}", 
                 image_URL = "${uploadedImageURL}",
-                alt_text = "${imageAltText}",
+                alt_text = "${htmlEntities(imageAltText)}",
                 public_ID = "${uploadedImagePublicID}",
                 timestamp = "${Date.now()}"
             WHERE image_ID = "${imageID}"`;
@@ -176,7 +177,7 @@ export const PATCH = async ({request}) => {
             ) VALUES (
                 "${campaignUserID}", 
                 "${uploadedImageURL}",
-                "${imageAltText}",
+                "${htmlEntities(imageAltText)}",
                 "${uploadedImagePublicID}"
             )`;
 
@@ -199,17 +200,17 @@ export const PATCH = async ({request}) => {
     const updateCampaignApplicationRegistrationStatement = `UPDATE campaign_applications 
         SET
             image_ID = "${imageID}",
-            campaign_name = "${campaignName}",
+            campaign_name = "${htmlEntities(campaignName)}",
             starting_year_for_office_sought = "${yearOfficeSought}",
             primary_election_date = "${electionDatePrimary}",
             general_election_date = "${electionDateGeneral}",
-            government_level = "${governmentLevel}",
-            state = "${state}",
-            county = "${county}",
-            city = "${city}",
-            party = "${party}",
-            website_URL = "${websiteURL}",
-            electorate = "${electorate}",
+            government_level = "${htmlEntities(governmentLevel)}",
+            state = "${htmlEntities(state)}",
+            county = "${htmlEntities(county)}",
+            city = "${htmlEntities(city)}",
+            party = "${htmlEntities(party)}",
+            website_URL = "${htmlEntities(websiteURL)}",
+            electorate = "${htmlEntities(electorate)}",
             authorized_campaign_representative = "${authorizedRepresentative}"
         WHERE campaign_application_ID = "${campaignApplicationID}"
     `;

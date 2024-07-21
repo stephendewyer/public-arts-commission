@@ -2,6 +2,7 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 import sgMail from "@sendgrid/mail";
 import { SENDGRIDAPIKey } from '$env/static/private';
 import { hashPassword } from "$lib/authentication/PasswordAuth.js";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 export async function POST({request}) {
 
@@ -137,13 +138,13 @@ export async function POST({request}) {
     zip_code
   ) VALUES (
     "${campaignUserID}",
-    "${nameFirst}",
-    "${nameLast}",
+    "${htmlEntities(nameFirst)}",
+    "${htmlEntities(nameLast)}",
     "${phoneNumber}",
-    "${streetAddress}",
-    "${streetAddress02}",
-    "${city}",
-    "${state}",
+    "${htmlEntities(streetAddress)}",
+    "${htmlEntities(streetAddress02)}",
+    "${htmlEntities(city)}",
+    "${htmlEntities(state)}",
     "${zipCode}"
   )`;
 
@@ -166,12 +167,12 @@ export async function POST({request}) {
     authorized_campaign_representative
   ) VALUES (
     "${campaignUserID}",
-    "${campaignName}",
-    "${electorate}",
-    "${party}",
+    "${htmlEntities(campaignName)}",
+    "${htmlEntities(electorate)}",
+    "${htmlEntities(party)}",
     "${primaryElectionDate}",
     "${generalElectionDate}",
-    "${websiteURL}",
+    "${htmlEntities(websiteURL)}",
     "${authorizedRepresentativeINT}"
   )`;
 

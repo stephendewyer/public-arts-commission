@@ -1,4 +1,5 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 export const PATCH = async ({request}) => {
 
@@ -61,13 +62,13 @@ export const PATCH = async ({request}) => {
 
     const updateCampaignUserInformationStatement = `UPDATE campaign_users_information 
         SET
-            name_first = "${nameFirst}",
-            name_last = "${nameLast}",
+            name_first = "${htmlEntities(nameFirst)}",
+            name_last = "${htmlEntities(nameLast)}",
             phone_number = "${phoneNumber}",
-            street_address = "${streetAddress}",
-            street_address_02 = "${streetAddress02}",
-            city = "${city}",
-            state = "${state}",
+            street_address = "${htmlEntities(streetAddress)}",
+            street_address_02 = "${htmlEntities(streetAddress02)}",
+            city = "${htmlEntities(city)}",
+            state = "${htmlEntities(state)}",
             zip_code = "${zipCode}"
         WHERE campaign_user_information_ID = "${campaignUserInformationID}"`;
 

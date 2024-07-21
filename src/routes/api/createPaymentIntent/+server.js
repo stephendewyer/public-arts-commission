@@ -1,5 +1,6 @@
 import { stripe } from '$lib/server/stripe/stripe';
 import { mysqlConnection } from "$lib/server/db/mysql";
+import { htmlEntities } from '$lib/utils/htmlEntities.js';
 
 export const POST = async ({request}) => {
 
@@ -34,13 +35,24 @@ export const POST = async ({request}) => {
 
         email: email,
 
-        name: `${nameFirst} ${nameLast}`
+        name: `${htmlEntities(nameFirst)} ${htmlEntities(nameLast)}`
 
     });
 
     let res = await mysqlConnection();
 
-    const insertQuery = `INSERT INTO users_in_checkout (NameFirst, NameLast, Email, stripe_id) VALUES ("${nameFirst}", "${nameLast}", "${email}", "${customer.id}")`;
+    const insertQuery = `INSERT INTO 
+        users_in_checkout (
+            NameFirst, 
+            NameLast, 
+            Email, 
+            stripe_id
+        ) VALUES (
+            "${htmlEntities(nameFirst)}", 
+            "${htmlEntities(nameLast)}", 
+            "${email}", 
+            "${customer.id}")
+    `;
 
     let success = false;
     // add the user data to users_in_checkout database table

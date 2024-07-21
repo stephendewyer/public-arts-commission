@@ -5,6 +5,7 @@ import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
 import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -139,7 +140,7 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${campaignUserID}", 
     "${uploadedImageURL}",
-    "${imageAltText}",
+    "${htmlEntities(imageAltText)}",
     "${uploadedImagePublicID}"
   )`;
 
@@ -176,17 +177,17 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${campaignUserID}",
     "${imageID}",
-    "${campaignName}",
+    "${htmlEntities(campaignName)}",
     "${yearOfficeSought}",
     "${electionDatePrimary}",
     "${electionDateGeneral}",
-    "${governmentLevel}",
-    "${state}",
-    "${county}",
-    "${city}",
-    "${party}",
-    "${websiteURL}",
-    "${electorate}",
+    "${htmlEntities(governmentLevel)}",
+    "${htmlEntities(state)}",
+    "${htmlEntities(county)}",
+    "${htmlEntities(city)}",
+    "${htmlEntities(party)}",
+    "${htmlEntities(websiteURL)}",
+    "${htmlEntities(electorate)}",
     "${authorizedCampaignRepresentativeINT}",
     "${1}"
   )`;

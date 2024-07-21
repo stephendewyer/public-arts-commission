@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -147,7 +148,7 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${adminID}", 
     "${uploadedImageURL}",
-    "${imageAltText}",
+    "${htmlEntities(imageAltText)}",
     "${uploadedImagePublicID}"
   )`;
 
@@ -194,29 +195,29 @@ export const POST = async ({request}) => {
     contact_email
   ) VALUES (
     "${imageID}",
-    "${actionName}",
+    "${htmlEntities(actionName)}",
     "${allDayActionINT}",
     "${allDayActionDate}",
     "${actionStartDate}",
     "${actionEndDate}",
     "${startTime}",
     "${endTime}",
-    "${timeZone}",
-    "${actionStreetAddress}",
-    "${actionStreetAddress02}",
-    "${actionCity}",
-    "${actionState}",
+    "${htmlEntities(timeZone)}",
+    "${htmlEntities(actionStreetAddress)}",
+    "${htmlEntities(actionStreetAddress02)}",
+    "${htmlEntities(actionCity)}",
+    "${htmlEntities(actionState)}",
     "${actionZipCode}",
-    "${governmentLevel}",
-    "${websiteURL}",
-    "${details}",
-    "${nameFirstContact}",
-    "${nameLastContact}",
+    "${htmlEntities(governmentLevel)}",
+    "${htmlEntities(websiteURL)}",
+    "${htmlEntities(details)}",
+    "${htmlEntities(nameFirstContact)}",
+    "${htmlEntities(nameLastContact)}",
     "${phoneContact}",
-    "${streetAddressContact}",
-    "${streetAddress02Contact}",
-    "${cityContact}",
-    "${stateContact}",
+    "${htmlEntities(streetAddressContact)}",
+    "${htmlEntities(streetAddress02Contact)}",
+    "${htmlEntities(cityContact)}",
+    "${htmlEntities(stateContact)}",
     "${zipCodeContact}",
     "${emailContact}"
   )`;

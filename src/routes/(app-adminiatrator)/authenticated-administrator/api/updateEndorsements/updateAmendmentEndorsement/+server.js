@@ -5,6 +5,7 @@ import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
 import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -302,7 +303,7 @@ export const PATCH = async ({request}) => {
         SET
             admin_ID = "${adminID}", 
             image_URL = "${uploadedImageURL}",
-            alt_text = "${imageAltText}",
+            alt_text = "${htmlEntities(imageAltText)}",
             public_ID = "${uploadedImagePublicID}",
             timestamp = "${Date.now()}"
         WHERE image_ID = "${imageID}"`;
@@ -406,7 +407,7 @@ export const PATCH = async ({request}) => {
         const insertHouseSponsorStatement = `INSERT INTO sponsors_House (
             sponsored_amendment_ID, 
             sponsor_name
-        ) VALUES ("${amendmentID}", "${sponsorHouse}")`;
+        ) VALUES ("${amendmentID}", "${htmlEntities(sponsorHouse)}")`;
     
         await res.query(insertHouseSponsorStatement)
         .then(() => {
@@ -505,7 +506,7 @@ export const PATCH = async ({request}) => {
         const insertSenateSponsorStatement = `INSERT INTO sponsors_Senate (
             sponsored_amendment_ID, 
             sponsor_name
-        ) VALUES ("${amendmentID}", "${sponsorSenate}")`;
+        ) VALUES ("${amendmentID}", "${htmlEntities(sponsorSenate)}")`;
     
         await res.query(insertSenateSponsorStatement)
         .then(() => {
@@ -642,7 +643,7 @@ export const PATCH = async ({request}) => {
 
         coSponsorHouseToAdd.forEach((coSponsorName) => {
 
-            coSponsorsHouseValues = (coSponsorsHouseValues.concat(`("${amendmentID}", "${coSponsorName}"),`))
+            coSponsorsHouseValues = (coSponsorsHouseValues.concat(`("${amendmentID}", "${htmlEntities(coSponsorName)}"),`))
 
         });
 
@@ -790,7 +791,7 @@ export const PATCH = async ({request}) => {
 
         coSponsorSenateToAdd.forEach((coSponsorName) => {
 
-            coSponsorsSenateValues = (coSponsorsSenateValues.concat(`("${amendmentID}", "${coSponsorName}"),`))
+            coSponsorsSenateValues = (coSponsorsSenateValues.concat(`("${amendmentID}", "${htmlEntities(coSponsorName)}"),`))
 
         });
 
@@ -813,17 +814,17 @@ export const PATCH = async ({request}) => {
 
     const updateEndorsedAmendmentInformationStatement = `UPDATE endorsed_amendments 
         SET
-            amendment_name = "${amendmentName}",
+            amendment_name = "${htmlEntities(amendmentName)}",
             year_released = "${yearReleased}",
             year_introduced_House = "${yearIntroducedInHouse}",
             year_introduced_Senate = "${yearIntroducedInSenate}",
             election_date = "${electionDate}",
-            government_level = "${governmentLevel}",
-            state = "${state}",
-            county = "${county}",
-            city = "${city}",
-            website_URL = "${websiteURL}",
-            details = "${details}",
+            government_level = "${htmlEntities(governmentLevel)}",
+            state = "${htmlEntities(state)}",
+            county = "${htmlEntities(county)}",
+            city = "${htmlEntities(city)}",
+            website_URL = "${htmlEntities(websiteURL)}",
+            details = "${htmlEntities(details)}",
             introduced_in_House = "${introducedInHouseINT}",
             introduced_in_Senate = "${introducedInSenateINT}",
             session_House = "${houseSession}",
@@ -833,13 +834,13 @@ export const PATCH = async ({request}) => {
             simple_majority_voters_passed = "${simpleMajorityVotersPassedINT}",
             ratified_by_state_convenctions = "${ratifiedByStateConventionsINT}",
             ratified_by_state_legislatures = "${ratifiedByStateLegislaturesINT}",
-            contact_name_first = "${nameFirstContact}",
-            contact_name_last = "${nameLastContact}",
+            contact_name_first = "${htmlEntities(nameFirstContact)}",
+            contact_name_last = "${htmlEntities(nameLastContact)}",
             contact_phone_number = "${phoneContact}",
-            contact_street_address = "${streetAddressContact}",
-            contact_street_address_02 = "${streetAddress02Contact}",
-            contact_city = "${cityContact}",
-            contact_state = "${stateContact}",
+            contact_street_address = "${htmlEntities(streetAddressContact)}",
+            contact_street_address_02 = "${htmlEntities(streetAddress02Contact)}",
+            contact_city = "${htmlEntities(cityContact)}",
+            contact_state = "${htmlEntities(stateContact)}",
             contact_zip_code = "${zipCodeContact}",
             contact_email = "${emailContact}"
         WHERE amendment_ID = "${amendmentID}"

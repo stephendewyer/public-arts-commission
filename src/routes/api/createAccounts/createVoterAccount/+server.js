@@ -2,6 +2,7 @@ import { mysqlConnection } from "$lib/server/db/mysql";
 import sgMail from "@sendgrid/mail";
 import { SENDGRIDAPIKey } from '$env/static/private';
 import { hashPassword } from "$lib/authentication/PasswordAuth.js";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 export async function POST({request}) {
 
@@ -116,8 +117,8 @@ export async function POST({request}) {
     union_member
   ) VALUES(
     "${voterUserID}",
-    "${nameFirst}",
-    "${nameLast}",
+    "${htmlEntities(nameFirst)}",
+    "${htmlEntities(nameLast)}",
     "${citizenEligibleVoterINT}",
     "${unionMemberINT}"
   )`;

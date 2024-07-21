@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -178,7 +179,7 @@ export const PATCH = async ({request}) => {
         SET
             admin_ID = "${adminID}", 
             image_URL = "${uploadedImageURL}",
-            alt_text = "${imageAltText}",
+            alt_text = "${htmlEntities(imageAltText)}",
             public_ID = "${uploadedImagePublicID}",
             timestamp = "${Date.now()}"
         WHERE image_ID = "${imageID}"`;
@@ -201,25 +202,25 @@ export const PATCH = async ({request}) => {
 
     const updateEndorsedReferendumInformationStatement = `UPDATE endorsed_referendums 
         SET
-            referendum_name = "${referendumName}",
+            referendum_name = "${htmlEntities(referendumName)}",
             starting_year_if_enacted = "${startingYearIfEnacted}",
             election_date = "${electionDate}",
-            government_level = "${governmentLevel}",
-            state = "${state}",
-            county = "${county}",
-            city = "${city}",
-            website_URL = "${websiteURL}",
-            details = "${details}",
+            government_level = "${htmlEntities(governmentLevel)}",
+            state = "${htmlEntities(state)}",
+            county = "${htmlEntities(county)}",
+            city = "${htmlEntities(city)}",
+            website_URL = "${htmlEntities(websiteURL)}",
+            details = "${htmlEntities(details)}",
             elected = "${electedINT}",
             rejected = "${rejectedINT}",
             pending_election = "${pendingElectionINT}",
-            contact_name_first = "${nameFirstContact}",
-            contact_name_last = "${nameLastContact}",
+            contact_name_first = "${htmlEntities(nameFirstContact)}",
+            contact_name_last = "${htmlEntities(nameLastContact)}",
             contact_phone_number = "${phoneContact}",
-            contact_street_address = "${streetAddressContact}",
-            contact_street_address_02 = "${streetAddress02Contact}",
-            contact_city = "${cityContact}",
-            contact_state = "${stateContact}",
+            contact_street_address = "${htmlEntities(streetAddressContact)}",
+            contact_street_address_02 = "${htmlEntities(streetAddress02Contact)}",
+            contact_city = "${htmlEntities(cityContact)}",
+            contact_state = "${htmlEntities(stateContact)}",
             contact_zip_code = "${zipCodeContact}",
             contact_email = "${emailContact}"
         WHERE referendum_ID = "${referendumID}"

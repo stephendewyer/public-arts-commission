@@ -1,4 +1,5 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 export const POST = async ({request}) => {
 
@@ -72,9 +73,9 @@ export const POST = async ({request}) => {
     const addCampaignApplicationQuestionnaireStatement = `UPDATE campaign_applications 
         SET
             excellent_public_art_for_all = "${expandPoliticalImaginationSupportINT}",
-            excellent_public_art_for_all_02 = "${howExpandPoliticalImagination}",
+            excellent_public_art_for_all_02 = "${htmlEntities(howExpandPoliticalImagination)}",
             art_government_seat = "${artSeatAtTableGovernmentINT}",
-            art_government_seat_02 = "${howArtSeatTableGovernment}",
+            art_government_seat_02 = "${htmlEntities(howArtSeatTableGovernment)}",
             campaign_questionnaire_completed = "${1}"
         WHERE campaign_application_ID = "${campaignApplicationID}"
     `;
