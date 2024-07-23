@@ -43,9 +43,10 @@
         fill: #4C4239;
         cursor: pointer;
         border: 2px solid #4C4239;
-        will-change: background-color;
-        transition: background-color 0.2s linear, border 0.2s linear;
+        will-change: background-color, box-shadow;
+        transition: background-color 0.2s linear, border 0.2s linear, box-shadow 0.2s ease-out;
         border-radius: 1rem;
+        box-shadow: none;
     }
 
     .payment_occurence_card:hover {
@@ -64,9 +65,16 @@
         fill: #4C4239;
         cursor: pointer;
         border: 2px solid #4C4239;
-        will-change: background-color;
-        transition: background-color 0.2s linear, border 0.2s linear;
         border-radius: 1rem;
+        box-shadow:
+            0 1px 1px hsl(0deg 0% 0% / 0.075),
+            0 2px 2px hsl(0deg 0% 0% / 0.075),
+            0 4px 4px hsl(0deg 0% 0% / 0.075),
+            0 8px 8px hsl(0deg 0% 0% / 0.075),
+            0 16px 16px hsl(0deg 0% 0% / 0.075)
+        ;
+        will-change: background-color, box-shadow;
+        transition: background-color 0.2s linear, border 0.2s linear, box-shadow 0.2s ease-out;
     }
 
     .payment_occurence_image {

@@ -1,4 +1,5 @@
 import { mysqlConnection } from "$lib/server/db/mysql";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 export const POST = async ({request}) => {
 
@@ -95,26 +96,26 @@ export const POST = async ({request}) => {
             electorate
         ) VALUES (
             "${campaignApplication.image_ID}",
-            "${campaignApplication.campaign_name}",
+            "${htmlEntities(campaignApplication.campaign_name)}",
             "${campaignApplication.starting_year_for_office_sought}",
             "${campaignApplication.primary_election_date}",
             "${campaignApplication.general_election_date}",
-            "${campaignApplication.government_level}",
-            "${campaignApplication.state}",
-            "${campaignApplication.county}",
-            "${campaignApplication.city}",
-            "${campaignApplication.party}",
-            "${campaignApplication.website_URL}",
-            "${campaignContactInfo.name_first}",
-            "${campaignContactInfo.name_last}",
+            "${htmlEntities(campaignApplication.government_level)}",
+            "${htmlEntities(campaignApplication.state)}",
+            "${htmlEntities(campaignApplication.county)}",
+            "${htmlEntities(campaignApplication.city)}",
+            "${htmlEntities(campaignApplication.party)}",
+            "${htmlEntities(campaignApplication.website_URL)}",
+            "${htmlEntities(campaignContactInfo.name_first)}",
+            "${htmlEntities(campaignContactInfo.name_last)}",
             "${campaignContactInfo.phone_number}",
-            "${campaignContactInfo.street_address}",
-            "${campaignContactInfo.street_address_02}",
-            "${campaignContactInfo.city}",
-            "${campaignContactInfo.state}",
+            "${htmlEntities(campaignContactInfo.street_address)}",
+            "${htmlEntities(campaignContactInfo.street_address_02)}",
+            "${htmlEntities(campaignContactInfo.city)}",
+            "${htmlEntities(campaignContactInfo.state)}",
             "${campaignContactInfo.zip_code}",
             "${campaignContactInfo.email}",
-            "${campaignApplication.electorate}"    
+            "${htmlEntities(campaignApplication.electorate)}"    
         )`;
         
         await res.query(insertEndorsedCandidateInformationStatement)

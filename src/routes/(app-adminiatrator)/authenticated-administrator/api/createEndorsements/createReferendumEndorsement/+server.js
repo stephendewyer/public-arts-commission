@@ -5,6 +5,7 @@ import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
 import { GovernmentLevelValidation } from "$lib/utils/GovernmentLevelValidation.js";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -162,7 +163,7 @@ export const POST = async ({request}) => {
   ) VALUES (
     "${adminID}", 
     "${uploadedImageURL}",
-    "${imageAltText}",
+    "${htmlEntities(imageAltText)}",
     "${uploadedImagePublicID}"
   )`;
 
@@ -205,25 +206,25 @@ export const POST = async ({request}) => {
     contact_email
   ) VALUES (
     "${imageID}",
-    "${referendumName}",
+    "${htmlEntities(referendumName)}",
     "${startingYearIfEnacted}",
     "${electionDate}",
-    "${governmentLevel}",
-    "${state}",
-    "${county}",
-    "${city}",
-    "${websiteURL}",
-    "${details}",
+    "${htmlEntities(governmentLevel)}",
+    "${htmlEntities(state)}",
+    "${htmlEntities(county)}",
+    "${htmlEntities(city)}",
+    "${htmlEntities(websiteURL)}",
+    "${htmlEntities(details)}",
     "${electedINT}",
     "${rejectedINT}",
     "${pendingElectionINT}",
-    "${nameFirstContact}",
-    "${nameLastContact}",
+    "${htmlEntities(nameFirstContact)}",
+    "${htmlEntities(nameLastContact)}",
     "${phoneContact}",
-    "${streetAddressContact}",
-    "${streetAddress02Contact}",
-    "${cityContact}",
-    "${stateContact}",
+    "${htmlEntities(streetAddressContact)}",
+    "${htmlEntities(streetAddress02Contact)}",
+    "${htmlEntities(cityContact)}",
+    "${htmlEntities(stateContact)}",
     "${zipCodeContact}",
     "${emailContact}"
   )`;

@@ -42,8 +42,9 @@
 		flex-direction: row;
 		align-items: center;
 		cursor: pointer;
-        will-change: color, background-color;
-		transition: background-color 0.2s linear, color 0.2s linear;
+		box-shadow: none;
+        will-change: color, background-color, box-shadow;
+		transition: background-color 0.2s linear, color 0.2s linear, box-shadow 0.2s ease-out;
     }
 
 	.donate_amount_button:hover {
@@ -63,8 +64,15 @@
 		flex-direction: row;
 		align-items: center;
 		cursor: pointer;
-        will-change: color, background-color;
-		transition: background-color 0.2s linear, color 0.2s linear;
+		box-shadow:
+            0 1px 1px hsl(0deg 0% 0% / 0.075),
+            0 2px 2px hsl(0deg 0% 0% / 0.075),
+            0 4px 4px hsl(0deg 0% 0% / 0.075),
+            0 8px 8px hsl(0deg 0% 0% / 0.075),
+            0 16px 16px hsl(0deg 0% 0% / 0.075)
+        ;
+        will-change: color, background-color, box-shadow;
+		transition: background-color 0.2s linear, color 0.2s linear, box-shadow 0.2s ease-out;
     }
 
 	@media (max-width: 1440px) {

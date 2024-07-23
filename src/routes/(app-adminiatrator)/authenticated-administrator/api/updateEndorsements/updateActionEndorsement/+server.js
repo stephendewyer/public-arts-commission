@@ -4,6 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CLOUDINARYCLOUDNAME } from "$env/static/private";
 import { CLOUDINARYSECRETKEY } from "$env/static/private";
 import { CLOUDINARYAPIKEY } from "$env/static/private";
+import { htmlEntities } from "$lib/utils/htmlEntities.js";
 
 cloudinary.config({ 
   cloud_name: CLOUDINARYCLOUDNAME, 
@@ -163,7 +164,7 @@ export const PATCH = async ({request}) => {
         SET
             admin_ID = "${adminID}", 
             image_URL = "${uploadedImageURL}",
-            alt_text = "${imageAltText}",
+            alt_text = "${htmlEntities(imageAltText)}",
             public_ID = "${uploadedImagePublicID}",
             timestamp = "${Date.now()}"
         WHERE image_ID = "${imageID}"`;
@@ -184,29 +185,29 @@ export const PATCH = async ({request}) => {
 
     const updateEndorsedActionInformationStatement = `UPDATE endorsed_actions 
         SET
-            action_name = "${actionName}",
+            action_name = "${htmlEntities(actionName)}",
             all_day_event = "${allDayActionINT}",
             all_day_event_date = "${allDayActionDate}",
             date_start = "${actionStartDate}",
             date_end = "${actionEndDate}",
             time_start = "${startTime}",
             time_end = "${endTime}",
-            time_zone = "${timeZone}",
-            action_street_address = "${actionStreetAddress}",
-            action_street_address_02 = "${actionStreetAddress02}",
-            action_city = "${actionCity}",
-            action_state = "${actionState}",
+            time_zone = "${htmlEntities(timeZone)}",
+            action_street_address = "${htmlEntities(actionStreetAddress)}",
+            action_street_address_02 = "${htmlEntities(actionStreetAddress02)}",
+            action_city = "${htmlEntities(actionCity)}",
+            action_state = "${htmlEntities(actionState)}",
             action_zip_code = "${actionZipCode}",
-            government_level = "${governmentLevel}",
-            website_URL = "${websiteURL}",
-            details = "${details}",
-            contact_name_first = "${nameFirstContact}",
-            contact_name_last = "${nameLastContact}",
+            government_level = "${htmlEntities(governmentLevel)}",
+            website_URL = "${htmlEntities(websiteURL)}",
+            details = "${htmlEntities(details)}",
+            contact_name_first = "${htmlEntities(nameFirstContact)}",
+            contact_name_last = "${htmlEntities(nameLastContact)}",
             contact_phone_number = "${phoneContact}",
-            contact_street_address = "${streetAddressContact}",
-            contact_street_address_02 = "${streetAddress02Contact}",
-            contact_city = "${cityContact}",
-            contact_state = "${stateContact}",
+            contact_street_address = "${htmlEntities(streetAddressContact)}",
+            contact_street_address_02 = "${htmlEntities(streetAddress02Contact)}",
+            contact_city = "${htmlEntities(cityContact)}",
+            contact_state = "${htmlEntities(stateContact)}",
             contact_zip_code = "${zipCodeContact}",
             contact_email = "${emailContact}"
         WHERE action_ID = "${actionID}"
