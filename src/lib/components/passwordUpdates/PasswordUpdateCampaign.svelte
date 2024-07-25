@@ -16,20 +16,6 @@
 
     let passwordsMatch: boolean | null = null;
 
-    let buttonDisabled: boolean = true;
-
-    $: if (
-        passwordInputValue !== "" &&
-        passwordIsValid === true &&
-        passwordReenteredInputValue !== "" &&
-        passwordReenteredIsValid === true &&
-        passwordsMatch === true
-    ) {
-        buttonDisabled = false;
-    } else {
-        buttonDisabled = true;
-    };
-
     // after submit
 
     let responseItem: ResponseObj = {
@@ -119,7 +105,7 @@
             </ComparePasswords>
         </div>
         
-        <SubmitButton disable={buttonDisabled}>
+        <SubmitButton disable={false}>
             update password
         </SubmitButton>
     </form>
