@@ -124,6 +124,8 @@
 
     // use the parsed address from seach by address input to filter endorsed candidates 
 
+    let searchEndorsedActions: SearchActionWithImage[];
+
     $: searchEndorsedActions = endorsedActions.map((action: ActionWithImage) => ({
 		...action,
 		searchTerms: {

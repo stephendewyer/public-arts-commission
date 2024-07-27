@@ -2,6 +2,7 @@
 // for information about these interfaces
 import type { SvelteComponent } from 'svelte';
 import type { E164Number } from 'svelte-tel-input/types';
+import type { User } from '@auth/core/types';
 
 declare global {
 	namespace App {
@@ -231,6 +232,52 @@ declare global {
 		public_ID: string;
 	}
 
+	interface SearchEndorsedCandidateWithImage {
+		searchTerms: {
+			year: string;
+			government_level: string;
+			state: string;
+			county: string;
+			city: string;
+			name: string;
+		};
+		candidate_ID: number;
+		image_ID: number;
+		campaign_name: string;
+		office_sought_starting_year: number;
+		election_date_primary: any;
+		election_date_general: any;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		party: string;
+		website_URL: string;
+		running_in_primary: number;
+		elected_in_primary: number;
+		rejected_in_primary: number;
+		running_in_general: number;
+		elected_in_general: number;
+		rejected_in_general: number;
+		campaign_ended: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: E164Number | null;
+		contact_street_address: string;
+		contact_street_address_02: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		contact_email: string;
+		electorate: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+	}
+
 	interface CandidateWithImageNominated {
 		candidate_ID: number;
 		user_ID: number;
@@ -328,6 +375,55 @@ declare global {
 	}
 
 	interface LegislationWithSponsorsAndImage {
+		legislation_ID: number;
+		image_ID: number;
+		legislation_name: string;
+		year_released: number;
+		year_introduced_House: number;
+		year_introduced_Senate: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		session_House: string;
+		session_Senate: string;
+		passed_in_House: number;
+		passed_in_Senate: number;
+		rejected_in_House: number;
+		rejected_in_Senate: number;
+		vetoed_by_Executive: number;
+		signed_by_Executive: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: E164Number | null;
+		contact_street_address: string;
+		contact_street_address: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		sponsors_House: SponsorHouse[];
+		sponsors_Senate: SponsorsSenate[];
+		co_sponsors_House: CoSponsorHouse[];
+		co_sponsors_Senate: CoSponsorsSenate[];
+		public_ID: string;
+	}
+
+	interface SearchLegislationWithSponsorsAndImage {
+		searchTerms: {
+			year: string;
+			government_level: string;
+			state: string;
+			county: string;
+			city: string;
+			name: string;
+		};
 		legislation_ID: number;
 		image_ID: number;
 		legislation_name: string;
@@ -518,6 +614,59 @@ declare global {
 		co_sponsors_Senate: CoSponsorsSenate[];
 	}
 
+	interface SearchAmendmentWithSponsorsAndImage {
+		searchTerms: {
+			year_election: string;
+			year_released: string;
+			government_level: string;
+			state: string;
+			county: string;
+			city: string;
+			name: string;
+		};
+		amendment_ID: number;
+		image_ID: number;
+		amendment_name: string;
+		year_released: number;
+		year_introduced_House: number;
+		year_introduced_Senate: number;
+		election_date: number;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		introduced_in_House: number;
+		introduced_in_Senate: number;
+		session_House: string;
+		session_Senate: string;
+		twothirds_House_and_Senate_passed: number;
+		simple_majority_House_and_Senate_passed: number;
+		simple_majority_voters_passed: number;
+		ratified_by_state_convenctions: number;
+		ratified_by_state_legislatures: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: E164Number | null;
+		contact_street_address: string;
+		contact_street_address_02: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		contact_email: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+		sponsors_House: SponsorHouse[];
+		sponsors_Senate: SponsorsSenate[];
+		co_sponsors_House: CoSponsorHouse[];
+		co_sponsors_Senate: CoSponsorsSenate[];
+	}
+
 	interface AmendmentWithSponsorsAndImageNominated {
 		amendment_ID: number;
 		image_ID: number;
@@ -581,6 +730,54 @@ declare global {
 		contact_state: string;
 		contact_zip_code: number;
 		contact_email: string;
+	}
+
+	interface SearchActionWithImage {
+		searchTerms: {
+            year: {
+                all_day_event_date: string;
+                date_start: string;
+                date_end: string;
+            };
+            action_name: string;
+            zipcode: string;
+			state: string;
+			city: string;
+            government_level: string;
+		};
+		action_ID: number;
+		image_ID: number;
+		action_name: string;
+		all_day_event: boolean,
+		all_day_event_date: Date,
+		date_start: any;
+		date_end: any;
+		time_start: Date;
+		time_end: Date;
+		time_zone: string;
+		action_street_address: string;
+		action_street_address_02: string;
+		action_city: string;
+		action_state: string;
+		action_zip_code: number;
+		government_level: string;
+		website_URL: string;
+		details: string;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: E164Number | null;
+		contact_street_address: string;
+		contact_street_address_02: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		contact_email: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
 	}
 
 	interface ActionWithImage {
@@ -679,6 +876,46 @@ declare global {
 	}
 
 	interface ReferendumWithImage {
+		referendum_ID: number;
+		image_ID: number;
+		referendum_name: string;
+		starting_year_if_enacted: number;
+		election_date: Date;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		website_URL: string;
+		details: string;
+		elected: number;
+		rejected: number;
+		pending_election: number;
+		contact_name_first: string;
+		contact_name_last: string;
+		contact_phone_number: E164Number | null;
+		contact_street_address: string;
+		contact_street_address_02: string;
+		contact_city: string;
+		contact_state: string;
+		contact_zip_code: number;
+		contact_email: string;
+		admin_ID: number;
+		voter_ID: number;
+		campaign_ID: number;
+		image_URL: string;
+		alt_text: string;
+		public_ID: string;
+	}
+
+	interface SearchReferendumWithImage {
+		searchTerms: {
+            year: string;
+            government_level: string;
+            state: string;
+            county: string;
+            city: string;
+            name: string;
+        };
 		referendum_ID: number;
 		image_ID: number;
 		referendum_name: string;
@@ -897,15 +1134,15 @@ declare global {
         endorsed_candidates: CandidateWithImage[];
         endorsed_legislation: LegislationWithSponsorsAndImage[];
         endorsed_referendums: ReferendumWithImage[];
-        getEndorsedAmendmentsDataSuccess: boolean;
-        getEndorsedCandidatesDataSuccess: boolean;
-        getEndorsedLegislationDataSuccess: boolean;
-        getEndorsedReferendumsDataSuccess: boolean;
-        pendingEndorsedAmendmentsData: boolean;
-        pendingEndorsedCandidatesData: boolean;
-        pendingEndorsedLegislationData: boolean;
-        pendingEndorsedReferendumsData: boolean;
-        user: User;
+        getEndorsedAmendmentsDataSuccess: boolean | null;
+        getEndorsedCandidatesDataSuccess: boolean | null;
+        getEndorsedLegislationDataSuccess: boolean | null;
+        getEndorsedReferendumsDataSuccess: boolean | null;
+        pendingEndorsedAmendmentsData: boolean | null;
+        pendingEndorsedCandidatesData: boolean | null;
+        pendingEndorsedLegislationData: boolean | null;
+        pendingEndorsedReferendumsData: boolean | null;
+        user: User | undefined;
     }
 
 }

@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { SearchActionsByNameAndLocationFilter } from '$lib/utils/SearchActionsByNameAndLocationFilter';
 
-export const createEndorsedActionsSearchStore = (/** @type {any} */ data) => {
+export const createEndorsedActionsSearchStore = (/** @type {SearchActionWithImage[]} */ data) => {
 
     const { subscribe, set, update } = writable({
         data: data,

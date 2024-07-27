@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter';
 
-export const createEndorsedCandidatesSearchStore = (/** @type {any} */ data) => {
+export const createEndorsedCandidatesSearchStore = (/** @type {SearchEndorsedCandidateWithImage[]} */ data) => {
 
     const { subscribe, set, update } = writable({
         data: data,

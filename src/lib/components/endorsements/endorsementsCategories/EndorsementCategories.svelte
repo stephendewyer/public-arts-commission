@@ -23,7 +23,7 @@
     $: endorsedLegislation = [...categories_data.endorsed_legislation];
     $: endorsedReferendums = [...categories_data.endorsed_referendums];
 
-    const user: User = categories_data.user;
+    const user: User | undefined = categories_data.user;
 
     // set the amount of items to appear in each category on the page
     let pageSize: number = 4;

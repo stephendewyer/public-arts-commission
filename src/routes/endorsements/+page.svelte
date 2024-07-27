@@ -880,6 +880,8 @@
 
 	// use the parsed address from seach by address input to filter endorsed candidates 
 
+	let searchEndorsedCandidates: SearchEndorsedCandidateWithImage[];
+
 	$: searchEndorsedCandidates = endorsedCandidates.map((candidate: CandidateWithImage) => ({
 		...candidate,
 		searchTerms: {
@@ -917,6 +919,8 @@
 
 	// use the parsed address from seach by address input to filter endorsed legislation 
 
+	let searchEndorsedLegislation: SearchLegislationWithSponsorsAndImage[];
+
 	$: searchEndorsedLegislation = endorsedLegislation.map((legislation: LegislationWithSponsorsAndImage) => ({
 		...legislation,
 		searchTerms: {
@@ -948,12 +952,14 @@
 		};
 	});
 
-	let amendmentsFederal: Amendment[] = [];
-	let amendmentsState: Amendment[] = [];
-	let amendmentsCounty: Amendment[] = [];
-	let amendmentsCity: Amendment[] = [];
+	let amendmentsFederal: AmendmentWithSponsorsAndImage[] = [];
+	let amendmentsState: AmendmentWithSponsorsAndImage[] = [];
+	let amendmentsCounty: AmendmentWithSponsorsAndImage[] = [];
+	let amendmentsCity: AmendmentWithSponsorsAndImage[] = [];
 
 	// use the parsed address from seach by address input to filter endorsed amendments 
+
+	let searchEndorsedAmendments: SearchAmendmentWithSponsorsAndImage[];
 
 	$: searchEndorsedAmendments = endorsedAmendments.map((amendment: AmendmentWithSponsorsAndImage) => ({
 		...amendment,
@@ -994,6 +1000,8 @@
 	let referendumsCity: ReferendumWithImage[] = [];
 
 	// use the parsed address from seach by address input to filter endorsed referendums 
+
+	let searchEndorsedReferendums: SearchReferendumWithImage[];
 
 	$: searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
 		...referendum,
@@ -1036,8 +1044,119 @@
 		};
 	});
 
-	let endorsementTabPanels: tabPanels[] = [];
 
+	let endorsementPanelData: Endorsements;
+
+	$: endorsementPanelData = {
+		user: data.streamed.user,
+		currentPageCandidates: currentPageCandidates,
+		currentPageAmendments: currentPageAmendments,
+		currentPageReferendums: currentPageReferendums,
+		currentPageLegislation: currentPageLegislation,
+		endorsed_amendments: $searchEndorsedAmendmentsStore.filtered, 
+		endorsed_candidates: $searchEndorsedCandidatesStore.filtered,
+		endorsed_legislation: $searchEndorsedLegislationStore.filtered,
+		endorsed_referendums: $searchEndorsedReferendumsStore.filtered,
+		pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+		pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+		pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+		pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
+		getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+		getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+		getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+		getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
+	};
+
+	let endorsementFederalPanelData: Endorsements;
+
+	$: endorsementFederalPanelData = {
+		user: data.streamed.user,
+		currentPageCandidates: currentPageCandidates,
+		currentPageAmendments: currentPageAmendments,
+		currentPageReferendums: currentPageReferendums,
+		currentPageLegislation: currentPageLegislation,
+		endorsed_amendments: amendmentsFederal, 
+		endorsed_candidates: candidatesFederal,
+		endorsed_legislation: legislationFederal,
+		endorsed_referendums: referendumsFederal,
+		pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+		pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+		pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+		pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
+		getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+		getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+		getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+		getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
+	};
+
+	let endorsementStatePanelData: Endorsements;
+
+	$: endorsementStatePanelData = {
+		user: data.streamed.user,
+		currentPageCandidates: currentPageCandidates,
+		currentPageAmendments: currentPageAmendments,
+		currentPageReferendums: currentPageReferendums,
+		currentPageLegislation: currentPageLegislation,
+		endorsed_amendments: amendmentsState, 
+		endorsed_candidates: candidatesState,
+		endorsed_legislation: legislationState,
+		endorsed_referendums: referendumsState,
+		pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+		pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+		pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+		pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
+		getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+		getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+		getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+		getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
+	};
+
+	let endorsementCountyPanelData: Endorsements;
+
+	$: endorsementCountyPanelData = {
+		user: data.streamed.user,
+		currentPageCandidates: currentPageCandidates,
+		currentPageAmendments: currentPageAmendments,
+		currentPageReferendums: currentPageReferendums,
+		currentPageLegislation: currentPageLegislation,
+		endorsed_amendments: amendmentsCounty, 
+		endorsed_candidates: candidatesCounty,
+		endorsed_legislation: legislationCounty,
+		endorsed_referendums: referendumsCounty,
+		pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+		pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+		pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+		pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
+		getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+		getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+		getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+		getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
+	};
+	
+	let endorsementCityPanelData: Endorsements;
+
+	$: endorsementCityPanelData = {
+		user: data.streamed.user,
+		currentPageCandidates: currentPageCandidates,
+		currentPageAmendments: currentPageAmendments,
+		currentPageReferendums: currentPageReferendums,
+		currentPageLegislation: currentPageLegislation,
+		endorsed_amendments: amendmentsCity, 
+		endorsed_candidates: candidatesCity,
+		endorsed_legislation: legislationCity,
+		endorsed_referendums: referendumsCity,
+		pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
+		pendingEndorsedLegislationData: pendingEndorsedLegislationData,
+		pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
+		pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
+		getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
+		getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
+		getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
+		getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
+	};
+
+	let endorsementTabPanels: tabPanels[] = [];
+	
 	$: endorsementTabPanels = [
 		{
 			id: uuidv4(),
@@ -1045,25 +1164,7 @@
 			label: "all",
 			hasCapitol: true,
 			panel: AllEndorsementPanel,
-			data: {
-				user: data.streamed.user,
-				currentPageCandidates: currentPageCandidates,
-				currentPageAmendments: currentPageAmendments,
-				currentPageReferendums: currentPageReferendums,
-				currentPageLegislation: currentPageLegislation,
-				endorsed_amendments: $searchEndorsedAmendmentsStore.filtered, 
-				endorsed_candidates: $searchEndorsedCandidatesStore.filtered,
-				endorsed_legislation: $searchEndorsedLegislationStore.filtered,
-				endorsed_referendums: $searchEndorsedReferendumsStore.filtered,
-				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
-				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
-				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
-				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
-				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
-				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
-				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
-			},
+			data: endorsementPanelData,
 			
 		},
 		{
@@ -1072,25 +1173,7 @@
 			label: "federal",
 			hasCapitol: true,
 			panel: FederalEndorsementsPanel,
-			data: {
-				user: data.streamed.user,
-				currentPageCandidates: currentPageCandidates,
-				currentPageAmendments: currentPageAmendments,
-				currentPageReferendums: currentPageReferendums,
-				currentPageLegislation: currentPageLegislation,
-				endorsed_amendments: amendmentsFederal,
-				endorsed_candidates: candidatesFederal,
-				endorsed_legislation: legislationFederal,
-				endorsed_referendums: referendumsFederal,
-				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
-				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
-				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
-				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
-				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
-				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
-				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
-			}
+			data: endorsementFederalPanelData,
 		},
 		{
 			id: uuidv4(),
@@ -1098,25 +1181,7 @@
 			label: "state",
 			hasCapitol: true,
 			panel: StateEndorsementsPanel,
-			data: {
-				user: data.streamed.user,
-				currentPageCandidates: currentPageCandidates,
-				currentPageAmendments: currentPageAmendments,
-				currentPageReferendums: currentPageReferendums,
-				currentPageLegislation: currentPageLegislation,
-				endorsed_amendments: amendmentsState,
-				endorsed_candidates: candidatesState,
-				endorsed_legislation: legislationState,
-				endorsed_referendums: referendumsState,
-				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
-				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
-				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
-				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
-				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
-				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
-				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
-			}
+			data: endorsementStatePanelData,
 		},
 		{
 			id: uuidv4(),
@@ -1124,25 +1189,7 @@
 			label: "county",
 			hasCapitol: true,
 			panel: CountyEndorsementsPanel,
-			data: {
-				user: data.streamed.user,
-				currentPageCandidates: currentPageCandidates,
-				currentPageAmendments: currentPageAmendments,
-				currentPageReferendums: currentPageReferendums,
-				currentPageLegislation: currentPageLegislation,
-				endorsed_amendments: amendmentsCounty,
-				endorsed_candidates: candidatesCounty,
-				endorsed_legislation: legislationCounty,
-				endorsed_referendums: referendumsCounty,
-				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
-				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
-				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
-				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
-				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
-				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
-				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
-			}
+			data: endorsementCountyPanelData,
 		},
 		{
 			id: uuidv4(),
@@ -1150,26 +1197,8 @@
 			label: "city",
 			hasCapitol: true,
 			panel: CityEndorsementsPanel,
-			data: {
-				user: data.streamed.user,
-				currentPageCandidates: currentPageCandidates,
-				currentPageAmendments: currentPageAmendments,
-				currentPageReferendums: currentPageReferendums,
-				currentPageLegislation: currentPageLegislation,
-				endorsed_amendments: amendmentsCity,
-				endorsed_candidates: candidatesCity,
-				endorsed_legislation: legislationCity,
-				endorsed_referendums: referendumsCity,
-				pendingEndorsedCandidatesData: pendingEndorsedCandidatesData,
-				pendingEndorsedLegislationData: pendingEndorsedLegislationData,
-				pendingEndorsedReferendumsData: pendingEndorsedReferendumsData,
-				pendingEndorsedAmendmentsData: pendingEndorsedAmendmentsData,
-				getEndorsedCandidatesDataSuccess: getEndorsedCandidatesDataSuccess,
-				getEndorsedLegislationDataSuccess: getEndorsedLegislationDataSuccess,
-				getEndorsedReferendumsDataSuccess: getEndorsedReferendumsDataSuccess,
-				getEndorsedAmendmentsDataSuccess: getEndorsedAmendmentsDataSuccess
-			}
-		}
+			data: endorsementCityPanelData,
+		},
 	];
 
 </script>
