@@ -29,11 +29,17 @@
         background: transparent;
         border: none;
         font-size: 1.25rem;
-        color: #1C2226;
-        fill: #1C2226;
+        color: #4C4239;
+        fill: #4C4239;
         padding: 0 1rem;
         font-weight: 600;
         cursor: pointer;
+        transition: color 0.2s linear, fill 0.2s linear;
+    }
+
+    .filter_button:hover {
+        color: #28387C;
+        fill: #28387C;
     }
 
     .filter_icon {

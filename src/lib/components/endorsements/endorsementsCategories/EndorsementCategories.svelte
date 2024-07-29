@@ -23,8 +23,6 @@
     $: endorsedLegislation = [...categories_data.endorsed_legislation];
     $: endorsedReferendums = [...categories_data.endorsed_referendums];
 
-    const user: User | undefined = categories_data.user;
-
     // set the amount of items to appear in each category on the page
     let pageSize: number = 4;
 
@@ -106,14 +104,6 @@
                 totalCount={endorsedCandidates.length}
                 pageSize={pageSize}
             />
-            <div class="nominate_a_candidate_button_container">
-                <NominateButton 
-                    category="candidate" 
-                    authorized_user={user}
-                >
-                    nominate a candidate
-                </NominateButton>
-            </div>
         </li>
         <li class="referendums_container">
             <h3>
@@ -140,14 +130,6 @@
                 totalCount={endorsedReferendums.length}
                 pageSize={pageSize}
             />
-            <div class="nominate_a_candidate_button_container">
-                <NominateButton 
-                    category="referendum"
-                    authorized_user={user}
-                >
-                    nominate an initiative
-                </NominateButton>
-            </div>
         </li>
         <li class="legislation_container">
             <h3>
@@ -174,14 +156,6 @@
                 totalCount={endorsedLegislation.length}
                 pageSize={pageSize}
             />
-            <div class="nominate_a_candidate_button_container">
-                <NominateButton 
-                    category="legislation"
-                    authorized_user={user}
-                >
-                    nominate a bill
-                </NominateButton>
-            </div>
         </li>
         <li class="amendments_container">
             <h3>
@@ -208,14 +182,6 @@
                 totalCount={endorsedAmendments.length}
                 pageSize={pageSize}
             />
-            <div class="nominate_a_candidate_button_container">
-                <NominateButton 
-                    category="amendment"
-                    authorized_user={user}
-                >
-                    nominate an amendment
-                </NominateButton>
-            </div>
         </li>
     {/if}
 </ul>
@@ -229,6 +195,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }
 
     .candidates_container {
@@ -269,6 +236,7 @@
     }
 
     .endorsement_cards_frame {
+        position: relative;
         width: 100%;
         overflow-x: auto;
         display: flex;
@@ -278,6 +246,7 @@
     }
 
     .endorsement_cards {
+        position: relative;
         display: flex;
         justify-content: center;
         flex-wrap: wrap;      
@@ -286,19 +255,16 @@
         width: 100%;
     }
 
-    .nominate_a_candidate_button_container {
-        width: 100%;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 1rem 0 0 0;
-    }
-
-    @media (max-width: 1140px) {
+    @media screen and (max-width: 720px) {
 
         .endorsement_cards {
             flex-wrap: nowrap;
             justify-content: flex-start;
+        }
+
+        .endorsement_cards_frame {
+            width: 100%;
+            max-width: 100%;
         }
 
 	}

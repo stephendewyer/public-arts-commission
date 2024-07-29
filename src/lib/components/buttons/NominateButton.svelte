@@ -38,9 +38,9 @@
 <style>
 
     .nominate_button {
+        background-color: #D8EAC5;
         color: #4C4239;
         border: 3px solid #4C4239;
-        background-color: transparent;
         border-radius: 0.5rem;
         padding: 0.5rem 1rem;
         font-size: 1.2rem;
@@ -53,10 +53,11 @@
         text-align: left;
         transition: background-color 0.2s linear;
         cursor: pointer;
+        pointer-events: all;
     }
 
     .nominate_button:hover {
-        background-color: #D8EAC5;
+        background-color: #E3CDB2;
     }
 
     .megaphone_icon {

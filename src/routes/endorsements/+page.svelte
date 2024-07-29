@@ -31,6 +31,9 @@
     import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
     import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
 	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
+	import FilterToggleButton from "$lib/components/buttons/FilterToggleButton.svelte";
+	import NominateButton from "$lib/components/buttons/NominateButton.svelte";
+	import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
 
 	export let data;
 
@@ -1201,6 +1204,29 @@
 		},
 	];
 
+	let openFilters: boolean = true;
+
+	let height: number = 0;
+
+    $: height;
+	// innerWidth is the width of the inner window
+	let innerWidth: number = 0;
+
+	let clearFiltersClicked: boolean = false;
+
+	$: if (clearFiltersClicked) {
+		useCurrentLocationChecked = false;
+		yearInputValue = "";
+		selectYearInputValueChangeHandler();
+		searchByStreetAddressInputValue = "";
+		searchByStreetAddressInputValueChangeHandler();
+		currentPageCandidates = 1;
+		currentPageReferendums = 1;
+		currentPageLegislation = 1;
+		currentPageAmendments = 1;
+		clearFiltersClicked = false;
+	};
+
 </script>
 
 <svelte:head>
@@ -1208,17 +1234,32 @@
 	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums and amendments" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
-
-<section>    
-    <form 
-		class="search_endorsements_by_address_form"
-	>
-		<h1>
-		    search endorsements
-		</h1>
-		<div class="search_endorsement_fields">
-			<div class="name_and_location_search_fields">
-				<div class="search_endorsements_by_address_input">
+<svelte:window bind:innerWidth />
+<section class="page">
+	<h1>
+		endorsements
+	</h1>
+	<div class="endorsements_tabs_container">
+		<Tabs
+			tabPanels={endorsementTabPanels} 
+			bind:activeTab={activeEndorsementsTab}
+		/>
+		<div class="filter_toggle_button_container">
+			<FilterToggleButton bind:openFilters >filters</FilterToggleButton>
+		</div>
+	</div>
+	<div class="filters_and_results">
+		<div 
+			id="filters_container" 
+			class={openFilters ? "filters_container_open" : "filters_container_closed"}
+			style={ (innerWidth <= 720) ? openFilters ? `height: ${height}px` : 'height: 0px;' : "height: 100%;" }
+		>
+			<form 
+				id="filters"
+				class={openFilters ? "filters_open" : "filters_closed"}
+				bind:clientHeight={height}
+			>
+				<div class="search_endorsements_input_container">
 					{#if useCurrentLocationChecked}
 						{#if pendingReverseGeocode}
 							<LoaderAnimation />
@@ -1252,8 +1293,6 @@
 							name, street address, city, state or zip code
 						</SearchInput>
 					{/if}
-				</div>
-				<div class="use_current_location_checkbox">
 					<Checkbox 
 						bind:checked={useCurrentLocationChecked}
 					>
@@ -1265,62 +1304,101 @@
 						</div>
 					</Checkbox>
 				</div>
-			</div>
-			<div class="year_search_field">
-				<SelectSearchInput 
-					options={Years}
-					inputID="year"
-					inputName="year"
-					inputLabel={true}	
-					bind:selectInputValue={yearInputValue}
-					selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+				<div class="year_input_container">
+					<SelectSearchInput 
+						options={Years}
+						inputID="year"
+						inputName="year"
+						inputLabel={true}	
+						bind:selectInputValue={yearInputValue}
+						selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+					>
+						election year or release year
+					</SelectSearchInput>	
+				</div>
+				<SubmitButtonSecondary 
+					disable={false}
+					bind:clicked={clearFiltersClicked}
 				>
-					election year or release year
-				</SelectSearchInput>
-			</div>
+					clear filters
+				</SubmitButtonSecondary>
+			</form>
 		</div>
-	</form>
-	<div class="endorsements_tabs_container">
-		<Tabs
-			tabPanels={endorsementTabPanels} 
-			bind:activeTab={activeEndorsementsTab}
-		/>
+		<div class="results">
+			<TabPanel
+				bind:tabPanels={endorsementTabPanels} 
+				bind:activeTab={activeEndorsementsTab}
+			/>	
+		</div>
 	</div>
-	<TabPanel
-		bind:tabPanels={endorsementTabPanels} 
-		bind:activeTab={activeEndorsementsTab}
-	/>
+	<div class="nominate_button_container">
+		<NominateButton 
+			category="amendment"
+			authorized_user={data.streamed.user}
+		>
+			make a nomination
+		</NominateButton>
+	</div>
 </section>
 
 <style>
 
-	.search_endorsements_by_address_form {
+	.page {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-        justify-content: center;
-		padding: 0 1rem;
+		gap: 1rem;
+	}
+
+	.filters_and_results {
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		background-color: #E7DED0;
+	}
+
+	#filters_container {
+		position: relative;
+		width: 34rem;
+		min-width: 34rem;
+		transition: margin-left 0.3s ease-out;
+		height: 100%;
+	}
+
+	.filters_container_open {
+		margin-left: 0%;
+	}
+
+	.filters_container_closed {
+		margin-left: -34rem;
+	}
+
+	#filters {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 1rem;
+		gap: 1rem;
+		transition: transform 0.2s ease-out;
+	}
+
+	.results {
 		width: 100%;
 	}
 
-	.search_endorsement_fields {
-		display: flex;
-		flex-direction: row;
-        justify-content: flex-start;
-        padding: 0 0 1rem 0;
-        gap: 2rem;
+	.filter_toggle_button_container {
+		position: absolute;
+		right: 0;
+		padding: 1rem;
 	}
 
-    .name_and_location_search_fields {
-        display: flex;
+	.search_endorsements_input_container {
+		display: flex;
 		flex-direction: column;
-		width: 40rem;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-	.use_current_location_checkbox {
-		display: inline;
+        gap: 0.5rem;
+		width: 100%;
 	}
 
     .use_current_location_label {
@@ -1328,83 +1406,121 @@
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
-		font-size: 1.4rem;
+		font-size: 1rem;
     }
 
     .geolocation_container {
         width: 1.25rem;
     }
 
-	.search_endorsements_by_address_input {
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-        width: 100%;
-	}
-
-	.year_search_field {
-		width: 10rem;
-	}
-
 	.endorsements_tabs_container {
+		position: relative;
 		display: flex;
 		justify-content: center;
+		width: 100%;
+		max-width: 1920px;
+		margin: 0 auto;
 	}
 
-    @media (max-width: 1140px) {
+	.year_input_container {
+		width: 12rem;
+	}
 
-		.search_endorsement_fields {
-            padding: 0 0 1rem 0;
-            gap: 1rem;
-        }
+	.nominate_button_container {
+		position: fixed;
+		bottom: 0;
+		right: 0;
+		padding: 1rem;
+		max-width: 1920px;
+		width: 100%;
+		left: auto;
+		right: auto;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		background: none;
+		pointer-events: none;
+	}
 
-        .name_and_location_search_fields {
-            width: 30rem;
-            gap: 1rem;
-        }
+	@media screen and (max-width: 1440px) {
 
-        .geolocation_container {
-            width: 1.125rem;
-        }
+		#filters_container {
+			width: 28rem;
+			min-width: 28rem;
+		}
 
-        .search_endorsements_by_address_input {
-            display: flex;
-        }
+		.filters_container_closed {
+			margin-left: -28rem;
+		}
 
 		.use_current_location_label {
-            font-size: 1.2rem;
-        }
+			font-size: 0.95rem;
+		}
+
+	}	
+
+    @media screen and (max-width: 1080px) {
+
+		.use_current_location_label {
+			font-size: 0.9rem;
+		}
+
+		#filters_container {
+			width: 24rem;
+			min-width: 24rem;
+		}
+
+		.filters_container_closed {
+			margin-left: -24rem;
+		}
 
 	}
 
 	@media (max-width: 720px) {
 
-		.search_endorsement_fields {
-            gap: 0.5rem;
-            flex-direction: column;
-            align-items: center;
-        }
+		.endorsements_tabs_container {
+			position: relative;
+			display: flex;
+			flex-direction: column-reverse;
+			justify-content: center;
+			margin: 0;
+		}
 
-        .search_endorsements_by_address_form {
-            width: 100%;
-        }
-
-        .search_endorsements_by_address_input {
-            width: 100%;
-        }
-
-        .name_and_location_search_fields {
-            gap: 0.5rem;
-            width: 100%;
-        }
+		.filter_toggle_button_container {
+			position: relative;
+			right: 0;
+			padding: 1rem;
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-end;
+		}
 
 		.use_current_location_label {
-            font-size: 1rem;
-        }
+			font-size: 0.85rem;
+		}
+
+		.filters_and_results {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
+
+		#filters_container {
+			width: 100%;
+			overflow-y: hidden;
+			will-change: height;
+        	transition: height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+			min-width: 100%;
+		}
 
         .geolocation_container {
             width: 1rem;
         }
+
+		.filters_container_closed {
+			margin-left: 0;
+		}
 	}
 
 </style>

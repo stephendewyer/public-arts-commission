@@ -98,15 +98,14 @@
 
     .checkbox_container {
       font-size: 1.25rem;
-      justify-content: center;
     }
   
   }
 
-    @media (max-width: 720px) {
-      .checkbox_container {
-        font-size: 1rem;
-      }
+  @media (max-width: 720px) {
+    .checkbox_container {
+      font-size: 1rem;
     }
+  }
 
 </style>
