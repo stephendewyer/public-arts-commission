@@ -929,6 +929,9 @@
 		width: 100%;
         margin: 0;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 	}
 
     .search_endorsements_input_container {
@@ -944,14 +947,6 @@
         align-items: center;
         gap: 0.5rem;
 		font-size: 1rem;
-    }
-
-    .use_current_location_label {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.4rem;
     }
 
     .geolocation_container {
@@ -1061,13 +1056,6 @@
 
         .endorsements_tabs_container {
 			position: relative;
-		}
-
-		.endorsement_nav_tabs_inner {
-			display: flex;
-			flex-direction: column-reverse;
-			justify-content: center;
-			margin: 0;
 		}
 
 		.use_current_location_label {
