@@ -1227,6 +1227,26 @@
 		clearFiltersClicked = false;
 	};
 
+	let endosermentNavHeight: number = 0;
+
+	let endorsementsNav: HTMLElement;
+
+	let y: number = 0;
+
+    let endorsementTabsSticky: boolean = false;
+
+    let currentEndorsementTabsStickyPosition: number = 0;
+
+    onMount(() => {
+        currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+    });
+
+    $: if (y > currentEndorsementTabsStickyPosition) {
+        endorsementTabsSticky = true;
+    } else {
+        endorsementTabsSticky = false;
+    };
+
 </script>
 
 <svelte:head>
@@ -1234,18 +1254,25 @@
 	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums and amendments" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
-<svelte:window bind:innerWidth />
+<svelte:window bind:innerWidth bind:scrollY={y}/>
 <section class="page">
 	<h1>
 		endorsements
 	</h1>
-	<div class="endorsements_tabs_container">
-		<Tabs
-			tabPanels={endorsementTabPanels} 
-			bind:activeTab={activeEndorsementsTab}
-		/>
-		<div class="filter_toggle_button_container">
-			<FilterToggleButton bind:openFilters >filters</FilterToggleButton>
+	<div 
+		id="endorsement_nav_tabs"
+		bind:this={endorsementsNav}
+		class={endorsementTabsSticky ? "endorsement_tabs_container_sticky" : "endorsements_tabs_container"}
+		bind:clientHeight={endosermentNavHeight}
+	>
+		<div class="endorsement_nav_tabs_inner">
+			<Tabs
+				tabPanels={endorsementTabPanels} 
+				bind:activeTab={activeEndorsementsTab}
+			/>
+			<div class="filter_toggle_button_container">
+				<FilterToggleButton bind:openFilters >filters</FilterToggleButton>
+			</div>	
 		</div>
 	</div>
 	<div class="filters_and_results">
@@ -1256,7 +1283,8 @@
 		>
 			<form 
 				id="filters"
-				class={openFilters ? "filters_open" : "filters_closed"}
+				class={(innerWidth > 720) ? endorsementTabsSticky ? "filters_sticky" : "filters_not_sticky" : "filters_not_sticky"}
+				style={(innerWidth > 720) ? endorsementTabsSticky ? `top: ${endosermentNavHeight}px;` : "top: 0;": ""}
 				bind:clientHeight={height}
 			>
 				<div class="search_endorsements_input_container">
@@ -1375,13 +1403,21 @@
 	}
 
 	#filters {
-		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 		padding: 1rem;
 		gap: 1rem;
 		transition: transform 0.2s ease-out;
+	}
+
+	.filters_sticky {
+		position: fixed;
+		width: 34rem;
+	}
+
+	.filters_not_sticky {
+		position: relative;
 	}
 
 	.results {
@@ -1413,7 +1449,23 @@
         width: 1.25rem;
     }
 
+	#endorsement_nav_tabs {	
+		width: 100%;
+		padding: 0.5rem 1rem;
+	}
+
 	.endorsements_tabs_container {
+		position: relative;
+	}
+
+	.endorsement_tabs_container_sticky {
+		position: fixed;
+		top: 0;
+		z-index: 1;
+		background-color: #DBE4D7;
+	}
+
+	.endorsement_nav_tabs_inner {
 		position: relative;
 		display: flex;
 		justify-content: center;
@@ -1449,6 +1501,10 @@
 			min-width: 28rem;
 		}
 
+		.filters_sticky {
+			width: 28rem;
+		}
+
 		.filters_container_closed {
 			margin-left: -28rem;
 		}
@@ -1474,12 +1530,19 @@
 			margin-left: -24rem;
 		}
 
+		.filters_sticky {
+			width: 24rem;
+		}
+
 	}
 
 	@media (max-width: 720px) {
 
 		.endorsements_tabs_container {
 			position: relative;
+		}
+
+		.endorsement_nav_tabs_inner {
 			display: flex;
 			flex-direction: column-reverse;
 			justify-content: center;
