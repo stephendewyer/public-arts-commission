@@ -1275,7 +1275,10 @@
 			</div>	
 		</div>
 	</div>
-	<div class="filters_and_results">
+	<div 
+		class="filters_and_results"
+		style={endorsementTabsSticky ? `padding-top: ${endosermentNavHeight}px;` : "padding-top: 0px;"}
+	>
 		<div 
 			id="filters_container" 
 			class={openFilters ? "filters_container_open" : "filters_container_closed"}
@@ -1375,7 +1378,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 1rem;
 	}
 
 	.filters_and_results {
