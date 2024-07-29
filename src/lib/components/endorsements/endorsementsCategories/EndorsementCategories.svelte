@@ -189,6 +189,7 @@
 <style>
 
     .endorsement_categories_container {
+        position: relative;
         list-style: none;
         margin: 0;
         padding: 0;

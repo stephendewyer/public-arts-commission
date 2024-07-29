@@ -1,7 +1,7 @@
 <script lang="ts">
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount, onDestroy, afterUpdate } from 'svelte';
 	import { page } from '$app/stores';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -1227,9 +1227,15 @@
 		clearFiltersClicked = false;
 	};
 
+	let filtersContainerHeight: number = 0;
+
+	$: filtersContainerHeight;
+
 	let endosermentNavHeight: number = 0;
 
 	let endorsementsNav: HTMLElement;
+
+	let filtersContainerElement: HTMLElement;
 
 	let y: number = 0;
 
@@ -1237,15 +1243,28 @@
 
     let currentEndorsementTabsStickyPosition: number = 0;
 
+	let filtersAbsolutePosition: number = 0;
+
+	let filtersAbsolute: boolean = false;
+
     onMount(() => {
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
     });
 
-    $: if (y > currentEndorsementTabsStickyPosition) {
+	afterUpdate(() =>  {
+		filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height - endosermentNavHeight);
+	});
+
+    $: if (y > currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
         endorsementTabsSticky = true;
-    } else {
-        endorsementTabsSticky = false;
-    };
+		filtersAbsolute = false;
+    } else if (y > currentEndorsementTabsStickyPosition && y > filtersAbsolutePosition) {
+        endorsementTabsSticky = true;
+		filtersAbsolute = true;
+    } else if (y <= currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
+		endorsementTabsSticky = false;
+		filtersAbsolute = false;
+	};
 
 </script>
 
@@ -1282,12 +1301,15 @@
 		<div 
 			id="filters_container" 
 			class={openFilters ? "filters_container_open" : "filters_container_closed"}
-			style={ (innerWidth <= 720) ? openFilters ? `height: ${height}px` : 'height: 0px;' : "height: 100%;" }
+			style={ (innerWidth <= 720) ? openFilters ? `height: ${height}px` : 'height: 0px;' : "" }
+			bind:clientHeight={filtersContainerHeight}
+			bind:this={filtersContainerElement}
 		>
+			
 			<form 
 				id="filters"
-				class={(innerWidth > 720) ? endorsementTabsSticky ? "filters_sticky" : "filters_not_sticky" : "filters_not_sticky"}
-				style={(innerWidth > 720) ? endorsementTabsSticky ? `top: ${endosermentNavHeight}px;` : "top: 0;": ""}
+				class={(innerWidth > 720) ? endorsementTabsSticky ? !filtersAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky" : "filters_not_sticky"}
+				style={(innerWidth > 720) ? endorsementTabsSticky ? filtersAbsolute ? "" : `top: ${endosermentNavHeight}px;` : "top: 0;": ""}
 				bind:clientHeight={height}
 			>
 				<div class="search_endorsements_input_container">
@@ -1375,6 +1397,7 @@
 <style>
 
 	.page {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -1385,7 +1408,6 @@
 		display: flex;
 		flex-direction: row;
 		width: 100%;
-		background-color: #E7DED0;
 	}
 
 	#filters_container {
@@ -1393,7 +1415,7 @@
 		width: 34rem;
 		min-width: 34rem;
 		transition: margin-left 0.3s ease-out;
-		height: 100%;
+		background-color: #E7DED0;
 	}
 
 	.filters_container_open {
@@ -1418,11 +1440,19 @@
 		width: 34rem;
 	}
 
+	.filters_absolute {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
 	.filters_not_sticky {
 		position: relative;
 	}
 
 	.results {
+		position: relative;
 		width: 100%;
 	}
 
