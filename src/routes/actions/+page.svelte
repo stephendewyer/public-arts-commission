@@ -4,7 +4,7 @@
     import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import type { User } from '@auth/core/types.js';
     import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
-    import { onDestroy, onMount } from 'svelte';
+    import { onDestroy, onMount, afterUpdate } from 'svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import Years from '$lib/data/years.json';
 	import SelectSearchInput from '$lib/components/inputs/SelectSearchInput.svelte';
@@ -18,10 +18,11 @@
     import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
     import { page } from '$app/stores';
     import GeoLocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
+    import NominateButton from '$lib/components/buttons/NominateButton.svelte';
+    import FilterToggleButton from '$lib/components/buttons/FilterToggleButton.svelte';
+    import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
 
     export let data;
-
-    $: data;
 
 	let URLPathName: string = $page.url.pathname;
 
@@ -33,7 +34,7 @@
 
 	// define the location variables
 
-	let country: string | any = "";
+	let country: string| any = "";
 	let zipcode: string | any = "";
 	let state: string | any = "";
 	let county: string | any = "";
@@ -41,11 +42,15 @@
 	let street: string | any = "";
 	let streetNumber: string | any = "";
 
-	let yearInputValue: number | any = "";
+	let yearInputValue: string | any = "";
 
-    let actionName: string | any = "";
+    $: yearInputValue;
+
+    let actionName: string = "";
 
     let searchByStreetAddressInputValue: string;
+
+    $: searchByStreetAddressInputValue;
 
     let useCurrentLocationChecked: boolean;
 
@@ -94,9 +99,7 @@
     };
 
     onMount(() => {
-
         getEndorsedActionsData();
-
     });
 
     let searchParams: URLSearchParams;
@@ -124,7 +127,7 @@
 
     // use the parsed address from seach by address input to filter endorsed candidates 
 
-    let searchEndorsedActions: SearchActionWithImage[];
+    let searchEndorsedActions: SearchActionWithImage[] = [];
 
     $: searchEndorsedActions = endorsedActions.map((action: ActionWithImage) => ({
 		...action,
@@ -175,28 +178,25 @@
     // set the amount of items to appear in each category on the page
     let pageSize: number = 4;
 
-    let actionsForthcomingCurrentPage: number;
-    let actionsHistoryCurrentPage: number;
-
-    $: actionsForthcomingCurrentPage = 1;
-    $: actionsHistoryCurrentPage = 1;
+    let actionsForthcomingCurrentPage: number = 1;
+    let actionsHistoryCurrentPage: number = 1;
 
     // set the index of the first item to appear on the page for each category
-    let firstPageIndexActionsForthcoming: number;
+    let firstPageIndexActionsForthcoming: number = 1;
     $: firstPageIndexActionsForthcoming = (actionsForthcomingCurrentPage -1) * pageSize;
     
-    let firstPageIndexActionsHistory: number;
+    let firstPageIndexActionsHistory: number = 1;
     $: firstPageIndexActionsHistory = (actionsHistoryCurrentPage -1) * pageSize;
 
     // set the index for the page after the first page for each category
-    let lastPageIndexActionsForthcoming: number;
+    let lastPageIndexActionsForthcoming: number = 1;
     $: lastPageIndexActionsForthcoming = firstPageIndexActionsForthcoming + pageSize;
 
-    let lastPageIndexActionsHistory: number;
+    let lastPageIndexActionsHistory: number = 1;
     $: lastPageIndexActionsHistory = firstPageIndexActionsHistory + pageSize;
 
-    let paginatedActionsForthcoming: ActionWithImage[];
-    let paginatedActionsHistory: ActionWithImage[];
+    let paginatedActionsForthcoming: ActionWithImage[] = [];
+    let paginatedActionsHistory: ActionWithImage[] = [];
 
     // use the first page index and last page index to slice the correct items to appear on the page for each category
     $: paginatedActionsForthcoming = futureEndorsedActions.slice(firstPageIndexActionsForthcoming, lastPageIndexActionsForthcoming);
@@ -610,22 +610,105 @@
 
     };
 
+    let openFilters: boolean = true;
+
+	let height: number = 0;
+
+    $: height;
+
+	// innerWidth is the width of the inner window
+	let innerWidth: number = 0;
+
+	let clearFiltersClicked: boolean = false;
+
+	$: if (clearFiltersClicked) {
+		useCurrentLocationChecked = false;
+		yearInputValue = "";
+		selectYearInputValueChangeHandler();
+		searchByStreetAddressInputValue = " ";
+		searchByNameOrLocationInputValueChangeHandler();
+		clearFiltersClicked = false;
+	};
+
+	let filtersContainerHeight: number = 0;
+
+	$: filtersContainerHeight;
+
+	let endosermentNavHeight: number = 0;
+
+	let endorsementsNav: HTMLElement;
+
+	let filtersContainerElement: HTMLElement;
+
+	let y: number = 0;
+
+    let endorsementTabsSticky: boolean = false;
+
+    let currentEndorsementTabsStickyPosition: number = 0;
+
+	let filtersAbsolutePosition: number = 0;
+
+	let filtersAbsolute: boolean = false;
+
+    onMount(() => {
+        currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+    });
+
+	afterUpdate(() =>  {
+		filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height - endosermentNavHeight);
+	});
+
+    $: if (y > currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
+        endorsementTabsSticky = true;
+		filtersAbsolute = false;
+    } else if (y > currentEndorsementTabsStickyPosition && y > filtersAbsolutePosition) {
+        endorsementTabsSticky = true;
+		filtersAbsolute = true;
+    } else if (y <= currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
+		endorsementTabsSticky = false;
+		filtersAbsolute = false;
+	};
+
 </script>
 <svelte:head>
 	<title>actions - public arts commission</title>
 	<meta name="description" content="forthcoming and past actions endorsed by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
-<section class="actions">
-    <form 
-        class="search_endorsements_by_address_form"
+<svelte:window bind:innerWidth bind:scrollY={y}/>
+<section class="page">
+    <h1>
+        search actions
+    </h1>
+    <div 
+        id="endorsement_nav_tabs"
+        bind:this={endorsementsNav}
+        class={endorsementTabsSticky ? "endorsement_tabs_container_sticky" : "endorsements_tabs_container"}
+        bind:clientHeight={endosermentNavHeight}
     >
-        <h1>
-            search actions
-        </h1>
-        <div class="search_endorsement_fields">
-            <div class="name_and_location_search_fields">
-                <div class="search_endorsements_by_address_input">
+        <div class="endorsement_nav_tabs_inner">
+            <FilterToggleButton bind:openFilters >filters</FilterToggleButton>
+        </div>
+    </div>
+    <div 
+        class="filters_and_results"
+        style={endorsementTabsSticky ? `padding-top: ${endosermentNavHeight}px;` : "padding-top: 0px;"}
+    >
+        <div 
+            id="filters_container" 
+            class={openFilters ? "filters_container_open" : "filters_container_closed"}
+            style={ (innerWidth <= 720) ? openFilters ? `height: ${height}px` : 'height: 0px;' : "" }
+            bind:clientHeight={filtersContainerHeight}
+            bind:this={filtersContainerElement}
+        >
+            
+            <form 
+                id="filters"
+                class={(innerWidth > 720) ? endorsementTabsSticky ? !filtersAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky" : "filters_not_sticky"}
+                style={(innerWidth > 720) ? endorsementTabsSticky ? filtersAbsolute ? "" : `top: ${endosermentNavHeight}px;` : "top: 0;": ""}
+                bind:clientHeight={height}
+            >
+                <div class="search_endorsements_input_container">
                     {#if useCurrentLocationChecked}
                         {#if pending}
                             <LoaderAnimation />
@@ -637,7 +720,7 @@
                                 inputLabel={true}
                                 bind:searchInputValue={searchByStreetAddressInputValue}
                                 searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
-								options={statesWithCity}
+                                options={statesWithCity}
                                 bind:optionSelected={searchbarOptionSelected}
                             >
                                 action name, state, city, zip code or street address
@@ -659,8 +742,6 @@
                             action name, state, city, zip code or street address
                         </SearchInput>
                     {/if}
-                </div>
-                <div class="use_current_location_checkbox">
                     <Checkbox 
                         bind:checked={useCurrentLocationChecked}
                     >
@@ -672,65 +753,37 @@
                         </div>
                     </Checkbox>
                 </div>
-            </div>
-            <div class="year_field">
-                <SelectSearchInput 
-                    options={Years}
-                    inputID="year"
-                    inputName="year"
-                    inputLabel={true}	
-                    bind:selectInputValue={yearInputValue}
-                    selectInputValueChange={() => selectYearInputValueChangeHandler()}	
-                >
-                    election year or release year
-                </SelectSearchInput>
-            </div>
-		</div>
-    </form>
-    <ul class="actions_categories_container">
-        {#if pendingEndorsedActionsData}
-            <LoaderAnimation />
-        {:else if (pendingEndorsedActionsData === false && getEndorsedActionsDataSuccess === true)}
-            <li class="forthcoming_actions_container">
-                <h3>
-                    forthcoming actions
-                </h3>
-                <div class="action_cards_frame">
-                    <div class="action_cards">
-                        {#each paginatedActionsForthcoming as endorsedAction, i}
-                            <a 
-                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
-                                data-sveltekit-noscroll
-                            > 
-                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                            </a>
-                        {/each}
-                    </div>
-                </div>
-                <Pagination 
-                    bind:currentPage={actionsForthcomingCurrentPage}
-                    totalCount={futureEndorsedActions.length}
-                    pageSize={pageSize}
-                />
-                <div class="propose_an_action_button_container">
-                    <ProposeActionButton
-                        category="actions" 
-                        authorized_user={user}
+                <div class="year_input_container">
+                    <SelectSearchInput 
+                        options={Years}
+                        inputID="year"
+                        inputName="year"
+                        inputLabel={true}	
+                        bind:selectInputValue={yearInputValue}
+                        selectInputValueChange={() => selectYearInputValueChangeHandler()}	
                     >
-                        propose an action
-                    </ProposeActionButton>
+                        election year or release year
+                    </SelectSearchInput>
                 </div>
-            </li>
-            <li class="actions_history_container">
-                <h3>
-                    actions history
-                </h3>
-                <div class="action_cards_frame">
-                    <div class="action_cards">
-                        {#if pendingEndorsedActionsData}
-                            <LoaderAnimation />
-                        {:else if getEndorsedActionsDataSuccess}
-                            {#each paginatedActionsHistory as endorsedAction, i}
+                <SubmitButtonSecondary 
+                    disable={false}
+                    bind:clicked={clearFiltersClicked}
+                >
+                    clear filters
+                </SubmitButtonSecondary>
+            </form>
+        </div>
+        <ul class="results">
+            {#if pendingEndorsedActionsData}
+                <LoaderAnimation />
+            {:else if (pendingEndorsedActionsData === false && getEndorsedActionsDataSuccess === true)}
+                <li class="forthcoming_actions_container">
+                    <h3>
+                        forthcoming actions
+                    </h3>
+                    <div class="action_cards_frame">
+                        <div class="action_cards">
+                            {#each paginatedActionsForthcoming as endorsedAction, i}
                                 <a 
                                     href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
                                     data-sveltekit-noscroll
@@ -738,65 +791,160 @@
                                     <ActionEndorsementCard endorsedActionData={endorsedAction} />
                                 </a>
                             {/each}
-                        {:else if !getEndorsedActionsDataSuccess}
-                            <p>failed to load endorsed actions history</p>
-                        {/if}
+                        </div>
                     </div>
-                </div>
-                <Pagination 
-                    bind:currentPage={actionsHistoryCurrentPage}
-                    totalCount={pastEndorsedActions.length}
-                    pageSize={pageSize}
-                />
-            </li>
-        {:else if (getEndorsedActionsDataSuccess === false && pendingEndorsedActionsData === false)}
-            <p>failed to load endorsed forthcoming actions</p>
-        {/if}
-    </ul>
+                    <Pagination 
+                        bind:currentPage={actionsForthcomingCurrentPage}
+                        totalCount={futureEndorsedActions.length}
+                        pageSize={pageSize}
+                    />
+                </li>
+                <li class="actions_history_container">
+                    <h3>
+                        actions history
+                    </h3>
+                    <div class="action_cards_frame">
+                        <div class="action_cards">
+                            {#if pendingEndorsedActionsData}
+                                <LoaderAnimation />
+                            {:else if getEndorsedActionsDataSuccess}
+                                {#each paginatedActionsHistory as endorsedAction, i}
+                                    <a 
+                                        href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                        data-sveltekit-noscroll
+                                    > 
+                                        <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                                    </a>
+                                {/each}
+                            {:else if !getEndorsedActionsDataSuccess}
+                                <p>failed to load endorsed actions history</p>
+                            {/if}
+                        </div>
+                    </div>
+                    <Pagination 
+                        bind:currentPage={actionsHistoryCurrentPage}
+                        totalCount={pastEndorsedActions.length}
+                        pageSize={pageSize}
+                    />
+                </li>
+            {:else if (getEndorsedActionsDataSuccess === false && pendingEndorsedActionsData === false)}
+                <p>failed to load endorsed forthcoming actions</p>
+            {/if}
+        </ul>
+    </div>
+    <div class="nominate_button_container">
+		<NominateButton 
+			category="actions"
+			authorized_user={data.streamed.user}
+		>
+			propose an action
+		</NominateButton>
+	</div>
 </section>
 
 <style>
 
-    .actions_categories_container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .actions {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .search_endorsements_by_address_form {
+    .page {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-        justify-content: center;
-		padding: 0 1rem;
 	}
 
-	.search_endorsement_fields {
+    #endorsement_nav_tabs {	
+		width: 100%;
+		padding: 0.5rem 1rem;
+	}
+
+    .endorsements_tabs_container {
+		position: relative;
+	}
+
+	.endorsement_tabs_container_sticky {
+		position: fixed;
+		top: 0;
+		z-index: 1;
+		background-color: #DBE4D7;
+	}
+
+	.endorsement_nav_tabs_inner {
+		position: relative;
+		display: flex;
+		justify-content: flex-end;
+		width: 100%;
+		max-width: 1920px;
+		margin: 0 auto;
+	}
+
+    .filters_and_results {
+		position: relative;
 		display: flex;
 		flex-direction: row;
 		width: 100%;
-        justify-content: flex-start;
-        padding: 0 0 1rem 0;
-        gap: 2rem;
 	}
 
-    .name_and_location_search_fields {
-        display: flex;
+	#filters_container {
+		position: relative;
+		width: 34rem;
+		min-width: 34rem;
+		transition: margin-left 0.3s ease-out;
+		background-color: #E7DED0;
+	}
+
+	.filters_container_open {
+		margin-left: 0%;
+	}
+
+	.filters_container_closed {
+		margin-left: -34rem;
+	}
+
+	#filters {
+		display: flex;
 		flex-direction: column;
-		width: 40rem;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-	.use_current_location_checkbox {
-		display: inline;
+		align-items: flex-start;
+		padding: 1rem;
+		gap: 1rem;
+		transition: transform 0.2s ease-out;
 	}
+
+	.filters_sticky {
+		position: fixed;
+		width: 34rem;
+	}
+
+	.filters_absolute {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+	.filters_not_sticky {
+		position: relative;
+	}
+
+	.results {
+		position: relative;
+		width: 100%;
+        margin: 0;
+        padding: 0;
+	}
+
+    .search_endorsements_input_container {
+		display: flex;
+		flex-direction: column;
+        gap: 0.5rem;
+		width: 100%;
+	}
+
+    .use_current_location_label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+		font-size: 1rem;
+    }
 
     .use_current_location_label {
         display: flex;
@@ -810,22 +958,9 @@
         width: 1.25rem;
     }
 
-	.search_endorsements_by_address_input {
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-        width: 100%;
+	.year_input_container {
+		width: 12rem;
 	}
-
-	.year_field {
-		width: 10rem;
-	}
-
-    .actions_categories_container {
-        padding: 0;
-        width: 100%;
-        margin: 0;
-    }
 
     .forthcoming_actions_container {
         background-color: #F4F5FB;
@@ -863,72 +998,107 @@
     }
 
     
-    .propose_an_action_button_container {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        width: 100%;
-        padding: 1rem 0 0 0;
+    .nominate_button_container {
+		position: fixed;
+		bottom: 0;
+		right: 0;
+		padding: 1rem;
+		max-width: 1920px;
+		width: 100%;
+		left: auto;
+		right: auto;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		background: none;
+		pointer-events: none;
+	}
+
+
+    @media screen and (max-width: 1440px) {
+        #filters_container {
+			width: 28rem;
+			min-width: 28rem;
+		}
+
+		.filters_sticky {
+			width: 28rem;
+		}
+
+		.filters_container_closed {
+			margin-left: -28rem;
+		}
+
+		.use_current_location_label {
+			font-size: 0.95rem;
+		}
     }
 
-    @media (max-width: 1140px) {
+    @media screen and (max-width: 1080px) {
 
-        .search_endorsement_fields {
-            padding: 0 0 1rem 0;
-            gap: 1rem;
-        }
-
-        .name_and_location_search_fields {
-            width: 30rem;
-            gap: 1rem;
-        }
 
         .use_current_location_label {
-            font-size: 1.2rem;
-        }
+			font-size: 0.9rem;
+		}
 
-        .geolocation_container {
-            width: 1.125rem;
-        }
+		#filters_container {
+			width: 24rem;
+			min-width: 24rem;
+		}
 
-        .search_endorsements_by_address_input {
-            display: flex;
-        }
+		.filters_container_closed {
+			margin-left: -24rem;
+		}
 
-        .action_cards {
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-        }
+		.filters_sticky {
+			width: 24rem;
+		}
+        
 
     }
 
     @media (max-width: 720px) {
 
-        .search_endorsement_fields {
-            gap: 0.5rem;
-            flex-direction: column;
-            align-items: center;
-        }
+        .endorsements_tabs_container {
+			position: relative;
+		}
 
-        .search_endorsements_by_address_form {
-            width: 100%;
-        }
+		.endorsement_nav_tabs_inner {
+			display: flex;
+			flex-direction: column-reverse;
+			justify-content: center;
+			margin: 0;
+		}
 
-        .search_endorsements_by_address_input {
-            width: 100%;
-        }
+		.use_current_location_label {
+			font-size: 0.85rem;
+		}
 
-        .name_and_location_search_fields {
-            gap: 0.5rem;
-            width: 100%;
-        }
+		.filters_and_results {
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+		}
 
-        .use_current_location_label {
-            font-size: 1rem;
-        }
+		#filters_container {
+			width: 100%;
+			overflow-y: hidden;
+			will-change: height;
+        	transition: height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
+			min-width: 100%;
+		}
 
         .geolocation_container {
             width: 1rem;
+        }
+
+		.filters_container_closed {
+			margin-left: 0;
+		}
+
+        .action_cards {
+            flex-wrap: nowrap;
+            justify-content: flex-start;
         }
 
     }

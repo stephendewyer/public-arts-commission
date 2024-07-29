@@ -883,7 +883,7 @@
 
 	// use the parsed address from seach by address input to filter endorsed candidates 
 
-	let searchEndorsedCandidates: SearchEndorsedCandidateWithImage[];
+	let searchEndorsedCandidates: SearchEndorsedCandidateWithImage[] = [];
 
 	$: searchEndorsedCandidates = endorsedCandidates.map((candidate: CandidateWithImage) => ({
 		...candidate,
@@ -1004,7 +1004,7 @@
 
 	// use the parsed address from seach by address input to filter endorsed referendums 
 
-	let searchEndorsedReferendums: SearchReferendumWithImage[];
+	let searchEndorsedReferendums: SearchReferendumWithImage[] = [];
 
 	$: searchEndorsedReferendums = endorsedReferendums.map((referendum: ReferendumWithImage) => ({
 		...referendum,
@@ -1168,7 +1168,6 @@
 			hasCapitol: true,
 			panel: AllEndorsementPanel,
 			data: endorsementPanelData,
-			
 		},
 		{
 			id: uuidv4(),
