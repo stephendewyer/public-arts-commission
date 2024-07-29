@@ -128,7 +128,7 @@
     {/if}
     <div 
         class="priorities_container"
-        style={NavTabsSticky && innerWidth <= 720 ? `padding-top: ${pageNavTabsHeight}px;` : "padding-top: 0px;"}
+        style={NavTabsSticky && innerWidth <= 1440 ? `padding-top: ${pageNavTabsHeight}px;` : "padding-top: 0px;"}
     >
         <section 
             id="governmentPriorities" 
