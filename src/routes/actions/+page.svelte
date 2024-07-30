@@ -634,7 +634,7 @@
 
 	$: filtersContainerHeight;
 
-	let endosermentNavHeight: number = 0;
+	let endorsementNavHeight: number = 0;
 
 	let endorsementsNav: HTMLElement;
 
@@ -655,7 +655,11 @@
     });
 
 	afterUpdate(() =>  {
-		filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height - endosermentNavHeight);
+		if (innerWidth <= 720) {
+			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - endorsementNavHeight);
+		} else {
+			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height- endorsementNavHeight);
+		};
 	});
 
     $: if (y > currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
@@ -684,7 +688,7 @@
         id="endorsement_nav_tabs"
         bind:this={endorsementsNav}
         class={endorsementTabsSticky ? "endorsement_tabs_container_sticky" : "endorsements_tabs_container"}
-        bind:clientHeight={endosermentNavHeight}
+        bind:clientHeight={endorsementNavHeight}
     >
         <div class="endorsement_nav_tabs_inner">
             <FilterToggleButton bind:openFilters >filters</FilterToggleButton>
@@ -692,7 +696,7 @@
     </div>
     <div 
         class="filters_and_results"
-        style={endorsementTabsSticky ? `padding-top: ${endosermentNavHeight}px;` : "padding-top: 0px;"}
+        style={endorsementTabsSticky ? `padding-top: ${endorsementNavHeight}px;` : "padding-top: 0px;"}
     >
         <div 
             id="filters_container" 
@@ -705,7 +709,7 @@
             <form 
                 id="filters"
                 class={(innerWidth > 720) ? endorsementTabsSticky ? !filtersAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky" : "filters_not_sticky"}
-                style={(innerWidth > 720) ? endorsementTabsSticky ? filtersAbsolute ? "" : `top: ${endosermentNavHeight}px;` : "top: 0;": ""}
+                style={(innerWidth > 720) ? endorsementTabsSticky ? filtersAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;": ""}
                 bind:clientHeight={height}
             >
                 <div class="search_endorsements_input_container">
