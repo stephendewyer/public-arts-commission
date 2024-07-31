@@ -269,7 +269,7 @@
 		<img src={PublicArtsCommissionBanner} alt="public arts commission banner" />
 	</picture>
 	<h1 class="heading01">
-		Art for everyone is fundamental to democracy.  
+		Art by everyone and for everyone is necessary for democracy.  
 		We help grow our political imagination to support a fairer, more just economy and a more egalitarian society.
 	</h1>
 	<form 
