@@ -282,7 +282,7 @@
 
     .action_name {
         padding: 0 1rem;
-        text-align: center;
+        text-align: left;
     }
 
     table {

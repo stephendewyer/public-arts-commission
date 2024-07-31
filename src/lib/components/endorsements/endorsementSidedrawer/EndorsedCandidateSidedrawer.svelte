@@ -304,7 +304,7 @@
 
     .campaign_name {
         padding: 0 1rem;
-        text-align: center;
+        text-align: left;
     }
 
     .close_button:hover {
