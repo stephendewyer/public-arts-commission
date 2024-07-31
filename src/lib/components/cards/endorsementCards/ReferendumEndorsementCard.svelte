@@ -1,5 +1,6 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let endorsedReferendumData: ReferendumWithImage;
 
@@ -67,7 +68,7 @@
     <div class="image_container">
         <img 
             src={endorsedReferendumData.image_URL} 
-            alt={endorsedReferendumData.alt_text} 
+            alt={reverseHtmlEntities(endorsedReferendumData.alt_text)} 
         />
     </div>
     <div 
@@ -77,19 +78,19 @@
         {@html MeatBalls}
     </div>
     <div class="card_info_container">
-        <h4 class="card_heading_01">{endorsedReferendumData.referendum_name}</h4>
+        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedReferendumData.referendum_name)}</h4>
         <h5 class="card_heading_02">
             <span class="data_category">
                 electorate: 
             </span>
             {#if (endorsedReferendumData.city)}
-                {endorsedReferendumData.city}
+                {reverseHtmlEntities(endorsedReferendumData.city)}
             {/if}
             {#if (endorsedReferendumData.county)}
-                {endorsedReferendumData.county}
+                {reverseHtmlEntities(endorsedReferendumData.county)}
             {/if}
             {#if (endorsedReferendumData.state)}
-                {endorsedReferendumData.state}
+                {reverseHtmlEntities(endorsedReferendumData.state)}
             {/if}
             United States of America
         </h5>
@@ -101,7 +102,7 @@
             </h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {referendumStatus.toString()}
+            {reverseHtmlEntities(referendumStatus.toString())}
         </h5>
     </div>
 </div>

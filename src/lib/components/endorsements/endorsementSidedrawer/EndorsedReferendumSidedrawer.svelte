@@ -4,6 +4,7 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let pageSearch;
 
@@ -92,10 +93,10 @@
     </div>
     <div>
         <picture>
-            <img src={endorsedReferendumSelected?.image_URL} alt={endorsedReferendumSelected?.alt_text} />
+            <img src={endorsedReferendumSelected?.image_URL} alt={reverseHtmlEntities(endorsedReferendumSelected?.alt_text)} />
         </picture>
         <h3 class="referendum_name">
-            {endorsedReferendumSelected?.referendum_name}
+            {reverseHtmlEntities(endorsedReferendumSelected?.referendum_name)}
         </h3>
         <table>
             <colgroup>
@@ -137,7 +138,7 @@
                             state: 
                         </td>
                         <td>
-                            {endorsedReferendumSelected?.state}
+                            {reverseHtmlEntities(endorsedReferendumSelected?.state)}
                         </td>
                     </tr>
                 {/if}
@@ -147,7 +148,7 @@
                             county: 
                         </td>
                         <td>
-                            {endorsedReferendumSelected?.county}
+                            {reverseHtmlEntities(endorsedReferendumSelected?.county)}
                         </td>
                     </tr>
                 {/if}
@@ -157,7 +158,7 @@
                             city: 
                         </td>
                         <td>
-                            {endorsedReferendumSelected?.city}
+                            {reverseHtmlEntities(endorsedReferendumSelected?.city)}
                         </td>
                     </tr>
                 {/if}
@@ -187,7 +188,7 @@
                         status: 
                     </td>
                     <td>
-                        {referendumStatus.toString()}
+                        {reverseHtmlEntities(referendumStatus.toString())}
                     </td>
                 </tr>
             </tbody>
@@ -195,7 +196,7 @@
         <div class="details_row">
             <p class="details_header">details</p>
             <p>
-                {endorsedReferendumSelected?.details} 
+                {reverseHtmlEntities(endorsedReferendumSelected?.details)} 
             </p>
         </div>    
     </div>

@@ -4,6 +4,7 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     
     export let pageSearch;
 
@@ -129,9 +130,9 @@
     </div>
     <div>
         <picture>
-            <img src={endorsedCandidateData?.image_URL} alt={endorsedCandidateData?.alt_text} />
+            <img src={endorsedCandidateData?.image_URL} alt={reverseHtmlEntities(endorsedCandidateData?.alt_text)} />
         </picture>
-        <h3 class="campaign_name">{endorsedCandidateData?.campaign_name}</h3>
+        <h3 class="campaign_name">{reverseHtmlEntities(endorsedCandidateData?.campaign_name)}</h3>
         <table>
             <colgroup>
                 <col style="width:40%">
@@ -167,7 +168,7 @@
                         electorate: 
                     </td>
                     <td>
-                        {endorsedCandidateData?.electorate}
+                        {reverseHtmlEntities(endorsedCandidateData?.electorate)}
                     </td>
                 </tr>
                 {#if (endorsedCandidateData?.state)}
@@ -176,7 +177,7 @@
                             state: 
                         </td>
                         <td>
-                            {endorsedCandidateData?.state}
+                            {reverseHtmlEntities(endorsedCandidateData?.state)}
                         </td>
                     </tr>
                 {/if}
@@ -186,7 +187,7 @@
                             county: 
                         </td>
                         <td>
-                            {endorsedCandidateData?.county}
+                            {reverseHtmlEntities(endorsedCandidateData?.county)}
                         </td>
                     </tr>
                 {/if}
@@ -196,7 +197,7 @@
                             city: 
                         </td>
                         <td>
-                            {endorsedCandidateData?.city}
+                            {reverseHtmlEntities(endorsedCandidateData?.city)}
                         </td>
                     </tr>
                 {/if}
@@ -205,7 +206,7 @@
                         party: 
                     </td>
                     <td>
-                        {endorsedCandidateData?.party}
+                        {reverseHtmlEntities(endorsedCandidateData?.party)}
                     </td>
                 </tr>
                 <tr>
@@ -234,7 +235,7 @@
                         status: 
                     </td>
                     <td>
-                        {candidateStatus.toString()}
+                        {reverseHtmlEntities(candidateStatus.toString())}
                     </td>
                 </tr>
             </tbody>

@@ -4,6 +4,7 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     
     export let pageSearch;
 
@@ -82,9 +83,9 @@
     </div>
     <div>
         <picture>
-            <img src={endorsedActionData?.image_URL} alt={endorsedActionData?.alt_text} />
+            <img src={endorsedActionData?.image_URL} alt={reverseHtmlEntities(endorsedActionData?.alt_text)} />
         </picture>
-        <h3 class="action_name">{endorsedActionData?.action_name}</h3>
+        <h3 class="action_name">{reverseHtmlEntities(endorsedActionData?.action_name)}</h3>
         <table>
             <colgroup>
                 <col style="width:40%">
@@ -132,7 +133,7 @@
                             street address: 
                         </td>
                         <td>
-                            {endorsedActionData?.action_street_address}
+                            {reverseHtmlEntities(endorsedActionData?.action_street_address)}
                         </td>
                     </tr>
                 {/if}
@@ -142,7 +143,7 @@
                             street address 02: 
                         </td>
                         <td>
-                            {endorsedActionData?.action_street_address_02}
+                            {reverseHtmlEntities(endorsedActionData?.action_street_address_02)}
                         </td>
                     </tr>
                 {/if}
@@ -152,7 +153,7 @@
                             city: 
                         </td>
                         <td>
-                            {endorsedActionData?.action_city}
+                            {reverseHtmlEntities(endorsedActionData?.action_city)}
                         </td>
                     </tr>
                 {/if}
@@ -162,7 +163,7 @@
                             state: 
                         </td>
                         <td>
-                            {endorsedActionData?.action_state}
+                            {reverseHtmlEntities(endorsedActionData?.action_state)}
                         </td>
                     </tr>
                 {/if}
@@ -210,7 +211,7 @@
         <div class="details_row">
             <p class="details_header">details</p>
             <p>
-                {endorsedActionData?.details} 
+                {reverseHtmlEntities(endorsedActionData?.details)} 
             </p>
         </div>       
     </div>

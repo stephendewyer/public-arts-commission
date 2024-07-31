@@ -1,5 +1,6 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let endorsedLegislationData: LegislationWithSponsorsAndImage;
 
@@ -78,7 +79,7 @@
     <div class="image_container">
         <img 
             src={endorsedLegislationData.image_URL} 
-            alt={endorsedLegislationData.alt_text} 
+            alt={reverseHtmlEntities(endorsedLegislationData.alt_text)} 
         />
     </div>
     <div 
@@ -88,19 +89,19 @@
         {@html MeatBalls}
     </div>
     <div class="card_info_container">
-        <h4 class="card_heading_01">{endorsedLegislationData.legislation_name}</h4>
+        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedLegislationData.legislation_name)}</h4>
         <h5 class="card_heading_02">
             <span class="data_category">
                 jurisdiction: 
             </span>
             {#if (endorsedLegislationData.city)}
-                {endorsedLegislationData.city}
+                {reverseHtmlEntities(endorsedLegislationData.city)}
             {/if}
             {#if (endorsedLegislationData.county)}
-                {endorsedLegislationData.county}
+                {reverseHtmlEntities(endorsedLegislationData.county)}
             {/if}
             {#if (endorsedLegislationData.state)}
-                {endorsedLegislationData.state}
+                {reverseHtmlEntities(endorsedLegislationData.state)}
             {/if}
             United States of America
         </h5>
@@ -129,7 +130,7 @@
             </h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {legislationStatus.toString()}
+            {reverseHtmlEntities(legislationStatus.toString())}
         </h5>
     </div>
 </div>

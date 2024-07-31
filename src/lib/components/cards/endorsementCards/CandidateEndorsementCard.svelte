@@ -1,5 +1,6 @@
 <script lang="ts">
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let endorsedCandidateData: CandidateWithImage;
 
@@ -110,7 +111,7 @@
     <div class="image_container">
         <img
             src={endorsedCandidateData.image_URL} 
-            alt={endorsedCandidateData.alt_text} 
+            alt={reverseHtmlEntities(endorsedCandidateData.alt_text)} 
         />
     </div>
     <div 
@@ -120,14 +121,14 @@
         {@html MeatBalls}
     </div>
     <div class="card_info_container">
-        <h4 class="card_heading_01">{endorsedCandidateData.campaign_name}</h4>
-        <h5 class="card_heading_02"><span class="data_category">electorate: </span>{endorsedCandidateData.electorate}</h5>
+        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedCandidateData.campaign_name)}</h4>
+        <h5 class="card_heading_02"><span class="data_category">electorate: </span>{reverseHtmlEntities(endorsedCandidateData.electorate)}</h5>
         {#if (primaryIsValid)}
             <h5 class="card_heading_02"><span class="data_category">primary election date: </span>{primaryElectionDate}</h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">general election date: </span>{generalElectionDate}</h5>
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {candidateStatus.toString()}
+            {reverseHtmlEntities(candidateStatus.toString())}
         </h5>
     </div>
 </div>

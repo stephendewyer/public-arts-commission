@@ -1,5 +1,6 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let endorsedActionData: ActionWithImage;
 
@@ -41,7 +42,7 @@
 >
     
     <div class="image_container">
-        <img src={endorsedActionData.image_URL} alt={endorsedActionData.alt_text} />
+        <img src={endorsedActionData.image_URL} alt={reverseHtmlEntities(endorsedActionData.alt_text)} />
     </div>
     <div class="endorsement_card_overlay" />
     <div 
@@ -59,21 +60,21 @@
             {/if}
         </h5>
         {#if (endorsedActionData.action_street_address)}
-            <h5 class="card_heading_02">{endorsedActionData.action_street_address}</h5>
+            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_street_address)}</h5>
         {/if}
         {#if (endorsedActionData.action_street_address_02)}
-            <h5 class="card_heading_02">{endorsedActionData.action_street_address_02}</h5>
+            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_street_address_02)}</h5>
         {/if}
         {#if (endorsedActionData.action_city)}
-            <h5 class="card_heading_02">{endorsedActionData.action_city}</h5>
+            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_city)}</h5>
         {/if}
         {#if (endorsedActionData.action_state)}
-            <h5 class="card_heading_02">{endorsedActionData.action_state}</h5>
+            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_state)}</h5>
         {/if}
         {#if (endorsedActionData.action_zip_code)}
             <h5 class="card_heading_02">{endorsedActionData.action_zip_code}</h5>
         {/if}
-        <h4 class="card_heading_01">{endorsedActionData?.action_name}</h4>
+        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedActionData?.action_name)}</h4>
     </div>
 </div>
 

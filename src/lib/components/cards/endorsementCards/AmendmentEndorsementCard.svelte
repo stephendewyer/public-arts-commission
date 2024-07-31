@@ -1,5 +1,6 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let endorsedAmendmentData: AmendmentWithSponsorsAndImage;
 
@@ -98,7 +99,7 @@
     class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
 >
     <div class="image_container">
-        <img src={endorsedAmendmentData.image_URL} alt={endorsedAmendmentData.alt_text} />
+        <img src={endorsedAmendmentData.image_URL} alt={reverseHtmlEntities(endorsedAmendmentData.alt_text)} />
 
     </div>
     <div 
@@ -108,19 +109,19 @@
         {@html MeatBalls}
     </div>
     <div class="card_info_container">
-        <h4 class="card_heading_01">{endorsedAmendmentData.amendment_name}</h4>
+        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedAmendmentData.amendment_name)}</h4>
         <h5 class="card_heading_02">
             <span class="data_category">
                 electorate/jurisdiction: 
             </span>
             {#if (endorsedAmendmentData.city)}
-                {endorsedAmendmentData.city}
+                {reverseHtmlEntities(endorsedAmendmentData.city)}
             {/if}
             {#if (endorsedAmendmentData.county)}
-                {endorsedAmendmentData.county}
+                {reverseHtmlEntities(endorsedAmendmentData.county)}
             {/if}
             {#if (endorsedAmendmentData.state)}
-                {endorsedAmendmentData.state}
+                {reverseHtmlEntities(endorsedAmendmentData.state)}
             {/if}
             United States of America
         </h5>
@@ -156,7 +157,7 @@
             </h5>
         {/if}
         <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {amendmentStatus.toString()}
+            {reverseHtmlEntities(amendmentStatus.toString())}
         </h5>
     </div>
 </div>

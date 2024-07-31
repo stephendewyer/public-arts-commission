@@ -4,6 +4,7 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let pageSearch;
 
@@ -168,10 +169,10 @@
     </div>
     <div>
         <picture>
-            <img src={endorsedLegislationData?.image_URL} alt={endorsedLegislationData?.alt_text} />
+            <img src={endorsedLegislationData?.image_URL} alt={reverseHtmlEntities(endorsedLegislationData?.alt_text)} />
         </picture>
         <h3 class="legislation_name">
-            {endorsedLegislationData?.legislation_name}
+            {reverseHtmlEntities(endorsedLegislationData?.legislation_name)}
         </h3>
         <table>
             <colgroup>
@@ -241,7 +242,7 @@
                             state: 
                         </td>
                         <td>
-                            {endorsedLegislationData?.state}
+                            {reverseHtmlEntities(endorsedLegislationData?.state)}
                         </td>
                     </tr>
                 {/if}
@@ -251,7 +252,7 @@
                             county: 
                         </td>
                         <td>
-                            {endorsedLegislationData?.county}
+                            {reverseHtmlEntities(endorsedLegislationData?.county)}
                         </td>
                     </tr>
                 {/if}
@@ -261,7 +262,7 @@
                             city: 
                         </td>
                         <td>
-                            {endorsedLegislationData?.city}
+                            {reverseHtmlEntities(endorsedLegislationData?.city)}
                         </td>
                     </tr>
                 {/if}
@@ -270,7 +271,7 @@
                         House sponsor: 
                     </td>
                     <td>
-                        {sponsorsHouseNames}
+                        {reverseHtmlEntities(sponsorsHouseNames.join(', ').toString())}
                     </td>
                 </tr>
                 <tr>
@@ -281,7 +282,7 @@
                         <ol class="co-sponsors">
                             {#each coSponsorsHouseNames as coSponsorHouse, i}
                                 <li>
-                                    {coSponsorHouse}
+                                    {reverseHtmlEntities(coSponsorHouse)}
                                 </li>
                             {/each}
                         </ol>
@@ -292,7 +293,7 @@
                         Senate sponsor: 
                     </td>
                     <td>
-                        {sponsorsSenateNames}
+                        {reverseHtmlEntities(sponsorsSenateNames.join(', ').toString())}
                     </td>
                 </tr>
                 <tr>
@@ -303,7 +304,7 @@
                         <ol class="co-sponsors">
                             {#each coSponsorsSenateNames as coSponsorName, i}
                                 <li>
-                                    {coSponsorName}
+                                    {reverseHtmlEntities(coSponsorName)}
                                 </li>
                             {/each}
                         </ol>
@@ -336,7 +337,7 @@
                         status: 
                     </td>
                     <td>
-                        {legislationStatus.toString()}
+                        {reverseHtmlEntities(legislationStatus.toString())}
                     </td>
                 </tr>
             </tbody>
@@ -344,7 +345,7 @@
         <div class="details_row">
             <p class="details_header">details</p>
             <p>
-                {endorsedLegislationData?.details} 
+                {reverseHtmlEntities(endorsedLegislationData?.details)} 
             </p>
         </div>              
     </div>
