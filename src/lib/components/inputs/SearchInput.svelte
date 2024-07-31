@@ -11,11 +11,9 @@
 
 <div class="input_and_label_container">
     {#if inputLabel !== false}
-        <div class="input_label">
-            <label for={inputID} >
-                <slot />
-            </label>
-        </div>
+        <label for={inputID} class="input_label">
+            <slot />
+        </label>
     {/if}
     <div class="searchbar">
         <input 
@@ -63,14 +61,11 @@
         width: 100%;
     }
 
-    label {
+    .input_label {
         font-size: 1.4rem;
         font-weight: 600;
         color: #1C2226;
-    }
-
-    .input_label {
-        padding: 0 0 0.5rem 0;
+        padding: 0 0 0.5rem 0;  
     }
 
     .searchbar {
@@ -170,12 +165,9 @@
             padding: 0 0 0 2.5rem;
         }
 
-        label {
-            font-size: 1.2rem;
-        }
-
         .input_label {
             padding: 0 0 0.4rem 0;
+            font-size: 1.2rem;
         }
     }
 
@@ -188,12 +180,9 @@
             font-size: 1rem;
         }
 
-        label {
-            font-size: 1rem;
-        }
-
         .input_label {
             padding: 0 0 0.3rem 0;
+            font-size: 1rem;
         }
     }
 

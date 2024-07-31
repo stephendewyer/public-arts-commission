@@ -4,7 +4,8 @@
     import CloseIcon from '$lib/images/icons/close_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/stores';
-    
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
+
     export let pageSearch;
 
     $: if (!pageSearch) {
@@ -193,10 +194,10 @@
     </div>
     <div>
         <picture>
-            <img src={endorsedAmendmentData?.image_URL} alt={endorsedAmendmentData?.alt_text} />
+            <img src={endorsedAmendmentData?.image_URL} alt={reverseHtmlEntities(endorsedAmendmentData?.alt_text)} />
         </picture>
         <h3 class="amendment_name">
-            {endorsedAmendmentData?.amendment_name}
+            {reverseHtmlEntities(endorsedAmendmentData?.amendment_name)}
         </h3>
         <table>
             <colgroup>
@@ -276,7 +277,7 @@
                             state: 
                         </td>
                         <td>
-                            {endorsedAmendmentData?.state}
+                            {reverseHtmlEntities(endorsedAmendmentData?.state)}
                         </td>
                     </tr>
                 {/if}
@@ -286,7 +287,7 @@
                             county: 
                         </td>
                         <td>
-                            {endorsedAmendmentData?.county}
+                            {reverseHtmlEntities(endorsedAmendmentData?.county)}
                         </td>
                     </tr>
                 {/if}
@@ -296,7 +297,7 @@
                             city: 
                         </td>
                         <td>
-                            {endorsedAmendmentData?.city}
+                            {reverseHtmlEntities(endorsedAmendmentData?.city)}
                         </td>
                     </tr>
                 {/if}
@@ -306,7 +307,7 @@
                     </td>
                     <td>
                         {#if (sponsorsHouseNames)}
-                            {sponsorsHouseNames.join(', ').toString()}
+                            {reverseHtmlEntities(sponsorsHouseNames.join(', ').toString())}
                         {/if}
                     </td>
                 </tr>
@@ -318,7 +319,7 @@
                         <ol class="co-sponsors">
                             {#each coSponsorsHouseNames as coSponsorHouseName, i}
                                 <li>
-                                    {coSponsorHouseName}
+                                    {reverseHtmlEntities(coSponsorHouseName)}
                                 </li>
                             {/each}
                         </ol>
@@ -329,7 +330,7 @@
                         Senate sponsor: 
                     </td>
                     <td>
-                        {sponsorsSenateNames}
+                        {reverseHtmlEntities(sponsorsSenateNames.join(', ').toString())}
                     </td>
                 </tr>
                 <tr>
@@ -340,7 +341,7 @@
                         <ol class="co-sponsors">
                             {#each coSponsorsSenateNames as coSponsorSenateName, i}
                                 <li>
-                                    {coSponsorSenateName}
+                                    {reverseHtmlEntities(coSponsorSenateName)}
                                 </li>
                             {/each}
                         </ol>
@@ -372,7 +373,7 @@
                         status: 
                     </td>
                     <td>
-                        {amendmentStatus.toString()}
+                        {reverseHtmlEntities(amendmentStatus.toString())}
                     </td>
                 </tr>
             </tbody>
@@ -380,7 +381,7 @@
         <div class="details_row">
             <p class="details_header">details</p>
             <p>
-                {endorsedAmendmentData?.details} 
+                {reverseHtmlEntities(endorsedAmendmentData?.details)} 
             </p>
         </div>   
     </div>
@@ -451,7 +452,7 @@
 
     .amendment_name {
         padding: 0 1rem;
-        text-align: center;
+        text-align: left;
     }
 
     table {
