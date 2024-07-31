@@ -34,6 +34,7 @@
 	import FilterToggleButton from "$lib/components/buttons/FilterToggleButton.svelte";
 	import NominateButton from "$lib/components/buttons/NominateButton.svelte";
 	import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
+	import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
 	export let data;
 
@@ -889,11 +890,11 @@
 		...candidate,
 		searchTerms: {
 			year: `${new Date(candidate.election_date_general).getFullYear()}`,
-			government_level: `${candidate.government_level}`,
-			state: `${candidate.state}`,
-			county: `${candidate.county}`,
-			city: `${candidate.city}`,
-			name: `${candidate.campaign_name}`
+			government_level: `${reverseHtmlEntities(candidate.government_level)}`,
+			state: `${reverseHtmlEntities(candidate.state)}`,
+			county: `${reverseHtmlEntities(candidate.county)}`,
+			city: `${reverseHtmlEntities(candidate.city)}`,
+			name: `${reverseHtmlEntities(candidate.campaign_name)}`
 		}
 	}));
 
@@ -928,11 +929,11 @@
 		...legislation,
 		searchTerms: {
 			year: `${legislation.year_released}`,
-			government_level: `${legislation.government_level}`,
-			state: `${legislation.state}`,
-			county: `${legislation.county}`,
-			city: `${legislation.city}`,
-			name: `${legislation.legislation_name}`
+			government_level: `${reverseHtmlEntities(legislation.government_level)}`,
+			state: `${reverseHtmlEntities(legislation.state)}`,
+			county: `${reverseHtmlEntities(legislation.county)}`,
+			city: `${reverseHtmlEntities(legislation.city)}`,
+			name: `${reverseHtmlEntities(legislation.legislation_name)}`
 		}
 	}));
 
@@ -969,11 +970,11 @@
 		searchTerms: {
 			year_election: `${amendment.election_date}`,
 			year_released: `${amendment.year_released}`,
-			government_level: `${amendment.government_level}`,
-			state: `${amendment.state}`,
-			county: `${amendment.county}`,
-			city: `${amendment.city}`,
-			name: `${amendment.amendment_name}`
+			government_level: `${reverseHtmlEntities(amendment.government_level)}`,
+			state: `${reverseHtmlEntities(amendment.state)}`,
+			county: `${reverseHtmlEntities(amendment.county)}`,
+			city: `${reverseHtmlEntities(amendment.city)}`,
+			name: `${reverseHtmlEntities(amendment.amendment_name)}`
 		}
 	}));
 
@@ -1010,11 +1011,11 @@
 		...referendum,
 		searchTerms: {
 			year: `${new Date(referendum.election_date).getFullYear()}`,
-			government_level: `${referendum.government_level}`,
-			state: `${referendum.state}`,
-			county: `${referendum.county}`,
-			city: `${referendum.city}`,
-			name: `${referendum.referendum_name}`
+			government_level: `${reverseHtmlEntities(referendum.government_level)}`,
+			state: `${reverseHtmlEntities(referendum.state)}`,
+			county: `${reverseHtmlEntities(referendum.county)}`,
+			city: `${reverseHtmlEntities(referendum.city)}`,
+			name: `${reverseHtmlEntities(referendum.referendum_name)}`
 		}
 	}));
 

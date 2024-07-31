@@ -21,6 +21,7 @@
     import NominateButton from '$lib/components/buttons/NominateButton.svelte';
     import FilterToggleButton from '$lib/components/buttons/FilterToggleButton.svelte';
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
+    import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 
     export let data;
 
@@ -137,11 +138,11 @@
                 date_start: `${new Date(action.date_start).getFullYear()}`,
                 date_end: `${new Date(action.date_end).getFullYear()}`
             },
-            action_name: `${action.action_name}`,
+            action_name: `${reverseHtmlEntities(action.action_name)}`,
             zipcode: `${action.action_zip_code}`,
-			state: `${action.action_state}`,
-			city: `${action.action_city}`,
-            government_level: `${action.government_level}`
+			state: `${reverseHtmlEntities(action.action_state)}`,
+			city: `${reverseHtmlEntities(action.action_city)}`,
+            government_level: `${reverseHtmlEntities(action.government_level)}`
 		}
 	}));
 
