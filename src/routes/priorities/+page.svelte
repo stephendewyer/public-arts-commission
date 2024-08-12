@@ -1,7 +1,7 @@
 <script lang="ts">
     import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import PriorityAccordion from '$lib/components/accordions/PriorityAccordion.svelte';
-    import { afterUpdate, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import IntersectionObserver from "svelte-intersection-observer";
     import Arrow from "$lib/images/icons/arrow.svg?raw";
 
@@ -151,11 +151,9 @@
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
-    afterUpdate(() => {
-        currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
-    });
 
     const handleWindowResize = () => {
+        currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
     };
