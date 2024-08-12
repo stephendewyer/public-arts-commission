@@ -675,7 +675,7 @@
 	};
 
     const handleWindowResize = () => {
-        currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+
     };
 
 </script>

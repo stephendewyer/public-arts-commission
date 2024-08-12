@@ -1254,7 +1254,7 @@
     });
 
 	const widowResizeHandler = () => {
-		currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+
 	};
 
 	afterUpdate(() =>  {
@@ -1283,9 +1283,13 @@
 <svelte:head>
 	<title>endorsements - public arts commission</title>
 	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums and amendments" />
-	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
+	<meta property="og:image" content={PublicArtsCommissionBanner} />
 </svelte:head>
-<svelte:window bind:innerWidth bind:scrollY={y} on:resize={widowResizeHandler}/>
+<svelte:window 
+	bind:innerWidth 
+	bind:scrollY={y} 
+	on:resize={widowResizeHandler}
+/>
 <section class="page">
 	<h1>
 		endorsements
