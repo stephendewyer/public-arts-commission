@@ -1253,6 +1253,10 @@
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
     });
 
+	const widowResizeHandler = () => {
+		currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+	};
+
 	afterUpdate(() =>  {
 		if (innerWidth <= 720) {
 			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - endorsementNavHeight);
@@ -1281,7 +1285,7 @@
 	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums and amendments" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
-<svelte:window bind:innerWidth bind:scrollY={y}/>
+<svelte:window bind:innerWidth bind:scrollY={y} on:resize={widowResizeHandler}/>
 <section class="page">
 	<h1>
 		endorsements

@@ -674,13 +674,21 @@
 		filtersAbsolute = false;
 	};
 
+    const handleWindowResize = () => {
+        currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+    };
+
 </script>
 <svelte:head>
 	<title>actions - public arts commission</title>
 	<meta name="description" content="forthcoming and past actions endorsed by public arts commission" />
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
-<svelte:window bind:innerWidth bind:scrollY={y}/>
+<svelte:window 
+    bind:innerWidth 
+    bind:scrollY={y}
+    on:resize={handleWindowResize}
+/>
 <section class="page">
     <h1>
         search actions
