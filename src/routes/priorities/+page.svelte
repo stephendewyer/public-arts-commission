@@ -59,6 +59,61 @@
         targetElement?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
+    $: if (governmentPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer) {
+            if (pageNavTabClicked && (pageNavTabClickedID === "governmentPriorities")) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                pageNavTabClicked = false;
+            } else if (!pageNavTabClicked) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+            };
+        };
+    };
+
+    $: if (climatePrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer) {
+            if (pageNavTabClicked && (pageNavTabClickedID === "climatePriorities")) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                pageNavTabClicked = false;
+            } else if (!pageNavTabClicked) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+            };
+        };
+    };
+
+    $: if (economyPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer) {
+            if (pageNavTabClicked && (pageNavTabClickedID === "economyPriorities")) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                pageNavTabClicked = false;
+            } else if (!pageNavTabClicked) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+            };
+        };
+    };
+
+    $: if (educationPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer) {
+            if (pageNavTabClicked && (pageNavTabClickedID === "educationPriorities")) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                pageNavTabClicked = false;
+            } else if (!pageNavTabClicked) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+            };
+        }; 
+    };
+
+    $: if (healthPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer) {
+            if (pageNavTabClicked && (pageNavTabClickedID === "healthPriorities")) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                pageNavTabClicked = false;
+            } else if (!pageNavTabClicked) {
+                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+            };
+        }; 
+    };
+
     let pageNavTabsScrollableLeftPosition: number = 0;
 
     let pageNavTabsScrollableWidth: number = 0;
