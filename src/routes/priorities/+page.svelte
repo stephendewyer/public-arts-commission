@@ -13,6 +13,8 @@
 
     let currentStickyPosition: number;
 
+    $: currentStickyPosition;
+
     onMount(() => {
         currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
 
@@ -22,11 +24,16 @@
 
     });
 
+    // $: console.log("y: ", y);
+    // $: console.log("currentStickyPosition: ", currentStickyPosition);
+
     $: if (y > currentStickyPosition) {
         NavTabsSticky = true;
     } else {
         NavTabsSticky = false;
     };
+
+    $: console.log("nav tabs sticky: ", NavTabsSticky);
 
     let pageNavTabsHeight: number = 0;
     $: pageNavTabsHeight;
