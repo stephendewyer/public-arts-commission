@@ -27,6 +27,61 @@
 
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
 
+        if (governmentPrioritiesNavTabElement) {
+            let governmentPrioritiesNavTabWidth = governmentPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (governmentPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                governmentPrioritiesNavTabScrollLeftPosition = (governmentPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - governmentPrioritiesNavTabWidth/2));
+            } else if (governmentPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                governmentPrioritiesNavTabScrollLeftPosition = governmentPrioritiesNavTabElement.offsetLeft;
+            } else {
+                governmentPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (climatePrioritiesNavTabElement) {
+            let climatePrioritiesNavTabWidth = climatePrioritiesNavTabElement.getBoundingClientRect().width;
+            if (climatePrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                climatePrioritiesNavTabScrollLeftPosition = (climatePrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - climatePrioritiesNavTabWidth/2));
+            } else if (climatePrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                climatePrioritiesNavTabScrollLeftPosition = climatePrioritiesNavTabElement.offsetLeft;
+            } else {
+                climatePrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (economyPrioritiesNavTabElement) {
+            let economyPrioritiesNavTabWidth = economyPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (economyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                economyPrioritiesNavTabScrollLeftPosition = (economyPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - economyPrioritiesNavTabWidth/2));
+            } else if (economyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                economyPrioritiesNavTabScrollLeftPosition = economyPrioritiesNavTabElement.offsetLeft;
+            } else {
+                economyPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (educationPrioritiesNavTabElement) {
+            let educationPrioritiesNavTabWidth = educationPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (educationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                educationPrioritiesNavTabScrollLeftPosition = (educationPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - educationPrioritiesNavTabWidth/2));
+            } else if (educationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                educationPrioritiesNavTabScrollLeftPosition = educationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                educationPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (healthPrioritiesNavTabElement) {
+            let healthPrioritiesNavTabWidth = healthPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (healthPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                healthPrioritiesNavTabScrollLeftPosition = (healthPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - healthPrioritiesNavTabWidth/2));
+            } else if (healthPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                healthPrioritiesNavTabScrollLeftPosition = healthPrioritiesNavTabElement.offsetLeft;
+            } else {
+                healthPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
     });
 
     $: console.log("y: ", y);
@@ -47,21 +102,39 @@
 
     let governmentPrioritiesElement: HTMLElement;
     let governmentPrioritiesIntersecting: boolean = false;
+    let governmentPrioritiesNavTabElement: HTMLElement;
+    let governmentPrioritiesNavTabScrollLeftPosition: number = 0;
 
     let climatePrioritiesElement: HTMLElement;
     let climatePrioritiesIntersecting: boolean = false;
+    let climatePrioritiesNavTabElement: HTMLElement;
+    let climatePrioritiesNavTabScrollLeftPosition: number = 0;
 
     let economyPrioritiesElement: HTMLElement;
     let economyPrioritiesIntersecting: boolean = false;
+    let economyPrioritiesNavTabElement: HTMLElement;
+    let economyPrioritiesNavTabScrollLeftPosition: number = 0;
 
     let educationPrioritiesElement: HTMLElement;
     let educationPrioritiesIntersecting: boolean = false;
+    let educationPrioritiesNavTabElement: HTMLElement;
+    let educationPrioritiesNavTabScrollLeftPosition: number = 0;
 
     let healthPrioritiesElement: HTMLElement;
     let healthPrioritiesIntersecting: boolean = false;
+    let healthPrioritiesNavTabElement: HTMLElement;
+    let healthPrioritiesNavTabScrollLeftPosition: number = 0;
 
     let pageNavTabClicked: boolean = false;
     let pageNavTabClickedID: string | null = null;
+
+    let pageNavTabsScrollableLeftPosition: number = 0;
+
+    let pageNavTabsScrollableWidth: number = 0;
+
+    let pageNavTabsScrollableContainerWidth: number = 0;
+
+    let pageNavTabsScrollableElement: HTMLElement;
 
     const pageNavTabClickHandler = (id: string) => {
         pageNavTabClicked = true;
@@ -72,11 +145,12 @@
 
     $: if (governmentPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
+            console.log(pageNavTabClickedID)
             if (pageNavTabClicked && (pageNavTabClickedID === "governmentPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = governmentPrioritiesNavTabScrollLeftPosition;
                 pageNavTabClicked = false;
             } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = governmentPrioritiesNavTabScrollLeftPosition;
             };
         };
     };
@@ -84,10 +158,10 @@
     $: if (climatePrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
             if (pageNavTabClicked && (pageNavTabClickedID === "climatePriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = climatePrioritiesNavTabScrollLeftPosition;
                 pageNavTabClicked = false;
             } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = climatePrioritiesNavTabScrollLeftPosition;
             };
         };
     };
@@ -95,10 +169,10 @@
     $: if (economyPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
             if (pageNavTabClicked && (pageNavTabClickedID === "economyPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
                 pageNavTabClicked = false;
             } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
             };
         };
     };
@@ -106,10 +180,10 @@
     $: if (educationPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
             if (pageNavTabClicked && (pageNavTabClickedID === "educationPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = educationPrioritiesNavTabScrollLeftPosition;
                 pageNavTabClicked = false;
             } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = educationPrioritiesNavTabScrollLeftPosition;
             };
         }; 
     };
@@ -117,21 +191,13 @@
     $: if (healthPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
             if (pageNavTabClicked && (pageNavTabClickedID === "healthPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = healthPrioritiesNavTabScrollLeftPosition;
                 pageNavTabClicked = false;
             } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = pageNavTabsScrollableLeftPosition;
+                PrioritiesNavTabsContainer.scrollLeft = healthPrioritiesNavTabScrollLeftPosition;
             };
         }; 
     };
-
-    let pageNavTabsScrollableLeftPosition: number = 0;
-
-    let pageNavTabsScrollableWidth: number = 0;
-
-    let pageNavTabsScrollableContainerWidth: number = 0;
-
-    let pageNavTabsScrollableElement: HTMLElement;
 
     const clickPageNavTabsScrollLeftHandler = () => {
         PrioritiesNavTabsContainer.scrollLeft = PrioritiesNavTabsContainer.scrollLeft - (pageNavTabsScrollableContainerWidth/2);
@@ -146,9 +212,67 @@
     };
 
     const handleWindowResize = () => {
-        // currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
+
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
+        
+        // currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
+
+        if (governmentPrioritiesNavTabElement) {
+            let governmentPrioritiesNavTabWidth = governmentPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (governmentPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                governmentPrioritiesNavTabScrollLeftPosition = (governmentPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - governmentPrioritiesNavTabWidth/2));
+            } else if (governmentPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                governmentPrioritiesNavTabScrollLeftPosition = governmentPrioritiesNavTabElement.offsetLeft;
+            } else {
+                governmentPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (climatePrioritiesNavTabElement) {
+            let climatePrioritiesNavTabWidth = climatePrioritiesNavTabElement.getBoundingClientRect().width;
+            if (climatePrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                climatePrioritiesNavTabScrollLeftPosition = (climatePrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - climatePrioritiesNavTabWidth/2));
+            } else if (climatePrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                climatePrioritiesNavTabScrollLeftPosition = climatePrioritiesNavTabElement.offsetLeft;
+            } else {
+                climatePrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (economyPrioritiesNavTabElement) {
+            let economyPrioritiesNavTabWidth = economyPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (economyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                economyPrioritiesNavTabScrollLeftPosition = (economyPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - economyPrioritiesNavTabWidth/2));
+            } else if (economyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                economyPrioritiesNavTabScrollLeftPosition = economyPrioritiesNavTabElement.offsetLeft;
+            } else {
+                economyPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (educationPrioritiesNavTabElement) {
+            let educationPrioritiesNavTabWidth = educationPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (educationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                educationPrioritiesNavTabScrollLeftPosition = (educationPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - educationPrioritiesNavTabWidth/2));
+            } else if (educationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                educationPrioritiesNavTabScrollLeftPosition = educationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                educationPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (healthPrioritiesNavTabElement) {
+            let healthPrioritiesNavTabWidth = healthPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (healthPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                healthPrioritiesNavTabScrollLeftPosition = (healthPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - healthPrioritiesNavTabWidth/2));
+            } else if (healthPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                healthPrioritiesNavTabScrollLeftPosition = healthPrioritiesNavTabElement.offsetLeft;
+            } else {
+                healthPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
     };
 
 </script>
@@ -187,6 +311,7 @@
                         href="#governmentPriorities" 
                         class="priorities_category_tab_container"
                         on:click|preventDefault={() => pageNavTabClickHandler("governmentPriorities")}
+                        bind:this={governmentPrioritiesNavTabElement}
                     >
                         <li 
                             class="priorities_category_tab"
@@ -200,6 +325,7 @@
                         href="#climatePriorities" 
                         class="priorities_category_tab_container"
                         on:click|preventDefault={() => pageNavTabClickHandler("climatePriorities")}
+                        bind:this={climatePrioritiesNavTabElement}
                     >
                         <li 
                             class={"priorities_category_tab"} 
@@ -213,6 +339,7 @@
                         href="#economyPriorities" 
                         class="priorities_category_tab_container"
                         on:click|preventDefault={() => pageNavTabClickHandler("economyPriorities")}
+                        bind:this={economyPrioritiesNavTabElement}
                     >
                         <li 
                             class={"priorities_category_tab"} 
@@ -226,6 +353,7 @@
                         href="#educationPriorities" 
                         class="priorities_category_tab_container"
                         on:click|preventDefault={() => pageNavTabClickHandler("educationPriorities")}
+                        bind:this={educationPrioritiesNavTabElement}
                     >
                         <li 
                             class={"priorities_category_tab"} 
@@ -239,6 +367,7 @@
                         href="#healthPriorities" 
                         class="priorities_category_tab_container"
                         on:click|preventDefault={() => pageNavTabClickHandler("healthPriorities")}
+                        bind:this={healthPrioritiesNavTabElement}
                     >
                         <li 
                             class={"priorities_category_tab"} 
@@ -744,6 +873,7 @@
     #priorities_tabs_scrollable_container {
         width: 100%;
         overflow-x: auto;
+        scroll-behavior: smooth;
     }
 
     .priorities_tabs_scrollable_container_relative {
