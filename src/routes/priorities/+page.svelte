@@ -30,7 +30,6 @@
     });
 
     $: console.log("y: ", y);
-    // $: console.log("currentStickyPosition: ", currentStickyPosition);
 
     $: if (y >= currentStickyPosition) {
         NavTabsSticky = true;
@@ -146,9 +145,8 @@
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
-
     const handleWindowResize = () => {
-        currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
+        // currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
     };
