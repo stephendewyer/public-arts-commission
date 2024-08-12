@@ -1,7 +1,7 @@
 <script lang="ts">
     import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import PriorityAccordion from '$lib/components/accordions/PriorityAccordion.svelte';
-    import { onMount } from 'svelte';
+    import { afterUpdate, onMount } from 'svelte';
     import IntersectionObserver from "svelte-intersection-observer";
     import Arrow from "$lib/images/icons/arrow.svg?raw";
 
@@ -15,7 +15,14 @@
 
     $: currentStickyPosition;
 
+    $: console.log("currentStickyPosition: ", currentStickyPosition);
+
+    let windowScrollY: number = 0;
+
+    $: windowScrollY;
+
     onMount(() => {
+        windowScrollY = window.scrollY;
         currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
 
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
@@ -24,14 +31,16 @@
 
     });
 
-    // $: console.log("y: ", y);
+    $: console.log("y: ", y);
     // $: console.log("currentStickyPosition: ", currentStickyPosition);
 
-    $: if (y > currentStickyPosition) {
+    $: if (y >= currentStickyPosition) {
         NavTabsSticky = true;
     } else {
         NavTabsSticky = false;
     };
+
+    $: console.log("window.scrolly: ", windowScrollY);
 
     $: console.log("nav tabs sticky: ", NavTabsSticky);
 
@@ -138,11 +147,15 @@
     };
 
     const handlePageNavTabsScroll = () => {
+        windowScrollY = window.scrollY;
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
-    const handleWindowResize = () => {
+    afterUpdate(() => {
         currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
+    });
+
+    const handleWindowResize = () => {
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
     };
