@@ -5,6 +5,8 @@
     import IntersectionObserver from "svelte-intersection-observer";
     import Arrow from "$lib/images/icons/arrow.svg?raw";
 
+    let stickyNavTabs: HTMLElement;
+
     let PrioritiesNavTabsContainer: HTMLElement;
 
     let y: number;
@@ -17,13 +19,9 @@
 
     $: console.log("currentStickyPosition: ", currentStickyPosition);
 
-    let windowScrollY: number = 0;
-
-    $: windowScrollY;
-
     onMount(() => {
-        windowScrollY = window.scrollY;
-        currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
+
+        currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
 
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
 
@@ -39,8 +37,6 @@
     } else {
         NavTabsSticky = false;
     };
-
-    $: console.log("window.scrolly: ", windowScrollY);
 
     $: console.log("nav tabs sticky: ", NavTabsSticky);
 
@@ -147,13 +143,12 @@
     };
 
     const handlePageNavTabsScroll = () => {
-        windowScrollY = window.scrollY;
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
 
     const handleWindowResize = () => {
-        currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
+        currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
     };
@@ -177,6 +172,7 @@
         <div
             id="priorities_tabs_container"
             class={ NavTabsSticky ? "priorities_tabs_container_sticky" : "priorities_tabs_container_relative" }
+            bind:this={stickyNavTabs}
         >
             <div 
                 bind:this={PrioritiesNavTabsContainer}
