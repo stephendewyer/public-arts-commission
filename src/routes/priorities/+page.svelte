@@ -43,8 +43,6 @@
     let economyPrioritiesElement: HTMLElement;
     let economyPrioritiesIntersecting: boolean = false;
 
-    $: console.log(economyPrioritiesIntersecting)
-
     let educationPrioritiesElement: HTMLElement;
     let educationPrioritiesIntersecting: boolean = false;
 
@@ -83,6 +81,8 @@
 
     const handleWindowResize = () => {
         currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
+        pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
+        pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
     };
 
 </script>
