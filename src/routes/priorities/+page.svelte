@@ -81,13 +81,21 @@
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
+    const handleWindowResize = () => {
+        currentStickyPosition = PrioritiesNavTabsContainer?.getBoundingClientRect().top + window.scrollY;
+    };
+
 </script>
 <svelte:head>
 	<title>priorities - public arts commission</title>
 	<meta name="description" content="priorities that guide public arts commission operations" />
 	<meta property="og:image" content={PublicArtsCommissionBanner} />
 </svelte:head>
-<svelte:window bind:innerWidth bind:scrollY={y} />
+<svelte:window 
+    bind:innerWidth 
+    bind:scrollY={y} 
+    on:resize={handleWindowResize}
+/>
 <div class="page_container">
     <h1 class="priorities_heading">
         our priorities guide all our operations
@@ -174,12 +182,16 @@
                         </li>
                     </a>
                 </ul>
-
             </div>
-            
             <button
                 class="arrow_left_scroll"
-                style={pageNavTabsScrollableLeftPosition === 0 ? "display: none;" : ""}
+                style={
+                    (pageNavTabsScrollableLeftPosition === 0) &&
+                    (pageNavTabsScrollableWidth >= pageNavTabsScrollableContainerWidth) 
+                    ? 
+                        "display: none;" 
+                    : ""
+                }
                 on:click={clickPageNavTabsScrollLeftHandler}
             >
                 <div class="arrow_container">
@@ -188,7 +200,13 @@
             </button>
             <button 
                 class="arrow_right_scroll"
-                style={(pageNavTabsScrollableLeftPosition >= (pageNavTabsScrollableWidth - pageNavTabsScrollableContainerWidth - 1)) ? "display: none;" : ""}
+                style={
+                    (pageNavTabsScrollableLeftPosition >= (pageNavTabsScrollableWidth - pageNavTabsScrollableContainerWidth - 1)) &&
+                    (pageNavTabsScrollableWidth >= pageNavTabsScrollableContainerWidth)
+                    ? 
+                        "display: none;" 
+                    : ""
+                }
                 on:click={clickPageNavTabsScrollRightHandler}
             >
                 <div class="arrow_container">
@@ -729,8 +747,16 @@
         background-color: #FCEDD4;
     }
 
+    .arrow_left_scroll {
+        display: none;
+    }
+
+    .arrow_right_scroll {
+        display: none;
+    }
+
     .arrow_container {
-        width: 1.5rem;
+        width: 1rem;
     }
 
     .priorities_heading {
@@ -862,6 +888,41 @@
 
         .priority_heading > h2 {
             font-size: 1.25rem;
+        }
+
+        .arrow_left_scroll {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            transform: rotate(180deg);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: rgb(245,193,238);
+            background: linear-gradient(270deg, rgba(245,193,238,1) 0%, rgba(245,193,238,1) 75%, rgba(245,193,238,0) 100%);
+            padding: 1rem;
+            cursor: pointer;
+            border: none;
+            color: #575B46;
+        }
+        
+        .arrow_right_scroll {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            background: rgb(245,193,238);
+            background: linear-gradient(90deg, rgba(245,193,238,0) 0%, rgba(245,193,238,1) 25%, rgba(245,193,238,1) 100%);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem;
+            cursor: pointer;
+            border: none;
+            color: #575B46;
         }
 
     }
