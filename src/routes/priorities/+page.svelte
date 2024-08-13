@@ -226,14 +226,13 @@
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
+    // use heading element to get current sticky scroll position when sticky and window resize
     let prioritiesHeadingElement: HTMLElement;
 
     const handleWindowResize = () => {
 
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
-
-        // currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
 
         currentStickyPosition = prioritiesHeadingElement?.getBoundingClientRect().bottom  + window.scrollY;
 
