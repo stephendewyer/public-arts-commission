@@ -19,6 +19,58 @@
 
     $: console.log("currentStickyPosition: ", currentStickyPosition);
 
+    $: console.log("y: ", y);
+
+    $: if (y >= currentStickyPosition) {
+        NavTabsSticky = true;
+    } else {
+        NavTabsSticky = false;
+    };
+
+    $: console.log("nav tabs sticky: ", NavTabsSticky);
+
+    let pageNavTabsHeight: number = 0;
+    $: pageNavTabsHeight;
+
+    // innerWidth is the width of the inner window
+	let innerWidth: number = 0;
+
+    let governmentPrioritiesElement: HTMLElement;
+    let governmentPrioritiesIntersecting: boolean = false;
+    let governmentPrioritiesNavTabElement: HTMLElement;
+    let governmentPrioritiesNavTabScrollLeftPosition: number = 0;
+
+    let climatePrioritiesElement: HTMLElement;
+    let climatePrioritiesIntersecting: boolean = false;
+    let climatePrioritiesNavTabElement: HTMLElement;
+    let climatePrioritiesNavTabScrollLeftPosition: number = 0;
+
+    let economyPrioritiesElement: HTMLElement;
+    let economyPrioritiesIntersecting: boolean = false;
+    let economyPrioritiesNavTabElement: HTMLElement;
+    let economyPrioritiesNavTabScrollLeftPosition: number = 0;
+
+    let educationPrioritiesElement: HTMLElement;
+    let educationPrioritiesIntersecting: boolean = false;
+    let educationPrioritiesNavTabElement: HTMLElement;
+    let educationPrioritiesNavTabScrollLeftPosition: number = 0;
+
+    let healthPrioritiesElement: HTMLElement;
+    let healthPrioritiesIntersecting: boolean = false;
+    let healthPrioritiesNavTabElement: HTMLElement;
+    let healthPrioritiesNavTabScrollLeftPosition: number = 0;
+
+    let pageNavTabClicked: boolean = false;
+    let pageNavTabClickedID: string | null = null;
+
+    let pageNavTabsScrollableLeftPosition: number = 0;
+
+    let pageNavTabsScrollableWidth: number = 0;
+
+    let pageNavTabsScrollableContainerWidth: number = 0;
+
+    let pageNavTabsScrollableElement: HTMLElement;
+
     onMount(() => {
 
         currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
@@ -84,58 +136,6 @@
 
     });
 
-    $: console.log("y: ", y);
-
-    $: if (y >= currentStickyPosition) {
-        NavTabsSticky = true;
-    } else {
-        NavTabsSticky = false;
-    };
-
-    $: console.log("nav tabs sticky: ", NavTabsSticky);
-
-    let pageNavTabsHeight: number = 0;
-    $: pageNavTabsHeight;
-
-    // innerWidth is the width of the inner window
-	let innerWidth: number = 0;
-
-    let governmentPrioritiesElement: HTMLElement;
-    let governmentPrioritiesIntersecting: boolean = false;
-    let governmentPrioritiesNavTabElement: HTMLElement;
-    let governmentPrioritiesNavTabScrollLeftPosition: number = 0;
-
-    let climatePrioritiesElement: HTMLElement;
-    let climatePrioritiesIntersecting: boolean = false;
-    let climatePrioritiesNavTabElement: HTMLElement;
-    let climatePrioritiesNavTabScrollLeftPosition: number = 0;
-
-    let economyPrioritiesElement: HTMLElement;
-    let economyPrioritiesIntersecting: boolean = false;
-    let economyPrioritiesNavTabElement: HTMLElement;
-    let economyPrioritiesNavTabScrollLeftPosition: number = 0;
-
-    let educationPrioritiesElement: HTMLElement;
-    let educationPrioritiesIntersecting: boolean = false;
-    let educationPrioritiesNavTabElement: HTMLElement;
-    let educationPrioritiesNavTabScrollLeftPosition: number = 0;
-
-    let healthPrioritiesElement: HTMLElement;
-    let healthPrioritiesIntersecting: boolean = false;
-    let healthPrioritiesNavTabElement: HTMLElement;
-    let healthPrioritiesNavTabScrollLeftPosition: number = 0;
-
-    let pageNavTabClicked: boolean = false;
-    let pageNavTabClickedID: string | null = null;
-
-    let pageNavTabsScrollableLeftPosition: number = 0;
-
-    let pageNavTabsScrollableWidth: number = 0;
-
-    let pageNavTabsScrollableContainerWidth: number = 0;
-
-    let pageNavTabsScrollableElement: HTMLElement;
-
     const pageNavTabClickHandler = (id: string) => {
         pageNavTabClicked = true;
         pageNavTabClickedID = id;
@@ -145,66 +145,79 @@
 
     $: if (governmentPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
-            console.log(pageNavTabClickedID)
-            if (pageNavTabClicked && (pageNavTabClickedID === "governmentPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = governmentPrioritiesNavTabScrollLeftPosition;
-                pageNavTabClicked = false;
-            } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = governmentPrioritiesNavTabScrollLeftPosition;
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "governmentPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = governmentPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = governmentPrioritiesNavTabScrollLeftPosition;
+                };
             };
         };
     };
 
     $: if (climatePrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
-            if (pageNavTabClicked && (pageNavTabClickedID === "climatePriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = climatePrioritiesNavTabScrollLeftPosition;
-                pageNavTabClicked = false;
-            } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = climatePrioritiesNavTabScrollLeftPosition;
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "climatePriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = climatePrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = climatePrioritiesNavTabScrollLeftPosition;
+                };
             };
         };
     };
 
     $: if (economyPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
-            if (pageNavTabClicked && (pageNavTabClickedID === "economyPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
-                pageNavTabClicked = false;
-            } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "economyPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
+                };
             };
         };
     };
 
     $: if (educationPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
-            if (pageNavTabClicked && (pageNavTabClickedID === "educationPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = educationPrioritiesNavTabScrollLeftPosition;
-                pageNavTabClicked = false;
-            } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = educationPrioritiesNavTabScrollLeftPosition;
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "educationPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = educationPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = educationPrioritiesNavTabScrollLeftPosition;
+                };
             };
         }; 
     };
 
     $: if (healthPrioritiesIntersecting) {
         if (PrioritiesNavTabsContainer) {
-            if (pageNavTabClicked && (pageNavTabClickedID === "healthPriorities")) {
-                PrioritiesNavTabsContainer.scrollLeft = healthPrioritiesNavTabScrollLeftPosition;
-                pageNavTabClicked = false;
-            } else if (!pageNavTabClicked) {
-                PrioritiesNavTabsContainer.scrollLeft = healthPrioritiesNavTabScrollLeftPosition;
-            };
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "healthPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = healthPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = healthPrioritiesNavTabScrollLeftPosition;
+                };
+            };            
         }; 
     };
 
+    let pageNavTabsScrollClicked: boolean = false;
+
     const clickPageNavTabsScrollLeftHandler = () => {
+        pageNavTabsScrollClicked = true;
         PrioritiesNavTabsContainer.scrollLeft = PrioritiesNavTabsContainer.scrollLeft - (pageNavTabsScrollableContainerWidth/2);
     };
 
     const clickPageNavTabsScrollRightHandler = () => {
-        PrioritiesNavTabsContainer.scrollLeft = PrioritiesNavTabsContainer.scrollLeft + (pageNavTabsScrollableContainerWidth/2);
+        pageNavTabsScrollClicked = true;
+        PrioritiesNavTabsContainer.scrollLeft = PrioritiesNavTabsContainer.scrollLeft + (pageNavTabsScrollableContainerWidth/2);    
     };
 
     const handlePageNavTabsScroll = () => {
@@ -215,7 +228,7 @@
 
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
-        
+
         // currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
 
         if (governmentPrioritiesNavTabElement) {
@@ -275,6 +288,10 @@
 
     };
 
+    const handleWindowScroll = () => {
+        pageNavTabsScrollClicked = false;
+    };
+
 </script>
 <svelte:head>
 	<title>priorities - public arts commission</title>
@@ -284,6 +301,7 @@
 <svelte:window 
     bind:innerWidth 
     bind:scrollY={y} 
+    on:scroll={handleWindowScroll}
     on:resize={handleWindowResize}
 />
 <div class="page_container">
