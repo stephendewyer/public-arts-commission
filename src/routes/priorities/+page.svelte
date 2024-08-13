@@ -17,9 +17,9 @@
 
     $: currentStickyPosition;
 
-    $: console.log("currentStickyPosition: ", currentStickyPosition);
+    // $: console.log("currentStickyPosition: ", currentStickyPosition);
 
-    $: console.log("y: ", y);
+    // $: console.log("y: ", y);
 
     $: if (y >= currentStickyPosition) {
         NavTabsSticky = true;
@@ -27,7 +27,7 @@
         NavTabsSticky = false;
     };
 
-    $: console.log("nav tabs sticky: ", NavTabsSticky);
+    // $: console.log("nav tabs sticky: ", NavTabsSticky);
 
     let pageNavTabsHeight: number = 0;
     $: pageNavTabsHeight;
@@ -70,6 +70,8 @@
     let pageNavTabsScrollableContainerWidth: number = 0;
 
     let pageNavTabsScrollableElement: HTMLElement;
+
+    $: console.log(currentStickyPosition);
 
     onMount(() => {
 
@@ -224,12 +226,16 @@
         pageNavTabsScrollableLeftPosition = PrioritiesNavTabsContainer.scrollLeft;
     };
 
+    let prioritiesHeadingElement: HTMLElement;
+
     const handleWindowResize = () => {
 
         pageNavTabsScrollableContainerWidth = PrioritiesNavTabsContainer.clientWidth;
         pageNavTabsScrollableWidth = pageNavTabsScrollableElement.scrollWidth;
 
         // currentStickyPosition = stickyNavTabs?.getBoundingClientRect().top + window.scrollY;
+
+        currentStickyPosition = prioritiesHeadingElement?.getBoundingClientRect().bottom  + window.scrollY;
 
         if (governmentPrioritiesNavTabElement) {
             let governmentPrioritiesNavTabWidth = governmentPrioritiesNavTabElement.getBoundingClientRect().width;
@@ -305,7 +311,10 @@
     on:resize={handleWindowResize}
 />
 <div class="page_container">
-    <h1 class="priorities_heading">
+    <h1 
+        bind:this={prioritiesHeadingElement}
+        class="priorities_heading"
+    >
         our priorities guide all our operations
     </h1>
     <div class="priorities">

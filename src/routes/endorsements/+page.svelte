@@ -1253,8 +1253,10 @@
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
     });
 
-	const widowResizeHandler = () => {
+	let endorsementsHeadingElement: HTMLElement;
 
+	const widowResizeHandler = () => {
+		currentEndorsementTabsStickyPosition = endorsementsHeadingElement?.getBoundingClientRect().bottom + window.scrollY;
 	};
 
 	afterUpdate(() =>  {
@@ -1264,8 +1266,6 @@
 			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height- endorsementNavHeight);
 		};
 	});
-
-	$: console.log(currentEndorsementTabsStickyPosition);
 
     $: if (y > currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
         endorsementTabsSticky = true;
@@ -1291,7 +1291,7 @@
 	on:resize={widowResizeHandler}
 />
 <section class="page">
-	<h1>
+	<h1 bind:this={endorsementsHeadingElement}>
 		endorsements
 	</h1>
 	<div 

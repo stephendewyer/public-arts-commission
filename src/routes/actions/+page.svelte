@@ -674,8 +674,10 @@
 		filtersAbsolute = false;
 	};
 
-    const handleWindowResize = () => {
+    let searchActionsHeadingElement: HTMLElement;
 
+    const handleWindowResize = () => {
+        currentEndorsementTabsStickyPosition = searchActionsHeadingElement?.getBoundingClientRect().bottom + window.scrollY;
     };
 
 </script>
@@ -690,7 +692,7 @@
     on:resize={handleWindowResize}
 />
 <section class="page">
-    <h1>
+    <h1 bind:this={searchActionsHeadingElement}>
         search actions
     </h1>
     <div 
