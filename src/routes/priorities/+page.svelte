@@ -60,6 +60,16 @@
     let healthPrioritiesNavTabElement: HTMLElement;
     let healthPrioritiesNavTabScrollLeftPosition: number = 0;
 
+    let immigrationPrioritiesElement: HTMLElement;
+    let immigrationPrioritiesIntersecting: boolean = false;
+    let immigrationPrioritiesNavTabElement: HTMLElement;
+    let immigrationPrioritiesNavTabScrollLeftPosition: number = 0;
+
+    let housingPrioritiesElement: HTMLElement;
+    let housingPrioritiesIntersecting: boolean = false;
+    let housingPrioritiesNavTabElement: HTMLElement;
+    let housingPrioritiesNavTabScrollLeftPosition: number = 0;
+
     let pageNavTabClicked: boolean = false;
     let pageNavTabClickedID: string | null = null;
 
@@ -136,6 +146,28 @@
             };
         };
 
+        if (immigrationPrioritiesNavTabElement) {
+            let immigrationPrioritiesNavTabWidth = immigrationPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (immigrationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                immigrationPrioritiesNavTabScrollLeftPosition = (immigrationPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - immigrationPrioritiesNavTabWidth/2));
+            } else if (immigrationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                immigrationPrioritiesNavTabScrollLeftPosition = immigrationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                immigrationPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (housingPrioritiesNavTabElement) {
+            let housingPrioritiesNavTabWidth = housingPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                housingPrioritiesNavTabScrollLeftPosition = (housingPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - housingPrioritiesNavTabWidth/2));
+            } else if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                housingPrioritiesNavTabScrollLeftPosition = immigrationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                housingPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
     });
 
     const pageNavTabClickHandler = (id: string) => {
@@ -208,6 +240,32 @@
                 };
             };            
         }; 
+    };
+
+    $: if (immigrationPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer){
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "immigrationPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = immigrationPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = immigrationPrioritiesNavTabScrollLeftPosition;
+                };
+            };   
+        };
+    };
+
+    $: if (housingPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer){
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "housingPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = housingPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = housingPrioritiesNavTabScrollLeftPosition;
+                };
+            };   
+        };
     };
 
     let pageNavTabsScrollClicked: boolean = false;
@@ -288,6 +346,28 @@
                 healthPrioritiesNavTabScrollLeftPosition = healthPrioritiesNavTabElement.offsetLeft;
             } else {
                 healthPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (immigrationPrioritiesNavTabElement) {
+            let immigrationPrioritiesNavTabWidth = immigrationPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (immigrationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                immigrationPrioritiesNavTabScrollLeftPosition = (immigrationPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - immigrationPrioritiesNavTabWidth/2));
+            } else if (immigrationPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                immigrationPrioritiesNavTabScrollLeftPosition = immigrationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                immigrationPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (housingPrioritiesNavTabElement) {
+            let housingPrioritiesNavTabWidth = housingPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                housingPrioritiesNavTabScrollLeftPosition = (housingPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - housingPrioritiesNavTabWidth/2));
+            } else if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                housingPrioritiesNavTabScrollLeftPosition = immigrationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                housingPrioritiesNavTabScrollLeftPosition = 0;
             };
         };
 
@@ -403,6 +483,34 @@
                             health
                         </li>
                     </a>
+                    <a 
+                        href="#immigrationPriorities" 
+                        class="priorities_category_tab_container"
+                        on:click|preventDefault={() => pageNavTabClickHandler("immigrationPriorities")}
+                        bind:this={immigrationPrioritiesNavTabElement}
+                    >
+                        <li 
+                            class={"priorities_category_tab"} 
+                            aria-current={immigrationPrioritiesIntersecting ? "page" : undefined}
+                            id="immigration_priorities_tab"
+                        >
+                            immigration
+                        </li>
+                    </a>
+                    <a 
+                        href="#housingPriorities" 
+                        class="priorities_category_tab_container"
+                        on:click|preventDefault={() => pageNavTabClickHandler("housingPriorities")}
+                        bind:this={housingPrioritiesNavTabElement}
+                    >
+                        <li 
+                            class={"priorities_category_tab"} 
+                            aria-current={housingPrioritiesIntersecting ? "page" : undefined}
+                            id="housing_priorities_tab"
+                        >
+                            housing
+                        </li>
+                    </a>
                 </ul>
             </div>
             <button
@@ -447,9 +555,11 @@
             >
                 <section 
                     id="governmentPriorities" 
-                    class="priorities_for_government_container"
+                    class="priorities_section_container"
+                    style="background-color: #F4F5FB;"
                     bind:this={governmentPrioritiesElement}
                 >
+                    <h2 class="priorities_section_heading">government</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading" >
                             <PriorityAccordion >
@@ -632,9 +742,11 @@
             >
                 <section 
                     id="climatePriorities" 
-                    class="priorities_for_climate_container"
+                    class="priorities_section_container"
+                    style="background-color: #EAEAE5;"
                     bind:this={climatePrioritiesElement}
                 >
+                    <h2 class="priorities_section_heading">climate</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading">
                             <PriorityAccordion>
@@ -666,9 +778,11 @@
             >
                 <section 
                     id="economyPriorities" 
-                    class="priorities_for_economy_container"
+                    class="priorities_section_container"
+                    style="background-color: #FEF0EE;"
                     bind:this={economyPrioritiesElement}
                 >
+                    <h2 class="priorities_section_heading">economy</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading">
                             <PriorityAccordion>
@@ -814,9 +928,11 @@
             >
                 <section 
                     id="educationPriorities" 
-                    class="priorities_for_education_container"
+                    class="priorities_section_container"
+                    style="background-color: #E2DED0;"
                     bind:this={educationPrioritiesElement}
                 >
+                    <h2 class="priorities_section_heading">education</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading">
                             <PriorityAccordion>
@@ -844,14 +960,72 @@
             >
                 <section 
                     id="healthPriorities" 
-                    class="priorities_for_health_container"
+                    class="priorities_section_container"
+                    style="background-color: #FCEDD4;"
                     bind:this={healthPrioritiesElement}
                 >
+                    <h2 class="priorities_section_heading">health</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading">
                             <h2>
                                 Medicare for all
                             </h2>
+                        </li>
+                    </ol>
+                </section>
+            </IntersectionObserver>
+            <IntersectionObserver 
+                element={immigrationPrioritiesElement} 
+                bind:intersecting={immigrationPrioritiesIntersecting}
+                rootMargin={"-25% 0% -75% 0%"}
+            >
+                <section 
+                    id="immigrationPriorities" 
+                    class="priorities_section_container"
+                    style="background-color: #C3CBC4;"
+                    bind:this={immigrationPrioritiesElement}
+                >
+                    <h2 class="priorities_section_heading">immigration</h2>
+                    <ol class="category_priorities">
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Enact a democratic immigration system that equitably distributes costs and does not come at the expense of the working class
+                                </span>
+                                <div slot="details">
+                                    <p>
+                                        A democratic immigration system is one where citizens decide who and how many enter their country.  The ideology behind open borders is the same neoliberal ideology behind free trade.  Unfettered immigration contributes to a race to the bottom on salaries and wages and places a burden on already strained housing and education resources.   A democratic immigration system allows for a citizen-approved immigration system that more equitably distributes the costs of immigration.  
+                                    </p>
+                                </div>
+                            </PriorityAccordion>
+                        </li>
+                    </ol>
+                </section>
+            </IntersectionObserver>
+            <IntersectionObserver 
+                element={housingPrioritiesElement} 
+                bind:intersecting={housingPrioritiesIntersecting}
+                rootMargin={"-25% 0% -75% 0%"}
+            >
+                <section 
+                    id="housingPriorities" 
+                    class="priorities_section_container"
+                    style="background-color: #DBD7EB;"
+                    bind:this={housingPrioritiesElement}
+                >
+                    <h2 class="priorities_section_heading">housing</h2>
+                    <ol class="category_priorities">
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Invest in increasing the supply of affordable homes
+                                </span>
+                                <div slot="details">
+                                    <p>
+                                        Homeownership played a key role in defining the American Dream, which played a crucial role in defending democracy.  Every family should be able to own a home.  The scarcity of homes today has contributed to a massive housing crisis.  We need to invest in increasing the supply of affordable homes.  
+                                    </p>
+                                </div>
+                            </PriorityAccordion>
                         </li>
                     </ol>
                 </section>
@@ -878,6 +1052,18 @@
         align-items: center;
     }
 
+    .priorities_container {
+        width: 100%;
+    }
+
+    .priorities_section_heading {
+        padding: 1rem 1rem 0 1rem;
+        margin: 0;
+        font-size: 3rem;
+        width: 100%;
+        max-width: 50rem;
+    }
+
     #priorities_tabs_container {
         margin: 0 auto;
     }
@@ -893,7 +1079,6 @@
         top: 0;
         left: 0;
         z-index: 1;
-        
     }
 
     #priorities_tabs_scrollable_container {
@@ -970,6 +1155,14 @@
         background-color: #FCEDD4;
     }
 
+    #immigration_priorities_tab {
+        background-color: #C3CBC4;
+    }
+
+    #housing_priorities_tab {
+        background-color: #DBD7EB;
+    }
+
     .arrow_left_scroll {
         display: none;
     }
@@ -990,47 +1183,10 @@
         padding: 0 1rem;
     }
 
-    .priorities_container {
-        width: 100%;
-    }
-
-    .priorities_for_government_container {
-        background-color: #F4F5FB;
+    .priorities_section_container {
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .priorities_for_climate_container {
-        background-color: #EAEAE5;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .priorities_for_economy_container {
-        background-color: #FEF0EE;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .priorities_for_education_container {
-        background-color: #E2DED0;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .priorities_for_health_container {
-        background-color: #FCEDD4;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
     }
 
@@ -1051,6 +1207,10 @@
     }
 
     @media (max-width: 1440px) {
+
+        .priorities_section_heading {
+            font-size: 2.5rem;
+        }
 
         #priorities_tabs_container {
             margin: 0;
@@ -1151,6 +1311,10 @@
     }
 
     @media (max-width: 720px) {
+
+        .priorities_section_heading {
+            font-size: 2rem;
+        }
 
         .priorities_tabs {
             left: 0;
