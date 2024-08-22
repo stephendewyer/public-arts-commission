@@ -658,9 +658,6 @@
                                         <li>
                                             Abolish the filibuster to allow a simple majority in the Senate to pass legislation;
                                         </li>
-                                        <li>
-                                            Institute term limits and add justices to the U.S. Supreme Court.
-                                        </li>
                                     </ol>
                                 </div>
                             </PriorityAccordion>
@@ -671,8 +668,11 @@
                                     Democratic integrity                  
                                 </span>
                                 <div slot="details">
-                                    Campaign finance reform is necessary to give artists and ordinary citizens the ability to participate in elections without undue influence of large corporations and the very wealthy. One of the largest threats to democracy is the undue influence of large corporations and the very wealthy in our elections. To make strengthen democratic integrity, we need to:<br />
+                                    Campaign finance reform is necessary to give artists and ordinary citizens the ability to participate in elections without undue influence of large corporations, foreign dark money lobbyists and organizations and the very wealthy. One of the largest threats to democracy is the undue influence of large corporations, foreign dark money lobbyists and organizations and the very wealthy in our elections. To strengthen democratic integrity, we need to:<br />
                                     <ol>
+                                        <li>
+                                            Enact a ban on super PACs in Democratic Party primary and general elections
+                                        </li>
                                         <li>
                                             Remove the influence of the wealthy and large corporations in deciding leadership on Congress;                            </li>
                                         <li>
@@ -683,7 +683,10 @@
                                         <li>
                                             Ban members of Congress from taking lobbying positions after they serve their terms;                            </li>
                                         <li>
-                                            Improve public financing of campaigns to allow low-income individuals to run for Congress.
+                                            Improve public financing of campaigns to allow low-income individuals to run for Congress;
+                                        </li>
+                                        <li>
+                                            Ban foreign dark money in elections.
                                         </li>
                                     </ol>
                                 </div>
@@ -718,19 +721,24 @@
                             </PriorityAccordion>
                         </li>
                         <li class="priority_heading">
-                            <h2>
-                                Expand the Supreme Court of the United States
-                            </h2>
-                        </li>
-                        <li class="priority_heading">
-                            <h2>
-                                Create term limits for justices on the Supreme Court of the United States
-                            </h2>
-                        </li>
-                        <li class="priority_heading">
-                            <h2>
-                                Establish a code of ethics for justices on the Supreme Court of the United States
-                            </h2>
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Democratic reforms to the Supreme Court of the United States                
+                                </span>
+                                <div slot="details">
+                                    <ol>
+                                        <li>
+                                            Create term limits for justices on the Supreme Court of the United States
+                                        </li>
+                                        <li>
+                                            Expand the Supreme Court of the United States
+                                        </li>
+                                        <li>
+                                            Establish a code of ethics for justices on the Supreme Court of the United States
+                                        </li>
+                                    </ol>
+                                </div>
+                            </PriorityAccordion>
                         </li>
                     </ol>
                 </section>
