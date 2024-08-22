@@ -1030,7 +1030,7 @@
                                 </span>
                                 <div slot="details">
                                     <p>
-                                        Homeownership played a key role in defining the American Dream, which played a crucial role in defending democracy.  Every family should be able to own a home.  The scarcity of homes today has contributed to a massive housing crisis.  We need to invest in increasing the supply of affordable homes.  
+                                        Homeownership played a key role in defining the American Dream, which played a crucial role in defending democracy.  Every family should be able to own a home.  As of August 2024, the deficit of U.S. homes per U.S. demography is around 3 million.  The scarcity of homes today has contributed to a massive housing crisis.  We need to invest in increasing the supply of affordable homes.  
                                     </p>
                                 </div>
                             </PriorityAccordion>
