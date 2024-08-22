@@ -656,7 +656,7 @@
                                             Abolish the Electoral College and move to a direct, popular vote for President of the United States;
                                         </li>
                                         <li>
-                                            Abolish the filibuster to allow a simple majority in the Senate to pass legislation;
+                                            Abolish the filibuster to allow a simple majority in the Senate to pass legislation.
                                         </li>
                                     </ol>
                                 </div>
@@ -671,7 +671,7 @@
                                     Campaign finance reform is necessary to give artists and ordinary citizens the ability to participate in elections without undue influence of large corporations, foreign dark money lobbyists and organizations and the very wealthy. One of the largest threats to democracy is the undue influence of large corporations, foreign dark money lobbyists and organizations and the very wealthy in our elections. To strengthen democratic integrity, we need to:<br />
                                     <ol>
                                         <li>
-                                            Enact a ban on super PACs in Democratic Party primary and general elections
+                                            Enact a ban on super PACs in Democratic Party primary and general elections;
                                         </li>
                                         <li>
                                             Remove the influence of the wealthy and large corporations in deciding leadership on Congress;                            </li>
@@ -728,13 +728,13 @@
                                 <div slot="details">
                                     <ol>
                                         <li>
-                                            Create term limits for justices on the Supreme Court of the United States
+                                            Create term limits for justices on the Supreme Court of the United States;
                                         </li>
                                         <li>
-                                            Expand the Supreme Court of the United States
+                                            Expand the Supreme Court of the United States;
                                         </li>
                                         <li>
-                                            Establish a code of ethics for justices on the Supreme Court of the United States
+                                            Establish a code of ethics for justices on the Supreme Court of the United States.
                                         </li>
                                     </ol>
                                 </div>
