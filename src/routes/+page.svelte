@@ -265,9 +265,31 @@
 </svelte:head>
 
 <section>
-	<picture class="banner">
-		<img src={PublicArtsCommissionBanner} alt="public arts commission banner" />
-	</picture>
+	<div class="banner_and_logins">
+		<picture class="banner_container">
+			<img class="banner" src={PublicArtsCommissionBanner} alt="public arts commission banner" />
+		</picture>
+		<div class="logins">
+			<div 
+				class="login_container"
+				style="background-image: url({LoginBackground});"
+			>
+				<div class="login_section">
+					<h2>
+						I'm a ...
+					</h2>
+					<Tabs 
+						tabPanels={loginTabPanels} 
+						bind:activeTab={activeLoginTab}
+					/>
+					<Panel 
+						tabPanels={loginTabPanels} 
+						bind:activeTab={activeLoginTab}
+					/>			
+				</div>
+			</div>
+		</div>
+	</div>
 	<h1 class="heading01">
 		Art by everyone and for everyone is necessary for democracy.  
 		We help grow our political imagination to support a fairer, more just economy and a more egalitarian society.
@@ -327,24 +349,6 @@
 		</ActionButton>
 	</form>
 	<div 
-		class="login_container"
-		style="background-image: url({LoginBackground});"
-	>
-		<div class="login_section">
-			<h2>
-				I'm a ...
-			</h2>
-			<Tabs 
-				tabPanels={loginTabPanels} 
-				bind:activeTab={activeLoginTab}
-			/>
-			<Panel 
-				tabPanels={loginTabPanels} 
-				bind:activeTab={activeLoginTab}
-			/>			
-		</div>
-	</div>
-	<div 
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
@@ -380,14 +384,27 @@
 		align-items: center;
 	}
 
-	.banner {
+	.banner_and_logins {
 		width: 100%;
-		max-width: 60rem;
-		padding: 1rem 0;
+		display: flex;
+		flex-direction: row;
+		gap: 1rem;
+		max-width: 2000px;
+	}
+
+	.banner_container {
+		width: 60%;
+	}
+
+	.banner {
+		object-fit: cover;
+		height: 100%;
+		width: 100%;
 	}
 
 	.heading01 {
-		max-width: 60rem;
+		width: 100%;
+		max-width: 2000px;
 		padding: 0 1rem;
 	}
 
@@ -430,20 +447,23 @@
 		align-items: center;
 	}
 
+	.logins {
+		width: 40%;
+	}
+
 	.login_container {
-		width: 100%;
+		width: auto;
 		background-size: cover;
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 2rem 1rem;
+		justify-content: flex-start;
+		align-items: flex-start;
+		padding: 1rem;
 		background-repeat: no-repeat;
 		background-position: center;
 	}
 
 	.login_section {
 		background-color: rgba(239,249,242,0.7);
-		max-width: 40rem;
 		width: 100%;
 		padding: 1rem;
 		display: flex;
@@ -504,6 +524,20 @@
             flex-wrap: nowrap;
             justify-content: flex-start;
         }
+	}
+
+	@media screen and (max-width: 1080px) {
+
+		.banner_and_logins {
+			flex-direction: column;;
+		}
+		.banner_container {
+			width: 100%;
+		}
+
+		.logins {
+			width: 100%;
+		}
 	}
 
 	@media (max-width: 720px) {
