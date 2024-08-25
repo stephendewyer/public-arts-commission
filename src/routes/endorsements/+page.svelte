@@ -1028,12 +1028,10 @@
 	});
 
 	onDestroy(() => {
-
 		unsubscribeSearchEndorsedCandidatesStore();
 		unsubscribeSearchEndorsedLegislationStore();
 		unsubscribeSearchEndorsedAmendmentsStore();
 		unsubscribeSearchEndorsedReferendumsStore();
-		
 	});
 
 	$: $searchEndorsedReferendumsStore.filtered.forEach((referendum: ReferendumWithImage) => {
@@ -1206,9 +1204,8 @@
 
 	let openFilters: boolean = true;
 
-	let height: number = 0;
+	let searchHeight: number = 0;
 
-    $: height;
 	// innerWidth is the width of the inner window
 	let innerWidth: number = 0;
 
@@ -1227,17 +1224,19 @@
 		clearFiltersClicked = false;
 	};
 
-	let filtersContainerHeight: number = 0;
+	let searchContainerHeight: number = 0;
 
-	$: filtersContainerHeight;
+	let searchContainerElement: HTMLElement;
+
+	let mobileScrollableSearchHeight: number = 0;
+
+	let innerHeight: number = 0;
+
+	let scrollableSearchHeight: number = 0;
 
 	let endorsementNavHeight: number = 0;
 
-	$: endorsementNavHeight;
-
-	let endorsementsNav: HTMLElement;
-
-	let filtersContainerElement: HTMLElement;
+	let endorsementsNav: HTMLElement;	
 
 	let y: number = 0;
 
@@ -1245,37 +1244,121 @@
 
     let currentEndorsementTabsStickyPosition: number = 0;
 
-	let filtersAbsolutePosition: number = 0;
+	let searchAbsolutePosition: number = 0;
 
-	let filtersAbsolute: boolean = false;
+	let searchAbsolute: boolean = false;
+
+	let endorsementResultsHeight: number = 0;
+
+	let clearFiltersButtonHeight: number = 0;
+
+	let searchContainerSticky: boolean = false;
+
+	let searchContainerTopPosition: number = 0;
+
+	// $: console.log("endorsement nav tabs sticky: ", endorsementTabsSticky);
+
+	// $: console.log("search absolute: ", searchAbsolute);
+
+	// $: console.log("nominate button absolute: ", nominateButtonAbsolute);
+
+	// $: console.log("nominate button absolute position: ", nominateButtonAbsolutePosition);
+
+	// $: console.log("endorsement results bottom: ", resultsBottomPosition);
+
+	let nominateButtonContainerElement: HTMLElement;
+
+	let resultsElement: HTMLElement;
+
+	let nominateButtonAbsolute: boolean = false;
+
+	let nominateButtonAbsolutePosition: number = 0;
+
+	let resultsBottomPosition: number = 0;
+
+	let nominateButtonContainerHeight: number = 0;
 
     onMount(() => {
+
+		if (innerWidth <= 720) {
+			openFilters = false;
+		};
+
+		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
+		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
     });
+
+	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
 
 	let endorsementsHeadingElement: HTMLElement;
 
 	const widowResizeHandler = () => {
+		if (innerWidth <= 720) {
+			openFilters = false;
+		} else {
+			openFilters = true;
+		};
+		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;		
+		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
 		currentEndorsementTabsStickyPosition = endorsementsHeadingElement?.getBoundingClientRect().bottom + window.scrollY;
 	};
 
 	afterUpdate(() =>  {
-		if (innerWidth <= 720) {
-			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - endorsementNavHeight);
-		} else {
-			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height- endorsementNavHeight);
-		};
+		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
+		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
+		searchAbsolutePosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY + (searchContainerHeight - searchHeight- endorsementNavHeight);
 	});
 
-    $: if (y > currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
-        endorsementTabsSticky = true;
-		filtersAbsolute = false;
-    } else if (y > currentEndorsementTabsStickyPosition && y > filtersAbsolutePosition) {
-        endorsementTabsSticky = true;
-		filtersAbsolute = true;
-    } else if (y <= currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
-		endorsementTabsSticky = false;
-		filtersAbsolute = false;
+	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
+		// quilt search results height is less than search container = no search absolute position
+		// handle for both mobile and desktop
+		searchAbsolute = false;
+		searchContainerSticky = false;
+		if (y > currentEndorsementTabsStickyPosition) {
+			endorsementTabsSticky = true;
+		} else if (y <= currentEndorsementTabsStickyPosition) {
+			endorsementTabsSticky = false;
+		};
+	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
+		// quilt search results height is more than search container = include search absolute position
+		if (innerWidth <= 720) {
+			// mobile = no search absolute position
+			searchAbsolute = false;
+			if (y > currentEndorsementTabsStickyPosition) {
+				endorsementTabsSticky = true;
+				searchContainerSticky = true;
+			} else if (y <= currentEndorsementTabsStickyPosition) {
+				endorsementTabsSticky = false;
+				searchContainerSticky = false;
+			};
+		} else if (innerWidth > 720) {
+			if ((y > currentEndorsementTabsStickyPosition) && (y > searchAbsolutePosition)) {
+				endorsementTabsSticky = true;
+				searchContainerSticky = true;
+				searchAbsolute = true;
+			} else if (y > currentEndorsementTabsStickyPosition && y <= searchAbsolutePosition) {
+				endorsementTabsSticky = true;
+				searchContainerSticky = true;
+				searchAbsolute = false;
+			} else if (y <= currentEndorsementTabsStickyPosition && y <= searchAbsolutePosition) {
+				endorsementTabsSticky = false;
+				searchContainerSticky = false;
+				searchAbsolute = false;
+			};
+		};
+	};
+
+	const handleScroll = () => {
+		if (window.scrollY + innerHeight >= resultsElement.getBoundingClientRect().bottom  + window.scrollY) {
+			nominateButtonAbsolute = true;
+		} else {
+			nominateButtonAbsolute = false;
+		};
 	};
 
 </script>
@@ -1286,9 +1369,11 @@
 	<meta property="og:image" content={PublicArtsCommissionBanner} />
 </svelte:head>
 <svelte:window 
+	bind:innerHeight
 	bind:innerWidth 
 	bind:scrollY={y} 
 	on:resize={widowResizeHandler}
+	on:scroll={handleScroll}
 />
 <section class="page">
 	<h1 bind:this={endorsementsHeadingElement}>
@@ -1309,97 +1394,216 @@
 				<FilterToggleButton bind:openFilters >filters</FilterToggleButton>
 			</div>	
 		</div>
+		{#if (innerWidth <= 720)}
+			<div class="mobile_search_container">
+				<div 
+					id="filters_container_mobile" 
+					class={openFilters ? "filters_container_open" : "filters_container_closed"}
+					style={openFilters ? `height: ${searchHeight}px` : 'height: 0px;'}
+					bind:clientHeight={searchContainerHeight}
+					bind:this={searchContainerElement}
+				>
+					<form 
+						id="filters"
+						noValidate 
+						autoComplete="off"
+						on:submit|preventDefault
+						bind:clientHeight={searchHeight}
+						style={openFilters ? "opacity: 100%;" : "opacity: 0;"}
+					>
+						<div 
+							class="scrollable_search_container"
+							style={`height: ${mobileScrollableSearchHeight}px;`}
+						>
+							<div class="search_endorsements_input_container">
+								{#if useCurrentLocationChecked}
+									{#if pendingReverseGeocode}
+										<LoaderAnimation />
+									{:else if addressLoadSuccess}
+										<SearchInput 
+											placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+											inputID="address"
+											inputName="address"
+											inputLabel={true}
+											bind:searchInputValue={searchByStreetAddressInputValue}
+											searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+											options={statesWithCity}
+											bind:optionSelected={searchbarOptionSelected}
+										>
+											name, street address, city, state or zip code
+										</SearchInput>
+									{:else if !addressLoadSuccess}
+										<p>failed to load address</p>
+									{/if}
+								{:else}
+									<SearchInput 
+										placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+										inputID="address"
+										inputName="address"
+										inputLabel={true}
+										bind:searchInputValue={searchByStreetAddressInputValue}
+										searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+										options={statesWithCity}
+										bind:optionSelected={searchbarOptionSelected}
+									>
+										name, street address, city, state or zip code
+									</SearchInput>
+								{/if}
+								<Checkbox 
+									bind:checked={useCurrentLocationChecked}
+								>
+									<div class="use_current_location_label">
+										<div class="geolocation_container">
+											{@html GeolocationIcon}
+										</div>
+										use my current location
+									</div>
+								</Checkbox>
+							</div>
+							<div class="year_input_container">
+								<SelectSearchInput 
+									options={Years}
+									inputID="year"
+									inputName="year"
+									inputLabel={true}	
+									bind:selectInputValue={yearInputValue}
+									selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+								>
+									election year or release year
+								</SelectSearchInput>	
+							</div>
+						</div>
+						<div 
+							class="clear_filters_container"
+							bind:clientHeight={clearFiltersButtonHeight}
+						>
+							<SubmitButtonSecondary 
+								disable={false}
+								bind:clicked={clearFiltersClicked}
+							>
+								clear filters
+							</SubmitButtonSecondary>
+						</div>
+					</form>
+				</div>
+			
+			</div>
+		{/if}
 	</div>
 	<div 
 		class="filters_and_results"
 		style={endorsementTabsSticky ? `padding-top: ${endorsementNavHeight}px;` : "padding-top: 0px;"}
 	>
-		<div 
-			id="filters_container" 
-			class={openFilters ? "filters_container_open" : "filters_container_closed"}
-			style={ (innerWidth <= 720) ? openFilters ? `height: ${height}px` : 'height: 0px;' : "" }
-			bind:clientHeight={filtersContainerHeight}
-			bind:this={filtersContainerElement}
-		>
-			<form 
-				id="filters"
-				class={(innerWidth > 720) ? endorsementTabsSticky ? !filtersAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky" : "filters_not_sticky"}
-				style={(innerWidth > 720) ? endorsementTabsSticky ? filtersAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;": ""}
-				bind:clientHeight={height}
+		{#if (innerWidth > 720)}
+			<div 
+				id="filters_container" 
+				class={openFilters ? "filters_container_open" : "filters_container_closed"}
+				bind:clientHeight={searchContainerHeight}
+				bind:this={searchContainerElement}
 			>
-				<div class="search_endorsements_input_container">
-					{#if useCurrentLocationChecked}
-						{#if pendingReverseGeocode}
-							<LoaderAnimation />
-						{:else if addressLoadSuccess}
-							<SearchInput 
-								placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
-								inputID="address"
-								inputName="address"
-								inputLabel={true}
-								bind:searchInputValue={searchByStreetAddressInputValue}
-								searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
-								options={statesWithCity}
-								bind:optionSelected={searchbarOptionSelected}
-							>
-								name, street address, city, state or zip code
-							</SearchInput>
-						{:else if !addressLoadSuccess}
-							<p>failed to load address</p>
-						{/if}
-					{:else}
-						<SearchInput 
-							placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
-							inputID="address"
-							inputName="address"
-							inputLabel={true}
-							bind:searchInputValue={searchByStreetAddressInputValue}
-							searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
-							options={statesWithCity}
-							bind:optionSelected={searchbarOptionSelected}
-						>
-							name, street address, city, state or zip code
-						</SearchInput>
-					{/if}
-					<Checkbox 
-						bind:checked={useCurrentLocationChecked}
-					>
-						<div class="use_current_location_label">
-							<div class="geolocation_container">
-								{@html GeolocationIcon}
-							</div>
-							use my current location
-						</div>
-					</Checkbox>
-				</div>
-				<div class="year_input_container">
-					<SelectSearchInput 
-						options={Years}
-						inputID="year"
-						inputName="year"
-						inputLabel={true}	
-						bind:selectInputValue={yearInputValue}
-						selectInputValueChange={() => selectYearInputValueChangeHandler()}	
-					>
-						election year or release year
-					</SelectSearchInput>	
-				</div>
-				<SubmitButtonSecondary 
-					disable={false}
-					bind:clicked={clearFiltersClicked}
+				<form 
+					id="filters"
+					noValidate 
+					autoComplete="off"
+					on:submit|preventDefault
+					class={endorsementTabsSticky ? !searchAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky"}
+					style={endorsementTabsSticky ? searchAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;"}
+					bind:clientHeight={searchHeight}
 				>
-					clear filters
-				</SubmitButtonSecondary>
-			</form>
-		</div>
-		<div class="results">
+					<div 
+						class="scrollable_search_container"
+						style={`height: ${scrollableSearchHeight}px;`}
+					>
+						<div class="search_endorsements_input_container">
+							{#if useCurrentLocationChecked}
+								{#if pendingReverseGeocode}
+									<LoaderAnimation />
+								{:else if addressLoadSuccess}
+									<SearchInput 
+										placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+										inputID="address"
+										inputName="address"
+										inputLabel={true}
+										bind:searchInputValue={searchByStreetAddressInputValue}
+										searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+										options={statesWithCity}
+										bind:optionSelected={searchbarOptionSelected}
+									>
+										name, street address, city, state or zip code
+									</SearchInput>
+								{:else if !addressLoadSuccess}
+									<p>failed to load address</p>
+								{/if}
+							{:else}
+								<SearchInput 
+									placeholder="campaign name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+									inputID="address"
+									inputName="address"
+									inputLabel={true}
+									bind:searchInputValue={searchByStreetAddressInputValue}
+									searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
+									options={statesWithCity}
+									bind:optionSelected={searchbarOptionSelected}
+								>
+									name, street address, city, state or zip code
+								</SearchInput>
+							{/if}
+							<Checkbox 
+								bind:checked={useCurrentLocationChecked}
+							>
+								<div class="use_current_location_label">
+									<div class="geolocation_container">
+										{@html GeolocationIcon}
+									</div>
+									use my current location
+								</div>
+							</Checkbox>
+						</div>
+						<div class="year_input_container">
+							<SelectSearchInput 
+								options={Years}
+								inputID="year"
+								inputName="year"
+								inputLabel={true}	
+								bind:selectInputValue={yearInputValue}
+								selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+							>
+								election year or release year
+							</SelectSearchInput>	
+						</div>
+					</div>
+					<div 
+						class="clear_filters_container"
+						bind:clientHeight={clearFiltersButtonHeight}
+					>
+						<SubmitButtonSecondary 
+							disable={false}
+							bind:clicked={clearFiltersClicked}
+						>
+							clear filters
+						</SubmitButtonSecondary>
+					</div>
+				</form>
+			</div>
+		{/if}
+		<div 
+			bind:clientHeight={endorsementResultsHeight}
+			class="results"
+			bind:this={resultsElement}
+		>
 			<TabPanel
 				bind:tabPanels={endorsementTabPanels} 
 				bind:activeTab={activeEndorsementsTab}
 			/>	
 		</div>
 	</div>
-	<div class="nominate_button_container">
+	<div 
+		id="nominate_button_container"
+		class={nominateButtonAbsolute ? "nominate_button_container_absolute" : "nominate_button_container_sticky"}
+		style={nominateButtonAbsolute ? `top: ${nominateButtonAbsolutePosition - (endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY)}px;` : "top: auto;"}
+		bind:this={nominateButtonContainerElement}
+		bind:clientHeight={nominateButtonContainerHeight}
+	>
 		<NominateButton 
 			category="amendment"
 			authorized_user={data.streamed.user}
@@ -1433,6 +1637,10 @@
 		background-color: #E7DED0;
 	}
 
+	#filters_container_mobile {
+		display: none;
+	}
+
 	.filters_container_open {
 		margin-left: 0%;
 	}
@@ -1445,8 +1653,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		padding: 1rem;
-		gap: 1rem;
 		transition: transform 0.2s ease-out;
 	}
 
@@ -1474,7 +1680,6 @@
 	.filter_toggle_button_container {
 		position: absolute;
 		right: 0;
-		padding: 1rem;
 	}
 
 	.search_endorsements_input_container {
@@ -1498,7 +1703,6 @@
 
 	#endorsement_nav_tabs {	
 		width: 100%;
-		padding: 0.5rem 1rem;
 	}
 
 	.endorsements_tabs_container {
@@ -1513,32 +1717,64 @@
 	}
 
 	.endorsement_nav_tabs_inner {
-		position: relative;
 		display: flex;
 		justify-content: center;
 		width: 100%;
 		max-width: 1920px;
 		margin: 0 auto;
+		padding: 0.5rem 1rem;
 	}
 
 	.year_input_container {
 		width: 12rem;
 	}
 
-	.nominate_button_container {
-		position: fixed;
-		bottom: 0;
-		right: 0;
+	.scrollable_search_container {
+		width: 100%;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1rem;
+	}
+
+	.clear_filters_container {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		padding: 1rem;
+	}
+
+	#nominate_button_container {
 		padding: 1rem;
 		max-width: 1920px;
 		width: 100%;
-		left: auto;
-		right: auto;
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
 		background: none;
 		pointer-events: none;
+	}
+
+	.nominate_button_container_sticky {
+		left: auto;
+		position: fixed;
+		bottom: 0;
+		right: 0;
+	}
+
+	.nominate_button_container_absolute {
+		position: absolute;
+		left: auto;
+		right: 0;
+		bottom: auto;
+	}
+
+	.mobile_search_container {
+		position: relative;
+		width: 100%;
 	}
 
 	@media screen and (max-width: 1440px) {
@@ -1590,6 +1826,7 @@
 		}
 
 		.endorsement_nav_tabs_inner {
+			position: relative;
 			display: flex;
 			flex-direction: column-reverse;
 			justify-content: center;
@@ -1599,7 +1836,7 @@
 		.filter_toggle_button_container {
 			position: relative;
 			right: 0;
-			padding: 1rem;
+			padding: 0;
 			width: 100%;
 			display: flex;
 			flex-direction: row;
@@ -1616,21 +1853,44 @@
 			width: 100%;
 		}
 
-		#filters_container {
+		#filters_container_mobile {
+			display: block;
+			position: absolute;
 			width: 100%;
+			min-width: 100%;
 			overflow-y: hidden;
 			will-change: height;
         	transition: height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
 			min-width: 100%;
+			z-index: 1;
+			margin-left: 0;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #E7DED0;
+		}
+
+		.filters_container_open {			
+			height: 100%;
+			overflow: hidden;
+
+		}
+
+		.filters_container_closed {
+			height: 0;
+			overflow: hidden;
+		}
+
+		#filters {
+			position: relative;
+			transition: opacity 0.6s ease-out;
 		}
 
         .geolocation_container {
             width: 1rem;
         }
 
-		.filters_container_closed {
-			margin-left: 0;
-		}
 	}
 
 </style>

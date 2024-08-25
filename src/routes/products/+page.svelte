@@ -125,6 +125,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+        padding: 1rem;
+        gap: 1rem;
 	}
 
     .products_heading {
@@ -138,7 +140,6 @@
         max-width: 1420px;
         justify-content: space-evenly;
         gap: 1rem;
-        padding: 1rem 0 2rem 0;
     }
 
     .product_card {
@@ -183,7 +184,6 @@
             justify-content: flex-start;
             align-items: center;
             gap: 1rem;
-            padding: 1rem 1rem 2rem 1rem;
         }
 	}
 
@@ -196,13 +196,14 @@
             flex-direction: column;
             justify-content: center;
         }
+
         .product_heading {
             margin: 0;
         }
 
         .paragraphs {
             font-size: 1rem;
-            padding: 0 1rem 0 1rem;
+            padding: 0 1rem;
         }
 
 	}

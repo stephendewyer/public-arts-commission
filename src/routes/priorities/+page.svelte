@@ -1188,7 +1188,6 @@
         width: 100%;
         display: flex;
         justify-content: center;
-        padding: 0 1rem;
     }
 
     .priorities_section_container {

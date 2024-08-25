@@ -291,7 +291,7 @@
 		</div>
 	</div>
 	<h1 class="heading01">
-		Art by everyone and for everyone is necessary for democracy.  
+		Excellent public art for everyone, by everyone and available to everyone will strengthen the political imaginary necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  
 		We help grow our political imagination to support a fairer, more just economy and a more egalitarian society.
 	</h1>
 	<form 
@@ -492,7 +492,7 @@
         width: 100%;
     }
 
-	@media (max-width: 1140px) {
+	@media screen and (max-width: 1140px) {
 		.search_endorsement_fields {
 			display: flex;
 			flex-direction: column;
@@ -540,7 +540,7 @@
 		}
 	}
 
-	@media (max-width: 720px) {
+	@media screen and (max-width: 720px) {
 
 		.search_endorsements_by_address_form {
 			width: 100%;
