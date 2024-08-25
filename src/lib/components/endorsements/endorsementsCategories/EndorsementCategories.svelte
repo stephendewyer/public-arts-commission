@@ -79,109 +79,145 @@
         categories_data.pendingEndorsedLegislationData === false &&
         categories_data.pendingEndorsedAmendmentsData === false
     )}
-        <li class="candidates_container">
-            <h3>
-                candidates
-            </h3>
-            <div class="endorsement_cards_frame">
-                <div class="endorsement_cards">
-                    {#if categories_data.getEndorsedCandidatesDataSuccess}
-                        {#each paginatedEndorsedCandidates as candidate, i}
-                            <a 
-                                href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
-                                data-sveltekit-noscroll
-                            > 
-                                <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-                            </a>
-                        {/each}
-                    {:else if (categories_data.getEndorsedCandidatesDataSuccess === false)}
-                        <p>failed to load endorsed candidates</p>
-                    {/if}
+        <li 
+            class="endorsement_section_container"
+            style="background-color: #FBEFF6;"
+        >
+            <div class="section_heading_container">
+                <h3 class="section_heading">
+                    candidates
+                </h3>
+            </div>
+            <div class="endorsement_cards_and_pagination">
+                <div class="endorsement_cards_frame">
+                    <div class="endorsement_cards">
+                        {#if categories_data.getEndorsedCandidatesDataSuccess}
+                            {#each paginatedEndorsedCandidates as candidate, i}
+                                <a 
+                                    href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
+                                    data-sveltekit-noscroll
+                                > 
+                                    <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+                                </a>
+                            {/each}
+                        {:else if (categories_data.getEndorsedCandidatesDataSuccess === false)}
+                            <p>failed to load endorsed candidates</p>
+                        {/if}
+                    </div>
+                </div>
+                <div class="pagination_container">
+                    <Pagination 
+                        bind:currentPage={categories_data.currentPageCandidates}
+                        totalCount={endorsedCandidates.length}
+                        pageSize={pageSize}
+                    />
                 </div>
             </div>
-            <Pagination 
-                bind:currentPage={categories_data.currentPageCandidates}
-                totalCount={endorsedCandidates.length}
-                pageSize={pageSize}
-            />
         </li>
-        <li class="referendums_container">
-            <h3>
-                referendums
-            </h3>
-            <div class="endorsement_cards_frame">
-                <div class="endorsement_cards">
-                    {#if categories_data.getEndorsedReferendumsDataSuccess}
-                        {#each paginatedEndorsedReferendums as referendum, i}
-                            <a 
-                                href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
-                                data-sveltekit-noscroll
-                            > 
-                                <EndorsedReferendumCard endorsedReferendumData={referendum} />
-                            </a>
-                        {/each}
-                    {:else if (categories_data.getEndorsedReferendumsDataSuccess === false)}
-                        <p>failed to load endorsed referendums</p>
-                    {/if}
+        <li 
+            class="endorsement_section_container"
+            style="background-color: #CBC6C2;"
+        >
+            <div class="section_heading_container">
+                <h3 class="section_heading">
+                    referendums
+                </h3>
+            </div>
+            <div class="endorsement_cards_and_pagination">
+                <div class="endorsement_cards_frame">
+                    <div class="endorsement_cards">
+                        {#if categories_data.getEndorsedReferendumsDataSuccess}
+                            {#each paginatedEndorsedReferendums as referendum, i}
+                                <a 
+                                    href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
+                                    data-sveltekit-noscroll
+                                > 
+                                    <EndorsedReferendumCard endorsedReferendumData={referendum} />
+                                </a>
+                            {/each}
+                        {:else if (categories_data.getEndorsedReferendumsDataSuccess === false)}
+                            <p>failed to load endorsed referendums</p>
+                        {/if}
+                    </div>
+                </div>
+                <div class="pagination_container">
+                    <Pagination 
+                        bind:currentPage={categories_data.currentPageReferendums}
+                        totalCount={endorsedReferendums.length}
+                        pageSize={pageSize}
+                    />
                 </div>
             </div>
-            <Pagination 
-                bind:currentPage={categories_data.currentPageReferendums}
-                totalCount={endorsedReferendums.length}
-                pageSize={pageSize}
-            />
         </li>
-        <li class="legislation_container">
-            <h3>
-                legislation
-            </h3>
-            <div class="endorsement_cards_frame">
-                <div class="endorsement_cards">
-                    {#if categories_data.getEndorsedLegislationDataSuccess}
-                        {#each paginatedEndorsedLegislation as legislation, i}
-                            <a 
-                                href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
-                                data-sveltekit-noscroll
-                            > 
-                                <EndorsedLegislationCard endorsedLegislationData={legislation} />
-                            </a>
-                        {/each}
-                    {:else if (categories_data.getEndorsedLegislationDataSuccess === false)}
-                        <p>failed to load endorsed legislation</p>
-                    {/if}
+        <li 
+            class="endorsement_section_container"
+            style="background-color: #F8FAF7;"
+        >
+            <div class="section_heading_container">
+                <h3 class="section_heading">
+                    legislation
+                </h3>
+            </div>
+            <div class="endorsement_cards_and_pagination">
+                <div class="endorsement_cards_frame">
+                    <div class="endorsement_cards">
+                        {#if categories_data.getEndorsedLegislationDataSuccess}
+                            {#each paginatedEndorsedLegislation as legislation, i}
+                                <a 
+                                    href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
+                                    data-sveltekit-noscroll
+                                > 
+                                    <EndorsedLegislationCard endorsedLegislationData={legislation} />
+                                </a>
+                            {/each}
+                        {:else if (categories_data.getEndorsedLegislationDataSuccess === false)}
+                            <p>failed to load endorsed legislation</p>
+                        {/if}
+                    </div>
+                </div>
+                <div class="pagination_container">
+                    <Pagination 
+                        bind:currentPage={categories_data.currentPageLegislation}
+                        totalCount={endorsedLegislation.length}
+                        pageSize={pageSize}
+                    />
                 </div>
             </div>
-            <Pagination 
-                bind:currentPage={categories_data.currentPageLegislation}
-                totalCount={endorsedLegislation.length}
-                pageSize={pageSize}
-            />
         </li>
-        <li class="amendments_container">
-            <h3>
-                amendments
-            </h3>
-            <div class="endorsement_cards_frame">
-                <div class="endorsement_cards">
-                    {#if categories_data.getEndorsedAmendmentsDataSuccess}
-                        {#each paginatedEndorsedAmendments as amendment, i}
-                            <a 
-                                href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
-                                data-sveltekit-noscroll
-                            >
-                                <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-                             </a>
-                        {/each}
-                    {:else if (categories_data.getEndorsedAmendmentsDataSuccess === false)}
-                        <p>failed to load endorsed amendments</p>
-                    {/if}
+        <li 
+            class="endorsement_section_container"
+            style="background-color: #F4F4DB;"
+        >
+            <div class="section_heading_container">
+                <h3 class="section_heading">
+                    amendments
+                </h3>
+            </div>
+            <div class="endorsement_cards_and_pagination">
+                <div class="endorsement_cards_frame">
+                    <div class="endorsement_cards">
+                        {#if categories_data.getEndorsedAmendmentsDataSuccess}
+                            {#each paginatedEndorsedAmendments as amendment, i}
+                                <a 
+                                    href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
+                                    data-sveltekit-noscroll
+                                >
+                                    <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+                                 </a>
+                            {/each}
+                        {:else if (categories_data.getEndorsedAmendmentsDataSuccess === false)}
+                            <p>failed to load endorsed amendments</p>
+                        {/if}
+                    </div>
+                </div>
+                <div class="pagination_container">
+                    <Pagination 
+                        bind:currentPage={categories_data.currentPageAmendments}
+                        totalCount={endorsedAmendments.length}
+                        pageSize={pageSize}
+                    />
                 </div>
             </div>
-            <Pagination 
-                bind:currentPage={categories_data.currentPageAmendments}
-                totalCount={endorsedAmendments.length}
-                pageSize={pageSize}
-            />
         </li>
     {/if}
 </ul>
@@ -199,37 +235,23 @@
         width: 100%;
     }
 
-    .candidates_container {
-        background-color: #FBEFF6;
+    .endorsement_section_container {
         padding: 1rem;
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-
-    }
-
-    .referendums_container {
-        background-color: #CBC6C2;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        flex-direction: row;
         width: 100%;
     }
 
-    .legislation_container {
-        background-color: #F8FAF7;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
+    .section_heading_container {
+        width: 20rem;
     }
 
-    .amendments_container {
-        background-color: #F4F4DB;
-        padding: 1rem;
+    .section_heading {
+        margin: 0;
+        font-size: 2rem;
+    }
+
+    .endorsement_cards_and_pagination {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -238,7 +260,7 @@
 
     .endorsement_cards_frame {
         position: relative;
-        width: 100%;
+        width: auto;
         overflow-x: auto;
         display: flex;
         flex-direction: column;
@@ -249,14 +271,57 @@
     .endorsement_cards {
         position: relative;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         flex-wrap: wrap;      
         gap: 1rem;
         padding: 0 1rem 1rem 1rem;
         width: 100%;
     }
 
+    .pagination_container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    @media screen and (max-width: 1440px) {
+
+        .section_heading_container {
+            width: 18rem;
+        }
+
+        .section_heading {
+            margin: 0;
+            font-size: 1.875rem;
+        }
+    }
+
+    @media screen and (max-width: 1080px) {
+
+        .section_heading_container {
+            width: 16rem;
+        }
+
+        .section_heading {
+            margin: 0;
+            font-size: 1.675rem;
+        }
+    }
+
     @media screen and (max-width: 720px) {
+
+        .section_heading_container {
+            width: 100%;
+        }
+
+        .endorsement_section_container {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
 
         .endorsement_cards {
             flex-wrap: nowrap;
@@ -266,6 +331,17 @@
         .endorsement_cards_frame {
             width: 100%;
             max-width: 100%;
+        }
+
+        .endorsement_cards_and_pagination {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .section_heading {
+            margin: 0;
+            font-size: 1.5rem;
         }
 
 	}

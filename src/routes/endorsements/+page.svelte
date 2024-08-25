@@ -1826,6 +1826,7 @@
 			flex-direction: column-reverse;
 			justify-content: center;
 			margin: 0;
+			gap: 0.5rem;
 		}
 
 		.filter_toggle_button_container {
