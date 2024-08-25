@@ -1296,11 +1296,6 @@
 	let endorsementsHeadingElement: HTMLElement;
 
 	const widowResizeHandler = () => {
-		if (innerWidth <= 720) {
-			openFilters = false;
-		} else {
-			openFilters = true;
-		};
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;		
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
@@ -1780,16 +1775,16 @@
 	@media screen and (max-width: 1440px) {
 
 		#filters_container {
-			width: 28rem;
-			min-width: 28rem;
+			width: 24rem;
+			min-width: 24rem;
 		}
 
 		.filters_sticky {
-			width: 28rem;
+			width: 24rem;
 		}
 
 		.filters_container_closed {
-			margin-left: -28rem;
+			margin-left: -24rem;
 		}
 
 		.use_current_location_label {
@@ -1805,16 +1800,16 @@
 		}
 
 		#filters_container {
-			width: 24rem;
-			min-width: 24rem;
+			width: 20rem;
+			min-width: 20rem;
 		}
 
 		.filters_container_closed {
-			margin-left: -24rem;
+			margin-left: -20rem;
 		}
 
 		.filters_sticky {
-			width: 24rem;
+			width: 20rem;
 		}
 
 	}
