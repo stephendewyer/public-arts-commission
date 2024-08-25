@@ -1589,6 +1589,7 @@
 			<TabPanel
 				bind:tabPanels={endorsementTabPanels} 
 				bind:activeTab={activeEndorsementsTab}
+				endorsementNavHeight={endorsementNavHeight}
 			/>	
 		</div>
 	</div>

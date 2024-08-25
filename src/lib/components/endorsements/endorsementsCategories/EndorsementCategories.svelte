@@ -1,14 +1,14 @@
 <script lang="ts">
-    import NominateButton from '$lib/components/buttons/NominateButton.svelte';
     import EndorsedCandidateCard from '$lib/components/cards/endorsementCards/CandidateEndorsementCard.svelte';
     import EndorsedAmendmentCard from '$lib/components/cards/endorsementCards/AmendmentEndorsementCard.svelte';
     import EndorsedLegislationCard from '$lib/components/cards/endorsementCards/LegislationEndorsementCard.svelte';
     import EndorsedReferendumCard from '$lib/components/cards/endorsementCards/ReferendumEndorsementCard.svelte';
-    import type { User } from '@auth/core/types.js';
     import Pagination from '$lib/components/pagination/Pagination.svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import { page } from '$app/stores';
+    import { afterUpdate, onMount } from 'svelte';
 
+    export let endorsementNavHeight: number = 0;
     export let categories_data: Endorsements;
 
     let URLPathName: string = $page.url.pathname;
@@ -63,8 +63,178 @@
     $: paginatedEndorsedLegislation = endorsedLegislation.slice(firstPageIndexLegislation, lastPageIndexLegislation);
     $: paginatedEndorsedReferendums = endorsedReferendums.slice(firstPageIndexReferendums, lastPageIndexReferendums);
 
-</script>
+    let candidatesSectionElement: HTMLElement;
+    let candidatesSectionElementTop: number = 0;
+    let candidatesSectionElementBottom: number = 0;
+    let candidatesHeadingSticky: boolean = false;
+    let candidatesHeadingAbsolute: boolean = false;
+    let candidatesHeadingHeight: number = 0;
 
+    let referendumsSectionElement: HTMLElement;
+    let referendumsSectionElementTop: number = 0;
+    let referendumsSectionElementBottom: number = 0;
+    let referendumsHeadingSticky: boolean = false;
+    let referendumsHeadingAbsolute: boolean = false;
+    let referendumsHeadingHeight: number = 0;
+
+    let amendmentsSectionElement: HTMLElement;
+    let amendmentsSectionElementTop: number = 0;
+    let amendmentsSectionElementBottom: number = 0;
+    let amendmentsHeadingSticky: boolean = false;
+    let amendmentsHeadingAbsolute: boolean = false;
+    let amendmentsHeadingHeight: number = 0;
+
+    let legislationSectionElement: HTMLElement;
+    let legislationSectionElementTop: number = 0;
+    let legislationSectionElementBottom: number = 0;
+    let legislationHeadingSticky: boolean = false;
+    let legislationHeadingAbsolute: boolean = false;
+    let legislationHeadingHeight: number = 0;
+
+    onMount(() => {
+        if (candidatesSectionElement) {
+            candidatesSectionElementTop = candidatesSectionElement.getBoundingClientRect().top + window.scrollY;
+            candidatesSectionElementBottom = candidatesSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (referendumsSectionElement) {
+            referendumsSectionElementTop = referendumsSectionElement.getBoundingClientRect().top + window.scrollY;
+            referendumsSectionElementBottom = referendumsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (amendmentsSectionElement) {
+            amendmentsSectionElementTop = amendmentsSectionElement.getBoundingClientRect().top + window.scrollY;
+            amendmentsSectionElementBottom = amendmentsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (legislationSectionElement) {
+            legislationSectionElementTop = legislationSectionElement.getBoundingClientRect().top + window.scrollY;
+            legislationSectionElementBottom = legislationSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+    });
+
+    afterUpdate(() => {
+        if (candidatesSectionElement) {
+            candidatesSectionElementTop = candidatesSectionElement.getBoundingClientRect().top + window.scrollY;
+            candidatesSectionElementBottom = candidatesSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (referendumsSectionElement) {
+            referendumsSectionElementTop = referendumsSectionElement.getBoundingClientRect().top + window.scrollY;
+            referendumsSectionElementBottom = referendumsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (amendmentsSectionElement) {
+            amendmentsSectionElementTop = amendmentsSectionElement.getBoundingClientRect().top + window.scrollY;
+            amendmentsSectionElementBottom = amendmentsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (legislationSectionElement) {
+            legislationSectionElementTop = legislationSectionElement.getBoundingClientRect().top + window.scrollY;
+            legislationSectionElementBottom = legislationSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+    });
+
+    const windowResizeHandler = () => {
+        if (candidatesSectionElement) {
+            candidatesSectionElementTop = candidatesSectionElement.getBoundingClientRect().top + window.scrollY;
+            candidatesSectionElementBottom = candidatesSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (referendumsSectionElement) {
+            referendumsSectionElementTop = referendumsSectionElement.getBoundingClientRect().top + window.scrollY;
+            referendumsSectionElementBottom = referendumsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (amendmentsSectionElement) {
+            amendmentsSectionElementTop = amendmentsSectionElement.getBoundingClientRect().top + window.scrollY;
+            amendmentsSectionElementBottom = amendmentsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+        if (legislationSectionElement) {
+            legislationSectionElementTop = legislationSectionElement.getBoundingClientRect().top + window.scrollY;
+            legislationSectionElementBottom = legislationSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+    };
+
+    let y: number = 0;
+
+    let innerWidth: number = 0;
+    let innerHeight: number = 0;
+
+    $: if (innerWidth > 720) {
+        if (
+            (y > candidatesSectionElementTop - endorsementNavHeight) && 
+            (y <= candidatesSectionElementBottom - endorsementNavHeight - candidatesHeadingHeight) 
+        ) {
+            candidatesHeadingSticky = true;
+        } else {
+            candidatesHeadingSticky = false;
+        };
+
+        if (y > candidatesSectionElementBottom - endorsementNavHeight - candidatesHeadingHeight) {
+            candidatesHeadingAbsolute = true;
+        } else {
+            candidatesHeadingAbsolute = false;
+        };
+
+        if (
+            (y > referendumsSectionElementTop - endorsementNavHeight) && 
+            (y <= referendumsSectionElementBottom - endorsementNavHeight - referendumsHeadingHeight) 
+        ) {
+            referendumsHeadingSticky = true;
+        } else {
+            referendumsHeadingSticky = false;
+        };
+
+        if (y > referendumsSectionElementBottom - endorsementNavHeight - referendumsHeadingHeight) {
+            referendumsHeadingAbsolute = true;
+        } else {
+            referendumsHeadingAbsolute = false;
+        };
+
+        if (
+            (y > amendmentsSectionElementTop - endorsementNavHeight) && 
+            (y <= amendmentsSectionElementBottom - endorsementNavHeight - amendmentsHeadingHeight) 
+        ) {
+            amendmentsHeadingSticky = true;
+        } else {
+            amendmentsHeadingSticky = false;
+        };
+
+        if (y > amendmentsSectionElementBottom - endorsementNavHeight - amendmentsHeadingHeight) {
+            amendmentsHeadingAbsolute = true;
+        } else {
+            amendmentsHeadingAbsolute = false;
+        };
+
+        if (
+            (y > legislationSectionElementTop - endorsementNavHeight) && 
+            (y <= legislationSectionElementBottom - endorsementNavHeight - legislationHeadingHeight) 
+        ) {
+            legislationHeadingSticky = true;
+        } else {
+            legislationHeadingSticky = false;
+        };
+
+        if ((y) > legislationSectionElementBottom - endorsementNavHeight - legislationHeadingHeight) {
+            legislationHeadingAbsolute = true;
+        } else {
+            legislationHeadingAbsolute = false;
+        };
+    } else {
+        candidatesHeadingAbsolute = false;
+        candidatesHeadingSticky = false;
+        referendumsHeadingAbsolute = false;
+        referendumsHeadingSticky = false;
+        legislationHeadingAbsolute = false;
+        legislationHeadingSticky = false;
+        amendmentsHeadingAbsolute = false;
+        amendmentsHeadingSticky = false;
+    };
+
+    // $: console.log("legislation sticky: ", legislationHeadingSticky)
+    // $: console.log("legislation absolute: ", legislationHeadingAbsolute)
+    // $: console.log("endorsement nav tabs height: ", endorsementNavHeight)
+
+</script>
+<svelte:window 
+    bind:innerWidth 
+    bind:scrollY={y} 
+    bind:innerHeight
+    on:resize={windowResizeHandler}
+/>
 <ul class="endorsement_categories_container">
     {#if ( 
         categories_data.pendingEndorsedCandidatesData || 
@@ -82,9 +252,14 @@
         <li 
             class="endorsement_section_container"
             style="background-color: #FBEFF6;"
+            bind:this={candidatesSectionElement}
         >
             <div class="section_heading_container">
-                <h3 class="section_heading">
+                <h3 
+                    bind:clientHeight={candidatesHeadingHeight}
+                    class={candidatesHeadingSticky ? "section_heading_sticky" : candidatesHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
+                    style={candidatesHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                >
                     candidates
                 </h3>
             </div>
@@ -117,9 +292,14 @@
         <li 
             class="endorsement_section_container"
             style="background-color: #CBC6C2;"
+            bind:this={referendumsSectionElement}
         >
-            <div class="section_heading_container">
-                <h3 class="section_heading">
+            <div class="section_heading_container" >
+                <h3 
+                    bind:clientHeight={referendumsHeadingHeight}
+                    class={referendumsHeadingSticky ? "section_heading_sticky" : referendumsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
+                    style={referendumsHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                >
                     referendums
                 </h3>
             </div>
@@ -152,9 +332,14 @@
         <li 
             class="endorsement_section_container"
             style="background-color: #F8FAF7;"
+            bind:this={legislationSectionElement}
         >
             <div class="section_heading_container">
-                <h3 class="section_heading">
+                <h3 
+                    bind:clientHeight={legislationHeadingHeight}
+                    class={legislationHeadingSticky? "section_heading_sticky" : legislationHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
+                    style={legislationHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                >
                     legislation
                 </h3>
             </div>
@@ -187,9 +372,14 @@
         <li 
             class="endorsement_section_container"
             style="background-color: #F4F4DB;"
+            bind:this={amendmentsSectionElement}
         >
             <div class="section_heading_container">
-                <h3 class="section_heading">
+                <h3 
+                    bind:clientHeight={amendmentsHeadingHeight}
+                    class={amendmentsHeadingSticky? "section_heading_sticky" : amendmentsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
+                    style={amendmentsHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                >
                     amendments
                 </h3>
             </div>
@@ -244,11 +434,32 @@
 
     .section_heading_container {
         width: 20rem;
+        position: relative;
     }
 
-    .section_heading {
+    .section_heading_container > h3 {
         margin: 0;
-        font-size: 2rem;
+        font-size: 2rem; 
+    }
+
+    .section_heading_relative {
+        position: relative;
+    }
+
+    .section_heading_absolute {
+        position: absolute;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        right: auto;
+        padding: 1rem 0 0 0;
+    }
+
+    .section_heading_sticky {
+        position: fixed;
+        top: 0;
+        bottom: auto;
+        padding: 1rem 0 0 0;
     }
 
     .endorsement_cards_and_pagination {
@@ -291,9 +502,8 @@
             width: 18rem;
         }
 
-        .section_heading {
-            margin: 0;
-            font-size: 1.875rem;
+        .section_heading_container > h3 {
+           font-size: 1.875rem; 
         }
     }
 
@@ -303,16 +513,20 @@
             width: 16rem;
         }
 
-        .section_heading {
-            margin: 0;
+        .section_heading_container > h3 {
             font-size: 1.675rem;
         }
+
     }
 
     @media screen and (max-width: 720px) {
 
         .section_heading_container {
             width: 100%;
+        }
+
+        .section_heading_container > h3 {
+            font-size: 1.5rem;
         }
 
         .endorsement_section_container {
@@ -337,11 +551,6 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-        }
-
-        .section_heading {
-            margin: 0;
-            font-size: 1.5rem;
         }
 
 	}
