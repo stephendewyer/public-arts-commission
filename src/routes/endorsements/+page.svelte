@@ -1280,12 +1280,16 @@
 
 	let nominateButtonContainerHeight: number = 0;
 
+	let endorsementsHeadingElement: HTMLElement;
+
+	let endorsementsHeadingTopPosition: number = 0;
+
     onMount(() => {
 
 		if (innerWidth <= 720) {
 			openFilters = false;
 		};
-
+		endorsementsHeadingTopPosition = endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
@@ -1293,11 +1297,8 @@
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
     });
 
-	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
-
-	let endorsementsHeadingElement: HTMLElement;
-
 	const widowResizeHandler = () => {
+		endorsementsHeadingTopPosition = endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;		
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
@@ -1305,6 +1306,7 @@
 	};
 
 	afterUpdate(() =>  {
+		endorsementsHeadingTopPosition = endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
@@ -1312,11 +1314,15 @@
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
 	});
 
+	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
+
 	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is less than search container = no search absolute position
 		// handle for both mobile and desktop
+		// console.log("results height less than search height")
 		searchAbsolute = false;
 		searchContainerSticky = false;
+		nominateButtonAbsolute = true;
 		if (y > currentEndorsementTabsStickyPosition) {
 			endorsementTabsSticky = true;
 		} else if (y <= currentEndorsementTabsStickyPosition) {
@@ -1348,11 +1354,17 @@
 				searchContainerSticky = false;
 				searchAbsolute = false;
 			};
+
+			if (window.scrollY + innerHeight >= resultsBottomPosition) {
+				nominateButtonAbsolute = true;
+			} else {
+				nominateButtonAbsolute = false;
+			};
 		};
 	};
 
 	const handleScroll = () => {
-		if (window.scrollY + innerHeight >= resultsElement.getBoundingClientRect().bottom  + window.scrollY) {
+		if (window.scrollY + innerHeight >= resultsBottomPosition) {
 			nominateButtonAbsolute = true;
 		} else {
 			nominateButtonAbsolute = false;
@@ -1584,22 +1596,24 @@
 				</form>
 			</div>
 		{/if}
-		<div 
-			bind:clientHeight={endorsementResultsHeight}
-			class="results"
-			bind:this={resultsElement}
-		>
-			<TabPanel
-				bind:tabPanels={endorsementTabPanels} 
-				bind:activeTab={activeEndorsementsTab}
-				endorsementNavHeight={endorsementNavHeight}
-			/>	
+		<div class="results_container" >
+			<div 
+				bind:clientHeight={endorsementResultsHeight}
+				bind:this={resultsElement}
+				class="results"
+			>
+				<TabPanel
+					bind:tabPanels={endorsementTabPanels} 
+					bind:activeTab={activeEndorsementsTab}
+					endorsementNavHeight={endorsementNavHeight}
+				/>	
+			</div>
 		</div>
 	</div>
 	<div 
 		id="nominate_button_container"
 		class={nominateButtonAbsolute ? "nominate_button_container_absolute" : "nominate_button_container_sticky"}
-		style={nominateButtonAbsolute ? `top: ${nominateButtonAbsolutePosition - (endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY)}px;` : "top: auto;"}
+		style={nominateButtonAbsolute ? `top: ${nominateButtonAbsolutePosition - endorsementsHeadingTopPosition}px;` : "top: auto;"}
 		bind:this={nominateButtonContainerElement}
 		bind:clientHeight={nominateButtonContainerHeight}
 	>
@@ -1669,6 +1683,11 @@
 
 	.filters_not_sticky {
 		position: relative;
+	}
+
+	.results_container {
+		position: relative;
+		width: 100%;
 	}
 
 	.results {
