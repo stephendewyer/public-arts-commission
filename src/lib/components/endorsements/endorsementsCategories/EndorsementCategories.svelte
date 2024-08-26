@@ -254,7 +254,10 @@
             style="background-color: #FBEFF6;"
             bind:this={candidatesSectionElement}
         >
-            <div class="section_heading_container">
+            <div 
+                class="section_heading_container"
+                style={candidatesHeadingSticky || candidatesHeadingAbsolute ? `height: ${candidatesHeadingHeight}px;` : "height: auto;"}
+            >
                 <h3 
                     bind:clientHeight={candidatesHeadingHeight}
                     class={candidatesHeadingSticky ? "section_heading_sticky" : candidatesHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
@@ -294,7 +297,10 @@
             style="background-color: #CBC6C2;"
             bind:this={referendumsSectionElement}
         >
-            <div class="section_heading_container" >
+            <div 
+                class="section_heading_container" 
+                style={referendumsHeadingSticky || referendumsHeadingAbsolute ? `height: ${referendumsHeadingHeight}px;` : "height: auto;"}
+            >
                 <h3 
                     bind:clientHeight={referendumsHeadingHeight}
                     class={referendumsHeadingSticky ? "section_heading_sticky" : referendumsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
@@ -334,7 +340,10 @@
             style="background-color: #F8FAF7;"
             bind:this={legislationSectionElement}
         >
-            <div class="section_heading_container">
+            <div 
+                class="section_heading_container"
+                style={legislationHeadingSticky || legislationHeadingAbsolute ? `height: ${legislationHeadingHeight}px;` : "height: auto;"}
+            >
                 <h3 
                     bind:clientHeight={legislationHeadingHeight}
                     class={legislationHeadingSticky? "section_heading_sticky" : legislationHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
@@ -374,7 +383,10 @@
             style="background-color: #F4F4DB;"
             bind:this={amendmentsSectionElement}
         >
-            <div class="section_heading_container">
+            <div 
+                class="section_heading_container"
+                style={amendmentsHeadingSticky || amendmentsHeadingAbsolute ? `height: ${amendmentsHeadingHeight}px;` : "height: auto;"}
+            >
                 <h3 
                     bind:clientHeight={amendmentsHeadingHeight}
                     class={amendmentsHeadingSticky? "section_heading_sticky" : amendmentsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
@@ -452,14 +464,12 @@
         top: auto;
         left: 0;
         right: auto;
-        padding: 1rem 0 0 0;
     }
 
     .section_heading_sticky {
         position: fixed;
         top: 0;
         bottom: auto;
-        padding: 1rem 0 0 0;
     }
 
     .endorsement_cards_and_pagination {
