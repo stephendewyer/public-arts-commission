@@ -1250,6 +1250,8 @@
 
 	let endorsementResultsHeight: number = 0;
 
+	// $: console.log("endorsement results height: ", endorsementResultsHeight);
+
 	let clearFiltersButtonHeight: number = 0;
 
 	let searchContainerSticky: boolean = false;
@@ -1285,9 +1287,9 @@
 		};
 
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
-		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
     });
 
@@ -1307,6 +1309,7 @@
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
 		searchAbsolutePosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY + (searchContainerHeight - searchHeight- endorsementNavHeight);
+		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
 	});
 
 	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
