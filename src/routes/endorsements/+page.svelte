@@ -1316,7 +1316,7 @@
 
 	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
 
-	$: console.log("endorsement results height: ", endorsementResultsHeight)
+	// $: console.log("endorsement results height: ", endorsementResultsHeight)
 
 	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is less than search container = no search absolute position
@@ -1522,8 +1522,8 @@
 					noValidate 
 					autoComplete="off"
 					on:submit|preventDefault
-					class={endorsementTabsSticky ? !searchAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky"}
-					style={endorsementTabsSticky ? searchAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;"}
+					class={searchContainerSticky ? !searchAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky"}
+					style={searchContainerSticky ? searchAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;"}
 					bind:clientHeight={searchHeight}
 				>
 					<div 
