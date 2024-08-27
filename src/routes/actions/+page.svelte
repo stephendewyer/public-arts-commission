@@ -613,9 +613,7 @@
 
     let openFilters: boolean = true;
 
-	let height: number = 0;
-
-    $: height;
+	let searchHeight: number = 0;
 
 	// innerWidth is the width of the inner window
 	let innerWidth: number = 0;
@@ -631,15 +629,19 @@
 		clearFiltersClicked = false;
 	};
 
-	let filtersContainerHeight: number = 0;
+	let searchContainerHeight: number = 0;
 
-	$: filtersContainerHeight;
+	let searchContainerElement: HTMLElement;
+
+	let mobileScrollableSearchHeight: number = 0;
+
+	let innerHeight: number = 0;
+
+	let scrollableSearchHeight: number = 0;
 
 	let endorsementNavHeight: number = 0;
 
-	let endorsementsNav: HTMLElement;
-
-	let filtersContainerElement: HTMLElement;
+	let endorsementsNav: HTMLElement;	
 
 	let y: number = 0;
 
@@ -647,38 +649,134 @@
 
     let currentEndorsementTabsStickyPosition: number = 0;
 
-	let filtersAbsolutePosition: number = 0;
+	let searchAbsolutePosition: number = 0;
 
-	let filtersAbsolute: boolean = false;
+	let searchAbsolute: boolean = false;
+
+	let endorsementResultsHeight: number = 0;
+
+	let clearFiltersButtonHeight: number = 0;
+
+	let searchContainerSticky: boolean = false;
+
+	let searchContainerTopPosition: number = 0;
+
+	let nominateButtonContainerElement: HTMLElement;
+
+	let resultsElement: HTMLElement;
+
+	let nominateButtonAbsolute: boolean = false;
+
+	let nominateButtonAbsolutePosition: number = 0;
+
+	let resultsBottomPosition: number = 0;
+
+	let nominateButtonContainerHeight: number = 0;
+
+	let searchActionsHeadingElement: HTMLElement;
+
+	let endorsementsHeadingTopPosition: number = 0;
+
+    let forthcomingActionsHeadingSticky: boolean = false;
+    let forthcomingActionsHeadingAbsolute: boolean = false;
+    let forthcomingActionsHeadingHeight: number = 0;
+
+    let actionsHistoryHeadingSticky: boolean = false;
+    let actionsHistoryHeadingAbsolute: boolean = false;
+    let actionsHistoryHeadingHeight: number = 0;
 
     onMount(() => {
+		if (innerWidth <= 720) {
+			openFilters = false;
+		};
+		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
+		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
+		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
+		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
     });
 
-	afterUpdate(() =>  {
-		if (innerWidth <= 720) {
-			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - endorsementNavHeight);
-		} else {
-			filtersAbsolutePosition = filtersContainerElement?.getBoundingClientRect().top + window.scrollY + (filtersContainerHeight - height- endorsementNavHeight);
-		};
-	});
-
-    $: if (y > currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
-        endorsementTabsSticky = true;
-		filtersAbsolute = false;
-    } else if (y > currentEndorsementTabsStickyPosition && y > filtersAbsolutePosition) {
-        endorsementTabsSticky = true;
-		filtersAbsolute = true;
-    } else if (y <= currentEndorsementTabsStickyPosition && y <= filtersAbsolutePosition) {
-		endorsementTabsSticky = false;
-		filtersAbsolute = false;
+	const widowResizeHandler = () => {
+		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
+		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;		
+		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
+		currentEndorsementTabsStickyPosition = searchActionsHeadingElement?.getBoundingClientRect().bottom + window.scrollY;
 	};
 
-    let searchActionsHeadingElement: HTMLElement;
+	afterUpdate(() =>  {
+		if (window.scrollY + innerHeight >= resultsBottomPosition) {
+				nominateButtonAbsolute = true;
+			} else {
+				nominateButtonAbsolute = false;
+			};
+		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
+		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
+		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
+		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
+		searchAbsolutePosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY + (searchContainerHeight - searchHeight- endorsementNavHeight);
+		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
+	});
 
-    const handleWindowResize = () => {
-        currentEndorsementTabsStickyPosition = searchActionsHeadingElement?.getBoundingClientRect().bottom + window.scrollY;
-    };
+	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
+
+	// $: console.log("endorsement results height: ", endorsementResultsHeight)
+
+	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
+		// quilt search results height is less than search container = no search absolute position
+		// handle for both mobile and desktop
+		searchAbsolute = false;
+		searchContainerSticky = false;
+		nominateButtonAbsolute = true;
+		if (y > currentEndorsementTabsStickyPosition) {
+			endorsementTabsSticky = true;
+		} else if (y <= currentEndorsementTabsStickyPosition) {
+			endorsementTabsSticky = false;
+		};
+	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
+		// quilt search results height is more than search container = include search absolute position
+		if (innerWidth <= 720) {
+			// mobile = no search absolute position
+			searchAbsolute = false;
+			if (y > currentEndorsementTabsStickyPosition) {
+				endorsementTabsSticky = true;
+				searchContainerSticky = true;
+			} else if (y <= currentEndorsementTabsStickyPosition) {
+				endorsementTabsSticky = false;
+				searchContainerSticky = false;
+			};
+		} else if (innerWidth > 720) {
+			if ((y > currentEndorsementTabsStickyPosition) && (y > searchAbsolutePosition)) {
+				endorsementTabsSticky = true;
+				searchContainerSticky = true;
+				searchAbsolute = true;
+			} else if (y > currentEndorsementTabsStickyPosition && y <= searchAbsolutePosition) {
+				endorsementTabsSticky = true;
+				searchContainerSticky = true;
+				searchAbsolute = false;
+			} else if (y <= currentEndorsementTabsStickyPosition && y <= searchAbsolutePosition) {
+				endorsementTabsSticky = false;
+				searchContainerSticky = false;
+				searchAbsolute = false;
+			};
+			if (window.scrollY + innerHeight >= resultsBottomPosition) {
+				nominateButtonAbsolute = true;
+			} else {
+				nominateButtonAbsolute = false;
+			};
+		};
+	};
+
+	const handleScroll = () => {
+		if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
+			if (window.scrollY + innerHeight >= resultsBottomPosition) {
+				nominateButtonAbsolute = true;
+			} else {
+				nominateButtonAbsolute = false;
+			};
+		};
+	};
 
 </script>
 <svelte:head>
@@ -687,9 +785,11 @@
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
 <svelte:window 
+    bind:innerHeight
     bind:innerWidth 
     bind:scrollY={y}
-    on:resize={handleWindowResize}
+    on:resize={widowResizeHandler}
+    on:scroll={handleScroll}
 />
 <section class="page">
     <h1 bind:this={searchActionsHeadingElement}>
@@ -704,150 +804,302 @@
         <div class="endorsement_nav_tabs_inner">
             <FilterToggleButton bind:openFilters >filters</FilterToggleButton>
         </div>
+        {#if (innerWidth <= 720)}
+			<div class="mobile_search_container">
+				<div 
+					id="filters_container_mobile" 
+					class={openFilters ? "filters_container_open" : "filters_container_closed"}
+					style={openFilters ? `height: ${searchHeight}px` : 'height: 0px;'}
+					bind:clientHeight={searchContainerHeight}
+					bind:this={searchContainerElement}
+				>
+					<form 
+						id="filters"
+						noValidate 
+						autoComplete="off"
+						on:submit|preventDefault
+						bind:clientHeight={searchHeight}
+						style={openFilters ? "opacity: 100%;" : "opacity: 0;"}
+					>
+						<div 
+							class="scrollable_search_container"
+							style={`height: ${mobileScrollableSearchHeight}px;`}
+						>
+                            <div class="search_actions_input_container">
+                                {#if useCurrentLocationChecked}
+                                    {#if pending}
+                                        <LoaderAnimation />
+                                    {:else if addressLoadSuccess}
+                                        <SearchInput 
+                                            placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+                                            inputID="address"
+                                            inputName="address"
+                                            inputLabel={true}
+                                            bind:searchInputValue={searchByStreetAddressInputValue}
+                                            searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                                            options={statesWithCity}
+                                            bind:optionSelected={searchbarOptionSelected}
+                                        >
+                                            action name, state, city, zip code or street address
+                                        </SearchInput>
+                                    {:else if !addressLoadSuccess}
+                                        <p>failed to load address</p>
+                                    {/if}
+                                {:else}
+                                    <SearchInput 
+                                        placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+                                        inputID="address"
+                                        inputName="address"
+                                        inputLabel={true}
+                                        bind:searchInputValue={searchByStreetAddressInputValue}
+                                        searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                                        options={statesWithCity}
+                                        bind:optionSelected={searchbarOptionSelected}
+                                    >
+                                        action name, state, city, zip code or street address
+                                    </SearchInput>
+                                {/if}
+                                <Checkbox 
+                                    bind:checked={useCurrentLocationChecked}
+                                >
+                                    <div class="use_current_location_label">
+                                        <div class="geolocation_container">
+                                            {@html GeoLocationIcon}
+                                        </div>
+                                        use my current location
+                                    </div>
+                                </Checkbox>
+                            </div>
+                            <div class="year_input_container">
+                                <SelectSearchInput 
+                                    options={Years}
+                                    inputID="year"
+                                    inputName="year"
+                                    inputLabel={true}	
+                                    bind:selectInputValue={yearInputValue}
+                                    selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+                                >
+                                    election year or release year
+                                </SelectSearchInput>
+                            </div>
+						</div>
+						<div 
+							class="clear_filters_container"
+							bind:clientHeight={clearFiltersButtonHeight}
+						>
+							<SubmitButtonSecondary 
+								disable={false}
+								bind:clicked={clearFiltersClicked}
+							>
+								clear filters
+							</SubmitButtonSecondary>
+						</div>
+					</form>
+				</div>
+			
+			</div>
+		{/if}
     </div>
     <div 
         class="filters_and_results"
         style={endorsementTabsSticky ? `padding-top: ${endorsementNavHeight}px;` : "padding-top: 0px;"}
-    >
-        <div 
-            id="filters_container" 
-            class={openFilters ? "filters_container_open" : "filters_container_closed"}
-            style={ (innerWidth <= 720) ? openFilters ? `height: ${height}px` : 'height: 0px;' : "" }
-            bind:clientHeight={filtersContainerHeight}
-            bind:this={filtersContainerElement}
-        >
-            
-            <form 
-                id="filters"
-                class={(innerWidth > 720) ? endorsementTabsSticky ? !filtersAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky" : "filters_not_sticky"}
-                style={(innerWidth > 720) ? endorsementTabsSticky ? filtersAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;": ""}
-                bind:clientHeight={height}
+    >   
+        {#if (innerWidth > 720)}
+            <div 
+                id="filters_container" 
+                class={openFilters ? "filters_container_open" : "filters_container_closed"}
+                bind:clientHeight={searchContainerHeight}
+                bind:this={searchContainerElement}
             >
-                <div class="search_endorsements_input_container">
-                    {#if useCurrentLocationChecked}
-                        {#if pending}
-                            <LoaderAnimation />
-                        {:else if addressLoadSuccess}
-                            <SearchInput 
-                                placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
-                                inputID="address"
-                                inputName="address"
-                                inputLabel={true}
-                                bind:searchInputValue={searchByStreetAddressInputValue}
-                                searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
-                                options={statesWithCity}
-                                bind:optionSelected={searchbarOptionSelected}
-                            >
-                                action name, state, city, zip code or street address
-                            </SearchInput>
-                        {:else if !addressLoadSuccess}
-                            <p>failed to load address</p>
-                        {/if}
-                    {:else}
-                        <SearchInput 
-                            placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
-                            inputID="address"
-                            inputName="address"
-                            inputLabel={true}
-                            bind:searchInputValue={searchByStreetAddressInputValue}
-                            searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
-                            options={statesWithCity}
-                            bind:optionSelected={searchbarOptionSelected}
-                        >
-                            action name, state, city, zip code or street address
-                        </SearchInput>
-                    {/if}
-                    <Checkbox 
-                        bind:checked={useCurrentLocationChecked}
-                    >
-                        <div class="use_current_location_label">
-                            <div class="geolocation_container">
-                                {@html GeoLocationIcon}
-                            </div>
-                            use my current location
-                        </div>
-                    </Checkbox>
-                </div>
-                <div class="year_input_container">
-                    <SelectSearchInput 
-                        options={Years}
-                        inputID="year"
-                        inputName="year"
-                        inputLabel={true}	
-                        bind:selectInputValue={yearInputValue}
-                        selectInputValueChange={() => selectYearInputValueChangeHandler()}	
-                    >
-                        election year or release year
-                    </SelectSearchInput>
-                </div>
-                <SubmitButtonSecondary 
-                    disable={false}
-                    bind:clicked={clearFiltersClicked}
+                <form 
+                    id="filters"
+                    noValidate 
+                    autoComplete="off"
+                    on:submit|preventDefault
+                    class={searchContainerSticky ? !searchAbsolute ? "filters_sticky" : "filters_absolute" : "filters_not_sticky"}
+                    style={searchContainerSticky ? searchAbsolute ? "" : `top: ${endorsementNavHeight}px;` : "top: 0;"}
+                    bind:clientHeight={searchHeight}
                 >
-                    clear filters
-                </SubmitButtonSecondary>
-            </form>
-        </div>
-        <ul class="results">
-            {#if pendingEndorsedActionsData}
-                <LoaderAnimation />
-            {:else if (pendingEndorsedActionsData === false && getEndorsedActionsDataSuccess === true)}
-                <li class="forthcoming_actions_container">
-                    <h3>
-                        forthcoming actions
-                    </h3>
-                    <div class="action_cards_frame">
-                        <div class="action_cards">
-                            {#each paginatedActionsForthcoming as endorsedAction, i}
-                                <a 
-                                    href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
-                                    data-sveltekit-noscroll
-                                > 
-                                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                                </a>
-                            {/each}
-                        </div>
-                    </div>
-                    <Pagination 
-                        bind:currentPage={actionsForthcomingCurrentPage}
-                        totalCount={futureEndorsedActions.length}
-                        pageSize={pageSize}
-                    />
-                </li>
-                <li class="actions_history_container">
-                    <h3>
-                        actions history
-                    </h3>
-                    <div class="action_cards_frame">
-                        <div class="action_cards">
-                            {#if pendingEndorsedActionsData}
-                                <LoaderAnimation />
-                            {:else if getEndorsedActionsDataSuccess}
-                                {#each paginatedActionsHistory as endorsedAction, i}
-                                    <a 
-                                        href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
-                                        data-sveltekit-noscroll
-                                    > 
-                                        <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                                    </a>
-                                {/each}
-                            {:else if !getEndorsedActionsDataSuccess}
-                                <p>failed to load endorsed actions history</p>
+                    <div 
+                        class="scrollable_search_container"
+                        style={`height: ${scrollableSearchHeight}px;`}
+                    >
+                        <div class="search_actions_input_container">
+                            {#if useCurrentLocationChecked}
+                                {#if pending}
+                                    <LoaderAnimation />
+                                {:else if addressLoadSuccess}
+                                    <SearchInput 
+                                        placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+                                        inputID="address"
+                                        inputName="address"
+                                        inputLabel={true}
+                                        bind:searchInputValue={searchByStreetAddressInputValue}
+                                        searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                                        options={statesWithCity}
+                                        bind:optionSelected={searchbarOptionSelected}
+                                    >
+                                        action name, state, city, zip code or street address
+                                    </SearchInput>
+                                {:else if !addressLoadSuccess}
+                                    <p>failed to load address</p>
+                                {/if}
+                            {:else}
+                                <SearchInput 
+                                    placeholder="action name | 1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+                                    inputID="address"
+                                    inputName="address"
+                                    inputLabel={true}
+                                    bind:searchInputValue={searchByStreetAddressInputValue}
+                                    searchInputValueChange={() => searchByNameOrLocationInputValueChangeHandler()}
+                                    options={statesWithCity}
+                                    bind:optionSelected={searchbarOptionSelected}
+                                >
+                                    action name, state, city, zip code or street address
+                                </SearchInput>
                             {/if}
+                            <Checkbox 
+                                bind:checked={useCurrentLocationChecked}
+                            >
+                                <div class="use_current_location_label">
+                                    <div class="geolocation_container">
+                                        {@html GeoLocationIcon}
+                                    </div>
+                                    use my current location
+                                </div>
+                            </Checkbox>
+                        </div>
+                        <div class="year_input_container">
+                            <SelectSearchInput 
+                                options={Years}
+                                inputID="year"
+                                inputName="year"
+                                inputLabel={true}	
+                                bind:selectInputValue={yearInputValue}
+                                selectInputValueChange={() => selectYearInputValueChangeHandler()}	
+                            >
+                                election year or release year
+                            </SelectSearchInput>
                         </div>
                     </div>
-                    <Pagination 
-                        bind:currentPage={actionsHistoryCurrentPage}
-                        totalCount={pastEndorsedActions.length}
-                        pageSize={pageSize}
-                    />
-                </li>
-            {:else if (getEndorsedActionsDataSuccess === false && pendingEndorsedActionsData === false)}
-                <p>failed to load endorsed forthcoming actions</p>
-            {/if}
-        </ul>
+                    <div 
+                        class="clear_filters_container"
+                        bind:clientHeight={clearFiltersButtonHeight}
+                    >
+                        <SubmitButtonSecondary 
+                            disable={false}
+                            bind:clicked={clearFiltersClicked}
+                        >
+                            clear filters
+                        </SubmitButtonSecondary>
+                    </div>
+                </form>
+            </div>
+        {/if}
+        <div class="results_container">
+            <ul 
+                bind:clientHeight={endorsementResultsHeight}
+				bind:this={resultsElement}
+                class="results"
+            >
+                {#if pendingEndorsedActionsData}
+                    <LoaderAnimation />
+                {:else if (pendingEndorsedActionsData === false && getEndorsedActionsDataSuccess === true)}
+                    <li 
+                        class="actions_section_container"
+                        style="background-color: rgb(251, 239, 246);"
+                    >
+                        <div 
+                            class="section_heading_container" 
+                            style={forthcomingActionsHeadingSticky || forthcomingActionsHeadingAbsolute ? `height: ${forthcomingActionsHeadingHeight}px;` : "height: auto;"}
+                        >
+                            <h3
+                                bind:clientHeight={forthcomingActionsHeadingHeight}
+                                class={forthcomingActionsHeadingSticky ? "section_heading_sticky" : forthcomingActionsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
+                                style={forthcomingActionsHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                            >
+                                forthcoming actions
+                            </h3>
+                        </div>
+                        <div class="action_cards_and_pagination">
+                            <div class="action_cards_frame">
+                                <div class="action_cards">
+                                    {#each paginatedActionsForthcoming as endorsedAction, i}
+                                        <a 
+                                            href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                            data-sveltekit-noscroll
+                                        > 
+                                            <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                                        </a>
+                                    {/each}
+                                </div>
+                            </div>
+                            <div class="pagination_container">
+                                <Pagination 
+                                    bind:currentPage={actionsForthcomingCurrentPage}
+                                    totalCount={futureEndorsedActions.length}
+                                    pageSize={pageSize}
+                                />
+                            </div>
+                        </div>
+                    </li>
+                    <li 
+                        class="actions_section_container"
+                        style="background-color: rgb(203, 198, 194);"
+                    >
+                        <div 
+                            class="section_heading_container" 
+                            style={actionsHistoryHeadingSticky || actionsHistoryHeadingAbsolute ? `height: ${actionsHistoryHeadingHeight}px;` : "height: auto;"}
+                        >
+                            <h3
+                                bind:clientHeight={actionsHistoryHeadingHeight}
+                                class={actionsHistoryHeadingSticky ? "section_heading_sticky" : actionsHistoryHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
+                                style={actionsHistoryHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                            >
+                                actions history
+                            </h3>
+                        </div>
+                        <div class="action_cards_and_pagination">
+                            <div class="action_cards_frame">
+                                <div class="action_cards">
+                                    {#if pendingEndorsedActionsData}
+                                        <LoaderAnimation />
+                                    {:else if getEndorsedActionsDataSuccess}
+                                        {#each paginatedActionsHistory as endorsedAction, i}
+                                            <a 
+                                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                                data-sveltekit-noscroll
+                                            > 
+                                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                                            </a>
+                                        {/each}
+                                    {:else if !getEndorsedActionsDataSuccess}
+                                        <p>failed to load endorsed actions history</p>
+                                    {/if}
+                                </div>
+                            </div>
+                            <div class="pagination_container">
+                                <Pagination 
+                                    bind:currentPage={actionsHistoryCurrentPage}
+                                    totalCount={pastEndorsedActions.length}
+                                    pageSize={pageSize}
+                                />
+                            </div>
+                        </div>
+                    </li>
+                {:else if (getEndorsedActionsDataSuccess === false && pendingEndorsedActionsData === false)}
+                    <p>failed to load endorsed forthcoming actions</p>
+                {/if}
+            </ul>
+        </div>
     </div>
-    <div class="nominate_button_container">
+    <div 
+		id="nominate_button_container"
+		class={nominateButtonAbsolute ? "nominate_button_container_absolute" : "nominate_button_container_sticky"}
+		style={nominateButtonAbsolute ? `top: ${nominateButtonAbsolutePosition - endorsementsHeadingTopPosition}px;` : "top: auto;"}
+		bind:this={nominateButtonContainerElement}
+		bind:clientHeight={nominateButtonContainerHeight}
+	>
 		<NominateButton 
 			category="actions"
 			authorized_user={data.streamed.user}
@@ -866,32 +1118,7 @@
 		align-items: center;
 	}
 
-    #endorsement_nav_tabs {	
-		width: 100%;
-		padding: 0.5rem 1rem;
-	}
-
-    .endorsements_tabs_container {
-		position: relative;
-	}
-
-	.endorsement_tabs_container_sticky {
-		position: fixed;
-		top: 0;
-		z-index: 1;
-		background-color: #DBE4D7;
-	}
-
-	.endorsement_nav_tabs_inner {
-		position: relative;
-		display: flex;
-		justify-content: flex-end;
-		width: 100%;
-		max-width: 1920px;
-		margin: 0 auto;
-	}
-
-    .filters_and_results {
+	.filters_and_results {
 		position: relative;
 		display: flex;
 		flex-direction: row;
@@ -906,6 +1133,10 @@
 		background-color: #E7DED0;
 	}
 
+	#filters_container_mobile {
+		display: none;
+	}
+
 	.filters_container_open {
 		margin-left: 0%;
 	}
@@ -918,8 +1149,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		padding: 1rem;
-		gap: 1rem;
 		transition: transform 0.2s ease-out;
 	}
 
@@ -939,17 +1168,20 @@
 		position: relative;
 	}
 
+	.results_container {
+		position: relative;
+		width: 100%;
+	}
+
 	.results {
 		position: relative;
 		width: 100%;
+        list-style: none;
         margin: 0;
         padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
 	}
 
-    .search_endorsements_input_container {
+    .search_actions_input_container {
 		display: flex;
 		flex-direction: column;
         gap: 0.5rem;
@@ -968,55 +1200,56 @@
         width: 1.25rem;
     }
 
+	#endorsement_nav_tabs {	
+		width: 100%;
+	}
+
+	.endorsements_tabs_container {
+		position: relative;
+	}
+
+	.endorsement_tabs_container_sticky {
+		position: fixed;
+		top: 0;
+		z-index: 1;
+		background-color: #DBE4D7;
+	}
+
+	.endorsement_nav_tabs_inner {
+		display: flex;
+		justify-content: flex-end;
+		width: 100%;
+		max-width: 1920px;
+		margin: 0 auto;
+		padding: 0.5rem 1rem;
+	}
+
 	.year_input_container {
 		width: 12rem;
 	}
 
-    .forthcoming_actions_container {
-        background-color: #F4F5FB;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
+	.scrollable_search_container {
+		width: 100%;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1rem;
+	}
 
-    .actions_history_container {
-        background-color: #CBC6C2;
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
+	.clear_filters_container {
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		padding: 1rem;
+	}
 
-    .action_cards_frame {
-        width: 100%;
-        overflow-x: auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .action_cards {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;      
-        gap: 1rem;
-        padding: 0 1rem 1rem 1rem;
-        width: 100%;
-    }
-
-    
-    .nominate_button_container {
-		position: fixed;
-		bottom: 0;
-		right: 0;
+	#nominate_button_container {
 		padding: 1rem;
 		max-width: 1920px;
 		width: 100%;
-		left: auto;
-		right: auto;
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
@@ -1024,53 +1257,161 @@
 		pointer-events: none;
 	}
 
+	.nominate_button_container_sticky {
+		left: auto;
+		position: fixed;
+		bottom: 0;
+		right: 0;
+	}
 
-    @media screen and (max-width: 1440px) {
-        #filters_container {
-			width: 28rem;
-			min-width: 28rem;
-		}
+	.nominate_button_container_absolute {
+		position: absolute;
+		left: auto;
+		right: 0;
+		bottom: auto;
+	}
 
-		.filters_sticky {
-			width: 28rem;
-		}
+	.mobile_search_container {
+		position: relative;
+		width: 100%;
+	}
 
-		.filters_container_closed {
-			margin-left: -28rem;
-		}
-
-		.use_current_location_label {
-			font-size: 0.95rem;
-		}
+    .actions_section_container {
+        padding: 1rem;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
     }
 
-    @media screen and (max-width: 1080px) {
+    .section_heading_container {
+        width: 20rem;
+        position: relative;
+    }
 
+    .section_heading_container > h3 {
+        margin: 0;
+        font-size: 2rem; 
+    }
+
+    .section_heading_relative {
+        position: relative;
+    }
+
+    .section_heading_absolute {
+        position: absolute;
+        bottom: 0;
+        top: auto;
+        left: 0;
+        right: auto;
+    }
+
+    .section_heading_sticky {
+        position: fixed;
+        top: 0;
+        bottom: auto;
+    }
+
+    .action_cards_and_pagination {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .action_cards_frame {
+        position: relative;
+        width: auto;
+        overflow-x: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .action_cards {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;      
+        gap: 1rem;
+        padding: 0 1rem 1rem 1rem;
+        width: 100%;
+    }
+
+    .pagination_container {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    @media screen and (max-width: 1440px) {
+
+        #filters_container {
+            width: 24rem;
+            min-width: 24rem;
+        }
+
+        .filters_sticky {
+            width: 24rem;
+        }
+
+        .filters_container_closed {
+            margin-left: -24rem;
+        }
+
+        .use_current_location_label {
+            font-size: 0.95rem;
+        }
+
+        .section_heading_container {
+            width: 18rem;
+        }
+
+        .section_heading_container > h3 {
+           font-size: 1.875rem; 
+        }
+
+    }	
+
+    @media screen and (max-width: 1080px) {
 
         .use_current_location_label {
 			font-size: 0.9rem;
 		}
 
 		#filters_container {
-			width: 24rem;
-			min-width: 24rem;
+			width: 20rem;
+			min-width: 20rem;
 		}
 
 		.filters_container_closed {
-			margin-left: -24rem;
+			margin-left: -20rem;
 		}
 
 		.filters_sticky {
-			width: 24rem;
+			width: 20rem;
 		}
-        
+
+        .section_heading_container {
+            width: 16rem;
+        }
+
+        .section_heading_container > h3 {
+            font-size: 1.675rem;
+        }
 
     }
 
-    @media (max-width: 720px) {
+    @media screen and (max-width: 720px) {
 
         .endorsements_tabs_container {
 			position: relative;
+		}
+
+		.endorsement_nav_tabs_inner {
+			margin: 0;
+			gap: 0.5rem;
 		}
 
 		.use_current_location_label {
@@ -1083,25 +1424,74 @@
 			width: 100%;
 		}
 
-		#filters_container {
+		#filters_container_mobile {
+			display: block;
+			position: absolute;
 			width: 100%;
+			min-width: 100%;
 			overflow-y: hidden;
 			will-change: height;
         	transition: height 0.4s cubic-bezier(0.65, 0.05, 0.36, 1);
 			min-width: 100%;
+			z-index: 1;
+			margin-left: 0;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: #E7DED0;
+		}
+
+		.filters_container_open {			
+			height: 100%;
+			overflow: hidden;
+
+		}
+
+		.filters_container_closed {
+			height: 0;
+			overflow: hidden;
+		}
+
+		#filters {
+			position: relative;
+			transition: opacity 0.6s ease-out;
 		}
 
         .geolocation_container {
             width: 1rem;
         }
 
-		.filters_container_closed {
-			margin-left: 0;
-		}
+        .section_heading_container {
+            width: 100%;
+        }
+
+        .section_heading_container > h3 {
+            font-size: 1.5rem;
+        }
+
+        .actions_section_container {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+        }
 
         .action_cards {
             flex-wrap: nowrap;
             justify-content: flex-start;
+        }
+
+        .action_cards_frame {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .action_cards_and_pagination {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
     }

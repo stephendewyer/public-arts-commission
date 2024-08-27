@@ -1285,7 +1285,6 @@
 	let endorsementsHeadingTopPosition: number = 0;
 
     onMount(() => {
-
 		if (innerWidth <= 720) {
 			openFilters = false;
 		};
@@ -1306,6 +1305,11 @@
 	};
 
 	afterUpdate(() =>  {
+		if (window.scrollY + innerHeight >= resultsBottomPosition) {
+				nominateButtonAbsolute = true;
+			} else {
+				nominateButtonAbsolute = false;
+			};
 		endorsementsHeadingTopPosition = endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
@@ -1321,7 +1325,7 @@
 	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is less than search container = no search absolute position
 		// handle for both mobile and desktop
-		console.log("results height less than search height")
+		// console.log("results height less than search height")
 		searchAbsolute = false;
 		searchContainerSticky = false;
 		nominateButtonAbsolute = true;
@@ -1332,7 +1336,7 @@
 		};
 	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is more than search container = include search absolute position
-		console.log("results height more than search height")
+		// console.log("results height more than search height")
 		if (innerWidth <= 720) {
 			// mobile = no search absolute position
 			searchAbsolute = false;

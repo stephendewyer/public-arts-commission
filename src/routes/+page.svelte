@@ -264,7 +264,7 @@
 	<meta property="og:image" content="{PublicArtsCommissionBanner}" />
 </svelte:head>
 
-<section>
+<section class="index_page_container">
 	<div class="banner_and_logins">
 		<picture class="banner_container">
 			<img class="banner" src={PublicArtsCommissionBanner} alt="public arts commission banner" />
@@ -377,11 +377,12 @@
 </section>
 
 <style>
-	section {
+	.index_page_container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		gap: 1rem;
 	}
 
 	.banner_and_logins {
@@ -404,7 +405,7 @@
 
 	.heading01 {
 		width: 100%;
-		max-width: 2000px;
+		max-width: 60rem;
 		padding: 0 1rem;
 	}
 
