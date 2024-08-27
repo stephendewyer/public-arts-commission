@@ -677,10 +677,16 @@
 
 	let endorsementsHeadingTopPosition: number = 0;
 
+    let forthcomingActionsSectionElement: HTMLElement;
+    let forthcomingActionsSectionElementTop: number = 0;
+    let forthcomingActionsSectionElementBottom: number = 0;
     let forthcomingActionsHeadingSticky: boolean = false;
     let forthcomingActionsHeadingAbsolute: boolean = false;
     let forthcomingActionsHeadingHeight: number = 0;
 
+    let actionsHistorySectionElement: HTMLElement;
+    let actionsHistorySectionElementTop: number = 0;
+    let actionsHistorySectionElementBottom: number = 0;
     let actionsHistoryHeadingSticky: boolean = false;
     let actionsHistoryHeadingAbsolute: boolean = false;
     let actionsHistoryHeadingHeight: number = 0;
@@ -695,6 +701,16 @@
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
         currentEndorsementTabsStickyPosition = endorsementsNav?.getBoundingClientRect().top + window.scrollY;
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
+
+        if (forthcomingActionsSectionElement) {
+            forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
+            forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+
+        if (actionsHistorySectionElement) {
+            actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
+            actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
     });
 
 	const widowResizeHandler = () => {
@@ -703,20 +719,42 @@
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;		
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
 		currentEndorsementTabsStickyPosition = searchActionsHeadingElement?.getBoundingClientRect().bottom + window.scrollY;
+
+        if (forthcomingActionsSectionElement) {
+            forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
+            forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+
+        if (actionsHistorySectionElement) {
+            actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
+            actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
 	};
 
 	afterUpdate(() =>  {
+
 		if (window.scrollY + innerHeight >= resultsBottomPosition) {
-				nominateButtonAbsolute = true;
-			} else {
-				nominateButtonAbsolute = false;
-			};
+            nominateButtonAbsolute = true;
+        } else {
+            nominateButtonAbsolute = false;
+        };
+
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
 		searchAbsolutePosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY + (searchContainerHeight - searchHeight- endorsementNavHeight);
 		searchContainerTopPosition = searchContainerElement?.getBoundingClientRect().top + window.scrollY;
+
+        if (forthcomingActionsSectionElement) {
+            forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
+            forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
+
+        if (actionsHistorySectionElement) {
+            actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
+            actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
+        };
 	});
 
 	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
@@ -767,6 +805,38 @@
 			};
 		};
 	};
+
+    $: if (innerWidth > 720) {
+        if (
+            (y > forthcomingActionsSectionElementTop - endorsementNavHeight) && 
+            (y <= forthcomingActionsSectionElementBottom - endorsementNavHeight - forthcomingActionsHeadingHeight) 
+        ) {
+            forthcomingActionsHeadingSticky = true;
+        } else {
+            forthcomingActionsHeadingSticky = false;
+        };
+
+        if (y > forthcomingActionsSectionElementBottom - endorsementNavHeight - forthcomingActionsHeadingHeight) {
+            forthcomingActionsHeadingAbsolute = true;
+        } else {
+            forthcomingActionsHeadingAbsolute = false;
+        };
+
+        if (
+            (y > actionsHistorySectionElementTop - endorsementNavHeight) && 
+            (y <= actionsHistorySectionElementBottom - endorsementNavHeight - actionsHistoryHeadingHeight) 
+        ) {
+            actionsHistoryHeadingSticky = true;
+        } else {
+            actionsHistoryHeadingSticky = false;
+        };
+
+        if (y > actionsHistorySectionElementBottom - endorsementNavHeight - actionsHistoryHeadingHeight) {
+            actionsHistoryHeadingAbsolute = true;
+        } else {
+            actionsHistoryHeadingAbsolute = false;
+        };
+    };
 
 	const handleScroll = () => {
 		if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
@@ -1006,6 +1076,7 @@
                     <LoaderAnimation />
                 {:else if (pendingEndorsedActionsData === false && getEndorsedActionsDataSuccess === true)}
                     <li 
+                        bind:this={forthcomingActionsSectionElement}
                         class="actions_section_container"
                         style="background-color: rgb(251, 239, 246);"
                     >
@@ -1044,6 +1115,7 @@
                         </div>
                     </li>
                     <li 
+                        bind:this={actionsHistorySectionElement}
                         class="actions_section_container"
                         style="background-color: rgb(203, 198, 194);"
                     >
@@ -1291,6 +1363,7 @@
     .section_heading_container > h3 {
         margin: 0;
         font-size: 2rem; 
+
     }
 
     .section_heading_relative {
