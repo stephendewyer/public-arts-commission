@@ -1034,13 +1034,15 @@
                                     </p>
                                 </div>
                             </PriorityAccordion>
+                        </li>
+                        <li class="priority_heading">
                             <PriorityAccordion>
                                 <span slot="head">
                                     Change zoning laws to allow multi-family housing
                                 </span>
                                 <div slot="details">
                                     <p>
-                                        Cities with single family zoning laws like Los Angeles are fueling the housing crisis by preventing more affordable homes and increasing the unhoused population.  Changing of zoning laws in cities like Los Angeles, which has one of the highest unhoused populations in the U.S., is necessary to address the housing crisis.
+                                        Cities with single family zoning laws like Los Angeles, California are fueling the housing crisis by preventing more affordable homes, increasing the unhoused population.  Changing of zoning laws in cities like Los Angeles, which has one of the highest unhoused populations in the U.S., is necessary to address the housing crisis.
                                     </p>
                                 </div>
                             </PriorityAccordion>
