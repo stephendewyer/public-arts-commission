@@ -29,21 +29,26 @@
     }
 
     const passwordInputFocusChangedHandler = () => {
-        if (passwordInputTouched) {
+        if (required) {
+            if (passwordInputTouched) {
+                if (passwordInputValue === "") {
+                    isValid = false;
+                } else if (passwordInputValue !== "") {
+                    isValid = true;
+                }
+            }
+        }
+        
+    }
+
+    const passwordInputBlurChangedHandler = () => {
+        passwordInputTouched = true;
+        if (required) {
             if (passwordInputValue === "") {
                 isValid = false;
             } else if (passwordInputValue !== "") {
                 isValid = true;
             }
-        }
-    }
-
-    const passwordInputBlurChangedHandler = () => {
-        passwordInputTouched = true;
-        if (passwordInputValue === "") {
-            isValid = false;
-        } else if (passwordInputValue !== "") {
-            isValid = true;
         }
     }
 

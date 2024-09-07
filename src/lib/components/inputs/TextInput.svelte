@@ -26,7 +26,6 @@
 
     const textInputFocusChangedHandler = () => {
         if (required) {
-            textInputTouched = true;
             if (textInputTouched) {
                 if (textInputValue === "") {
                     isValid = false;
