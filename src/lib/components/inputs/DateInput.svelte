@@ -15,49 +15,40 @@
 
     const dateInputValueChangedHandler = () => {
         if (required) {
-            if (dateInputTouched) {
-                if (dateInputValue === "") {
-                    isValid = false;
-                    errorMessage = dateInputErrorMessage;
-                } else if (dateInputValue !== "") {
-                    isValid = true;
-                }
-            } else if (!dateInputTouched) {
+            if (dateInputValue === "") {
+                isValid = false;
+            } else if (!(dateInputValue === "")) {
                 isValid = true;
-            };
-        };
-    };
+            }
+        }
+    }
 
     const dateInputFocusChangedHandler = () => {
         if (required) {
             if (dateInputTouched) {
                 if (dateInputValue === "") {
                     isValid = false;
-                    errorMessage = dateInputErrorMessage;
-                } else if (dateInputValue !== "") {
+                } else if (!(dateInputValue === "")) {
                     isValid = true;
-                };
-            } else if (!dateInputTouched) {
-                isValid = true;
-            };
-        };
-    };
+                }
+            }
+        }
+    }
 
     const dateInputBlurChangedHandler = () => {
         if (required) {
             dateInputTouched = true;
             if (dateInputValue === "") {
                 isValid = false;
-                errorMessage = dateInputErrorMessage;
-            } else if (dateInputValue !== "") {
+            } else if (!(dateInputValue === "")) {
                 isValid = true;
-            };
-        };
-    };
+            }
+        }
+    }
 
     $: if (!isValid) {
         errorMessage = dateInputErrorMessage;
-    };
+    }
 
 </script>
 

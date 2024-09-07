@@ -16,52 +16,43 @@
 
     const textInputValueChangedHandler = () => {
         if (required) {
-            if (textInputTouched) {
-                if (textInputValue === "") {
-                    isValid = false;
-                    errorMessage = textInputErrorMessage;
-                } else if (textInputValue !== "") {
-                    isValid = true;
-                }
-            } else if (!textInputTouched) {
+            if (textInputValue === "") {
+                isValid = false;
+            } else if (textInputValue !== "") {
                 isValid = true;
-            };
-        };
-    };
+            }
+        }
+    }
 
     const textInputFocusChangedHandler = () => {
         if (required) {
+            textInputTouched = true;
             if (textInputTouched) {
                 if (textInputValue === "") {
                     isValid = false;
-                    errorMessage = textInputErrorMessage;
                 } else if (textInputValue !== "") {
                     isValid = true;
-                };
-            } else if (!textInputTouched) {
-                isValid = true;
-            };
+                }
+            }
         }
-        
-    };
+    }
 
     const textInputBlurChangedHandler = () => {
         if (required) {
             textInputTouched = true;
             if (textInputValue === "") {
                 isValid = false;
-                errorMessage = textInputErrorMessage;
             } else if (textInputValue !== "") {
                 isValid = true;
-            };
-        };
-    };
+            }
+        }
+    }
 
     $: if (!isValid) {
         if (textInputValue === "") {
             errorMessage = textInputErrorMessage;
-        };
-    };
+        }
+    }
 
 </script>
 

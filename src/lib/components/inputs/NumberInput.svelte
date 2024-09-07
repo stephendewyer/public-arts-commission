@@ -14,18 +14,14 @@
 
     const numberInputValueChangedHandler = () => {
         if (required) {
-            if (numberInputTouched) {
-                if (numberInputValue === null) {
-                    isValid = false;
-                    errorMessage = numberInputErrorMessage;
-                } else if (numberInputValue !== null) {
-                    isValid = true;
-                }
-            } else if (!numberInputTouched) {
+            if (numberInputValue === null) {
+                isValid = false;
+                errorMessage = numberInputErrorMessage;
+            } else if (numberInputValue !== null) {
                 isValid = true;
-            };
-        };
-    };
+            }
+        }
+    }
 
     const numberInputFocusChangedHandler = () => {
         if (required) {
@@ -35,12 +31,10 @@
                     errorMessage = numberInputErrorMessage;
                 } else if (numberInputValue !== null) {
                     isValid = true;
-                };
-            } else if (!numberInputTouched) {
-                isValid = true;
-            };
-        };
-    };
+                }
+            }
+        }
+    }
 
     const numberInputBlurChangedHandler = () => {
         if (required) {
@@ -50,15 +44,15 @@
                 errorMessage = numberInputErrorMessage;
             } else if (numberInputValue !== null) {
                 isValid = true;
-            };
-        };
-    };
+            }
+        }
+    }
 
     $: if (!isValid) {
         if (numberInputValue === null) {
             errorMessage = numberInputErrorMessage;
-        };
-    };
+        }
+    }
 </script>
 
 <div class="input_and_label_container">

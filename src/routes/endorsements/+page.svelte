@@ -1250,23 +1250,11 @@
 
 	let endorsementResultsHeight: number = 0;
 
-	// $: console.log("endorsement results height: ", endorsementResultsHeight);
-
 	let clearFiltersButtonHeight: number = 0;
 
 	let searchContainerSticky: boolean = false;
 
 	let searchContainerTopPosition: number = 0;
-
-	// $: console.log("endorsement nav tabs sticky: ", endorsementTabsSticky);
-
-	// $: console.log("search absolute: ", searchAbsolute);
-
-	// $: console.log("nominate button absolute: ", nominateButtonAbsolute);
-
-	// $: console.log("nominate button absolute position: ", nominateButtonAbsolutePosition);
-
-	// $: console.log("endorsement results bottom: ", resultsBottomPosition);
 
 	let nominateButtonContainerElement: HTMLElement;
 
@@ -1325,7 +1313,6 @@
 	$: if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is less than search container = no search absolute position
 		// handle for both mobile and desktop
-		// console.log("results height less than search height")
 		searchAbsolute = false;
 		searchContainerSticky = false;
 		nominateButtonAbsolute = true;
@@ -1336,7 +1323,6 @@
 		};
 	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is more than search container = include search absolute position
-		// console.log("results height more than search height")
 		if (innerWidth <= 720) {
 			// mobile = no search absolute position
 			searchAbsolute = false;
@@ -1370,7 +1356,6 @@
 	};
 
 	const handleScroll = () => {
-
 		if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
 			if (window.scrollY + innerHeight >= resultsBottomPosition) {
 				nominateButtonAbsolute = true;
@@ -1378,7 +1363,6 @@
 				nominateButtonAbsolute = false;
 			};
 		};
-		
 	};
 
 </script>

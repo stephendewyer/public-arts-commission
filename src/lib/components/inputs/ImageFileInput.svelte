@@ -27,9 +27,9 @@
 
                 imageFileInputErrorMessage = "image required!";
 
-            };
+            }
 
-        };
+        }
 
         if (imageFile?.size >  2000000) {
 
@@ -39,7 +39,7 @@
 
             return;
 
-        };
+        }
         
         if ((imageFile) && (ImageFileExtensionTest(imageFile?.type) === "false")) {
 
@@ -49,7 +49,7 @@
 
             return;
 
-        };
+        }
 
         const fileReader = new FileReader();
 
@@ -64,11 +64,11 @@
 
                 image = e.target?.result;
 
-            };
+            }
 
             fileReader.readAsDataURL(imageFile);
-        };
-    };
+        }
+    }
 
     $: if (!isValid) {
         if (required) {
@@ -78,9 +78,9 @@
                 imageFileInputErrorMessage = "images cannot exceed 2MB in size!";
             } else if ((imageFile) && (ImageFileExtensionTest(imageFile?.type) === "false")) {
                 imageFileInputErrorMessage = "invalid file type";
-            };
-        };
-    };
+            }
+        }
+    }
 
 </script>
 
