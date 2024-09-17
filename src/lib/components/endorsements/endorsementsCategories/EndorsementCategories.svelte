@@ -7,6 +7,7 @@
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import { page } from '$app/stores';
     import { afterUpdate, onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
 
     export let endorsementNavHeight: number = 0;
     export let categories_data: Endorsements;
@@ -268,20 +269,25 @@
             </div>
             <div class="endorsement_cards_and_pagination">
                 <div class="endorsement_cards_frame">
-                    <div class="endorsement_cards">
-                        {#if categories_data.getEndorsedCandidatesDataSuccess}
-                            {#each paginatedEndorsedCandidates as candidate, i}
-                                <a 
-                                    href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
-                                    data-sveltekit-noscroll
-                                > 
-                                    <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-                                </a>
-                            {/each}
-                        {:else if (categories_data.getEndorsedCandidatesDataSuccess === false)}
-                            <p>failed to load endorsed candidates</p>
-                        {/if}
-                    </div>
+                    {#if categories_data.getEndorsedCandidatesDataSuccess}
+                        {#key (categories_data.currentPageCandidates)}
+                            <div 
+                                class="endorsement_cards"
+                                in:fade={{ delay: 250, duration: 300 }}
+                            >
+                                {#each paginatedEndorsedCandidates as candidate, i}
+                                    <a 
+                                        href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
+                                        data-sveltekit-noscroll
+                                    > 
+                                        <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+                                    </a>
+                                {/each} 
+                            </div>
+                        {/key}
+                    {:else if (categories_data.getEndorsedCandidatesDataSuccess === false)}
+                        <p>failed to load endorsed candidates</p>
+                    {/if}
                 </div>
                 <div class="pagination_container">
                     <Pagination 
@@ -311,20 +317,25 @@
             </div>
             <div class="endorsement_cards_and_pagination">
                 <div class="endorsement_cards_frame">
-                    <div class="endorsement_cards">
-                        {#if categories_data.getEndorsedReferendumsDataSuccess}
-                            {#each paginatedEndorsedReferendums as referendum, i}
-                                <a 
-                                    href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
-                                    data-sveltekit-noscroll
-                                > 
-                                    <EndorsedReferendumCard endorsedReferendumData={referendum} />
-                                </a>
-                            {/each}
-                        {:else if (categories_data.getEndorsedReferendumsDataSuccess === false)}
-                            <p>failed to load endorsed referendums</p>
-                        {/if}
-                    </div>
+                    {#if categories_data.getEndorsedReferendumsDataSuccess}
+                        {#key (categories_data.currentPageReferendums)}
+                            <div 
+                                in:fade={{ delay: 250, duration: 300 }}
+                                class="endorsement_cards"
+                            >
+                                {#each paginatedEndorsedReferendums as referendum, i}
+                                    <a 
+                                        href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
+                                        data-sveltekit-noscroll
+                                    > 
+                                        <EndorsedReferendumCard endorsedReferendumData={referendum} />
+                                    </a>
+                                {/each}
+                            </div>
+                        {/key}
+                    {:else if (categories_data.getEndorsedReferendumsDataSuccess === false)}
+                        <p>failed to load endorsed referendums</p>
+                    {/if}
                 </div>
                 <div class="pagination_container">
                     <Pagination 
@@ -354,20 +365,25 @@
             </div>
             <div class="endorsement_cards_and_pagination">
                 <div class="endorsement_cards_frame">
-                    <div class="endorsement_cards">
-                        {#if categories_data.getEndorsedLegislationDataSuccess}
-                            {#each paginatedEndorsedLegislation as legislation, i}
-                                <a 
-                                    href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
-                                    data-sveltekit-noscroll
-                                > 
-                                    <EndorsedLegislationCard endorsedLegislationData={legislation} />
-                                </a>
-                            {/each}
-                        {:else if (categories_data.getEndorsedLegislationDataSuccess === false)}
-                            <p>failed to load endorsed legislation</p>
-                        {/if}
-                    </div>
+                    {#if categories_data.getEndorsedLegislationDataSuccess}
+                        {#key (categories_data.currentPageLegislation)}
+                            <div 
+                                in:fade={{ delay: 250, duration: 300 }}
+                                class="endorsement_cards"
+                            >
+                                {#each paginatedEndorsedLegislation as legislation, i}
+                                    <a 
+                                        href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
+                                        data-sveltekit-noscroll
+                                    > 
+                                        <EndorsedLegislationCard endorsedLegislationData={legislation} />
+                                    </a>
+                                {/each}
+                            </div>
+                        {/key}
+                    {:else if (categories_data.getEndorsedLegislationDataSuccess === false)}
+                        <p>failed to load endorsed legislation</p>
+                    {/if}
                 </div>
                 <div class="pagination_container">
                     <Pagination 
@@ -397,20 +413,25 @@
             </div>
             <div class="endorsement_cards_and_pagination">
                 <div class="endorsement_cards_frame">
-                    <div class="endorsement_cards">
-                        {#if categories_data.getEndorsedAmendmentsDataSuccess}
-                            {#each paginatedEndorsedAmendments as amendment, i}
-                                <a 
-                                    href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
-                                    data-sveltekit-noscroll
-                                >
-                                    <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-                                 </a>
-                            {/each}
-                        {:else if (categories_data.getEndorsedAmendmentsDataSuccess === false)}
-                            <p>failed to load endorsed amendments</p>
-                        {/if}
-                    </div>
+                    {#if categories_data.getEndorsedAmendmentsDataSuccess}
+                        {#key (categories_data.currentPageAmendments)}
+                            <div 
+                                in:fade={{ delay: 250, duration: 300 }}
+                                class="endorsement_cards"
+                            >
+                                {#each paginatedEndorsedAmendments as amendment, i}
+                                    <a 
+                                        href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
+                                        data-sveltekit-noscroll
+                                    >
+                                        <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+                                    </a>
+                                {/each}
+                            </div>
+                        {/key}
+                    {:else if (categories_data.getEndorsedAmendmentsDataSuccess === false)}
+                        <p>failed to load endorsed amendments</p>
+                    {/if}
                 </div>
                 <div class="pagination_container">
                     <Pagination 

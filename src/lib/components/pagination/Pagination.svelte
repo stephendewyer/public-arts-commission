@@ -16,12 +16,9 @@
 
     // function to return ann array for range using the start and end
     const range = (start: number, end: number) => {
-
         let length = (end - start) + 1;
-
         return Array.from({ length }, (_, idx) => idx + start);
-
-    };
+    }
 
     // set the total page count
     let totalPageCount: number;
@@ -36,10 +33,8 @@
         pagination and return the range [1..totalPageCount]
     */
     $: if (totalPageNumbers >= totalPageCount) {
-
         paginationRange = range(1, totalPageCount);
-
-    };
+    }
 
     // set the index for left sibling
     let leftSiblingIndex: number;
@@ -83,7 +78,7 @@
 
         paginationRange = [...leftRange, DOTS, lastPageIndex];
 
-    };
+    }
 
     $: if (shouldShowLeftDots && !shouldShowRightDots) {
 
@@ -104,19 +99,15 @@
 
         paginationRange = [firstPageIndex, DOTS, ...middleRange, DOTS, lastPageIndex];
 
-    };
+    }
 
     const onNext = () => {
-
         currentPage = currentPage + 1;
-
-    };
+    }
 
     const onPrevious = () => {
-
         currentPage = currentPage - 1;
-
-    };
+    }
 
 </script>
 {#if (paginationRange.length >= 2)}
@@ -170,8 +161,12 @@
                 <div
                     role={"paginated number"}
                     class={pageNumber === currentPage ? "pagination_item selected" : "pagination_item"}
-                    on:click={() => currentPage = pageNumber}
-                    on:keyup={() => currentPage = pageNumber}
+                    on:click={() => {
+                        currentPage = pageNumber;
+                    }}
+                    on:keyup={() => {
+                        currentPage = pageNumber;
+                    }}
                 >
                     <li>
                         {pageNumber}

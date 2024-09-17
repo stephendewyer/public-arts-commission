@@ -15,16 +15,12 @@
     let cardHovered: boolean = false;
 
     const cardHoverHandler = () => {
-
         cardHovered = true;
-
-    };
+    }
 
     const cardExitHandler = () => {
-
         cardHovered = false;
-
-    };
+    }
 
 </script>
 

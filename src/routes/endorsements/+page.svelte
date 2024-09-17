@@ -1284,7 +1284,7 @@
 		mobileScrollableSearchHeight =  innerHeight - searchContainerElement?.getBoundingClientRect().top - clearFiltersButtonHeight;
     });
 
-	const widowResizeHandler = () => {
+	const windowResizeHandler = () => {
 		endorsementsHeadingTopPosition = endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;		
@@ -1376,7 +1376,7 @@
 	bind:innerHeight
 	bind:innerWidth 
 	bind:scrollY={y} 
-	on:resize={widowResizeHandler}
+	on:resize={windowResizeHandler}
 	on:scroll={handleScroll}
 />
 <section class="page">

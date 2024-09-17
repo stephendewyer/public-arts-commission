@@ -8,6 +8,7 @@
     import SuccessFlashMessage from '../flashMessages/SuccessFlashMessage.svelte';
     import ErrorFlashMessage from '../flashMessages/ErrorFlashMessage.svelte';
     import { signIn } from "@auth/sveltekit/client";
+    import { fade } from 'svelte/transition';
     
     let passwordInputValue: string = "";
     let emailInputValue: string = "";
@@ -66,7 +67,10 @@
 
 </script>
 
-<div id="voter">
+<div 
+    in:fade={{ delay: 250, duration: 300 }}
+    id="voter"
+>
     <h4 style="text-align: center; line-height: 1.4;">network, organize, nominate and connect</h4>
     <form 
         on:submit|preventDefault={voterLoginHandler}

@@ -1,7 +1,6 @@
 <script lang="ts">
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-
     export let endorsedCandidateData: CandidateWithImage;
 
     let candidateStatus: string[] = [];    
@@ -11,47 +10,33 @@
         candidateStatus = [];
 
         if (endorsedCandidateData.running_in_primary === 1) {
-
             candidateStatus = [ ...candidateStatus, " running in the primary"];
-
-        };
+        }
         
         if (endorsedCandidateData.elected_in_primary === 1) {
-
             candidateStatus = [ ...candidateStatus, " elected in the primary"];
-
-        };
+        }
         
         if (endorsedCandidateData.rejected_in_primary === 1) {
-
             candidateStatus = [ ...candidateStatus, " rejected in the primary"];
-
-        };
+        }
         
         if (endorsedCandidateData.running_in_general === 1) {
-
             candidateStatus = [ ...candidateStatus, " running in the general"];
-
-        };
+        }
         
         if (endorsedCandidateData.rejected_in_general === 1) {
-
             candidateStatus = [ ...candidateStatus, " rejected in the general"];
-
-        };
+        }
         
         if (endorsedCandidateData.elected_in_general === 1) {
-
             candidateStatus = [ ...candidateStatus, " elected in the general"];
-
-        };
+        }
 
         if (endorsedCandidateData.campaign_ended === 1) {
-
             candidateStatus = [ ...candidateStatus, " campaign ended"];
-
-        };
-    };
+        }
+    }
 
     let primaryIsValid: boolean = true;
 
@@ -62,16 +47,11 @@
     let blankDate = new Date("2016-01-01T06:00:00.000Z");
     
     $: if (rawPrimaryElectionDate < blankDate) {
-
         primaryElectionDate = "";
-
         primaryIsValid = false;
-
     } else {
-
         primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
-
-    };
+    }
 
     let generalElectionDate: string = "";
 
@@ -84,16 +64,12 @@
     let cardHovered: boolean = false;
 
     const cardHoverHandler = () => {
-
         cardHovered = true;
-
-    };
+    }
 
     const cardExitHandler = () => {
-
         cardHovered = false;
-
-    };
+    }
 
 </script>
 <div 
