@@ -1,8 +1,11 @@
 <script lang="ts">
-
+    import { fade } from "svelte/transition";
 </script>
 
-<div class="panel">
+<div 
+    class="panel"
+    in:fade={{ delay: 250, duration: 300 }} 
+>
     <div class="process_image">
         <slot name="process_image" />
     </div>

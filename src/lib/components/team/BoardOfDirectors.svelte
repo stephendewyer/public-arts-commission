@@ -2,6 +2,7 @@
     import TeamMemberData from '$lib/data/teamMembers.json';
     import TeamMemberCard from '$lib/components/cards/teamCards/TeamMemberCard.svelte';
     import { page } from '$app/stores';
+    import { fade } from 'svelte/transition';
 
     let URLPathName: string = $page.url.pathname;
 
@@ -9,7 +10,10 @@
 
 </script>
 
-<div class="members_container">
+<div 
+    in:fade={{ delay: 250, duration: 300 }}
+    class="members_container"
+>
     {#each data as TeamMemberData, i}
         {#if TeamMemberData.board_director === true}
             <a 

@@ -46,7 +46,7 @@
 			panel: ExhibitingPanel,
             data: []
 		}
-	]
+	];
 
 </script>
 <svelte:head>
