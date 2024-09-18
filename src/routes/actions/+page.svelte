@@ -22,6 +22,7 @@
     import FilterToggleButton from '$lib/components/buttons/FilterToggleButton.svelte';
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
+    import { fade } from 'svelte/transition';
 
     export let data;
 
@@ -95,13 +96,13 @@
 
             getEndorsedActionsDataSuccess = false;
 
-        };
+        }
 
-    };
+    }
 
     onMount(() => {
         getEndorsedActionsData();
-    });
+    })
 
     let searchParams: URLSearchParams;
 	
@@ -118,11 +119,11 @@
                 $EndorsedActionSelectedStore = action;
                 $EndorsedActionOpenStore = true;
 
-            };
+            }
 
-        });
+        })
 
-    };
+    }
 
     const currentDate = new Date();
 
@@ -156,7 +157,7 @@
 
 	onDestroy(() => {
 
-		unsubscribeSearchEndorsedActionsStore();
+		unsubscribeSearchEndorsedActionsStore()
 		
 	});
 
@@ -173,8 +174,8 @@
 
             pastEndorsedActions = [...pastEndorsedActions, action]
 
-        };
-    });
+        }
+    })
 
     // set the amount of items to appear in each category on the page
     let pageSize: number = 4;
@@ -240,7 +241,7 @@
 
             addressLoadSuccess = false;
 
-        };
+        }
 
         // show the user's address as the value in the searchEndorsements searchInput
 
@@ -277,7 +278,7 @@
 
         return searchByStreetAddressInputValue;
 
-    };
+    }
 
     // if getCurrentPosition is a success, 
 
@@ -288,7 +289,7 @@
 
         reverseGeocode(latitude, longitude);
 
-    };
+    }
 
     // log an error if getCurrentPosition fails
 
@@ -299,7 +300,7 @@
         addressLoadSuccess = false;
 
         console.log("Unable to retrieve your location!" + error);
-    };
+    }
 
         // get user's location using JavaScript geolocation
 
@@ -307,9 +308,9 @@
 
         actionName = "";
 
-        navigator.geolocation.getCurrentPosition(success, error);
+        navigator.geolocation.getCurrentPosition(success, error)
 
-    };
+    }
 
         // if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
@@ -317,9 +318,9 @@
 
         pending = true;
 
-        findUserLocation();
+        findUserLocation()
 
-    };
+    }
 
     // handle changes to searchbar input value
 
@@ -360,7 +361,7 @@
 
 			useCurrentLocationChecked = false;
 
-		};
+		}
 
 		// IMPORTANT: street address parser must have an input length greater than zero
 
@@ -397,9 +398,9 @@
 
 						return;
 
-					};
+					}
 
-				});
+				})
 
 			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
@@ -420,9 +421,9 @@
 						stateValueArray = [...state.split(" ")];
 						stateValueFirstWord = stateValueArray[0].replace(",", "");
 
-					};
+					}
 
-				});
+				})
 
 				// check if search input value includes city
 
@@ -446,7 +447,7 @@
 
 								};
 
-							});
+							})
 
 							if (state === cityObj.state) {
 
@@ -454,11 +455,11 @@
 								cityValueArray = [...city.split(" ")];
 								cityValueFirstWord = cityValueArray[0].replace(",", "");
 
-							};
+							}
 
-						};
+						}
 
-					});
+					})
 
 				} else if (!state) {
 
@@ -481,13 +482,13 @@
 
 								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
 
-							};
+							}
 
-						};
+						}
 
-					});
+					})
 
-				};
+				}
 
 				if (
 
@@ -509,7 +510,7 @@
 					
 					actionName = searchByStreetAddressInputValue.toLowerCase();
 					
-				};                
+				}          
 
 			} else if (searchByStreetAddressInputValue.length > 0) {
 
@@ -531,7 +532,7 @@
 
 				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
 
-			};
+			}
 
 		} else {
 
@@ -550,7 +551,7 @@
 			countyValueArray = [];
 			countyValueFirstWord = "";
 
-		};
+		}
 
         // update the search filter stores
         futureEndorsedActions = [];
@@ -570,7 +571,7 @@
             government_level: "federal"
         };
 
-    };
+    }
 
     // if option is selected, run filters
 
@@ -578,11 +579,11 @@
 
     $: if (searchbarOptionSelected) {
 
-        searchByNameOrLocationInputValueChangeHandler();
+        searchByNameOrLocationInputValueChangeHandler()
 
         searchbarOptionSelected = false;
 
-    };
+    }
 
     const selectYearInputValueChangeHandler = () => {
 
@@ -609,7 +610,7 @@
             government_level: "federal"
         };
 
-    };
+    }
 
     let openFilters: boolean = true;
 
@@ -627,7 +628,7 @@
 		searchByStreetAddressInputValue = " ";
 		searchByNameOrLocationInputValueChangeHandler();
 		clearFiltersClicked = false;
-	};
+	}
 
 	let searchContainerHeight: number = 0;
 
@@ -694,7 +695,7 @@
     onMount(() => {
 		if (innerWidth <= 720) {
 			openFilters = false;
-		};
+		}
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
@@ -705,13 +706,13 @@
         if (forthcomingActionsSectionElement) {
             forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
             forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
-        };
+        }
 
         if (actionsHistorySectionElement) {
             actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
             actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
-        };
-    });
+        }
+    })
 
 	const widowResizeHandler = () => {
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
@@ -723,13 +724,13 @@
         if (forthcomingActionsSectionElement) {
             forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
             forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
-        };
+        }
 
         if (actionsHistorySectionElement) {
             actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
             actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
-        };
-	};
+        }
+	}
 
 	afterUpdate(() =>  {
 
@@ -737,7 +738,7 @@
             nominateButtonAbsolute = true;
         } else {
             nominateButtonAbsolute = false;
-        };
+        }
 
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
@@ -749,13 +750,13 @@
         if (forthcomingActionsSectionElement) {
             forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
             forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
-        };
+        }
 
         if (actionsHistorySectionElement) {
             actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
             actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
-        };
-	});
+        }
+	})
 
 	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
 
@@ -771,7 +772,7 @@
 			endorsementTabsSticky = true;
 		} else if (y <= currentEndorsementTabsStickyPosition) {
 			endorsementTabsSticky = false;
-		};
+		}
 	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is more than search container = include search absolute position
 		if (innerWidth <= 720) {
@@ -783,7 +784,7 @@
 			} else if (y <= currentEndorsementTabsStickyPosition) {
 				endorsementTabsSticky = false;
 				searchContainerSticky = false;
-			};
+			}
 		} else if (innerWidth > 720) {
 			if ((y > currentEndorsementTabsStickyPosition) && (y > searchAbsolutePosition)) {
 				endorsementTabsSticky = true;
@@ -797,14 +798,14 @@
 				endorsementTabsSticky = false;
 				searchContainerSticky = false;
 				searchAbsolute = false;
-			};
+			}
 			if (window.scrollY + innerHeight >= resultsBottomPosition) {
 				nominateButtonAbsolute = true;
 			} else {
 				nominateButtonAbsolute = false;
-			};
-		};
-	};
+			}
+		}
+	}
 
     $: if (innerWidth > 720) {
         if (
@@ -814,13 +815,13 @@
             forthcomingActionsHeadingSticky = true;
         } else {
             forthcomingActionsHeadingSticky = false;
-        };
+        }
 
         if (y > forthcomingActionsSectionElementBottom - endorsementNavHeight - forthcomingActionsHeadingHeight) {
             forthcomingActionsHeadingAbsolute = true;
         } else {
             forthcomingActionsHeadingAbsolute = false;
-        };
+        }
 
         if (
             (y > actionsHistorySectionElementTop - endorsementNavHeight) && 
@@ -829,14 +830,14 @@
             actionsHistoryHeadingSticky = true;
         } else {
             actionsHistoryHeadingSticky = false;
-        };
+        }
 
         if (y > actionsHistorySectionElementBottom - endorsementNavHeight - actionsHistoryHeadingHeight) {
             actionsHistoryHeadingAbsolute = true;
         } else {
             actionsHistoryHeadingAbsolute = false;
-        };
-    };
+        }
+    }
 
 	const handleScroll = () => {
 		if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
@@ -844,9 +845,9 @@
 				nominateButtonAbsolute = true;
 			} else {
 				nominateButtonAbsolute = false;
-			};
-		};
-	};
+			}
+		}
+	}
 
 </script>
 <svelte:head>
@@ -1094,16 +1095,21 @@
                         </div>
                         <div class="action_cards_and_pagination">
                             <div class="action_cards_frame">
-                                <div class="action_cards">
-                                    {#each paginatedActionsForthcoming as endorsedAction, i}
-                                        <a 
-                                            href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
-                                            data-sveltekit-noscroll
-                                        > 
-                                            <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                                        </a>
-                                    {/each}
-                                </div>
+                                {#key actionsForthcomingCurrentPage}
+                                    <div 
+                                        in:fade={{ delay: 250, duration: 300 }}
+                                        class="action_cards"
+                                    >
+                                        {#each paginatedActionsForthcoming as endorsedAction, i}
+                                            <a 
+                                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                                data-sveltekit-noscroll
+                                            > 
+                                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                                            </a>
+                                        {/each}
+                                    </div>
+                                {/key}
                             </div>
                             <div class="pagination_container">
                                 <Pagination 
@@ -1133,22 +1139,24 @@
                         </div>
                         <div class="action_cards_and_pagination">
                             <div class="action_cards_frame">
-                                <div class="action_cards">
-                                    {#if pendingEndorsedActionsData}
-                                        <LoaderAnimation />
-                                    {:else if getEndorsedActionsDataSuccess}
-                                        {#each paginatedActionsHistory as endorsedAction, i}
-                                            <a 
-                                                href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
-                                                data-sveltekit-noscroll
-                                            > 
-                                                <ActionEndorsementCard endorsedActionData={endorsedAction} />
-                                            </a>
-                                        {/each}
-                                    {:else if !getEndorsedActionsDataSuccess}
-                                        <p>failed to load endorsed actions history</p>
-                                    {/if}
-                                </div>
+                                {#if pendingEndorsedActionsData}
+                                    <LoaderAnimation />
+                                {:else if getEndorsedActionsDataSuccess}
+                                    {#key actionsHistoryCurrentPage}
+                                        <div class="action_cards" in:fade={{ delay: 250, duration: 300 }}>
+                                            {#each paginatedActionsHistory as endorsedAction, i}
+                                                <a 
+                                                    href={`${URLPathName}/?action_ID=${endorsedAction.action_ID}&action_name=${endorsedAction.action_name.replace(/ /g,"_")}`}
+                                                    data-sveltekit-noscroll
+                                                > 
+                                                    <ActionEndorsementCard endorsedActionData={endorsedAction} />
+                                                </a>
+                                            {/each}
+                                        </div>
+                                    {/key}
+                                {:else if !getEndorsedActionsDataSuccess}
+                                    <p>failed to load endorsed actions history</p>
+                                {/if}
                             </div>
                             <div class="pagination_container">
                                 <Pagination 
@@ -1251,6 +1259,9 @@
         list-style: none;
         margin: 0;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 	}
 
     .search_actions_input_container {
@@ -1291,7 +1302,6 @@
 		display: flex;
 		justify-content: flex-end;
 		width: 100%;
-		max-width: 1920px;
 		margin: 0 auto;
 		padding: 0.5rem 1rem;
 	}

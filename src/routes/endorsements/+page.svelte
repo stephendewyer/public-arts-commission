@@ -1320,7 +1320,7 @@
 			endorsementTabsSticky = true;
 		} else if (y <= currentEndorsementTabsStickyPosition) {
 			endorsementTabsSticky = false;
-		};
+		}
 	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is more than search container = include search absolute position
 		if (innerWidth <= 720) {
@@ -1332,7 +1332,7 @@
 			} else if (y <= currentEndorsementTabsStickyPosition) {
 				endorsementTabsSticky = false;
 				searchContainerSticky = false;
-			};
+			}
 		} else if (innerWidth > 720) {
 			if ((y > currentEndorsementTabsStickyPosition) && (y > searchAbsolutePosition)) {
 				endorsementTabsSticky = true;
@@ -1346,14 +1346,14 @@
 				endorsementTabsSticky = false;
 				searchContainerSticky = false;
 				searchAbsolute = false;
-			};
+			}
 			if (window.scrollY + innerHeight >= resultsBottomPosition) {
 				nominateButtonAbsolute = true;
 			} else {
 				nominateButtonAbsolute = false;
-			};
-		};
-	};
+			}
+		}
+	}
 
 	const handleScroll = () => {
 		if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
