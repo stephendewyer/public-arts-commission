@@ -50,6 +50,11 @@
     let economyPrioritiesNavTabElement: HTMLElement;
     let economyPrioritiesNavTabScrollLeftPosition: number = 0;
 
+    let familyPrioritiesElement: HTMLElement;
+    let familyPrioritiesIntersecting: boolean = false;
+    let familyPrioritiesNavTabElement: HTMLElement;
+    let familyPrioritiesNavTabScrollLeftPosition: number = 0;
+
     let educationPrioritiesElement: HTMLElement;
     let educationPrioritiesIntersecting: boolean = false;
     let educationPrioritiesNavTabElement: HTMLElement;
@@ -121,6 +126,17 @@
                 economyPrioritiesNavTabScrollLeftPosition = economyPrioritiesNavTabElement.offsetLeft;
             } else {
                 economyPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (familyPrioritiesNavTabElement) {
+            let familyPrioritiesNavTabWidth = familyPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (familyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                familyPrioritiesNavTabScrollLeftPosition = (familyPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - familyPrioritiesNavTabWidth/2));
+            } else if (familyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                familyPrioritiesNavTabScrollLeftPosition = familyPrioritiesNavTabElement.offsetLeft;
+            } else {
+                familyPrioritiesNavTabScrollLeftPosition = 0;
             };
         };
 
@@ -211,6 +227,19 @@
                     pageNavTabClicked = false;
                 } else if (!pageNavTabClicked) {
                     PrioritiesNavTabsContainer.scrollLeft = economyPrioritiesNavTabScrollLeftPosition;
+                };
+            };
+        };
+    };
+
+    $: if (familyPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer) {
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "familyPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = familyPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = familyPrioritiesNavTabScrollLeftPosition;
                 };
             };
         };
@@ -324,6 +353,17 @@
                 economyPrioritiesNavTabScrollLeftPosition = economyPrioritiesNavTabElement.offsetLeft;
             } else {
                 economyPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (familyPrioritiesNavTabElement) {
+            let familyPrioritiesNavTabWidth = familyPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (familyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                familyPrioritiesNavTabScrollLeftPosition = (familyPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - familyPrioritiesNavTabWidth/2));
+            } else if (familyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                familyPrioritiesNavTabScrollLeftPosition = familyPrioritiesNavTabElement.offsetLeft;
+            } else {
+                familyPrioritiesNavTabScrollLeftPosition = 0;
             };
         };
 
@@ -453,6 +493,20 @@
                             id="economy_priorities_tab"
                         >
                             economy
+                        </li>
+                    </a>
+                    <a 
+                        href="#familyPriorities" 
+                        class="priorities_category_tab_container"
+                        on:click|preventDefault={() => pageNavTabClickHandler("familyPriorities")}
+                        bind:this={familyPrioritiesNavTabElement}
+                    >
+                        <li 
+                            class={"priorities_category_tab"} 
+                            aria-current={familyPrioritiesIntersecting ? "page" : undefined}
+                            id="family_priorities_tab"
+                        >
+                            family
                         </li>
                     </a>
                     <a 
@@ -832,43 +886,7 @@
                             </PriorityAccordion>
                         </li>
                         <li class="priority_heading">
-                            <PriorityAccordion>
-                                <span slot="head">
-                                    Jobs, culture and tax credits that support starting and raising families              
-                                </span>
-                                <div slot="details">
-                                    Art workers largely want, plan and/or have already started to have families.  Supporting families and the formation of families is essential for not only art workers, but humanity as a whole.  Falling rates of family formation/birth rates cannot be adequately addressed and should not be addressed by immigration.  Immigration is only a band-aid for the crisis of declining family formations/birth rates.  We can adequately increase family formation/increased birth rates by:
-                                    <ol>
-                                        <li>
-                                            Increase jobs that support family formation.  Jobs that support family formation are ones that pay enough to raise a family, have stability and opportunities for growth.
-                                        </li>
-                                        <li>
-                                            Improve work-life balance.  No one should have to choose between having a career and a family.
-                                        </li>
-                                        <li>
-                                            Enact universal paid parental leave programs for workers who have recently started families.
-                                        </li>
-                                        <li>
-                                            Offer tax credits for starting and raising families like the expansion of the Child Tax Credit (CTC) in 2021 that lowered the child poverty rate by 46%, raising 2.1 million children out of poverty.
-                                        </li>
-                                        <li>
-                                            Provide affordable, high-quality early childhood education programs
-                                        </li>
-                                        <li>
-                                            Publicly fund reproductive health services.
-                                        </li>
-                                        <li>
-                                            Relearn how to proactively discuss and educate on family formation.
-                                        </li>
-                                        <li>
-                                            Improve housing opportunities for starting and raising families.
-                                        </li>
-                                        <li>
-                                            Provide affordable, high-quality mental health resources.
-                                        </li>
-                                    </ol>
-                                </div>
-                            </PriorityAccordion>
+                            Jobs, culture and tax credits that support starting and raising families
                         </li>
                         <li class="priority_heading">
                             <PriorityAccordion>
@@ -948,6 +966,61 @@
                                         </li>
                                         <li>
                                             Add the Equal Rights Amendment to the U.S. Constitution.
+                                        </li>
+                                    </ol>
+                                </div>
+                            </PriorityAccordion>
+                        </li>
+                    </ol>
+                </section>
+            </IntersectionObserver>
+            <IntersectionObserver 
+                element={familyPrioritiesElement} 
+                bind:intersecting={familyPrioritiesIntersecting}
+                rootMargin={"-25% 0% -75% 0%"}
+            >
+                <section 
+                    id="familyPriorities" 
+                    class="priorities_section_container"
+                    style="background-color: #F1DACC;"
+                    bind:this={familyPrioritiesElement}
+                >
+                    <h2 class="priorities_section_heading">family</h2>
+                    <ol class="category_priorities">
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Support family formation and families for humanity
+                                </span>
+                                <div slot="details">
+                                    Art workers largely want, plan and/or have already started to have families.  Supporting families and the formation of families is essential for not only art workers, but humanity as a whole.  Falling rates of family formation/birth rates cannot be adequately addressed and should not be addressed by immigration.  Immigration is only a band-aid for the crisis of declining family formations/birth rates.  We can adequately increase family formation/increased birth rates by:
+                                    <ol>
+                                        <li>
+                                            Increase jobs that support family formation.  Jobs that support family formation are ones that pay enough to raise a family, have stability and opportunities for growth.
+                                        </li>
+                                        <li>
+                                            Improve work-life balance.  No one should have to choose between having a career and a family.
+                                        </li>
+                                        <li>
+                                            Enact universal paid parental leave programs for workers who have recently started families.
+                                        </li>
+                                        <li>
+                                            Offer tax credits for starting and raising families like the expansion of the Child Tax Credit (CTC) in 2021 that lowered the child poverty rate by 46%, raising 2.1 million children out of poverty.
+                                        </li>
+                                        <li>
+                                            Provide affordable, high-quality early childhood education programs
+                                        </li>
+                                        <li>
+                                            Publicly fund reproductive health services.
+                                        </li>
+                                        <li>
+                                            Relearn how to proactively discuss and educate on family formation.
+                                        </li>
+                                        <li>
+                                            Improve housing opportunities for starting and raising families.
+                                        </li>
+                                        <li>
+                                            Provide affordable, high-quality mental health resources.
                                         </li>
                                     </ol>
                                 </div>
@@ -1192,6 +1265,10 @@
 
     #economy_priorities_tab {
         background-color: #FEF0EE;
+    }
+
+    #family_priorities_tab {
+        background-color: #F1DACC;
     }
 
     #education_priorities_tab {
