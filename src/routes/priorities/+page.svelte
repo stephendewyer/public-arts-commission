@@ -837,7 +837,7 @@
                                     Jobs, culture and tax credits that support starting and raising families              
                                 </span>
                                 <div slot="details">
-                                    Art workers largely want, plan and/or have already started to have families.  Supporting families and the formation of families is essential for not only art workers, but humanity as a whole.  Falling rates of family formation/birth rates cannot be adequately addressed and should not be addressed by immigration.  We can adequately increase family formation/increased birth rates by:
+                                    Art workers largely want, plan and/or have already started to have families.  Supporting families and the formation of families is essential for not only art workers, but humanity as a whole.  Falling rates of family formation/birth rates cannot be adequately addressed and should not be addressed by immigration.  Immigration is only a band-aid for the crisis of declining family formations/birth rates.  We can adequately increase family formation/increased birth rates by:
                                     <ol>
                                         <li>
                                             Increase jobs that support family formation.  Jobs that support family formation are ones that pay enough to raise a family, have stability and opportunities for growth.
