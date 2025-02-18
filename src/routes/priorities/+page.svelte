@@ -837,9 +837,36 @@
                                     Jobs, culture and tax credits that support starting and raising families              
                                 </span>
                                 <div slot="details">
-                                    <p>
-                                        Art workers have started or plan to start families.  Having a culture and economy that supports and encourages current and future parents is essential for humanity.                
-                                    </p>
+                                    Art workers largely want, plan and/or have already started to have families.  Supporting families and the formation of families is essential for not only art workers, but humanity as a whole.  Falling rates of family formation/birth rates cannot be adequately addressed and should not be addressed by immigration.  We can adequately increase family formation/increased birth rates by:
+                                    <ol>
+                                        <li>
+                                            Increase jobs that support family formation.  Jobs that support family formation are ones that pay enough to raise a family, have stability and opportunities for growth.
+                                        </li>
+                                        <li>
+                                            Improve work-life balance.  No one should have to choose between having a career and a family.
+                                        </li>
+                                        <li>
+                                            Enact universal paid parental leave programs for workers who have recently started families.
+                                        </li>
+                                        <li>
+                                            Offer tax credits for starting and raising families like the expansion of the Child Tax Credit (CTC) in 2021 that lowered the child poverty rate by 46%, raising 2.1 million children out of poverty.
+                                        </li>
+                                        <li>
+                                            Provide affordable, high-quality early childhood education programs
+                                        </li>
+                                        <li>
+                                            Publicly fund reproductive health services.
+                                        </li>
+                                        <li>
+                                            Relearn how to proactively discuss and educate on family formation.
+                                        </li>
+                                        <li>
+                                            Improve housing opportunities for starting and raising families.
+                                        </li>
+                                        <li>
+                                            Provide affordable, high-quality mental health resources.
+                                        </li>
+                                    </ol>
                                 </div>
                             </PriorityAccordion>
                         </li>
