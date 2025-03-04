@@ -243,8 +243,8 @@
             <div class="headquarters_info">
                 <p>
                     public arts commission<br />
-                    3750 E Via Palomita, #25103<br />
-                    Tucson, Arizona  85718<br />
+                    5003 E. Julia Street<br />
+                    Tucson, Arizona  85711<br />
                     United States
                 </p>
                 <div class="mailbox_container">
