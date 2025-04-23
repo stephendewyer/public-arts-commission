@@ -1,10 +1,12 @@
 <script lang="ts">
     import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
+    import ClosedEye from "$lib/images/icons/closed_eye_icon.svg?raw";
+    import OpenEye from "$lib/images/icons/open_eye_icon.svg?raw";
     export let placeholder: string;
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let passwordInputValue: string;
+    export let value: string = "";
     export let isValid: boolean | null;
     export let required: boolean;
     export let passwordInputErrorMessage: string = "";
@@ -17,38 +19,33 @@
 
     export let passwordInputTouched: boolean = false;
 
-    const passwordInputValueChangedHandler = () => {
+    const passwordInputValueChangedHandler = (event: any) => {
         inputValueChanged = true;
         if (required) {
-            if (passwordInputValue === "") {
+            if (event.target.value === "") {
                 isValid = false;
-            } else if (passwordInputValue !== "") {
+            } else if (event.target.value !== "") {
                 isValid = true;
             }
         }
     }
 
-    const passwordInputFocusChangedHandler = () => {
-        if (required) {
-            if (passwordInputTouched) {
-                if (passwordInputValue === "") {
-                    isValid = false;
-                } else if (passwordInputValue !== "") {
-                    isValid = true;
-                }
+    const passwordInputFocusChangedHandler = (event: any) => {
+        if (passwordInputTouched) {
+            if (event.target.value === "") {
+                isValid = false;
+            } else if (event.target.value !== "") {
+                isValid = true;
             }
         }
-        
     }
 
-    const passwordInputBlurChangedHandler = () => {
+    const passwordInputBlurChangedHandler = (event: any) => {
         passwordInputTouched = true;
-        if (required) {
-            if (passwordInputValue === "") {
-                isValid = false;
-            } else if (passwordInputValue !== "") {
-                isValid = true;
-            }
+        if (event.target.value === "") {
+            isValid = false;
+        } else if (event.target.value !== "") {
+            isValid = true;
         }
     }
 
@@ -56,13 +53,39 @@
         passwordMatchValidation = false;
     } else {
         passwordMatchValidation = true;
-    }
+    };
 
     $: if (!isValid) {
-        if (passwordInputValue === "") {
+        if (value === "") {
             errorMessage = passwordInputErrorMessage;
         }
-    }
+    };
+
+    const handleInput = (event: any) => {
+
+        passwordInputValueChangedHandler(event);
+
+        value = event.target.value;
+
+    };
+
+    let passwordVisible: boolean = false;
+
+    let type: string = "password";
+
+    const togglePasswordVisibility = (event: { currentTarget: { previousElementSibling: any; }; }) => {
+
+        const input = event.currentTarget.previousElementSibling;
+
+        if (!input) {
+            return;
+        };
+
+        input.type = input.type === "password" ? "text" : "password";
+        
+        passwordVisible = !passwordVisible;
+
+    };
   
 </script>
 
@@ -74,19 +97,33 @@
             </label>
         </div>
     {/if}
-    <input 
-        class={isValid ? "input" : "invalid_input"}
-        style={!passwordMatchValidation ? "border-color: #9F1D20" : ""}
-        placeholder={placeholder}
-        id={inputID}
-        name={inputName}
-        type="password"
-        autocomplete="off"
-        bind:value={passwordInputValue}
-        on:input={passwordInputValueChangedHandler}
-        on:focus={passwordInputFocusChangedHandler}
-        on:blur={passwordInputBlurChangedHandler}
-    />
+    <div class="input_container">
+        <input 
+            class={isValid ? "input" : "invalid_input"}
+            style={!passwordMatchValidation ? "border-color: #9F1D20" : ""}
+            placeholder={placeholder}
+            id={inputID}
+            name={inputName}
+            autocomplete="off"
+            {value}
+            {type} 
+            on:input={handleInput}
+            on:focus={passwordInputFocusChangedHandler}
+            on:blur={passwordInputBlurChangedHandler}
+        />
+        <button 
+            class="toggle_password_visibility_button"
+            on:click={togglePasswordVisibility}
+            on:keyup={togglePasswordVisibility}
+            type="button"
+        >
+            {#if (passwordVisible)}
+                {@html OpenEye}
+            {:else}
+                {@html ClosedEye}
+            {/if}
+        </button>
+    </div>
     {#if (!isValid)}
         <InputErrorMessage>
             {errorMessage}
@@ -110,6 +147,10 @@
 
     .input_label {
         padding: 0 0 0.5rem 0;
+    }
+
+    .input_container {
+        position: relative;
     }
     
     .input {
@@ -150,6 +191,28 @@
         width: 100%;
         border-color: #9F1D20;
         will-change: border-color;
+    }
+
+    .toggle_password_visibility_button {
+        position: absolute;
+        height: 100%;
+        width: 4rem;
+        padding: 0.25rem;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        fill: #1C2226;
+        transition: fill 0.3s linear;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .toggle_password_visibility_button:hover {
+        fill: #484B47;
     }
 
     ::placeholder {
