@@ -2,7 +2,7 @@
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
     import DateInput from '$lib/components/inputs/DateInput.svelte';
-    import ComparePasswords from '$lib/components/inputs/ComparePasswords.svelte';
+    import ComparePasswords from '$lib/components/inputs/createPasswordInputs/ComparePasswords.svelte';
     import SelectInput from '$lib/components/inputs/SelectInput.svelte';
     import PhoneInput from '$lib/components/inputs/PhoneInput.svelte';
     import NumberInput from '$lib/components/inputs/NumberInput.svelte';
@@ -481,6 +481,17 @@
             </div>
             <h2>campaign password</h2>
             <div class="create_account_input">
+                <ul>
+                    <li>
+                        password must have at least 7 characters and 14 or less characters
+                    </li>
+                    <li>
+                        password must have at least one number and one special character
+                    </li>
+                    <li>
+                        password must have at least one capitalized letter and one lower case letter
+                    </li>
+                </ul>
                 <ComparePasswords 
                     bind:passwordInputValue
                     bind:passwordReenteredInputValue

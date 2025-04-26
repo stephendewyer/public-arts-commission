@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ComparePasswords from '../inputs/ComparePasswords.svelte';
+    import ComparePasswords from '../inputs/createPasswordInputs/ComparePasswords.svelte';
     import PendingFlashMessage from '$lib/components/flashMessages/PendingFlashMessage.svelte';
     import SuccessFlashMessage from '$lib/components/flashMessages/SuccessFlashMessage.svelte';
     import ErrorFlashMessage from '$lib/components/flashMessages/ErrorFlashMessage.svelte';
@@ -88,6 +88,17 @@
 
 <div id="campaign">
     <h3 class="heading03">create a new password</h3>
+    <ul>
+        <li>
+            password must have at least 7 characters and 14 or less characters
+        </li>
+        <li>
+            password must have at least one number and one special character
+        </li>
+        <li>
+            password must have at least one capitalized letter and one lower case letter
+        </li>
+    </ul>
     <form 
         on:submit|preventDefault={updatePasswordSubmitHandler}
         class="update_password_form"

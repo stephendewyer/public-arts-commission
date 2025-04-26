@@ -2,7 +2,7 @@
     import PublicArtsCommissionBanner from '$lib/images/endorsed_campaign_search_banner.jpg';
     import TextInput from '$lib/components/inputs/TextInput.svelte';
     import EmailInput from '$lib/components/inputs/EmailInput.svelte';
-    import ComparePasswords from '$lib/components/inputs/ComparePasswords.svelte';
+    import ComparePasswords from '$lib/components/inputs/createPasswordInputs/ComparePasswords.svelte';
     import AnimatedCheckbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SubmitButton from '$lib/components/buttons/SubmitButton.svelte';
     import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
@@ -214,6 +214,18 @@
             </div>
 
             <div class="create_account_input">
+                <h3>create password</h3>
+                <ul>
+                    <li>
+                        password must have at least 7 characters and 14 or less characters
+                    </li>
+                    <li>
+                        password must have at least one number and one special character
+                    </li>
+                    <li>
+                        password must have at least one capitalized letter and one lower case letter
+                    </li>
+                </ul>
                 <ComparePasswords 
                     bind:passwordInputValue
                     bind:passwordReenteredInputValue
