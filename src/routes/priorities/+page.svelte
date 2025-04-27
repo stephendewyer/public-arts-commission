@@ -953,6 +953,30 @@
                         <li class="priority_heading">
                             <PriorityAccordion>
                                 <span slot="head">
+                                    Support fair trade that honors workers and the environment             
+                                </span>
+                                <div slot="details">
+                                    Free trade without fair trade is not sustainable.  For decades, trade actions like NAFTA have sold-out the U.S. worker and led to millions of jobs lost.  We need trade deals that honor workers and the environment.  Actions we can take to support fair trade:                                    
+                                    <ol>
+                                        <li>
+                                            Enact smart, targeted tariffs to counteract dumping of foreign surplus products that wipe out domestic industries;
+                                        </li>
+                                        <li>
+                                            Strengthen partnerships with countries that have fair trade programs with the United States;                      
+                                        </li>
+                                        <li>
+                                            End universal tariffs enacted by Trump;
+                                        </li>
+                                        <li>
+                                            Support trade agreements that honor workers and the environment and not trade agreements that sell-out workers and the environment.
+                                        </li>
+                                    </ol>
+                                </div>
+                            </PriorityAccordion>
+                        </li>
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
                                     End discrimination based on class, race, ethnicity, sex and gender           
                                 </span>
                                 <div slot="details">
