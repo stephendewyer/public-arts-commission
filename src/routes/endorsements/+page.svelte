@@ -58,16 +58,16 @@
 
 	let yearInputValue: number | any = "";
 
-    let searchByStreetAddressInputValue: string;
+    let searchByStreetAddressInputValue: string = "";
 
-    let useCurrentLocationChecked: boolean;
+    let useCurrentLocationChecked: boolean = false;
 
 	let currentPageCandidates: number = 1;
 	let currentPageReferendums: number = 1;
 	let currentPageLegislation: number = 1;
 	let currentPageAmendments: number = 1;
 
-	let activeEndorsementsTab: number;
+	let activeEndorsementsTab: number = 0;
 
 	$: activeEndorsementsTab = 0;
 
@@ -1273,7 +1273,7 @@
 	let endorsementsHeadingTopPosition: number = 0;
 
     onMount(() => {
-		if (innerWidth <= 720) {
+		if (innerWidth <= 720 && !useCurrentLocationChecked) {
 			openFilters = false;
 		};
 		endorsementsHeadingTopPosition = endorsementsHeadingElement.getBoundingClientRect().top + window.scrollY;
