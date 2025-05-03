@@ -23,6 +23,7 @@
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { fade } from 'svelte/transition';
+    import Arrow from "$lib/images/icons/arrow.svg?raw";
 
     export let data;
 
@@ -45,16 +46,9 @@
 	let streetNumber: string | any = "";
 
 	let yearInputValue: string | any = "";
-
-    $: yearInputValue;
-
     let actionName: string = "";
-
-    let searchByStreetAddressInputValue: string;
-
-    $: searchByStreetAddressInputValue;
-
-    let useCurrentLocationChecked: boolean;
+    let searchByStreetAddressInputValue: string = ""
+    let useCurrentLocationChecked: boolean = false;
 
     const user: User | undefined = data.streamed.user;
 
@@ -96,13 +90,13 @@
 
             getEndorsedActionsDataSuccess = false;
 
-        }
+        };
 
-    }
+    };
 
     onMount(() => {
         getEndorsedActionsData();
-    })
+    });
 
     let searchParams: URLSearchParams;
 	
@@ -119,11 +113,11 @@
                 $EndorsedActionSelectedStore = action;
                 $EndorsedActionOpenStore = true;
 
-            }
+            };
 
-        })
+        });
 
-    }
+    };
 
     const currentDate = new Date();
 
@@ -300,7 +294,7 @@
         addressLoadSuccess = false;
 
         console.log("Unable to retrieve your location!" + error);
-    }
+    };
 
         // get user's location using JavaScript geolocation
 
@@ -310,7 +304,7 @@
 
         navigator.geolocation.getCurrentPosition(success, error)
 
-    }
+    };
 
         // if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
@@ -320,7 +314,7 @@
 
         findUserLocation()
 
-    }
+    };
 
     // handle changes to searchbar input value
 
@@ -571,7 +565,7 @@
             government_level: "federal"
         };
 
-    }
+    };
 
     // if option is selected, run filters
 
@@ -583,7 +577,7 @@
 
         searchbarOptionSelected = false;
 
-    }
+    };
 
     const selectYearInputValueChangeHandler = () => {
 
@@ -610,7 +604,7 @@
             government_level: "federal"
         };
 
-    }
+    };
 
     let openFilters: boolean = true;
 
@@ -625,10 +619,10 @@
 		useCurrentLocationChecked = false;
 		yearInputValue = "";
 		selectYearInputValueChangeHandler();
-		searchByStreetAddressInputValue = " ";
+		searchByStreetAddressInputValue = "";
 		searchByNameOrLocationInputValueChangeHandler();
 		clearFiltersClicked = false;
-	}
+	};
 
 	let searchContainerHeight: number = 0;
 
@@ -847,7 +841,22 @@
 				nominateButtonAbsolute = false;
 			}
 		}
-	}
+	};
+
+    let disableClearFiltersButton: boolean = false;
+
+	$: if (searchByStreetAddressInputValue !== "") {
+		disableClearFiltersButton = false;
+	} else if (useCurrentLocationChecked) {
+		disableClearFiltersButton = false;
+	} else if (yearInputValue !== "") {
+		disableClearFiltersButton = false;
+	} else {
+		disableClearFiltersButton = true;
+	};
+
+    $: console.log("searchByStreetAddressInputValue: ", searchByStreetAddressInputValue);
+    $: console.log("disableClearFiltersButton: ", disableClearFiltersButton);
 
 </script>
 <svelte:head>
@@ -959,7 +968,7 @@
 							bind:clientHeight={clearFiltersButtonHeight}
 						>
 							<SubmitButtonSecondary 
-								disable={false}
+								disable={disableClearFiltersButton}
 								bind:clicked={clearFiltersClicked}
 							>
 								clear filters
@@ -995,6 +1004,16 @@
                         class="scrollable_search_container"
                         style={`height: ${scrollableSearchHeight}px;`}
                     >
+                    <button 
+                    id="toggle_filters_button_sidedrawer_container"
+                    class={openFilters ? "toggle_filters_button_sidedrawer_open" : "toggle_filters_button_sidedrawer_closed"}
+                    on:click={() => openFilters = !openFilters}
+                    on:keyup={() => openFilters = !openFilters}
+
+                >
+                    {@html Arrow}
+                </button>
+                <h2 style="text-align: center">filters</h2>
                         <div class="search_actions_input_container">
                             {#if useCurrentLocationChecked}
                                 {#if pending}
@@ -1058,7 +1077,7 @@
                         bind:clientHeight={clearFiltersButtonHeight}
                     >
                         <SubmitButtonSecondary 
-                            disable={false}
+                            disable={disableClearFiltersButton}
                             bind:clicked={clearFiltersClicked}
                         >
                             clear filters
@@ -1427,6 +1446,30 @@
         flex-direction: row;
         justify-content: center;
     }
+
+    #toggle_filters_button_sidedrawer_container {
+		position: absolute;
+		right: 1rem;
+		top: 1rem;
+		width: 2rem;
+		background: none;
+		border: none;
+		fill: #4C4239;
+		cursor: pointer;
+        transition: transform 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
+	}
+
+	#toggle_filters_button_sidedrawer_container:hover {
+		fill: #28387C;
+	}
+
+	.toggle_filters_button_sidedrawer_open {
+		transform: rotate(180deg) rotateY(0deg);
+	}
+
+	.toggle_filters_button_sidedrawer_closed {
+		transform: rotate(180deg) rotateY(180deg);
+	}
 
     @media screen and (max-width: 1440px) {
 
