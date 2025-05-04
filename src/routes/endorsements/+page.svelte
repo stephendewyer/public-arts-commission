@@ -35,7 +35,7 @@
 	import NominateButton from "$lib/components/buttons/NominateButton.svelte";
 	import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
 	import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-	import Arrow from "$lib/images/icons/arrow.svg?raw";
+	import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
 
 	export let data;
 
@@ -1532,15 +1532,7 @@
 						class="scrollable_search_container"
 						style={`height: ${scrollableSearchHeight}px;`}
 					>
-						<button 
-							id="toggle_filters_button_sidedrawer_container"
-							class={openFilters ? "toggle_filters_button_sidedrawer_open" : "toggle_filters_button_sidedrawer_closed"}
-							on:click={() => openFilters = !openFilters}
-							on:keyup={() => openFilters = !openFilters}
-
-						>
-							{@html Arrow}
-						</button>
+						<ArrowButton bind:openFilters={openFilters} />
 						<h2 style="text-align: center">filters</h2>
 						<div class="search_endorsements_input_container">
 							{#if useCurrentLocationChecked}
@@ -1811,31 +1803,6 @@
 	.mobile_search_container {
 		position: relative;
 		width: 100%;
-	}
-
-	#toggle_filters_button_sidedrawer_container {
-		position: absolute;
-		right: 1rem;
-		top: 1rem;
-		width: 2rem;
-		background: none;
-		border: none;
-		fill: #4C4239;
-		cursor: pointer;
-		
-        transition: transform 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
-	}
-
-	#toggle_filters_button_sidedrawer_container:hover {
-		fill: #28387C;
-	}
-
-	.toggle_filters_button_sidedrawer_open {
-		transform: rotate(180deg) rotateY(0deg);
-	}
-
-	.toggle_filters_button_sidedrawer_closed {
-		transform: rotate(180deg) rotateY(180deg);
 	}
 
 	@media screen and (max-width: 1440px) {

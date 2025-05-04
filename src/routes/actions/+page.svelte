@@ -23,7 +23,7 @@
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { fade } from 'svelte/transition';
-    import Arrow from "$lib/images/icons/arrow.svg?raw";
+    import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
 
     export let data;
 
@@ -166,10 +166,11 @@
             
         } else {
 
-            pastEndorsedActions = [...pastEndorsedActions, action]
+            pastEndorsedActions = [...pastEndorsedActions, action];
 
-        }
-    })
+        };
+
+    });
 
     // set the amount of items to appear in each category on the page
     let pageSize: number = 4;
@@ -235,7 +236,7 @@
 
             addressLoadSuccess = false;
 
-        }
+        };
 
         // show the user's address as the value in the searchEndorsements searchInput
 
@@ -283,7 +284,7 @@
 
         reverseGeocode(latitude, longitude);
 
-    }
+    };
 
     // log an error if getCurrentPosition fails
 
@@ -312,7 +313,7 @@
 
         pending = true;
 
-        findUserLocation()
+        findUserLocation();
 
     };
 
@@ -355,7 +356,7 @@
 
 			useCurrentLocationChecked = false;
 
-		}
+		};
 
 		// IMPORTANT: street address parser must have an input length greater than zero
 
@@ -392,9 +393,9 @@
 
 						return;
 
-					}
+					};
 
-				})
+				});
 
 			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
@@ -415,9 +416,9 @@
 						stateValueArray = [...state.split(" ")];
 						stateValueFirstWord = stateValueArray[0].replace(",", "");
 
-					}
+					};
 
-				})
+				});
 
 				// check if search input value includes city
 
@@ -441,7 +442,7 @@
 
 								};
 
-							})
+							});
 
 							if (state === cityObj.state) {
 
@@ -449,11 +450,11 @@
 								cityValueArray = [...city.split(" ")];
 								cityValueFirstWord = cityValueArray[0].replace(",", "");
 
-							}
+							};
 
-						}
+						};
 
-					})
+					});
 
 				} else if (!state) {
 
@@ -476,13 +477,13 @@
 
 								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
 
-							}
+							};
 
-						}
+						};
 
-					})
+					});
 
-				}
+				};
 
 				if (
 
@@ -504,7 +505,7 @@
 					
 					actionName = searchByStreetAddressInputValue.toLowerCase();
 					
-				}          
+				};       
 
 			} else if (searchByStreetAddressInputValue.length > 0) {
 
@@ -526,7 +527,7 @@
 
 				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
 
-			}
+			};
 
 		} else {
 
@@ -545,7 +546,7 @@
 			countyValueArray = [];
 			countyValueFirstWord = "";
 
-		}
+		};
 
         // update the search filter stores
         futureEndorsedActions = [];
@@ -583,7 +584,6 @@
 
         // update the search filter stores
         // clear categories data
-
         futureEndorsedActions = [];
         pastEndorsedActions = [];
 
@@ -618,7 +618,25 @@
 	$: if (clearFiltersClicked) {
 		useCurrentLocationChecked = false;
 		yearInputValue = "";
-		selectYearInputValueChangeHandler();
+        futureEndorsedActions = [];
+        pastEndorsedActions = [];
+
+        actionsForthcomingCurrentPage = 1;
+        actionsHistoryCurrentPage = 1;
+
+        $searchEndorsedActionsStore.search = {
+            year:  {
+                all_day_event_date: yearInputValue,
+                date_start: yearInputValue,
+                date_end: yearInputValue
+            },
+            action_name: actionName,
+            zipcode: zipcode,
+            state: state,
+            city: city,
+            county: county,
+            government_level: "federal"
+        };
 		searchByStreetAddressInputValue = "";
 		searchByNameOrLocationInputValueChangeHandler();
 		clearFiltersClicked = false;
@@ -689,7 +707,7 @@
     onMount(() => {
 		if (innerWidth <= 720) {
 			openFilters = false;
-		}
+		};
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
 		nominateButtonAbsolutePosition = resultsBottomPosition - nominateButtonContainerElement.clientHeight;
@@ -700,13 +718,13 @@
         if (forthcomingActionsSectionElement) {
             forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
             forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
-        }
+        };
 
         if (actionsHistorySectionElement) {
             actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
             actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
-        }
-    })
+        };
+    });
 
 	const widowResizeHandler = () => {
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
@@ -718,13 +736,13 @@
         if (forthcomingActionsSectionElement) {
             forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
             forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
-        }
+        };
 
         if (actionsHistorySectionElement) {
             actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
             actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
-        }
-	}
+        };
+	};
 
 	afterUpdate(() =>  {
 
@@ -732,7 +750,7 @@
             nominateButtonAbsolute = true;
         } else {
             nominateButtonAbsolute = false;
-        }
+        };
 
 		endorsementsHeadingTopPosition = searchActionsHeadingElement.getBoundingClientRect().top + window.scrollY;
 		resultsBottomPosition = resultsElement.getBoundingClientRect().bottom + window.scrollY;
@@ -744,13 +762,13 @@
         if (forthcomingActionsSectionElement) {
             forthcomingActionsSectionElementTop = forthcomingActionsSectionElement.getBoundingClientRect().top + window.scrollY;
             forthcomingActionsSectionElementBottom = forthcomingActionsSectionElement.getBoundingClientRect().bottom + window.scrollY;
-        }
+        };
 
         if (actionsHistorySectionElement) {
             actionsHistorySectionElementTop = actionsHistorySectionElement.getBoundingClientRect().top + window.scrollY;
             actionsHistorySectionElementBottom = actionsHistorySectionElement.getBoundingClientRect().bottom + window.scrollY;
-        }
-	})
+        };
+	});
 
 	$: scrollableSearchHeight = innerHeight - clearFiltersButtonHeight - searchContainerTopPosition;
 
@@ -766,7 +784,7 @@
 			endorsementTabsSticky = true;
 		} else if (y <= currentEndorsementTabsStickyPosition) {
 			endorsementTabsSticky = false;
-		}
+		};
 	} else if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
 		// quilt search results height is more than search container = include search absolute position
 		if (innerWidth <= 720) {
@@ -778,7 +796,7 @@
 			} else if (y <= currentEndorsementTabsStickyPosition) {
 				endorsementTabsSticky = false;
 				searchContainerSticky = false;
-			}
+			};
 		} else if (innerWidth > 720) {
 			if ((y > currentEndorsementTabsStickyPosition) && (y > searchAbsolutePosition)) {
 				endorsementTabsSticky = true;
@@ -792,14 +810,14 @@
 				endorsementTabsSticky = false;
 				searchContainerSticky = false;
 				searchAbsolute = false;
-			}
+			};
 			if (window.scrollY + innerHeight >= resultsBottomPosition) {
 				nominateButtonAbsolute = true;
 			} else {
 				nominateButtonAbsolute = false;
-			}
-		}
-	}
+			};
+		};
+	};
 
     $: if (innerWidth > 720) {
         if (
@@ -809,13 +827,13 @@
             forthcomingActionsHeadingSticky = true;
         } else {
             forthcomingActionsHeadingSticky = false;
-        }
+        };
 
         if (y > forthcomingActionsSectionElementBottom - endorsementNavHeight - forthcomingActionsHeadingHeight) {
             forthcomingActionsHeadingAbsolute = true;
         } else {
             forthcomingActionsHeadingAbsolute = false;
-        }
+        };
 
         if (
             (y > actionsHistorySectionElementTop - endorsementNavHeight) && 
@@ -824,14 +842,14 @@
             actionsHistoryHeadingSticky = true;
         } else {
             actionsHistoryHeadingSticky = false;
-        }
+        };
 
         if (y > actionsHistorySectionElementBottom - endorsementNavHeight - actionsHistoryHeadingHeight) {
             actionsHistoryHeadingAbsolute = true;
         } else {
             actionsHistoryHeadingAbsolute = false;
-        }
-    }
+        };
+    };
 
 	const handleScroll = () => {
 		if (endorsementResultsHeight > (scrollableSearchHeight + clearFiltersButtonHeight)) {
@@ -840,7 +858,7 @@
 			} else {
 				nominateButtonAbsolute = false;
 			}
-		}
+		};
 	};
 
     let disableClearFiltersButton: boolean = false;
@@ -854,9 +872,6 @@
 	} else {
 		disableClearFiltersButton = true;
 	};
-
-    $: console.log("searchByStreetAddressInputValue: ", searchByStreetAddressInputValue);
-    $: console.log("disableClearFiltersButton: ", disableClearFiltersButton);
 
 </script>
 <svelte:head>
@@ -1004,16 +1019,8 @@
                         class="scrollable_search_container"
                         style={`height: ${scrollableSearchHeight}px;`}
                     >
-                    <button 
-                    id="toggle_filters_button_sidedrawer_container"
-                    class={openFilters ? "toggle_filters_button_sidedrawer_open" : "toggle_filters_button_sidedrawer_closed"}
-                    on:click={() => openFilters = !openFilters}
-                    on:keyup={() => openFilters = !openFilters}
-
-                >
-                    {@html Arrow}
-                </button>
-                <h2 style="text-align: center">filters</h2>
+                        <ArrowButton bind:openFilters={openFilters} />
+                        <h2 style="text-align: center">filters</h2>
                         <div class="search_actions_input_container">
                             {#if useCurrentLocationChecked}
                                 {#if pending}
@@ -1446,30 +1453,6 @@
         flex-direction: row;
         justify-content: center;
     }
-
-    #toggle_filters_button_sidedrawer_container {
-		position: absolute;
-		right: 1rem;
-		top: 1rem;
-		width: 2rem;
-		background: none;
-		border: none;
-		fill: #4C4239;
-		cursor: pointer;
-        transition: transform 0.6s cubic-bezier(0.075, 0.82, 0.165, 1);
-	}
-
-	#toggle_filters_button_sidedrawer_container:hover {
-		fill: #28387C;
-	}
-
-	.toggle_filters_button_sidedrawer_open {
-		transform: rotate(180deg) rotateY(0deg);
-	}
-
-	.toggle_filters_button_sidedrawer_closed {
-		transform: rotate(180deg) rotateY(180deg);
-	}
 
     @media screen and (max-width: 1440px) {
 
