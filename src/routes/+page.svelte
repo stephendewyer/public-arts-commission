@@ -291,9 +291,12 @@
 		</div>
 	</div>
 	<h1 class="heading01">
-		Excellent public art for everyone, by everyone and available to everyone will strengthen the political imaginary necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  
-		We help grow our political imagination to support a fairer, more just economy and a more egalitarian society.
+		The American Dream wasn't just imagined.  People made it happen.  We reimagine the American Dream and help make it happen for a stronger, more democratic society.
 	</h1>
+	<h2 class="heading01">
+		Strengthening the political imagination is necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  
+		We help grow our political imagination to support a fairer, more just economy and a more egalitarian society.  We also help people turn the political imaginary into reality.
+	</h2>
 	<form 
 		on:submit|preventDefault={searchSubmitHandler}
 		class="search_endorsements_by_address_form"
