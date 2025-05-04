@@ -37,4 +37,14 @@
 	.toggle_filters_button_sidedrawer_closed {
 		transform: rotate(180deg) rotateY(180deg);
 	}
+
+	@media screen and (max-width: 720px) {
+		.toggle_filters_button_sidedrawer_open {
+			transform: rotate(270deg) rotateY(0deg);
+		}
+
+		.toggle_filters_button_sidedrawer_closed {
+			transform: rotate(270deg) rotateY(180deg);
+		}
+	}
 </style>

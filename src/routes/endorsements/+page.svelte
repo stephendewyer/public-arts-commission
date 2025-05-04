@@ -1432,7 +1432,8 @@
 							class="scrollable_search_container"
 							style={`height: ${mobileScrollableSearchHeight}px;`}
 						>
-							<h2>filters</h2>
+							<h2 style="text-align: center">filters</h2>
+							<ArrowButton bind:openFilters />
 							<div class="search_endorsements_input_container">
 								{#if useCurrentLocationChecked}
 									{#if pendingReverseGeocode}
@@ -1773,6 +1774,12 @@
 		align-items: center;
 		width: 100%;
 		padding: 1rem;
+		border-top: 1px;
+        border-right: 0;
+        border-left: 0;
+        border-bottom: 0;
+        border-style: solid;
+        border-color: #1C2226;
 	}
 
 	#nominate_button_container {
