@@ -59,7 +59,7 @@
         mission
     </h2>
     <p class="story_paragraphs">
-        Focusing directly on art and politics, public arts commission is dedicated to redefining art's relation to the public for greater democracy within and outside art.
+        Reimagine the American Dream and help make it happen for a stronger, more democratic society by giving the art community a platform in politics.
     </p>
     <h2 class="story_section_heading">
         how we work

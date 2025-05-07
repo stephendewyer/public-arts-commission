@@ -291,11 +291,11 @@
 		</div>
 	</div>
 	<h1 class="heading01">
-		The American Dream wasn't just imagined.  People made it happen.  We reimagine the American Dream and help make it happen for a stronger, more democratic society.
+		The American Dream wasn't just imagined.  People made it happen.  We reimagine the American Dream and help make it happen for a stronger, more democratic society by giving the art community a platform in politics.
 	</h1>
 	<h2 class="heading01">
-		Strengthening the political imagination is necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  
-		We help grow our political imagination to support a fairer, more just economy and a more egalitarian society.  We also help people turn the political imaginary into reality.
+		Strengthening our political imagination is necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  The art community plays a pivotal role in defining the American Dream, but largely has had no platform in politics.
+		We are building the political platform for the art community.
 	</h2>
 	<form 
 		on:submit|preventDefault={searchSubmitHandler}

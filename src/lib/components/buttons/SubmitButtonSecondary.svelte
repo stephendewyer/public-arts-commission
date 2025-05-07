@@ -54,10 +54,6 @@
 		opacity: 50%;
 	}
 
-	.submit_button:disabled {
-		opacity: 50%;
-	}
-
 	.submit_button:hover {
         color: #D8EAC5;
 		fill: #D8EAC5;
