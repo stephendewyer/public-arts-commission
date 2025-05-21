@@ -376,18 +376,6 @@
         >
             government level*
         </SelectInput>
-        <SelectInput 
-            options={governmentLevelOptions}
-            bind:selectInputValue={governmentLevelInputValue}
-            isValid={governmentLevelIsValid}
-            required={true}
-            inputID="government_level"
-            inputName="government_level"
-            selectInputErrorMessage="government level required"
-            inputLabel={true}
-        >
-            government level*
-        </SelectInput>
         <div class="two_columns">
             <TextInputReadonly
                 inputLabel={true}
