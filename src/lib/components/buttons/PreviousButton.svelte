@@ -71,18 +71,8 @@
     @media all and (max-width:720px){
 
         #previous_button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
             height: 2rem;
             width: 2rem;
-            text-align: center;
-            margin: 0.5rem;
-            min-width: 1rem;
-            font-size: 1.75rem;
-            line-height: 2.75rem;
-            transition: box-shadow 0.3s linear, fill 0.3s linear;
         }
 
         .arrow_left {
