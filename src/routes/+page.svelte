@@ -17,6 +17,7 @@
 	import { EndorsedActionSelectedStore } from '$lib/stores/EndorsedActionSelectedStore.js';
 	import { page } from '$app/stores';
 	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
+	import CampaignHighlights from '$lib/components/sliders/CampaignHighlights.svelte';
 
 	export let data;
 
@@ -351,6 +352,12 @@
 			search endorsements
 		</ActionButton>
 	</form>
+	<div class="highlighted_campaigns">
+		<h2>
+			highlighted campaigns
+		</h2>
+		<CampaignHighlights/>
+	</div>
 	<div 
 		id="forthcoming_actions"
 		class="forthcoming actions"
@@ -495,6 +502,12 @@
         padding: 0 1rem 1rem 1rem;
         width: 100%;
     }
+
+	.highlighted_campaigns {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 
 	@media screen and (max-width: 1140px) {
 		.search_endorsement_fields {
