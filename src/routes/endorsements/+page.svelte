@@ -700,25 +700,20 @@
 
 			let searchAddress: string | null = null;
 			
-            if (searchParams.get("current_address_checked") === "true") {
-
-                useCurrentLocationChecked = true;
-
-            } else if (
-
-				searchParams.get("current_address_checked") === "false" && 
-				searchParams.get("address")
-
+            if (
+				searchParams.get("current_address_checked") === "true" && 
+				!searchParams.get("address")
 			) {
-
+                useCurrentLocationChecked = true;
+            } else if (
+				searchParams.get("current_address_checked") === "true" && 
+				searchParams.get("address")
+			) {
 				searchAddress = searchParams.get("address");
-
 				if (searchAddress !== null) {
-
+					// filter results by address
 					searchByStreetAddressInputValue = searchAddress.replace(/_/g, ' ');
-
 				};
-
             };
 
         };
