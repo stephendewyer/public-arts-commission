@@ -25,7 +25,7 @@
     $: endorsedReferendums = [...categories_data.endorsed_referendums];
 
     // set the amount of items to appear in each category on the page
-    let pageSize: number = 4;
+    let pageSize: number = 8;
 
     // set the index of the first item to appear on the page for each category
     let firstPageIndexAmendments: number;
@@ -260,6 +260,7 @@
                 style={candidatesHeadingSticky || candidatesHeadingAbsolute ? `height: ${candidatesHeadingHeight}px;` : "height: auto;"}
             >
                 <h3 
+                    id="candidates_heading"
                     bind:clientHeight={candidatesHeadingHeight}
                     class={candidatesHeadingSticky ? "section_heading_sticky" : candidatesHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
                     style={candidatesHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
@@ -308,6 +309,7 @@
                 style={referendumsHeadingSticky || referendumsHeadingAbsolute ? `height: ${referendumsHeadingHeight}px;` : "height: auto;"}
             >
                 <h3 
+                    id="referendums_heading"
                     bind:clientHeight={referendumsHeadingHeight}
                     class={referendumsHeadingSticky ? "section_heading_sticky" : referendumsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
                     style={referendumsHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
@@ -356,9 +358,10 @@
                 style={legislationHeadingSticky || legislationHeadingAbsolute ? `height: ${legislationHeadingHeight}px;` : "height: auto;"}
             >
                 <h3 
+                    id="legislation_heading"
                     bind:clientHeight={legislationHeadingHeight}
                     class={legislationHeadingSticky? "section_heading_sticky" : legislationHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
-                    style={legislationHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+                    style={legislationHeadingSticky ? `top: ${endorsementNavHeight}px; background-color: #F8FAF7;`: "background-color: #F8FAF7;"}
                 >
                     legislation
                 </h3>
@@ -404,9 +407,11 @@
                 style={amendmentsHeadingSticky || amendmentsHeadingAbsolute ? `height: ${amendmentsHeadingHeight}px;` : "height: auto;"}
             >
                 <h3 
+                    id="amendments_heading"
                     bind:clientHeight={amendmentsHeadingHeight}
                     class={amendmentsHeadingSticky? "section_heading_sticky" : amendmentsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
                     style={amendmentsHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
+
                 >
                     amendments
                 </h3>
@@ -447,6 +452,22 @@
 
 <style>
 
+    #amendments_heading {
+        background-color: #F4F4DB;
+    }
+
+    #legislation_heading {
+        background-color: #F8FAF7;
+    }
+
+    #referendums_heading {
+        background-color: #CBC6C2;
+    }
+
+    #candidates_heading {
+        background-color: #FBEFF6;
+    }
+
     .endorsement_categories_container {
         position: relative;
         list-style: none;
@@ -461,18 +482,23 @@
     .endorsement_section_container {
         padding: 1rem;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         width: 100%;
     }
 
     .section_heading_container {
-        width: 20rem;
         position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .section_heading_container > h3 {
         margin: 0;
         font-size: 2rem; 
+        text-align: center;
+        padding: 0 1rem 0.5rem 1rem;
     }
 
     .section_heading_relative {
@@ -483,14 +509,16 @@
         position: absolute;
         bottom: 0;
         top: auto;
-        left: 0;
+        left: auto;
         right: auto;
+        z-index: 1;
     }
 
     .section_heading_sticky {
         position: fixed;
         top: 0;
         bottom: auto;
+        z-index: 1;
     }
 
     .endorsement_cards_and_pagination {
@@ -512,11 +540,10 @@
 
     .endorsement_cards {
         position: relative;
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;      
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);   
         gap: 1rem;
-        padding: 0 1rem 1rem 1rem;
+        padding: 0 0 1rem 0;
         width: 100%;
     }
 
@@ -529,19 +556,15 @@
 
     @media screen and (max-width: 1440px) {
 
-        .section_heading_container {
-            width: 18rem;
-        }
-
         .section_heading_container > h3 {
            font-size: 1.875rem; 
         }
     }
 
     @media screen and (max-width: 1080px) {
-
-        .section_heading_container {
-            width: 16rem;
+        .endorsement_cards_frame {
+            width: 100%;
+            max-width: 100%;
         }
 
         .section_heading_container > h3 {
@@ -551,10 +574,6 @@
     }
 
     @media screen and (max-width: 720px) {
-
-        .section_heading_container {
-            width: 100%;
-        }
 
         .section_heading_container > h3 {
             font-size: 1.5rem;
@@ -566,22 +585,6 @@
             flex-direction: column;
             gap: 0.5rem;
             width: 100%;
-        }
-
-        .endorsement_cards {
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-        }
-
-        .endorsement_cards_frame {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .endorsement_cards_and_pagination {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
         }
 
 	}

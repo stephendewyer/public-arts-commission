@@ -1114,6 +1114,7 @@
                             style={forthcomingActionsHeadingSticky || forthcomingActionsHeadingAbsolute ? `height: ${forthcomingActionsHeadingHeight}px;` : "height: auto;"}
                         >
                             <h3
+                                id="forthcoming_actions_heading"
                                 bind:clientHeight={forthcomingActionsHeadingHeight}
                                 class={forthcomingActionsHeadingSticky ? "section_heading_sticky" : forthcomingActionsHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
                                 style={forthcomingActionsHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
@@ -1158,6 +1159,7 @@
                             style={actionsHistoryHeadingSticky || actionsHistoryHeadingAbsolute ? `height: ${actionsHistoryHeadingHeight}px;` : "height: auto;"}
                         >
                             <h3
+                                id="actions_history_heading"
                                 bind:clientHeight={actionsHistoryHeadingHeight}
                                 class={actionsHistoryHeadingSticky ? "section_heading_sticky" : actionsHistoryHeadingAbsolute ? "section_heading_absolute" : "section_heading_relative"}
                                 style={actionsHistoryHeadingSticky ? `top: ${endorsementNavHeight}px;`: ""}
@@ -1218,6 +1220,14 @@
 </section>
 
 <style>
+
+    #forthcoming_actions_heading {
+        background-color: rgb(251, 239, 246);
+    }
+
+    #actions_history_heading {
+        background-color: rgb(203, 198, 194);
+    }
 
     .page {
 		position: relative;
@@ -1393,21 +1403,27 @@
 	}
 
     .actions_section_container {
+        position: relative;
         padding: 1rem;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+        align-items: center;
         width: 100%;
     }
 
     .section_heading_container {
-        width: 20rem;
         position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 1;
     }
 
     .section_heading_container > h3 {
         margin: 0;
         font-size: 2rem; 
-
+        padding: 0 1rem 0.5rem 1rem;
     }
 
     .section_heading_relative {
@@ -1418,7 +1434,7 @@
         position: absolute;
         bottom: 0;
         top: auto;
-        left: 0;
+        left: auto;
         right: auto;
     }
 
@@ -1447,11 +1463,10 @@
 
     .action_cards {
         position: relative;
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;      
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);   
         gap: 1rem;
-        padding: 0 1rem 1rem 1rem;
+        padding: 0 0 1rem 0;
         width: 100%;
     }
 
@@ -1481,10 +1496,6 @@
             font-size: 0.95rem;
         }
 
-        .section_heading_container {
-            width: 18rem;
-        }
-
         .section_heading_container > h3 {
            font-size: 1.875rem; 
         }
@@ -1510,12 +1521,13 @@
 			width: 20rem;
 		}
 
-        .section_heading_container {
-            width: 16rem;
-        }
-
         .section_heading_container > h3 {
             font-size: 1.675rem;
+        }
+
+        .action_cards_frame {
+            width: 100%;
+            max-width: 100%;
         }
 
     }
@@ -1579,36 +1591,13 @@
             width: 1rem;
         }
 
-        .section_heading_container {
-            width: 100%;
-        }
-
         .section_heading_container > h3 {
             font-size: 1.5rem;
         }
 
         .actions_section_container {
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
             gap: 0.5rem;
             width: 100%;
-        }
-
-        .action_cards {
-            flex-wrap: nowrap;
-            justify-content: flex-start;
-        }
-
-        .action_cards_frame {
-            width: 100%;
-            max-width: 100%;
-        }
-
-        .action_cards_and_pagination {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
         }
 
     }

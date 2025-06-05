@@ -110,16 +110,18 @@
 <style>
     .endorsement_card {
         position: relative;
-        width: 20rem;
-        min-width: 20rem;
+        width: 100%;
+        max-width: 20rem;
+        min-width: 14rem;
         will-change: box-shadow;
         transition: box-shadow 0.2s linear;
     }
 
     .endorsement_card_hovered {
         position: relative;
-        width: 20rem;
-        min-width: 20rem;
+        width: 100%;
+        max-width: 20rem;
+        min-width: 14rem;
         box-shadow:
             0 1px 1px hsl(0deg 0% 0% / 0.075),
             0 2px 2px hsl(0deg 0% 0% / 0.075),
@@ -175,16 +177,6 @@
 
     @media (max-width: 1440px) {
 
-        .endorsement_card {
-            width: 15rem;
-            min-width: 15rem;
-        }
-
-        .endorsement_card_hovered {
-            width: 15rem;
-            min-width: 15rem;
-        }
-
         .image_container {
             height: 15rem;
         }
@@ -197,15 +189,6 @@
     }
 
     @media (max-width: 720px) {
-        .endorsement_card {
-            width: 12rem;
-            min-width: 12rem;
-        }
-
-        .endorsement_card_hovered {
-            width: 12rem;
-            min-width: 12rem;
-        }
 
         .image_container {
             height: 12rem;
