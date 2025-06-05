@@ -115,7 +115,6 @@
         position: relative;
         width: 100%;
         max-width: 20rem;
-        min-width: 14rem;
         will-change: box-shadow;
         transition: box-shadow 0.2s linear;
     }
@@ -124,7 +123,6 @@
         position: relative;
         width: 100%;
         max-width: 20rem;
-        min-width: 14rem;
         box-shadow:
             0 1px 1px hsl(0deg 0% 0% / 0.075),
             0 2px 2px hsl(0deg 0% 0% / 0.075),
@@ -192,6 +190,15 @@
     }
 
     @media (max-width: 720px) {
+
+        .endorsement_card {
+            min-width: 14rem;
+        }
+
+
+        .endorsement_card_hovered {
+            min-width: 14rem;
+        }
 
         .image_container {
             height: 12rem;
