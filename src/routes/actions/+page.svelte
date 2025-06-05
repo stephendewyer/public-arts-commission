@@ -1417,7 +1417,6 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        z-index: 1;
     }
 
     .section_heading_container > h3 {
@@ -1436,12 +1435,14 @@
         top: auto;
         left: auto;
         right: auto;
+        z-index: 1;
     }
 
     .section_heading_sticky {
         position: fixed;
         top: 0;
         bottom: auto;
+        z-index: 1;
     }
 
     .action_cards_and_pagination {
