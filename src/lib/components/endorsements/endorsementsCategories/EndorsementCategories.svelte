@@ -587,6 +587,10 @@
             width: 100%;
         }
 
+        .endorsement_cards {
+            grid-template-columns: repeat(8, 1fr);   
+        }
+
 	}
 
 </style>

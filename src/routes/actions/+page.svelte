@@ -1534,6 +1534,10 @@
 
     @media screen and (max-width: 720px) {
 
+        .action_cards {
+            grid-template-columns: repeat(8, 1fr);   
+        }
+
         .endorsements_tabs_container {
 			position: relative;
 		}
