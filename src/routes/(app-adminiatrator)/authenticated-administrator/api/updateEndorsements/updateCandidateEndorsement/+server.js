@@ -231,8 +231,8 @@ export const PATCH = async ({request}) => {
         SET
             campaign_name = "${htmlEntities(campaignName)}",
             office_sought_starting_year = "${yearOfficeSought}",
-            election_date_primary = "${electionDatePrimary}",
-            election_date_general = "${electionDateGeneral}",
+            election_date_primary = "${new Date(electionDatePrimary).toISOString().split('T')[0]}",
+            election_date_general = "${new Date(electionDateGeneral).toISOString().split('T')[0]}",
             government_level = "${htmlEntities(governmentLevel)}",
             state = "${htmlEntities(state)}",
             county = "${htmlEntities(county)}",

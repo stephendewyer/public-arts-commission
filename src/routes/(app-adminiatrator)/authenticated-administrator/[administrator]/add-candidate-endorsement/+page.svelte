@@ -25,10 +25,10 @@
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
-    let image: any;
+    let image: any | string = "";
     let campaignNameInputValue: string = "";
     let electorateInputValue: string = "";
-    let yearOfficeSoughtInputValue: number | null = null;
+    let yearOfficeSoughtInputValue: number | string = "";
     let electionDatePrimaryInputValue: string = "";
     let electionDateGeneralInputValue: string = "";
     let governmentLevelInputValue: string = "";
@@ -46,12 +46,12 @@
     let campaignEndedChecked: boolean = false;
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
+    let phoneContactInputValue: E164Number | string = "";
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
     let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
+    let zipCodeContactInputValue: number | string = "";
     let emailContactInputValue: string = "";
 
     let noContactInformationChecked: boolean;
@@ -100,10 +100,10 @@
         userEmail: string | null | undefined,
         imageFile: string,
         imageAltText: string,
-        image: any,
+        image: any | string,
         campaignName: string,
         electorate: string,
-        yearOfficeSought: number | null,
+        yearOfficeSought: number | string,
         electionDatePrimary: string,
         electionDateGeneral: string,
         governmentLevel: string,
@@ -121,12 +121,12 @@
         campaignEnded: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/createEndorsements/createCandidateEndorsement", {
@@ -221,7 +221,7 @@
                 imageAltTextInputValue = "",
                 image = "",
                 campaignNameInputValue = "",
-                yearOfficeSoughtInputValue = null,
+                yearOfficeSoughtInputValue = "",
                 electionDatePrimaryInputValue = "",
                 electionDateGeneralInputValue = "",
                 governmentLevelInputValue = "",
@@ -244,7 +244,7 @@
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -274,6 +274,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>create a candidate endorsement - public arts commission</title>
@@ -289,26 +293,22 @@
     >
         <h2>campaign image</h2>
         <h3>select an image to represent the campaign*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="campaign_name_or_action"
-            inputID="campaign_name_or_action"
+            inputName="candidate_image_file"
+            inputID="candidate_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file*
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}

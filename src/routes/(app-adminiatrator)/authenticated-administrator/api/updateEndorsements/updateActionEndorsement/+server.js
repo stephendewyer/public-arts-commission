@@ -187,9 +187,9 @@ export const PATCH = async ({request}) => {
         SET
             action_name = "${htmlEntities(actionName)}",
             all_day_event = "${allDayActionINT}",
-            all_day_event_date = "${allDayActionDate}",
-            date_start = "${actionStartDate}",
-            date_end = "${actionEndDate}",
+            all_day_event_date = "${new Date(allDayActionDate).toISOString().split('T')[0]}",
+            date_start = "${new Date(actionStartDate).toISOString().split('T')[0]}",
+            date_end = "${new Date(actionEndDate).toISOString().split('T')[0]}",
             time_start = "${startTime}",
             time_end = "${endTime}",
             time_zone = "${htmlEntities(timeZone)}",

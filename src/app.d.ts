@@ -331,10 +331,11 @@ declare global {
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
 		contact_street_address: string;
-		contact_street_address: string;
+		contact_street_address_02: string;
 		contact_city: string;
 		contact_state: string;
 		contact_zip_code: number;
+		contact_email: string;
 	}
 
 	interface LegislationWithImage {
@@ -362,10 +363,11 @@ declare global {
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
 		contact_street_address: string;
-		contact_street_address: string;
+		contact_street_address_02: string;
 		contact_city: string;
 		contact_state: string;
 		contact_zip_code: number;
+		contact_email: string;
 		admin_ID: number;
 		voter_ID: number;
 		campaign_ID: number;
@@ -399,10 +401,11 @@ declare global {
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
 		contact_street_address: string;
-		contact_street_address: string;
+		contact_street_address_02: string;
 		contact_city: string;
 		contact_state: string;
 		contact_zip_code: number;
+		contact_email: string;
 		admin_ID: number;
 		voter_ID: number;
 		campaign_ID: number;
@@ -448,10 +451,11 @@ declare global {
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
 		contact_street_address: string;
-		contact_street_address: string;
+		contact_street_address_02: string;
 		contact_city: string;
 		contact_state: string;
 		contact_zip_code: number;
+		contact_email: string;
 		admin_ID: number;
 		voter_ID: number;
 		campaign_ID: number;

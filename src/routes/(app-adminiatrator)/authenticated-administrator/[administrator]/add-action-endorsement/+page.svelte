@@ -41,19 +41,19 @@
     let actionStreetAddress02InputValue: string = "";
     let actionCityInputValue: string = "";
     let actionStateInputValue: string = "";
-    let actionZipCodeInputValue: number | null = null;
+    let actionZipCodeInputValue: number |string = "";
     let governmentLevelInputValue: string = "";
     let websiteURLInputValue: string = "";
     let detailsInputValue: string = "";
 
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
+    let phoneContactInputValue: E164Number | string = "";
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
     let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
+    let zipCodeContactInputValue: number | string = "";
     let emailContactInputValue: string = "";
 
     let noContactInformationChecked: boolean;
@@ -122,18 +122,18 @@
         actionStreetAddress02: string,
         actionCity: string,
         actionState: string,
-        actionZipCode: number | null,
+        actionZipCode: number | string,
         governmentLevel: string,
         websiteURL: string,
         details: string,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/createEndorsements/createActionEndorsement", {
@@ -235,18 +235,18 @@
                 actionStreetAddress02InputValue = "",
                 actionCityInputValue = "",
                 actionStateInputValue = "",
-                actionZipCodeInputValue = null,
+                actionZipCodeInputValue = "",
                 governmentLevelInputValue = "",
                 websiteURLInputValue = "",
                 detailsInputValue = "",
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -290,6 +290,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>create an action endorsement - public arts commission</title>
@@ -305,8 +309,6 @@
     >
         <h2>action image</h2>
         <h3>select an image to represent the action*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
@@ -314,17 +316,15 @@
             placeholder="/image.jpg"
             inputName="action_image_file"
             inputID="action_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
@@ -563,7 +563,7 @@
                     inputName="name_first"
                     bind:textInputValue={nameFirstContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="first name required"
                 >
                     first name
@@ -575,7 +575,7 @@
                     inputName="name_last"
                     bind:textInputValue={nameLastContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="last name required"
                 >
                     last name
@@ -589,7 +589,7 @@
                     inputName="email"
                     bind:emailInputValue={emailContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     email
                 </EmailInput>
@@ -599,7 +599,7 @@
                     inputName="phone"
                     bind:phoneInputValue={phoneContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     phone number
                 </PhoneInput>
@@ -612,7 +612,7 @@
                     inputName="street_address"
                     bind:textInputValue={streetAddressContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="street address required"
                 >
                     street address
@@ -637,7 +637,7 @@
                     inputName="city"
                     bind:textInputValue={cityContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="city required"
                 >
                     city
@@ -649,7 +649,7 @@
                     options={States}
                     bind:selectInputValue={stateContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     selectInputErrorMessage="state required"
                 >
                     state
@@ -662,7 +662,7 @@
                     inputName="zip_code"
                     bind:numberInputValue={zipCodeContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     numberInputErrorMessage="zip code required"
                 >
                     zip code

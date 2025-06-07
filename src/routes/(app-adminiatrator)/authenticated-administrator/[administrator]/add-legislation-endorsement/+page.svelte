@@ -124,11 +124,11 @@
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
-    let image: any;
+    let image: any | string = "";
     let legislationTitleInputValue: string = "";
-    let yearReleasedInputValue: number | null = null;
-    let yearIntroducedInHouseInputValue: number | null = null;
-    let yearIntroducedInSenateInputValue: number | null = null;
+    let yearReleasedInputValue: number | string = "";
+    let yearIntroducedInHouseInputValue: number | string = "";
+    let yearIntroducedInSenateInputValue: number | string = "";
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
     let countyInputValue: string = "";
@@ -150,12 +150,12 @@
     
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
+    let phoneContactInputValue: E164Number | string = "";
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
     let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
+    let zipCodeContactInputValue: number | string = "";
     let emailContactInputValue: string = "";
 
     let noContactInformationChecked: boolean;
@@ -208,11 +208,11 @@
         userEmail: string | null | undefined,
         imageFile: string,
         imageAltText: string,
-        image: any,
+        image: any | string,
         legislationTitle: string,
-        yearReleased: number | null,
-        yearIntroducedInHouse: number | null,
-        yearIntroducedInSenate: number | null,
+        yearReleased: number | string,
+        yearIntroducedInHouse: number | string,
+        yearIntroducedInSenate: number | string,
         governmentLevel: string,
         state: string,
         county: string,
@@ -235,12 +235,12 @@
         ExecutiveSignedIntoLaw: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/createEndorsements/createLegislationEndorsement", {
@@ -348,9 +348,9 @@
                 imageAltTextInputValue = "",
                 image = "",
                 legislationTitleInputValue = "",
-                yearReleasedInputValue = null,
-                yearIntroducedInHouseInputValue = null,
-                yearIntroducedInSenateInputValue = null,
+                yearReleasedInputValue = "",
+                yearIntroducedInHouseInputValue = "",
+                yearIntroducedInSenateInputValue = "",
                 governmentLevelInputValue = "",
                 stateInputValue = "",
                 countyInputValue = "",
@@ -373,12 +373,12 @@
                 ExecutiveSignedIntoLawChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -433,6 +433,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>create a legislation endorsement - public arts commission</title>
@@ -448,26 +452,22 @@
     >
         <h2>legislation image</h2>
         <h3>select an image to represent the legislation*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="legislation_image"
-            inputID="legislation_image"
+            inputName="legislation_image_file"
+            inputID="legislation_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file
         </ImageFileInput>
-        {#if (image)}
-            <div class="image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}

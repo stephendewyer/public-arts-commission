@@ -21,6 +21,7 @@
     import { goto } from '$app/navigation';
     import type { E164Number } from "svelte-tel-input/types";
     import CancelButton from '$lib/components/buttons/CancelButton.svelte';
+    import { reverseHtmlEntities } from '$lib/utils/reverseHtmlEntities.js';
 
     export let data;
 
@@ -29,7 +30,7 @@
     let addHouseCoSponsor: boolean = false;
     let addSenateCoSponsor: boolean = false;
 
-    let legislationID = data.endorsedLegislationImagesAndSponsors.legislation_ID;
+    let legislationID: number | null = data.endorsedLegislationImagesAndSponsors.legislation_ID ? data.endorsedLegislationImagesAndSponsors.legislation_ID : null;
 
     let coSponsorsHouseValues: CoSponsorInputValue[] = [];
     
@@ -122,26 +123,26 @@
     // end remove House sponsor
 
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = data.endorsedLegislationImagesAndSponsors.alt_text;
-    let image: any = data.endorsedLegislationImagesAndSponsors.image_URL;
-    let imageID: number = data.endorsedLegislationImagesAndSponsors.image_ID;
-    let imagePublicID: string = data.endorsedLegislationImagesAndSponsors.public_ID;
-    let legislationTitleInputValue: string = data.endorsedLegislationImagesAndSponsors.legislation_name;
-    let yearReleasedInputValue: number | null = data.endorsedLegislationImagesAndSponsors.year_released;
-    let yearIntroducedInHouseInputValue: number | null = data.endorsedLegislationImagesAndSponsors.year_introduced_House;
-    let yearIntroducedInSenateInputValue: number | null = data.endorsedLegislationImagesAndSponsors.year_introduced_Senate;
-    let governmentLevelInputValue: string = data.endorsedLegislationImagesAndSponsors.government_level;
-    let stateInputValue: string = data.endorsedLegislationImagesAndSponsors.state;
-    let countyInputValue: string = data.endorsedLegislationImagesAndSponsors.county;
-    let cityInputValue: string = data.endorsedLegislationImagesAndSponsors.city;
-    let websiteURLInputValue: string = data.endorsedLegislationImagesAndSponsors.website_URL;
-    let detailsInputValue: string = data.endorsedLegislationImagesAndSponsors.details;
+    let imageAltTextInputValue: string = data.endorsedLegislationImagesAndSponsors.alt_text ? reverseHtmlEntities(data.endorsedLegislationImagesAndSponsors.alt_text) : "";
+    let image: string | any = data.endorsedLegislationImagesAndSponsors.image_URL ? data.endorsedLegislationImagesAndSponsors.image_URL : "";
+    let imageID: number | null = data.endorsedLegislationImagesAndSponsors.image_ID ? data.endorsedLegislationImagesAndSponsors.image_ID : null;
+    let imagePublicID: string = data.endorsedLegislationImagesAndSponsors.public_ID ? data.endorsedLegislationImagesAndSponsors.public_ID : "";
+    let legislationTitleInputValue: string = data.endorsedLegislationImagesAndSponsors.legislation_name ? reverseHtmlEntities(data.endorsedLegislationImagesAndSponsors.legislation_name) : "";
+    let yearReleasedInputValue: number | string = data.endorsedLegislationImagesAndSponsors.year_released ? data.endorsedLegislationImagesAndSponsors.year_released : "";
+    let yearIntroducedInHouseInputValue: number | string = data.endorsedLegislationImagesAndSponsors.year_introduced_House ? data.endorsedLegislationImagesAndSponsors.year_introduced_House : "";
+    let yearIntroducedInSenateInputValue: number | string = data.endorsedLegislationImagesAndSponsors.year_introduced_Senate ? data.endorsedLegislationImagesAndSponsors.year_introduced_Senate : "";
+    let governmentLevelInputValue: string = data.endorsedLegislationImagesAndSponsors.government_level ? data.endorsedLegislationImagesAndSponsors.government_level : "";
+    let stateInputValue: string = data.endorsedLegislationImagesAndSponsors.state ? data.endorsedLegislationImagesAndSponsors.state : "";
+    let countyInputValue: string = data.endorsedLegislationImagesAndSponsors.county ? data.endorsedLegislationImagesAndSponsors.county : "";
+    let cityInputValue: string = data.endorsedLegislationImagesAndSponsors.city ? data.endorsedLegislationImagesAndSponsors.city : "";
+    let websiteURLInputValue: string = data.endorsedLegislationImagesAndSponsors.website_URL ? data.endorsedLegislationImagesAndSponsors.website_URL : "";
+    let detailsInputValue: string = data.endorsedLegislationImagesAndSponsors.details ? reverseHtmlEntities(data.endorsedLegislationImagesAndSponsors.details) : "";
     let introducedInHouseChecked: boolean = data.endorsedLegislationImagesAndSponsors.year_introduced_House ? true : false;
     let introducedInSenateChecked: boolean = data.endorsedLegislationImagesAndSponsors.year_introduced_Senate ? true : false;
-    let sponsorHouseInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_House[0]?.sponsor_name;
-    let sponsorSenateInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_Senate[0]?.sponsor_name;
-    let houseSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_House;
-    let senateSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_Senate;
+    let sponsorHouseInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_House[0]?.sponsor_name ? data.endorsedLegislationImagesAndSponsors.sponsors_House[0]?.sponsor_name : "";
+    let sponsorSenateInputValue: string = data.endorsedLegislationImagesAndSponsors.sponsors_Senate[0]?.sponsor_name ? data.endorsedLegislationImagesAndSponsors.sponsors_Senate[0]?.sponsor_name : "";
+    let houseSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_House ? data.endorsedLegislationImagesAndSponsors.session_House : "";
+    let senateSessionInputValue: string = data.endorsedLegislationImagesAndSponsors.session_Senate ? data.endorsedLegislationImagesAndSponsors.session_Senate : "";
     let passedInHouseChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.passed_in_House;
     let passedInSenateChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.passed_in_Senate;
     let rejectedByHouseChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.rejected_in_House;
@@ -149,17 +150,16 @@
     let vetoedByExecutiveChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.vetoed_by_Executive;
     let ExecutiveSignedIntoLawChecked: boolean | any = data.endorsedLegislationImagesAndSponsors.signed_by_Executive;
     
-    let nameFirstContactInputValue: string = "";
-    let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null = null;
-    let streetAddressContactInputValue: string = "";
-    let streetAddress02ContactInputValue: string = "";
-    let cityContactInputValue: string = "";
-    let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
-    let emailContactInputValue: string = "";
-
-    let noContactInformationChecked: boolean;
+    let nameFirstContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_name_first ? data.endorsedLegislationImagesAndSponsors.contact_name_first : "";
+    let nameLastContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_name_last ? data.endorsedLegislationImagesAndSponsors.contact_name_last : "";
+    let phoneContactInputValue: E164Number | string = data.endorsedLegislationImagesAndSponsors.contact_phone_number ? data.endorsedLegislationImagesAndSponsors.contact_phone_number : "";
+    let streetAddressContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_street_address ? data.endorsedLegislationImagesAndSponsors.contact_street_address : "";
+    let streetAddress02ContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_street_address_02 ? data.endorsedLegislationImagesAndSponsors.contact_street_address_02 : "";
+    let cityContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_city ? data.endorsedLegislationImagesAndSponsors.contact_city : "";
+    let stateContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_state ? data.endorsedLegislationImagesAndSponsors.contact_state : "";
+    let zipCodeContactInputValue: number | string = data.endorsedLegislationImagesAndSponsors.contact_zip_code ? data.endorsedLegislationImagesAndSponsors.contact_zip_code : "";
+    let emailContactInputValue: string = data.endorsedLegislationImagesAndSponsors.contact_email ? data.endorsedLegislationImagesAndSponsors.contact_email : "";
+    let noContactInformationChecked: boolean = false;
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
@@ -206,17 +206,17 @@
     };
 
     const createLegislationEndorsement = async (
-        legialstionID: number,
+        legislationID: number | null,
         userEmail: string | null | undefined,
         imageFile: string,
         imagePublicID: string,
         imageAltText: string,
-        image: any,
-        imageID: number,
+        image: any | string,
+        imageID: number | null,
         legislationTitle: string,
-        yearReleased: number | null,
-        yearIntroducedInHouse: number | null,
-        yearIntroducedInSenate: number | null,
+        yearReleased: number | string,
+        yearIntroducedInHouse: number | string,
+        yearIntroducedInSenate: number | string,
         governmentLevel: string,
         state: string,
         county: string,
@@ -239,12 +239,12 @@
         ExecutiveSignedIntoLaw: boolean | any,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateLegislationEndorsement", {
@@ -300,7 +300,7 @@
 
         return responseItem;
 
-    }
+    };
 
     const submitLegislationEndoresementHandler = async () => {
 
@@ -358,9 +358,9 @@
                 imageAltTextInputValue = "",
                 image = "",
                 legislationTitleInputValue = "",
-                yearReleasedInputValue = null,
-                yearIntroducedInHouseInputValue = null,
-                yearIntroducedInSenateInputValue = null,
+                yearReleasedInputValue = "",
+                yearIntroducedInHouseInputValue = "",
+                yearIntroducedInSenateInputValue = "",
                 governmentLevelInputValue = "",
                 stateInputValue = "",
                 countyInputValue = "",
@@ -383,12 +383,12 @@
                 ExecutiveSignedIntoLawChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -443,6 +443,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>edit a legislation endorsement - public arts commission</title>
@@ -458,26 +462,22 @@
     >
         <h2>legislation image</h2>
         <h3>select an image to represent the legislation*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="legislation_image"
-            inputID="legislation_image"
+            inputName="legislation_image_file"
+            inputID="legislation_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file
         </ImageFileInput>
-        {#if (image)}
-            <div class="image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
@@ -815,7 +815,7 @@
                     inputName="name_first"
                     bind:textInputValue={nameFirstContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="first name required"
                 >
                     first name
@@ -827,7 +827,7 @@
                     inputName="name_last"
                     bind:textInputValue={nameLastContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="last name required"
                 >
                     last name
@@ -841,7 +841,7 @@
                     inputName="email"
                     bind:emailInputValue={emailContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     email
                 </EmailInput>
@@ -851,7 +851,7 @@
                     inputName="phone"
                     bind:phoneInputValue={phoneContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     phone number
                 </PhoneInput>
@@ -864,7 +864,7 @@
                     inputName="street_address"
                     bind:textInputValue={streetAddressContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="street address required"
                 >
                     street address
@@ -889,7 +889,7 @@
                     inputName="city"
                     bind:textInputValue={cityContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="city required"
                 >
                     city
@@ -901,7 +901,7 @@
                     options={States}
                     bind:selectInputValue={stateContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     selectInputErrorMessage="state required"
                 >
                     state
@@ -914,7 +914,7 @@
                     inputName="zip_code"
                     bind:numberInputValue={zipCodeContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     numberInputErrorMessage="zip code required"
                 >
                     zip code

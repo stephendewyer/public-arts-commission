@@ -6,7 +6,7 @@
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let phoneInputValue: E164Number | null = '+36301234567';
+    export let phoneInputValue: E164Number | string = "'+36301234567'";
     export let isValid: boolean = true;
     export let required: boolean;
 

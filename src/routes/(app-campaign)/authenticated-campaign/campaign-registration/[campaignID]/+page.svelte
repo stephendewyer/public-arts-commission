@@ -22,33 +22,27 @@
 
     export let data;
 
-    let campaignApplication: CampaignApplicationWithImageRow | any = null;
-    
-    if (data.campaignApplicationWithImage) {
+    let campaignApplication: CampaignApplicationWithImageRow | null = data.campaignApplicationWithImage ? data.campaignApplicationWithImage : null;
 
-        campaignApplication = data.campaignApplicationWithImage;
-
-    };
-
-    let campaignApplicationID: number | any = campaignApplication.campaign_application_ID;
-    let campaignUserID: number | any = campaignApplication.user_ID;
+    let campaignApplicationID: number | null = campaignApplication?.campaign_application_ID ? campaignApplication.campaign_application_ID : null;
+    let campaignUserID: number | null = campaignApplication?.user_ID ? campaignApplication.user_ID : null;
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string | any = campaignApplication.alt_text;
-    let image: string = campaignApplication.image_URL;
-    let imageID: number | any = campaignApplication.image_ID;
-    let imagePublicID: string = campaignApplication.public_ID;
-    let campaignNameInputValue: string = campaignApplication.campaign_name;
-    let electorateInputValue: string = campaignApplication.electorate;
-    let yearOfficeSoughtInputValue: number | null = campaignApplication.starting_year_for_office_sought;
-    let electionDatePrimaryInputValue: string = ConvertDateInputFormat(new Date(campaignApplication.primary_election_date));
-    let electionDateGeneralInputValue: string = ConvertDateInputFormat(new Date(campaignApplication.general_election_date));
-    let governmentLevelInputValue: string = campaignApplication.government_level;
-    let stateInputValue: string = campaignApplication.state;
-    let countyInputValue: string = campaignApplication.county;
-    let cityInputValue: string = campaignApplication.city;
-    let partyInputValue: string = campaignApplication.party;
-    let websiteURLInputValue: string = campaignApplication.website_URL;
-    let authorizedRepresentativeInputValue: boolean = campaignApplication.authorized_campaign_representative;
+    let imageAltTextInputValue: string = campaignApplication?.alt_text ? campaignApplication?.alt_text : "";
+    let image: string = campaignApplication?.image_URL ? campaignApplication.image_URL : "";
+    let imageID: number | null = campaignApplication?.image_ID ? campaignApplication?.image_ID : null;
+    let imagePublicID: string = campaignApplication?.public_ID ? campaignApplication.public_ID : "";
+    let campaignNameInputValue: string = campaignApplication?.campaign_name ? campaignApplication.campaign_name : "";
+    let electorateInputValue: string = campaignApplication?.electorate ? campaignApplication.electorate : "";
+    let yearOfficeSoughtInputValue: number | string = campaignApplication?.starting_year_for_office_sought ? campaignApplication.starting_year_for_office_sought : "";
+    let electionDatePrimaryInputValue: string = campaignApplication?.primary_election_date ? ConvertDateInputFormat(new Date(campaignApplication.primary_election_date)) : "";
+    let electionDateGeneralInputValue: string = campaignApplication?.general_election_date ? ConvertDateInputFormat(new Date(campaignApplication.general_election_date)) : "";
+    let governmentLevelInputValue: string = campaignApplication?.government_level ? campaignApplication.government_level : "";
+    let stateInputValue: string = campaignApplication?.state ? campaignApplication.state : "";
+    let countyInputValue: string = campaignApplication?.county ? campaignApplication.county : "";
+    let cityInputValue: string = campaignApplication?.city ? campaignApplication.city : "";
+    let partyInputValue: string = campaignApplication?.party ? campaignApplication.party : "";
+    let websiteURLInputValue: string = campaignApplication?.website_URL ? campaignApplication.website_URL : "";
+    let authorizedRepresentativeInputValue: boolean = campaignApplication?.authorized_campaign_representative ? true : false;
 
     let imageFileIsValid: boolean = true;
     let imageAltTextIsValid: boolean = true;
@@ -65,6 +59,10 @@
     let websiteURLIsValid: boolean = true;
     let electorateIsValid: boolean = true;
     let authorizedRepresentativeIsValid: boolean = true;
+
+    let campaignApplicationSubmitted: boolean = campaignApplication?.campaign_application_submitted ? true : false;
+    let campaignQuestionnaireCompleted: boolean = campaignApplication?.campaign_questionnaire_completed ? true : false;
+    let campaignRegistrationCompleted: boolean = campaignApplication?.campaign_registered ? true : false;
 
     const governmentLevelOptions: GovernmentLevel[] = GovernmentLevel;
 
@@ -95,16 +93,16 @@
     };
 
     const submitCampaignRegistrationInformation = async (
-        campaignApplicationID: number,
-        campaignUserID: number,
-        imageID: number,
+        campaignApplicationID: number | null,
+        campaignUserID: number | null,
+        imageID: number | null,
         imagePublicID: string,
         imageFile: string,
         imageAltText: string,
-        image: any,
+        image: any | string,
         campaignName: string,
         electorate: string,
-        yearOfficeSought: number | null,
+        yearOfficeSought: number | string,
         electionDatePrimary: string,
         electionDateGeneral: string,
         governmentLevel: string,
@@ -113,7 +111,7 @@
         city: string,
         party: string,
         websiteURL: string,
-        authorizedRepresentative: boolean
+        authorizedRepresentative: boolean | number
     ) => {
         const response = await fetch("/authenticated-campaign/api/updateCampaignRegistration", {
             method: 'PATCH',
@@ -185,7 +183,7 @@
                 imageAltTextInputValue = "";
                 image = "";
                 campaignNameInputValue = "";
-                yearOfficeSoughtInputValue = null;
+                yearOfficeSoughtInputValue = "";
                 electionDatePrimaryInputValue = "";
                 electionDateGeneralInputValue = "";
                 governmentLevelInputValue = "";
@@ -195,7 +193,7 @@
                 partyInputValue = "";
                 websiteURLInputValue = "";
                 authorizedRepresentativeInputValue = false;
-                goto(`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`);
+                goto(`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplicationID}`);
             };
 
             if (responseItem.error) {
@@ -236,16 +234,16 @@
     };
 
     const updateCampaignRegistrationInformation = async (
-        campaignApplicationID: number,
-        campaignUserID: number,
-        imageID: number,
+        campaignApplicationID: number | null,
+        campaignUserID: number | null,
+        imageID: number | null,
         imagePublicID: string,
         imageFile: string,
         imageAltText: string,
-        image: any,
+        image: string | any,
         campaignName: string,
         electorate: string,
-        yearOfficeSought: number | null,
+        yearOfficeSought: number | string,
         electionDatePrimary: string,
         electionDateGeneral: string,
         governmentLevel: string,
@@ -369,22 +367,26 @@
         {
             id: "registration",
             name: "registration",
-            path: `/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_registered
+            path: `/authenticated-campaign/campaign-registration/campaign=${campaignApplicationID}`,
+            completed: campaignRegistrationCompleted
         },
         {
             id: "questionnaire",
             name: "questionnaire",
-            path: `/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_questionnaire_completed
+            path: `/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplicationID}`,
+            completed: campaignQuestionnaireCompleted
         },
         {
             id: "submit",
             name: "submit",
-            path: `/authenticated-campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_application_submitted
+            path: `/authenticated-campaign/campaign-submit/campaign=${campaignApplicationID}`,
+            completed: campaignApplicationSubmitted
         }
     ];
+
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
 
 </script>
 <svelte:head>
@@ -397,7 +399,7 @@
         campaign endorsement application
     </h2>
     <h4 style="margin: 0;">
-        {campaignApplication.campaign_name}
+        {campaignNameInputValue}
     </h4>
     <CampaignApplicationProgressBar nav_paths={navPaths} />
     <h1>
@@ -412,32 +414,22 @@
         <h3 class="select_image_heading">
             select an image to represent the campaign
         </h3>
-        <ul>
-            <li class="constraints">
-                file formats accepted: JPG, PNG, GIF
-            </li>
-            <li class="constraints">
-                maximum file size: 2MB
-            </li>
-        </ul>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="referendum_name_or_action"
-            inputID="referendum_name_or_action"
+            inputName="candidate_image_file"
+            inputID="candidate_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file*
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
@@ -646,7 +638,7 @@
                 cancel
             </CancelButton>
         </a>
-        {#if ((campaignApplication.campaign_registered === null))}
+        {#if ((!campaignRegistrationCompleted))}
             <div 
                 role={"button"}
                 on:click={() => submitCampaignRegistrationHandler()}
@@ -656,8 +648,8 @@
                     campaign questionnaire
                 </ActionButton>
             </div>
-        {:else if (campaignApplication.campaign_registered === 1)}
-            <a href={`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`}>
+        {:else if (campaignRegistrationCompleted)}
+            <a href={`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplicationID}`}>
                 <ActionButton>
                     campaign questionnaire
                 </ActionButton>

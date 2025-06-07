@@ -28,9 +28,9 @@
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
-    let image: any;
+    let image: any | string = "";
     let referendumNameInputValue: string = "";
-    let startingYearIfEnactedInputValue: number | null = null;
+    let startingYearIfEnactedInputValue: number | string = "";
     let electionDateInputValue: string = "";
     let governmentLevelInputValue: string = "";
     let stateInputValue: string = "";
@@ -46,12 +46,12 @@
 
     let nameFirstContactInputValue: string = "";
     let nameLastContactInputValue: string = "";
-    let phoneContactInputValue: E164Number | null= null;
+    let phoneContactInputValue: E164Number | string = "";
     let streetAddressContactInputValue: string = "";
     let streetAddress02ContactInputValue: string = "";
     let cityContactInputValue: string = "";
     let stateContactInputValue: string = "";
-    let zipCodeContactInputValue: number | null = null;
+    let zipCodeContactInputValue: number | string = "";
     let emailContactInputValue: string = "";
 
     let noContactInformationChecked: boolean;
@@ -97,11 +97,11 @@
     
     const createReferendumEndorsement = async (
         userEmail: string | null | undefined,
-        image: string,
+        image: any | string,
         imageFileName: string,
         imageAltText: string,
         referendumName: string,
-        startingYearIfEnacted: number | null,
+        startingYearIfEnacted: number | string,
         electionDate: string,
         governmentLevel: string,
         state: string,
@@ -114,12 +114,12 @@
         pendingElection: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/createEndorsements/createReferendumEndorsement", {
@@ -201,7 +201,7 @@
                 imageAltTextInputValue = "",
                 image = "",
                 referendumNameInputValue = "",
-                startingYearIfEnactedInputValue = null,
+                startingYearIfEnactedInputValue = "",
                 electionDateInputValue = "",
                 governmentLevelInputValue = "",
                 stateInputValue = "",
@@ -214,12 +214,12 @@
                 pendingElectionChecked= false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -257,6 +257,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>create a referendum endorsement - public arts commission</title>
@@ -272,26 +276,22 @@
     >
         <h2>referendum image</h2>
         <h3>select an image to represent the referendum*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="referendum_name_or_action"
-            inputID="referendum_name_or_action"
+            inputName="referendum_image_file"
+            inputID="referendum_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file*
         </ImageFileInput>
-        {#if (image)}
-            <div class="image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}

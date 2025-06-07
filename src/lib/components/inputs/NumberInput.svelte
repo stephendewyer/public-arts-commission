@@ -1,12 +1,12 @@
 <script lang="ts">
     import InputErrorMessage from "../errorMessages/InputErrorMessage.svelte";
-    export let placeholder: string;
-    export let inputID: string;
-    export let inputName: string;
-    export let inputLabel: boolean;
-    export let numberInputValue: number | null;
-    export let isValid: boolean;
-    export let required: boolean;
+    export let placeholder: string = "";
+    export let inputID: string = "";
+    export let inputName: string = "";
+    export let inputLabel: boolean = false;
+    export let numberInputValue: number | string = "";
+    export let isValid: boolean = true;
+    export let required: boolean = false;
     export let numberInputErrorMessage: string = "";
 
     let numberInputTouched: boolean = false;
@@ -14,10 +14,10 @@
 
     const numberInputValueChangedHandler = () => {
         if (required) {
-            if (numberInputValue === null) {
+            if (numberInputValue === "") {
                 isValid = false;
                 errorMessage = numberInputErrorMessage;
-            } else if (numberInputValue !== null) {
+            } else if (numberInputValue !== "") {
                 isValid = true;
             }
         }
@@ -26,10 +26,10 @@
     const numberInputFocusChangedHandler = () => {
         if (required) {
             if (numberInputTouched) {
-                if (numberInputValue === null) {
+                if (numberInputValue === "") {
                     isValid = false;
                     errorMessage = numberInputErrorMessage;
-                } else if (numberInputValue !== null) {
+                } else if (numberInputValue !== "") {
                     isValid = true;
                 }
             }
@@ -39,17 +39,17 @@
     const numberInputBlurChangedHandler = () => {
         if (required) {
             numberInputTouched = true;
-            if (numberInputValue === null) {
+            if (numberInputValue === "") {
                 isValid = false;
                 errorMessage = numberInputErrorMessage;
-            } else if (numberInputValue !== null) {
+            } else if (numberInputValue !== "") {
                 isValid = true;
             }
         }
     }
 
     $: if (!isValid) {
-        if (numberInputValue === null) {
+        if (numberInputValue === "") {
             errorMessage = numberInputErrorMessage;
         }
     }

@@ -818,7 +818,7 @@ export const PATCH = async ({request}) => {
             year_released = "${yearReleased}",
             year_introduced_House = "${yearIntroducedInHouse}",
             year_introduced_Senate = "${yearIntroducedInSenate}",
-            election_date = "${electionDate}",
+            election_date = "${new Date(electionDate).toISOString().split('T')[0]}",
             government_level = "${htmlEntities(governmentLevel)}",
             state = "${htmlEntities(state)}",
             county = "${htmlEntities(county)}",

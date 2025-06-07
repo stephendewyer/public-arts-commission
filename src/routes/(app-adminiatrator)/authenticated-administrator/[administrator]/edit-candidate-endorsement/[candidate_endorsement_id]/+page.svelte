@@ -26,21 +26,21 @@
 
     let imageFileInputValue: string = "";
     let candidateID: number = data.endorsedCandidateWithImage.candidate_ID;
-    let imageID: number = data.endorsedCandidateWithImage.image_ID;
-    let imageAltTextInputValue: string = data.endorsedCandidateWithImage.alt_text;
-    let image: any = data.endorsedCandidateWithImage.image_URL;
-    let imagePublicID: string = data.endorsedCandidateWithImage.public_ID;
-    let campaignNameInputValue: string = data.endorsedCandidateWithImage.campaign_name;
-    let electorateInputValue: string = data.endorsedCandidateWithImage.electorate;
-    let yearOfficeSoughtInputValue: number | null = data.endorsedCandidateWithImage.office_sought_starting_year;
-    let electionDatePrimaryInputValue: string = ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_primary));
-    let electionDateGeneralInputValue: string = ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_general));
-    let governmentLevelInputValue: string = data.endorsedCandidateWithImage.government_level;
-    let stateInputValue: string = data.endorsedCandidateWithImage.state;
-    let countyInputValue: string = data.endorsedCandidateWithImage.county;
-    let cityInputValue: string = data.endorsedCandidateWithImage.city;
-    let partyInputValue: string = data.endorsedCandidateWithImage.party;
-    let websiteURLInputValue: string = data.endorsedCandidateWithImage.website_URL;
+    let imageID: number | null = data.endorsedCandidateWithImage.image_ID ? data.endorsedCandidateWithImage.image_ID : null;
+    let imageAltTextInputValue: string = data.endorsedCandidateWithImage.alt_text ? data.endorsedCandidateWithImage.alt_text : "";
+    let image: any = data.endorsedCandidateWithImage.image_URL ? data.endorsedCandidateWithImage.image_URL : null;
+    let imagePublicID: string = data.endorsedCandidateWithImage.public_ID ? data.endorsedCandidateWithImage.public_ID : "";
+    let campaignNameInputValue: string = data.endorsedCandidateWithImage.campaign_name ? data.endorsedCandidateWithImage.campaign_name : "";
+    let electorateInputValue: string = data.endorsedCandidateWithImage.electorate ? data.endorsedCandidateWithImage.electorate : "";
+    let yearOfficeSoughtInputValue: number | string = data.endorsedCandidateWithImage.office_sought_starting_year ? data.endorsedCandidateWithImage.office_sought_starting_year : "";
+    let electionDatePrimaryInputValue: string = ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_primary)) ? ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_primary)) : "";
+    let electionDateGeneralInputValue: string = ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_general)) ? ConvertDateInputFormat(new Date(data.endorsedCandidateWithImage.election_date_general)) : "";
+    let governmentLevelInputValue: string = data.endorsedCandidateWithImage.government_level ? data.endorsedCandidateWithImage.government_level : "";
+    let stateInputValue: string = data.endorsedCandidateWithImage.state ? data.endorsedCandidateWithImage.state : "";
+    let countyInputValue: string = data.endorsedCandidateWithImage.county ? data.endorsedCandidateWithImage.county : "";
+    let cityInputValue: string = data.endorsedCandidateWithImage.city ? data.endorsedCandidateWithImage.city : "";
+    let partyInputValue: string = data.endorsedCandidateWithImage.party ? data.endorsedCandidateWithImage.party : "";
+    let websiteURLInputValue: string = data.endorsedCandidateWithImage.website_URL ? data.endorsedCandidateWithImage.website_URL : "";
     let runningInPrimaryChecked: boolean | any = data.endorsedCandidateWithImage.running_in_primary;
     let electedInPrimaryChecked: boolean | any = data.endorsedCandidateWithImage.elected_in_primary;
     let rejectedInPrimaryChecked: boolean | any = data.endorsedCandidateWithImage.rejected_in_primary;
@@ -48,15 +48,15 @@
     let electedInGeneralChecked: boolean | any = data.endorsedCandidateWithImage.elected_in_general;
     let rejectedInGeneralChecked: boolean | any = data.endorsedCandidateWithImage.rejected_in_general;
     let campaignEndedChecked: boolean | any = data.endorsedCandidateWithImage.campaign_ended;
-    let nameFirstContactInputValue: string = data.endorsedCandidateWithImage.contact_name_first;
-    let nameLastContactInputValue: string = data.endorsedCandidateWithImage.contact_name_last;
-    let phoneContactInputValue: E164Number | null = data.endorsedCandidateWithImage.contact_phone_number;
-    let streetAddressContactInputValue: string = data.endorsedCandidateWithImage.contact_street_address;
-    let streetAddress02ContactInputValue: string = data.endorsedCandidateWithImage.contact_street_address_02;
-    let cityContactInputValue: string = data.endorsedCandidateWithImage.contact_city;
-    let stateContactInputValue: string = data.endorsedCandidateWithImage.contact_state;
-    let zipCodeContactInputValue: number | null = data.endorsedCandidateWithImage.contact_zip_code;
-    let emailContactInputValue: string = data.endorsedCandidateWithImage.contact_email;
+    let nameFirstContactInputValue: string = data.endorsedCandidateWithImage.contact_name_first ? data.endorsedCandidateWithImage.contact_name_first : "";
+    let nameLastContactInputValue: string = data.endorsedCandidateWithImage.contact_name_last ? data.endorsedCandidateWithImage.contact_name_last : "";
+    let phoneContactInputValue: E164Number | string = data.endorsedCandidateWithImage.contact_phone_number ? data.endorsedCandidateWithImage.contact_phone_number : "";
+    let streetAddressContactInputValue: string = data.endorsedCandidateWithImage.contact_street_address ? data.endorsedCandidateWithImage.contact_street_address : "";
+    let streetAddress02ContactInputValue: string = data.endorsedCandidateWithImage.contact_street_address_02 ? data.endorsedCandidateWithImage.contact_street_address_02 : "";
+    let cityContactInputValue: string = data.endorsedCandidateWithImage.contact_city ? data.endorsedCandidateWithImage.contact_city : "";
+    let stateContactInputValue: string = data.endorsedCandidateWithImage.contact_state ? data.endorsedCandidateWithImage.contact_state : "";
+    let zipCodeContactInputValue: number | string = data.endorsedCandidateWithImage.contact_zip_code ? data.endorsedCandidateWithImage.contact_zip_code : "";
+    let emailContactInputValue: string = data.endorsedCandidateWithImage.contact_email ? data.endorsedCandidateWithImage.contact_email : "";
 
     let noContactInformationChecked: boolean;
 
@@ -105,12 +105,12 @@
         imageFile: string,
         imageAltText: string,
         image: any,
-        imageID: number,
+        imageID: number | null,
         imagePublicID: string,
         candidateID: number,
         campaignName: string,
         electorate: string,
-        yearOfficeSought: number | null,
+        yearOfficeSought: number | string,
         electionDatePrimary: string,
         electionDateGeneral: string,
         governmentLevel: string,
@@ -128,12 +128,12 @@
         campaignEnded: boolean,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateCandidateEndorsement", {
@@ -234,7 +234,7 @@
                 imageAltTextInputValue = "",
                 image = "",
                 campaignNameInputValue = "",
-                yearOfficeSoughtInputValue = null,
+                yearOfficeSoughtInputValue = "",
                 electionDatePrimaryInputValue = "",
                 electionDateGeneralInputValue = "",
                 governmentLevelInputValue = "",
@@ -252,12 +252,12 @@
                 campaignEndedChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -287,6 +287,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>edit a candidate endorsement - public arts commission</title>
@@ -302,26 +306,22 @@
     >
         <h2>campaign image</h2>
         <h3>select an image to represent the campaign*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="campaign_name_or_action"
-            inputID="campaign_name_or_action"
+            inputName="candidate_image_file"
+            inputID="candidate_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file*
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
@@ -558,7 +558,7 @@
                     inputName="name_first"
                     bind:textInputValue={nameFirstContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="first name required"
                 >
                     first name
@@ -570,7 +570,7 @@
                     inputName="name_last"
                     bind:textInputValue={nameLastContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="last name required"
                 >
                     last name
@@ -584,7 +584,7 @@
                     inputName="email"
                     bind:emailInputValue={emailContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     email
                 </EmailInput>
@@ -594,7 +594,7 @@
                     inputName="phone"
                     bind:phoneInputValue={phoneContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     phone number
                 </PhoneInput>
@@ -607,7 +607,7 @@
                     inputName="street_address"
                     bind:textInputValue={streetAddressContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="street address required"
                 >
                     street address
@@ -632,7 +632,7 @@
                     inputName="city"
                     bind:textInputValue={cityContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="city required"
                 >
                     city
@@ -644,7 +644,7 @@
                     options={States}
                     bind:selectInputValue={stateContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     selectInputErrorMessage="state required"
                 >
                     state
@@ -657,7 +657,7 @@
                     inputName="zip_code"
                     bind:numberInputValue={zipCodeContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     numberInputErrorMessage="zip code required"
                 >
                     zip code

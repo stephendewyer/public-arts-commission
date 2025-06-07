@@ -22,44 +22,45 @@
     import type { E164Number } from 'svelte-tel-input/types';
     import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat";
     import CancelButton from '$lib/components/buttons/CancelButton.svelte';
+    import { reverseHtmlEntities } from '$lib/utils/reverseHtmlEntities.js';
 
     export let data;
 
     let userEmail: string | null | undefined;
 
     $: userEmail = data.streamed.user?.email;
-    let actionID: number | null = data.endorsedActionWithImage.action_ID;
-    let imageID: number | null = data.endorsedActionWithImage.image_ID;
+    let actionID: number | null = data.endorsedActionWithImage.action_ID ? data.endorsedActionWithImage.action_ID : null;
+    let imageID: number | null = data.endorsedActionWithImage.image_ID ? data.endorsedActionWithImage.image_ID : null;
     let imageFileInputValue: string = "";
-    let imagePublicID: string = data.endorsedActionWithImage.public_ID;
-    let imageAltTextInputValue: string = data.endorsedActionWithImage.alt_text;
-    let image: string = data.endorsedActionWithImage.image_URL;
-    let actionNameInputValue: string = data.endorsedActionWithImage.action_name;
+    let imagePublicID: string = data.endorsedActionWithImage.public_ID ? data.endorsedActionWithImage.public_ID : "";
+    let imageAltTextInputValue: string = data.endorsedActionWithImage.alt_text ? reverseHtmlEntities(data.endorsedActionWithImage.alt_text) : "";
+    let image: string = data.endorsedActionWithImage.image_URL ? data.endorsedActionWithImage.image_URL : "";
+    let actionNameInputValue: string = data.endorsedActionWithImage.action_name ? data.endorsedActionWithImage.action_name : "";
     let allDayActionChecked: boolean = data.endorsedActionWithImage.all_day_event;
-    let allDayActionDateInputValue: string = ConvertDateInputFormat(data.endorsedActionWithImage.all_day_event_date);
-    let actionStartDateInputValue: string = ConvertDateInputFormat(data.endorsedActionWithImage.date_start);
-    let actionEndDateInputValue: string = ConvertDateInputFormat(data.endorsedActionWithImage.date_end);
-    let startTimeInputValue: string = data.endorsedActionWithImage.time_start.toString();
-    let endTimeInputValue: string = data.endorsedActionWithImage.time_end.toString();
-    let timeZoneInputValue: string = data.endorsedActionWithImage.time_zone;
-    let actionStreetAddressInputValue: string = data.endorsedActionWithImage.action_street_address;
-    let actionStreetAddress02InputValue: string = data.endorsedActionWithImage.action_street_address_02;
-    let actionCityInputValue: string = data.endorsedActionWithImage.action_city;
-    let actionStateInputValue: string = data.endorsedActionWithImage.action_state;
-    let actionZipCodeInputValue: number | null = data.endorsedActionWithImage.action_zip_code;
-    let governmentLevelInputValue: string = data.endorsedActionWithImage.government_level;
-    let websiteURLInputValue: string = data.endorsedActionWithImage.website_URL;
-    let detailsInputValue: string = data.endorsedActionWithImage.details;
+    let allDayActionDateInputValue: string = data.endorsedActionWithImage.all_day_event_date ? ConvertDateInputFormat(data.endorsedActionWithImage.all_day_event_date): "";
+    let actionStartDateInputValue: string = data.endorsedActionWithImage.date_start ? ConvertDateInputFormat(data.endorsedActionWithImage.date_start) : "";
+    let actionEndDateInputValue: string = data.endorsedActionWithImage.date_end ? ConvertDateInputFormat(data.endorsedActionWithImage.date_end) : "";
+    let startTimeInputValue: string = data.endorsedActionWithImage.time_start ? data.endorsedActionWithImage.time_start.toString() : "";
+    let endTimeInputValue: string = data.endorsedActionWithImage.time_end ? data.endorsedActionWithImage.time_end.toString() : "";
+    let timeZoneInputValue: string = data.endorsedActionWithImage.time_zone ? data.endorsedActionWithImage.time_zone : "";
+    let actionStreetAddressInputValue: string = data.endorsedActionWithImage.action_street_address ? data.endorsedActionWithImage.action_street_address : "";
+    let actionStreetAddress02InputValue: string = data.endorsedActionWithImage.action_street_address_02 ? data.endorsedActionWithImage.action_street_address_02 : "";
+    let actionCityInputValue: string = data.endorsedActionWithImage.action_city ? data.endorsedActionWithImage.action_city : "";
+    let actionStateInputValue: string = data.endorsedActionWithImage.action_state ? data.endorsedActionWithImage.action_state : "";
+    let actionZipCodeInputValue: number | string = data.endorsedActionWithImage.action_zip_code ? data.endorsedActionWithImage.action_zip_code : "";
+    let governmentLevelInputValue: string = data.endorsedActionWithImage.government_level ? data.endorsedActionWithImage.government_level : "";
+    let websiteURLInputValue: string = data.endorsedActionWithImage.website_URL ? data.endorsedActionWithImage.website_URL : "";
+    let detailsInputValue: string = data.endorsedActionWithImage.details ? data.endorsedActionWithImage.details : "";
 
-    let nameFirstContactInputValue: string = data.endorsedActionWithImage.contact_name_first;
-    let nameLastContactInputValue: string = data.endorsedActionWithImage.contact_name_last;
-    let phoneContactInputValue: E164Number | null = data.endorsedActionWithImage.contact_phone_number;
-    let streetAddressContactInputValue: string = data.endorsedActionWithImage.contact_street_address;
-    let streetAddress02ContactInputValue: string = data.endorsedActionWithImage.action_street_address_02;
-    let cityContactInputValue: string = data.endorsedActionWithImage.contact_city;
-    let stateContactInputValue: string = data.endorsedActionWithImage.contact_state;
-    let zipCodeContactInputValue: number | null = data.endorsedActionWithImage.contact_zip_code;
-    let emailContactInputValue: string = data.endorsedActionWithImage.contact_email;
+    let nameFirstContactInputValue: string = data.endorsedActionWithImage.contact_name_first ? data.endorsedActionWithImage.contact_name_first : "";
+    let nameLastContactInputValue: string = data.endorsedActionWithImage.contact_name_last ? data.endorsedActionWithImage.contact_name_last : "";
+    let phoneContactInputValue: E164Number | string = data.endorsedActionWithImage.contact_phone_number ? data.endorsedActionWithImage.contact_phone_number : "";
+    let streetAddressContactInputValue: string = data.endorsedActionWithImage.contact_street_address ? data.endorsedActionWithImage.contact_street_address : "";
+    let streetAddress02ContactInputValue: string = data.endorsedActionWithImage.contact_street_address_02 ? data.endorsedActionWithImage.contact_street_address_02 : "";
+    let cityContactInputValue: string = data.endorsedActionWithImage.contact_city ? data.endorsedActionWithImage.contact_city : "";
+    let stateContactInputValue: string = data.endorsedActionWithImage.contact_state ? data.endorsedActionWithImage.contact_state : "";
+    let zipCodeContactInputValue: number | string = data.endorsedActionWithImage.contact_zip_code ? data.endorsedActionWithImage.contact_zip_code : "";
+    let emailContactInputValue: string = data.endorsedActionWithImage.contact_email ? data.endorsedActionWithImage.contact_email : "";
 
     let noContactInformationChecked: boolean;
 
@@ -117,7 +118,7 @@
         imageFile: string,
         imagePublicID: string,
         imageAltText: string,
-        image: any,
+        image: string,
         actionName: string,
         allDayAction: boolean,
         allDayActionDate: string,
@@ -130,18 +131,18 @@
         actionStreetAddress02: string,
         actionCity: string,
         actionState: string,
-        actionZipCode: number | null,
+        actionZipCode: number | string,
         governmentLevel: string,
         websiteURL: string,
         details: string,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateActionEndorsement", {
@@ -251,18 +252,18 @@
                 actionStreetAddress02InputValue = "",
                 actionCityInputValue = "",
                 actionStateInputValue = "",
-                actionZipCodeInputValue = null,
+                actionZipCodeInputValue = "",
                 governmentLevelInputValue = "",
                 websiteURLInputValue = "",
                 detailsInputValue = "",
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -306,6 +307,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>edit an action endorsement - public arts commission</title>
@@ -321,8 +326,6 @@
     >
         <h2>action image</h2>
         <h3>select an image to represent the action*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
@@ -330,17 +333,15 @@
             placeholder="/image.jpg"
             inputName="action_image_file"
             inputID="action_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
@@ -579,7 +580,7 @@
                     inputName="name_first"
                     bind:textInputValue={nameFirstContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="first name required"
                 >
                     first name
@@ -591,7 +592,7 @@
                     inputName="name_last"
                     bind:textInputValue={nameLastContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="last name required"
                 >
                     last name
@@ -605,7 +606,7 @@
                     inputName="email"
                     bind:emailInputValue={emailContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     email
                 </EmailInput>
@@ -615,7 +616,7 @@
                     inputName="phone"
                     bind:phoneInputValue={phoneContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     phone number
                 </PhoneInput>
@@ -628,7 +629,7 @@
                     inputName="street_address"
                     bind:textInputValue={streetAddressContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="street address required"
                 >
                     street address
@@ -653,7 +654,7 @@
                     inputName="city"
                     bind:textInputValue={cityContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="city required"
                 >
                     city
@@ -665,7 +666,7 @@
                     options={States}
                     bind:selectInputValue={stateContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     selectInputErrorMessage="state required"
                 >
                     state
@@ -678,7 +679,7 @@
                     inputName="zip_code"
                     bind:numberInputValue={zipCodeContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     numberInputErrorMessage="zip code required"
                 >
                     zip code

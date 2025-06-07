@@ -22,6 +22,7 @@
     import { goto } from '$app/navigation';
     import type { E164Number } from 'svelte-tel-input/types';
     import { ConvertDateInputFormat } from "$lib/utils/ConvertDateInputFormat";
+    import { reverseHtmlEntities } from '$lib/utils/reverseHtmlEntities.js';
     import CancelButton from '$lib/components/buttons/CancelButton.svelte';
 
     export let data;
@@ -122,41 +123,42 @@
     // end remove House sponsor
 
     let imageFileInputValue: string = "";
-    let imageAltTextInputValue: string = data.endorsedAmendmentImagesAndSponsors.alt_text;
-    let image: any = data.endorsedAmendmentImagesAndSponsors.image_URL;
-    let imageID: number = data.endorsedAmendmentImagesAndSponsors.image_ID;
-    let imagePublicID: string = data.endorsedAmendmentImagesAndSponsors.public_ID;
-    let amendmentNameInputValue: string = data.endorsedAmendmentImagesAndSponsors.amendment_name;
-    let yearReleasedInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_released;
-    let yearIntroducedInHouseInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_introduced_House;
-    let yearIntroducedInSenateInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.year_introduced_Senate;
-    let electionDateInputValue: string = ConvertDateInputFormat(new Date(data.endorsedAmendmentImagesAndSponsors.election_date));
-    let governmentLevelInputValue: string = data.endorsedAmendmentImagesAndSponsors.government_level;
-    let stateInputValue: string = data.endorsedAmendmentImagesAndSponsors.state;
-    let countyInputValue: string = data.endorsedAmendmentImagesAndSponsors.county;
-    let cityInputValue: string = data.endorsedAmendmentImagesAndSponsors.city;
+    let imageAltTextInputValue: string = data.endorsedAmendmentImagesAndSponsors.alt_text ? reverseHtmlEntities(data.endorsedAmendmentImagesAndSponsors.alt_text) : "";
+    let image: any | string = data.endorsedAmendmentImagesAndSponsors.image_URL ? data.endorsedAmendmentImagesAndSponsors.image_URL : "";
+    let imageID: number | null = data.endorsedAmendmentImagesAndSponsors.image_ID ? data.endorsedAmendmentImagesAndSponsors.image_ID : null;
+    let imagePublicID: string = data.endorsedAmendmentImagesAndSponsors.public_ID ? data.endorsedAmendmentImagesAndSponsors.public_ID : "";
+    let amendmentNameInputValue: string = data.endorsedAmendmentImagesAndSponsors.amendment_name ? reverseHtmlEntities(data.endorsedAmendmentImagesAndSponsors.amendment_name) : "";
+    let yearReleasedInputValue: number | string = data.endorsedAmendmentImagesAndSponsors.year_released ? data.endorsedAmendmentImagesAndSponsors.year_released : "";
+    let yearIntroducedInHouseInputValue: number | string = data.endorsedAmendmentImagesAndSponsors.year_introduced_House ? data.endorsedAmendmentImagesAndSponsors.year_introduced_House : "";
+    let yearIntroducedInSenateInputValue: number | string = data.endorsedAmendmentImagesAndSponsors.year_introduced_Senate ? data.endorsedAmendmentImagesAndSponsors.year_introduced_Senate : "";
+    let electionDateInputValue: string = data.endorsedAmendmentImagesAndSponsors.election_date ? ConvertDateInputFormat(new Date(data.endorsedAmendmentImagesAndSponsors.election_date)) : "";
+    let governmentLevelInputValue: string = data.endorsedAmendmentImagesAndSponsors.government_level ? data.endorsedAmendmentImagesAndSponsors.government_level : "";
+    let stateInputValue: string = data.endorsedAmendmentImagesAndSponsors.state ? data.endorsedAmendmentImagesAndSponsors.state : "";
+    let countyInputValue: string = data.endorsedAmendmentImagesAndSponsors.county ? data.endorsedAmendmentImagesAndSponsors.county : "";
+    let cityInputValue: string = data.endorsedAmendmentImagesAndSponsors.city ? data.endorsedAmendmentImagesAndSponsors.city : "";
     let introducedInHouseChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.introduced_in_House;
     let introducedInSenateChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.introduced_in_Senate;
-    let sponsorHouseInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_House[0]?.sponsor_name;
-    let sponsorSenateInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_Senate[0]?.sponsor_name;
-    let houseSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_House;
-    let senateSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_Senate;
-    let detailsInputValue: string = data.endorsedAmendmentImagesAndSponsors.details;
-    let websiteURLInputValue: string = data.endorsedAmendmentImagesAndSponsors.website_URL;
+    let sponsorHouseInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_House[0]?.sponsor_name ? data.endorsedAmendmentImagesAndSponsors.sponsors_House[0]?.sponsor_name : "";
+    let sponsorSenateInputValue: string = data.endorsedAmendmentImagesAndSponsors.sponsors_Senate[0]?.sponsor_name ? data.endorsedAmendmentImagesAndSponsors.sponsors_Senate[0]?.sponsor_name : "";
+    let houseSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_House ? data.endorsedAmendmentImagesAndSponsors.session_House : "";
+    let senateSessionInputValue: string = data.endorsedAmendmentImagesAndSponsors.session_Senate ? data.endorsedAmendmentImagesAndSponsors.session_Senate : "";
+    let detailsInputValue: string = data.endorsedAmendmentImagesAndSponsors.details ? reverseHtmlEntities(data.endorsedAmendmentImagesAndSponsors.details) : "";
+    let websiteURLInputValue: string = data.endorsedAmendmentImagesAndSponsors.website_URL ? data.endorsedAmendmentImagesAndSponsors.website_URL : "";
     let twoThirdsHouseAndSenatePassedChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.twothirds_House_and_Senate_passed;
     let simpleMajorityHouseAndSenatePassedChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.simple_majority_House_and_Senate_passed;
     let simpleMajorityVotersPassedChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.simple_majority_voters_passed;
     let ratifiedByStateLegislaturesChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.ratified_by_state_legislatures;
     let ratifiedByStateConventionsChecked: boolean | any = data.endorsedAmendmentImagesAndSponsors.ratified_by_state_convenctions;
-    let nameFirstContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_name_first;
-    let nameLastContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_name_last;
-    let phoneContactInputValue: E164Number | null = data.endorsedAmendmentImagesAndSponsors.contact_phone_number;
-    let streetAddressContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_street_address;
-    let streetAddress02ContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_street_address_02;
-    let cityContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_city;
-    let stateContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_state;
-    let zipCodeContactInputValue: number | null = data.endorsedAmendmentImagesAndSponsors.contact_zip_code;
-    let emailContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_email;
+
+    let nameFirstContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_name_first ? data.endorsedAmendmentImagesAndSponsors.contact_name_first : "";
+    let nameLastContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_name_last ? data.endorsedAmendmentImagesAndSponsors.contact_name_last : "";
+    let phoneContactInputValue: E164Number | string = data.endorsedAmendmentImagesAndSponsors.contact_phone_number ? data.endorsedAmendmentImagesAndSponsors.contact_phone_number : "";
+    let streetAddressContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_street_address ? data.endorsedAmendmentImagesAndSponsors.contact_street_address : "";
+    let streetAddress02ContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_street_address_02 ? data.endorsedAmendmentImagesAndSponsors.contact_street_address_02 : "";
+    let cityContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_city ? data.endorsedAmendmentImagesAndSponsors.contact_city : "";
+    let stateContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_state ? data.endorsedAmendmentImagesAndSponsors.contact_state : "";
+    let zipCodeContactInputValue: number | string = data.endorsedAmendmentImagesAndSponsors.contact_zip_code ? data.endorsedAmendmentImagesAndSponsors.contact_zip_code : "";
+    let emailContactInputValue: string = data.endorsedAmendmentImagesAndSponsors.contact_email ? data.endorsedAmendmentImagesAndSponsors.contact_email : "";
 
     let noContactInformationChecked: boolean;
 
@@ -210,12 +212,12 @@
         imageFile: string,
         imagePublicID: string,
         imageAltText: string,
-        image: any,
-        imageID: number,
+        image: any | string,
+        imageID: number | null,
         amendmentName: string,
-        yearReleased: number | null,
-        yearIntroducedInHouse: number | null,
-        yearIntroducedInSenate: number | null,
+        yearReleased: number | string,
+        yearIntroducedInHouse: number | string,
+        yearIntroducedInSenate: number | string,
         electionDate: string,
         governmentLevel: string,
         state: string,
@@ -238,12 +240,12 @@
         ratifiedByStateConventions: boolean | number,
         nameFirstContact: string,
         nameLastContact: string,
-        phoneContact: E164Number | null,
+        phoneContact: E164Number | string,
         streetAddressContact: string,
         streetAddress02Contact: string,
         cityContact: string,
         stateContact: string,
-        zipCodeContact: number | null,
+        zipCodeContact: number | string,
         emailContact: string
     ) => {
         const response = await fetch("/authenticated-administrator/api/updateEndorsements/updateAmendmentEndorsement", {
@@ -356,9 +358,9 @@
                 imageAltTextInputValue = "",
                 image = "",
                 amendmentNameInputValue = "",
-                yearReleasedInputValue = null,
-                yearIntroducedInHouseInputValue = null,
-                yearIntroducedInSenateInputValue = null,
+                yearReleasedInputValue = "",
+                yearIntroducedInHouseInputValue = "",
+                yearIntroducedInSenateInputValue = "",
                 electionDateInputValue = "",
                 governmentLevelInputValue = "",
                 stateInputValue = "",
@@ -381,12 +383,12 @@
                 ratifiedByStateConventionsChecked = false,
                 nameFirstContactInputValue = "",
                 nameLastContactInputValue = "",
-                phoneContactInputValue = null,
+                phoneContactInputValue = "",
                 streetAddressContactInputValue = "",
                 streetAddress02ContactInputValue = "",
                 cityContactInputValue = "",
                 stateContactInputValue = "",
-                zipCodeContactInputValue = null,
+                zipCodeContactInputValue = "",
                 emailContactInputValue = ""
                 goto("/authenticated-administrator/admin");
             };
@@ -447,6 +449,10 @@
         pending = false;
     };
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>edit an amendment endorsement - public arts commission</title>
@@ -462,8 +468,6 @@
     >
         <h2>amendment image</h2>
         <h3>select an image to represent the amendment*</h3>
-        <p class="constraints">* file formats accepted: JPG, PNG, GIF</p>
-        <p class="constraints">* maximum file size: 2MB</p>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
@@ -471,17 +475,15 @@
             placeholder="/image.jpg"
             inputName="amendment_image_file"
             inputID="amendment_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}
@@ -827,7 +829,7 @@
                     inputName="name_first"
                     bind:textInputValue={nameFirstContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="first name required"
                 >
                     first name
@@ -839,7 +841,7 @@
                     inputName="name_last"
                     bind:textInputValue={nameLastContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="last name required"
                 >
                     last name
@@ -853,7 +855,7 @@
                     inputName="email"
                     bind:emailInputValue={emailContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     email
                 </EmailInput>
@@ -863,7 +865,7 @@
                     inputName="phone"
                     bind:phoneInputValue={phoneContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                 >
                     phone number
                 </PhoneInput>
@@ -876,7 +878,7 @@
                     inputName="street_address"
                     bind:textInputValue={streetAddressContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="street address required"
                 >
                     street address
@@ -901,7 +903,7 @@
                     inputName="city"
                     bind:textInputValue={cityContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     textInputErrorMessage="city required"
                 >
                     city
@@ -913,7 +915,7 @@
                     options={States}
                     bind:selectInputValue={stateContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     selectInputErrorMessage="state required"
                 >
                     state
@@ -926,7 +928,7 @@
                     inputName="zip_code"
                     bind:numberInputValue={zipCodeContactInputValue}
                     inputLabel={true}
-                    required={true}
+                    required={false}
                     numberInputErrorMessage="zip code required"
                 >
                     zip code

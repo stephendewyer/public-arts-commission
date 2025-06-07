@@ -1,86 +1,65 @@
 <script lang="ts">
     import InputErrorMessage from '$lib/components/errorMessages/InputErrorMessage.svelte';
-    import { ImageFileExtensionTest } from '$lib/utils/ImageFileExtensionTest';
+    import { ImageFileExtensionTest } from "$lib/utils/ImageFileExtensionTest";
+    import CancelSubmitButton from '$lib/components/buttons/CancelSubmitButton.svelte';
     export let placeholder: string;
     export let inputID: string;
     export let inputName: string;
     export let inputLabel: boolean;
-    export let imageFileInputValue: string; 
-    export let image: any;
+    export let files: FileList | null = null;
+    export let imageFileInputValue: string = ""; 
+    export let image: string | ArrayBuffer | null | undefined | any;
     export let isValid: boolean;
     export let imageFileInputErrorMessage: string = "";
     export let required: boolean;
+    export let deleteImage: boolean = false;
 
-    let imageFile: any;
+    export let imageFileInputElement: HTMLInputElement;
 
-    const imageFileChangedHandler = (event: any) => {
+    let imageFile: File | null = null;
+
+    const imageFileChangedHandler = () => {
 
         image = "";
-
-        imageFile = event.target?.files[0];
-
         if (required) {
-
             if (imageFileInputValue === "") {
-
                 isValid = false;
-
                 imageFileInputErrorMessage = "image required!";
+            };
+        };
 
-            }
-
-        }
-
-        if (imageFile?.size >  2000000) {
-
-            isValid = false;
-
-            imageFileInputErrorMessage = "images cannot exceed 2MB in size!";
-
-            return;
-
-        }
-        
-        if ((imageFile) && (ImageFileExtensionTest(imageFile?.type) === "false")) {
-
-            isValid = false;
-
-            imageFileInputErrorMessage = "invalid file type";
-
-            return;
-
-        }
-
-        const fileReader = new FileReader();
-
-        if (imageFile && (ImageFileExtensionTest(imageFile?.type) === "true") ) {
-
-            isValid = true;
-
-            imageFileInputErrorMessage = "";
-
-            fileReader.onload = function (e) {
-                // the file's text will be printed here;
-
-                image = e.target?.result;
-
-            }
-
-            fileReader.readAsDataURL(imageFile);
-        }
-    }
-
-    $: if (!isValid) {
-        if (required) {
-            if (imageFileInputValue === "") {
-                imageFileInputErrorMessage = "image required!";
-            } else if (imageFile?.size >  2000000) {
+        if (files !== null) {
+            imageFile = files[0];
+            if (imageFile.size > 2000000) {
+                isValid = false;
                 imageFileInputErrorMessage = "images cannot exceed 2MB in size!";
-            } else if ((imageFile) && (ImageFileExtensionTest(imageFile?.type) === "false")) {
+            } else if (!ImageFileExtensionTest(files[0].type)) {
+                isValid = false;
                 imageFileInputErrorMessage = "invalid file type";
-            }
-        }
-    }
+            } else {
+                const fileReader = new FileReader();
+                isValid = true;
+                imageFileInputErrorMessage = "";
+                fileReader.onload = (e) => {
+                    // the file's text will be printed here;
+                    image = e.target?.result;
+                };
+                fileReader.readAsDataURL(files[0]);
+            };
+        };
+    };
+
+    let cancelImageUpload: boolean = false;
+
+    $: if (cancelImageUpload) {
+        imageFileInputElement.value = "";
+        imageFileInputValue = "";
+        deleteImage = true;
+        image = null;
+        cancelImageUpload = false;
+    } else {
+        deleteImage = false;
+    };
 
 </script>
 
@@ -98,14 +77,27 @@
         id={inputID}
         name={inputName}
         type="file"
+        bind:this={imageFileInputElement}
         bind:value={imageFileInputValue}
+        bind:files={files}
         on:change={imageFileChangedHandler}
+        style={image ? "display: none" : ""}
     />
-    {#if ((required) && (!isValid))}
+    {#if (!isValid)}
         <InputErrorMessage>
             {imageFileInputErrorMessage}
         </InputErrorMessage>
     {/if}
+    {#if (image)}
+        <div class="project_image_container">
+            <img src={image} alt="project"/>
+            <div class="cancel_button_container">
+                <CancelSubmitButton bind:closeButtonClicked={cancelImageUpload} />
+            </div>
+        </div>
+    {/if}
+    <p class="constraints">* file formats accepted: <span style="font-weight: bold">JPG, PNG, GIF, jpg, png, gif</span></p>
+    <p class="constraints">* maximum file size: <span style="font-weight: bold">2MB</span></p>
 </div>
  
 <style>
@@ -162,13 +154,24 @@
         opacity: 50%; /* Firefox */
     }
 
+    .project_image_container {
+        position: relative;
+        padding: 1rem;
+    }
+
+    .cancel_button_container {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+    }
+
     @media (max-width: 1440px) {
 
-    input {
-        font-size: 1.2rem;
-        padding: 0.5rem 1rem 0.5rem 2.5rem;
-        background-size: 1.5rem;       
-    }
+        input {
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            background-size: 1.5rem;       
+        }
 
         label {
             font-size: 1.2rem;
@@ -176,6 +179,13 @@
 
         .input_label {
             padding: 0 0 0.4rem 0;
+        }
+    }
+
+    @media screen and (max-width: 1080px) {
+        .cancel_button_container {
+            right: 0.5rem;
+            top: 0.5rem;
         }
     }
 
@@ -190,6 +200,11 @@
 
         .input_label {
             padding: 0 0 0.3rem 0;
+        }
+
+        .cancel_button_container {
+            right: 0.25rem;
+            top: 0.25rem;
         }
     }
 

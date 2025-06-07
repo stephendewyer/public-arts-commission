@@ -26,10 +26,10 @@
 
     let imageFileInputValue: string = "";
     let imageAltTextInputValue: string = "";
-    let image: any;
+    let image: any | string = "";
     let campaignNameInputValue: string = "";
     let electorateInputValue: string = "";
-    let yearOfficeSoughtInputValue: number | null = null;
+    let yearOfficeSoughtInputValue: number | string = "";
     let electionDatePrimaryInputValue: string = "";
     let electionDateGeneralInputValue: string = "";
     let governmentLevelInputValue: string = "";
@@ -88,10 +88,10 @@
         userEmail: string | null | undefined,
         imageFile: string,
         imageAltText: string,
-        image: any,
+        image: any | string,
         campaignName: string,
         electorate: string,
-        yearOfficeSought: number | null,
+        yearOfficeSought: number | string,
         electionDatePrimary: string,
         electionDateGeneral: string,
         governmentLevel: string,
@@ -164,7 +164,7 @@
                 imageAltTextInputValue = "";
                 image = "";
                 campaignNameInputValue = "";
-                yearOfficeSoughtInputValue = null;
+                yearOfficeSoughtInputValue = "";
                 electionDatePrimaryInputValue = "";
                 electionDateGeneralInputValue = "";
                 governmentLevelInputValue = "";
@@ -243,6 +243,10 @@
         }
     ];
 
+    let deleteImage: boolean = false;
+    let imageInputElement: HTMLInputElement;
+    let imageInputFiles: FileList | null = null;
+
 </script>
 <svelte:head>
 	<title>register a campaign to start a campaign application - public arts commission</title>
@@ -266,32 +270,22 @@
         <h3 class="select_image_heading">
             select an image to represent the campaign
         </h3>
-        <ul>
-            <li class="constraints">
-                file formats accepted: JPG, PNG, GIF
-            </li>
-            <li class="constraints">
-                maximum file size: 2MB
-            </li>
-        </ul>
         <ImageFileInput
             inputLabel={true}
             bind:imageFileInputValue={imageFileInputValue}
             bind:image={image}
             placeholder="/image.jpg"
-            inputName="referendum_name_or_action"
-            inputID="referendum_name_or_action"
+            inputName="campaign_image_file"
+            inputID="campaign_image_file"
+            bind:files={imageInputFiles}
+            bind:imageFileInputElement={imageInputElement}
             bind:isValid={imageFileIsValid}
-            required={true}
+            bind:deleteImage
+            required={false}
             imageFileInputErrorMessage="image file required"
         >
             image file*
         </ImageFileInput>
-        {#if (image)}
-            <div class="campaign_image_container">
-                <img src={image} alt="test"/>
-            </div>
-        {/if}
         <TextInput 
             inputLabel={true}
             bind:textInputValue={imageAltTextInputValue}

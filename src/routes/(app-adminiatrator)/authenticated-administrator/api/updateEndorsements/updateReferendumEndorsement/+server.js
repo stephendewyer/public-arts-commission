@@ -26,8 +26,6 @@ export const PATCH = async ({request}) => {
 
     const data = await request.json();
 
-    console.log(data)
-
     let { 
         userEmail,
         imageID,
@@ -204,7 +202,7 @@ export const PATCH = async ({request}) => {
         SET
             referendum_name = "${htmlEntities(referendumName)}",
             starting_year_if_enacted = "${startingYearIfEnacted}",
-            election_date = "${electionDate}",
+            election_date = "${new Date(electionDate).toISOString().split('T')[0]}",
             government_level = "${htmlEntities(governmentLevel)}",
             state = "${htmlEntities(state)}",
             county = "${htmlEntities(county)}",

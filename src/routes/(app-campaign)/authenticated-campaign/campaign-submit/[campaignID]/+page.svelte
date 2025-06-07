@@ -10,54 +10,50 @@
     import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
     import { goto } from '$app/navigation';
 
-    export let data;
+    export let data: any;
 
     let userEmail: string | any;
 
     $: userEmail = data.streamed.user?.email;
 
-    let campaignApplication: CampaignApplicationWithImageRow | any = null;
+    let campaignApplication: CampaignApplicationWithImageRow | null = data.campaignApplication ? data.campaignApplication : null;
 
-    let electionYear: number;
+    let campaignApplicationID: number | null = campaignApplication?.campaign_application_ID ? campaignApplication.campaign_application_ID : null;
 
-    $: electionYear = new Date(campaignApplication.general_election_date).getFullYear();
+    let campaignApplicationUserID: number | null = campaignApplication?.user_ID ? campaignApplication.user_ID : null;
 
-    let primaryElectionDate: string;
+    let campaignName: string = campaignApplication?.campaign_name ? campaignApplication.campaign_name : "";
 
-    $: primaryElectionDate = new Date(campaignApplication.primary_election_date).toUTCString().substring(0, 16);
+    let electionYear: number | string = campaignApplication?.general_election_date ? new Date(campaignApplication.general_election_date).getFullYear() : "";
 
-    let generalElectionDate: string;
+    let primaryElectionDate: string = campaignApplication?.primary_election_date ? new Date(campaignApplication.primary_election_date).toUTCString().substring(0, 16) : "";
 
-    $: generalElectionDate = new Date(campaignApplication.general_election_date).toUTCString().substring(0, 16);
-    
-    if (data.campaignApplication) {
-
-        campaignApplication = data.campaignApplication;
-
-    };
+    let generalElectionDate: string = campaignApplication?.general_election_date ? new Date(campaignApplication.general_election_date).toUTCString().substring(0, 16) : "";
 
     let currentDate: Date = new Date();
 
-    let navPaths: NavPath[];
-    
-    $: navPaths = [
+    let campaignApplicationSubmitted: boolean = campaignApplication?.campaign_application_submitted ? true : false;
+    let campaignQuestionnaireCompleted: boolean = campaignApplication?.campaign_questionnaire_completed ? true : false;
+    let campaignRegistrationCompleted: boolean = campaignApplication?.campaign_registered ? true : false;
+
+    let navPaths: NavPath[] = [
         {
             id: "registration",
             name: "registration",
-            path: `/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_registered
+            path: `/authenticated-campaign/campaign-registration/campaign=${campaignApplicationID}`,
+            completed: campaignRegistrationCompleted
         },
         {
             id: "questionnaire",
             name: "questionnaire",
-            path: `/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_questionnaire_completed
+            path: `/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplicationID}`,
+            completed: campaignQuestionnaireCompleted
         },
         {
             id: "submit",
             name: "submit",
-            path: `/authenticated-campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_application_submitted
+            path: `/authenticated-campaign/campaign-submit/campaign=${campaignApplicationID}`,
+            completed: campaignApplicationSubmitted
         }
     ];
 
@@ -88,8 +84,8 @@
     };
 
     const submitApplication = async (
-        campaignApplicationID: number,
-        campaignUserID: number,
+        campaignApplicationID: number | null,
+        campaignUserID: number | null,
         campaignName: string,
         currentDate: Date,
         userEmail: string
@@ -123,16 +119,16 @@
         try {
             
             await submitApplication(
-                campaignApplication.campaign_application_ID,
-                campaignApplication.user_ID,
-                campaignApplication.campaign_name,
+                campaignApplicationID,
+                campaignApplicationUserID,
+                campaignName,
                 currentDate,
                 userEmail
             );
 
             if (responseItem.success) {
 
-                goto(`/authenticated-campaign/campaign-submit-confirmation/campaign=${campaignApplication.campaign_application_ID}`);
+                goto(`/authenticated-campaign/campaign-submit-confirmation/campaign=${campaignApplicationID}`);
 
             };
 
@@ -155,14 +151,14 @@
         campaign endorsement application
     </h2>
     <h4 style="margin: 0;">
-        {campaignApplication.campaign_name}
+        {campaignApplication?.campaign_name}
     </h4>
     <CampaignApplicationProgressBar nav_paths={navPaths}/>
     <h2 style="margin: 1rem 0 0 0;">
         campaign registration
     </h2>
     <div class="campaign_image_container">
-        <img src={campaignApplication.image_URL} alt="test"/>
+        <img src={campaignApplication?.image_URL} alt="test"/>
     </div>
     <div class="frame_table">
         <table class="table">
@@ -176,7 +172,7 @@
                         campaign name:
                     </td>
                     <td>
-                        {campaignApplication.campaign_name}
+                        {campaignApplication?.campaign_name}
                     </td>
                 </tr>
                 <tr>
@@ -192,7 +188,7 @@
                         electorate:
                     </td>
                     <td>
-                        {campaignApplication.electorate}
+                        {campaignApplication?.electorate}
                     </td>
                 </tr>
                 <tr>
@@ -200,10 +196,10 @@
                         government level:
                     </td>
                     <td>
-                        {campaignApplication.government_level}
+                        {campaignApplication?.government_level}
                     </td>
                 </tr>
-                {#if campaignApplication.state}
+                {#if campaignApplication?.state}
                     <tr>
                         <td class="table_key">
                             state:
@@ -213,7 +209,7 @@
                         </td>
                     </tr>
                 {/if}
-                {#if campaignApplication.county}
+                {#if campaignApplication?.county}
                     <tr>
                         <td class="table_key">
                             county:
@@ -223,7 +219,7 @@
                         </td>
                     </tr>
                 {/if}
-                {#if campaignApplication.city}
+                {#if campaignApplication?.city}
                     <tr>
                         <td class="table_key">
                             city:
@@ -238,7 +234,7 @@
                         party:
                     </td>
                     <td>
-                        {campaignApplication.party}
+                        {campaignApplication?.party}
                     </td>
                 </tr>
                 <tr>
@@ -262,12 +258,12 @@
                         website:
                     </td>
                     <td>
-                        <a class="external_link_container" href={campaignApplication.website_URL} target="_blank">
+                        <a class="external_link_container" href={campaignApplication?.website_URL} target="_blank">
                             <div class="external_link_icon">
                                 {@html ExternalLinkIcon}
                             </div>
                             <span class="website_URL">
-                                {campaignApplication.website_URL}
+                                {campaignApplication?.website_URL}
                             </span>
                         </a>
                     </td>
@@ -277,7 +273,7 @@
                         starting year for office sought:
                     </td>
                     <td>
-                            {campaignApplication.starting_year_for_office_sought}
+                            {campaignApplication?.starting_year_for_office_sought}
                     </td>
                 </tr>
                 <tr>
@@ -285,9 +281,9 @@
                         authorized campaign representative:
                     </td>
                     <td>
-                        {#if (campaignApplication.authorized_campaign_representative === 1)}
+                        {#if (campaignApplication?.authorized_campaign_representative === 1)}
                             yes 
-                        {:else if (campaignApplication.authorized_campaign_representative === 0)}
+                        {:else if (campaignApplication?.authorized_campaign_representative === 0)}
                             no
                         {/if}
                     </td>
@@ -296,7 +292,7 @@
         </table>
     </div>
     <div class="edit_button_container">
-        <a href={`/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`}>
+        <a href={`/authenticated-campaign/campaign-registration/campaign=${campaignApplicationID}`}>
             <EditButton>edit registration information</EditButton>
         </a>
     </div>
@@ -312,9 +308,9 @@
                     </tr>
                     <tr>
                         <td class="response">
-                            {#if (campaignApplication.excellent_public_art_for_all === 1)}
+                            {#if (campaignApplication?.excellent_public_art_for_all === 1)}
                                 yes
-                            {:else if (campaignApplication.excellent_public_art_for_all === 0)}
+                            {:else if (campaignApplication?.excellent_public_art_for_all === 0)}
                                 no
                             {/if}
                         </td>
@@ -322,7 +318,7 @@
                 </tbody>
             </table>
         </li>
-        {#if (campaignApplication.excellent_public_art_for_all === 1)}
+        {#if (campaignApplication?.excellent_public_art_for_all === 1)}
             <li>
                 <table>
                     <tbody>
@@ -350,9 +346,9 @@
                     </tr>
                     <tr>
                         <td class="response">
-                            {#if (campaignApplication.art_government_seat === 1)}
+                            {#if (campaignApplication?.art_government_seat === 1)}
                                 yes
-                            {:else if (campaignApplication.art_government_seat === 0)}
+                            {:else if (campaignApplication?.art_government_seat === 0)}
                                 no
                             {/if}
                         </td>
@@ -360,7 +356,7 @@
                 </tbody>
             </table>
         </li>
-        {#if (campaignApplication.art_government_seat === 1)}
+        {#if (campaignApplication?.art_government_seat === 1)}
             <li>
                 <table>
                     <tbody>
@@ -380,7 +376,7 @@
         {/if}
     </ol>
     <div class="edit_button_container">
-        <a href={`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`}>
+        <a href={`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplicationID}`}>
             <EditButton>edit questionnaire responses</EditButton>
         </a>
     </div>
@@ -398,7 +394,7 @@
         </SuccessFlashMessage>
     {/if}
     <div class="two_columns">
-        <a href={`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`} class="cancel_button_container">
+        <a href={`/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplicationID}`} class="cancel_button_container">
             <CancelButton>
                 quesionnaire
             </CancelButton>

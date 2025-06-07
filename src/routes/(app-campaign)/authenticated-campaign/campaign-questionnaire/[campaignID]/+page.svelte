@@ -11,20 +11,14 @@
     import SubmitButtonSecondary from '$lib/components/buttons/SubmitButtonSecondary.svelte';
     import { goto } from '$app/navigation';
 
-    export let data;
+    export let data: any;
 
-    let campaignApplication: CampaignApplicationWithImageRow | any = null;
+    let campaignApplication: CampaignApplicationWithImageRow = data.campaignApplication;
 
-    if (data.campaignApplication) {
-
-        campaignApplication = data.campaignApplication;
-
-    };
-
-    let expandPoliticalImaginationSupportValue: boolean = campaignApplication.excellent_public_art_for_all;
-    let howExpandPoliticalImaginationValue: string = campaignApplication.excellent_public_art_for_all_02;
-    let artSeatAtTableGovernmentValue: boolean = campaignApplication.art_government_seat;
-    let howArtSeatTableGovernmentValue: string = campaignApplication.art_government_seat_02;
+    let expandPoliticalImaginationSupportValue: boolean = campaignApplication.excellent_public_art_for_all ? true : false;
+    let howExpandPoliticalImaginationValue: string = campaignApplication.excellent_public_art_for_all_02 ? campaignApplication.excellent_public_art_for_all_02 : "";
+    let artSeatAtTableGovernmentValue: boolean = campaignApplication.art_government_seat ? true : false;
+    let howArtSeatTableGovernmentValue: string = campaignApplication.art_government_seat_02 ? campaignApplication.art_government_seat_02 : "";
 
     $: if (!expandPoliticalImaginationSupportValue) {
         howExpandPoliticalImaginationValue = "";
@@ -32,31 +26,33 @@
 
     $: if (!artSeatAtTableGovernmentValue) {
         howArtSeatTableGovernmentValue = "";
-    }
+    };
 
     let howExpandPoliticalImaginationIsValid: boolean = true;
     let howArtSeatTableGovernmentIsValid: boolean = true;
 
-    let navPaths: NavPath[];
+    let campaignApplicationSubmitted: boolean = campaignApplication.campaign_application_submitted ? true : false;
+    let campaignQuestionnaireCompleted: boolean = campaignApplication.campaign_questionnaire_completed ? true : false;
+    let campaignRegistrationCompleted: boolean = campaignApplication.campaign_registered ? true : false;
 
-    $: navPaths = [
+    let navPaths: NavPath[] = [
         {
             id: "registration",
             name: "registration",
             path: `/authenticated-campaign/campaign-registration/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_registered
+            completed: campaignRegistrationCompleted
         },
         {
             id: "questionnaire",
             name: "questionnaire",
             path: `/authenticated-campaign/campaign-questionnaire/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_questionnaire_completed
+            completed: campaignQuestionnaireCompleted
         },
         {
             id: "submit",
             name: "submit",
             path: `/authenticated-campaign/campaign-submit/campaign=${campaignApplication.campaign_application_ID}`,
-            completed: campaignApplication.campaign_application_submitted
+            completed: campaignApplicationSubmitted
         }
     ];
 
@@ -82,6 +78,7 @@
             status: null;
         }, 4000)
     };
+
     let pending: boolean = false;
 
     const submitCampaignQuestionnaire = async (
