@@ -944,11 +944,29 @@
                                             Enact net neutrality;
                                         </li>
                                         <li>
-                                            Diversify federal subsidies to agriculture to support local, sustainable farm practices.
+                                            Diversify federal subsidies to agriculture to support local, sustainable farm practices;
+                                        </li>
+                                        <li>
+                                            Expand remote work opportunities.
                                         </li>
                                     </ol>
                                 </div>
                             </PriorityAccordion>
+                        </li>
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Use accurate economic data when deciding economic programs, especially when setting the Federal Reserve interest rate      
+                                </span>
+                                <p slot="details">
+                                    We must get real with the actual economic data if we are to have a government that actually represents the wills and aspirations of the people, especially concerning the Federal Reserve interest rate, which has a huge impact on everything from one’s ability to own a home, start a family and afford groceries. 
+                                    The data used by the Federal Reserve and lawmakers to decide economic programs is wildly inaccurate and should be updated to include data such as whether workers are getting fulfillment from their work, if workers are working in their chosen field and if workers are getting support to find the work they want.  
+                                    The unemployment rate does not reflect workers not in the labor market, workers who have to take part-time work for childcare reasons, discouraged workers and various types of work.  
+                                    For instance, as of 9 June 2025, the government unemployment rate is 4.2%, but of the working-age population aged 15 to 64 in the U.S. (211,554,500 people), only 52.6% (135,440,000 people) work full-time jobs.  
+                                    The measurement the Federal Reserve uses to assess job openings does not account for the fact that four in ten jobs companies post are fake.  Around 3 in 10 job postings are not for an actual position.  Around 1 in 10 job postings are for a position for which the company has no intention on hiring.  The official economic data by our government needs to reflect what people actually see and feel.
+                                    
+                                </p>
+                            </PriorityAccordion>                            
                         </li>
                         <li class="priority_heading">
                             <PriorityAccordion>
@@ -1021,6 +1039,9 @@
                                     <ol>
                                         <li>
                                             Increase jobs that support family formation.  Jobs that support family formation are ones that pay enough to raise a family, have stability and opportunities for growth.
+                                        </li>
+                                        <li>
+                                            Expand remote work opportunities, which offer increased flexibility, reduced stress, better work-life balance, increased time with family, reduced childcare costs and improved mental health.  Evidence shows no loss of productivity by shifting to remote work.  In fact, remote work can help companies increase productivity by reducing micromanagement, which is harmful to the bottom line.
                                         </li>
                                         <li>
                                             Improve work-life balance.  No one should have to choose between having a career and a family.
