@@ -54,6 +54,7 @@
 	let city: string | any = "";
 	let street: string | any = "";
 	let streetNumber: string | any = "";
+	let streetPreDir: string | any = "";
 
 	let name: string = "";
 
@@ -395,12 +396,30 @@
 		city = "";
 		street= "";
 		streetNumber = "";
+		streetPreDir = "";
 		county = "";
 		name = "";
 
-		let searchBarInputValueArray: string[] = searchByStreetAddressInputValue.split(" ");
-		let searchBarInputValueFirstWord: string = searchBarInputValueArray[0].replace(",", "");
-		let searchBarFirstPhrase: string = searchByStreetAddressInputValue.split(",")[0]
+		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
+		let searchBarInputValueFirstWord: string | number = "";
+
+		if (searchBarInputValueArray[0].includes(",")) {
+			searchBarInputValueFirstWord = searchBarInputValueArray[0].replace(",", "");
+		} else {
+			searchBarInputValueFirstWord = searchBarInputValueArray[0];
+		};
+
+		let searchBarInputValueSecondWord: string = "";
+
+		if (searchBarInputValueArray.length > 1) {
+			if (searchBarInputValueArray[1].includes(",")) {
+				searchBarInputValueSecondWord = searchBarInputValueArray[1].replace(",", "");
+			} else {
+				searchBarInputValueSecondWord = searchBarInputValueArray[1];
+			};
+		};
+
+		let searchBarFirstPhrase: string | number = searchByStreetAddressInputValue.split(",")[0]
 		let stateValueArray: string[] = [];
 		let stateValueFirstWord: string = "";
 		let cityValueArray: string[] = [];
@@ -422,6 +441,8 @@
 		// if search by address input value is greater than zero and use my current location is not checked, 
 		// use address-parser to parse search by address input value
 
+		console.log(/^-?\d+$/.test(searchByStreetAddressInputValue))
+
 		if (
 			!useCurrentLocationChecked
 		) {
@@ -429,8 +450,6 @@
 			// if user has entered only numbers, filter actions using zipcode
 
 			if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
-
-				console.log("user is searching by zipcode")
 
 				// check if entered value matches zipcode in USCities
 
@@ -458,19 +477,39 @@
 
 				});
 
+			} else if (
+				// if user enters numbers followed by strings, user is searching by street address
+				/^-?\d+$/.test(searchBarInputValueFirstWord) && !(/^-?\d+$/.test(searchBarInputValueSecondWord))
+			) {
+				// parse the search by address input value
+				const parsed = parse(searchByStreetAddressInputValue);
+
+				// load the parsed properties
+
+				country = parsed.country;
+				zipcode = parsed.zip;
+				state = parsed.state;
+				city = parsed.city;
+				street= parsed.streetName;
+				streetNumber = parsed.number;
+				streetPreDir = parsed.streetPreDir;
+
+				// use zip code to load county from parsed address
+
+				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
+
+				// use civic data API to get representative districts or wards in federal, state and city levels
+
 			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
 				// if the first entered value by user is a letter, filter actions by state, city and name
-
 				// check if search input value includes state
-
 				States.filter((stateObj) => {
 
 					if (
 						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
 						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
 					) {
-						console.log("user is searching by state");
 						state = stateObj.name;
 						stateName = stateObj.name.toLowerCase();
 						stateAbbreviation = stateObj.abbreviation.toLowerCase();
@@ -520,45 +559,29 @@
 				} else if (!state) {
 
 					// create an array of all possible states for city
-
 					USCities.forEach((cityObj: CityObject) => {
-
 						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
-
 							city = cityObj.city;
 							cityValueArray = [...city.split(" ")];
 							cityValueFirstWord = cityValueArray[0].replace(",", "");
-
 							// check if city and state combination already is in statesWithCity and if false, add to statesWithCity
-
 							if (
 								(statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) &&
 								(searchBarInputValueArray.length <= 2)
 							) {
-
 								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
-
 							};
-
 						};
-
 					});
-
 				};
 
 				if (
-
 					searchBarFirstPhrase.toLowerCase() !== stateName &&
-
 					searchBarInputValueFirstWord.toLowerCase() !== stateAbbreviation &&
-
 					searchBarInputValueFirstWord.toLowerCase() !== stateValueFirstWord && 
-
 					!searchByStreetAddressInputValue.includes(",") &&
-
-					(
+				(
 						searchBarInputValueFirstWord.toLowerCase() !== cityValueFirstWord.toLowerCase() ||
-
 						searchBarInputValueArray.length >= 2
 
 					)
@@ -568,58 +591,6 @@
 					
 				};                
 
-			} else if (searchByStreetAddressInputValue.length > 0) {
-
-				// if user has entered numbers followed by letters, filter actions using street address
-				// parse the search by address input value
-
-				console.log("user is entering street address");
-
-				const parsed = parse(searchByStreetAddressInputValue);
-
-				// load the parsed properties
-
-				country = parsed.country;
-				zipcode = parsed.zip;
-				state = parsed.state;
-				city = parsed.city;
-				street= parsed.streetName;
-				streetNumber = parsed.number;
-
-				// use zip code to load county from parsed address
-
-				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
-
-				// use Google Civic Information API to get representative districts or wards in federal, state and city levels
-				// const getCivicData = async (country: string, zipcode: number, state: string, city: string, street: string, streetNumber: number) => {
-				// 	try {
-				// 		const response = await fetch("/api/getCivicDataByAddress", {
-				// 			method: 'POST',
-				// 			body: JSON.stringify({
-				// 				country,
-				// 				zipcode,
-				// 				state,
-				// 				city,
-				// 				street,
-				// 				streetNumber
-				// 			}),
-				// 			headers: {
-				// 				'Content-Type': 'application/json',
-				// 			}
-				// 		});
-						
-				// 		civicData = await response.json();
-
-				// 		if (response.ok) {
-				// 			console.log(civicData);
-				// 		};
-				// 	} catch (error) {
-				// 		console.log(error);
-				// 	};
-				// };
-				
-				// getCivicData(country, zipcode, state, city, street, streetNumber);
-				
 			};
 
 		} else {
@@ -1415,7 +1386,9 @@
 <svelte:head>
 	<title>endorsements - public arts commission</title>
 	<meta name="description" content="find public arts commission-endorsed candidates, legislation, referendums and amendments" />
-	<meta property="og:image" content={PublicArtsCommissionBanner} />
+	<meta property="og:image" content={PublicArtsCommissionBanner} 
+/>
+
 </svelte:head>
 <svelte:window 
 	bind:innerHeight
