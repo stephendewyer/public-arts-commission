@@ -376,6 +376,8 @@
 
 	let statesWithCity: string[] = [];
 
+	let civicData: any = [];
+
 	const searchByStreetAddressInputValueChangeHandler = () => {
 
 		// reset current pagination page for each category
@@ -398,6 +400,7 @@
 
 		let searchBarInputValueArray: string[] = searchByStreetAddressInputValue.split(" ");
 		let searchBarInputValueFirstWord: string = searchBarInputValueArray[0].replace(",", "");
+		let searchBarFirstPhrase: string = searchByStreetAddressInputValue.split(",")[0]
 		let stateValueArray: string[] = [];
 		let stateValueFirstWord: string = "";
 		let cityValueArray: string[] = [];
@@ -426,6 +429,8 @@
 			// if user has entered only numbers, filter actions using zipcode
 
 			if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+
+				console.log("user is searching by zipcode")
 
 				// check if entered value matches zipcode in USCities
 
@@ -465,7 +470,7 @@
 						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
 						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
 					) {
-
+						console.log("user is searching by state");
 						state = stateObj.name;
 						stateName = stateObj.name.toLowerCase();
 						stateAbbreviation = stateObj.abbreviation.toLowerCase();
@@ -543,13 +548,13 @@
 
 				if (
 
-					searchBarInputValueFirstWord.toLowerCase() !== stateName &&
+					searchBarFirstPhrase.toLowerCase() !== stateName &&
 
 					searchBarInputValueFirstWord.toLowerCase() !== stateAbbreviation &&
 
 					searchBarInputValueFirstWord.toLowerCase() !== stateValueFirstWord && 
 
-					searchByStreetAddressInputValue.includes(",") === false &&
+					!searchByStreetAddressInputValue.includes(",") &&
 
 					(
 						searchBarInputValueFirstWord.toLowerCase() !== cityValueFirstWord.toLowerCase() ||
@@ -568,6 +573,8 @@
 				// if user has entered numbers followed by letters, filter actions using street address
 				// parse the search by address input value
 
+				console.log("user is entering street address");
+
 				const parsed = parse(searchByStreetAddressInputValue);
 
 				// load the parsed properties
@@ -583,6 +590,36 @@
 
 				county = USCities.find((location) => location.zip_code.toString() === zipcode)?.county;
 
+				// use Google Civic Information API to get representative districts or wards in federal, state and city levels
+				// const getCivicData = async (country: string, zipcode: number, state: string, city: string, street: string, streetNumber: number) => {
+				// 	try {
+				// 		const response = await fetch("/api/getCivicDataByAddress", {
+				// 			method: 'POST',
+				// 			body: JSON.stringify({
+				// 				country,
+				// 				zipcode,
+				// 				state,
+				// 				city,
+				// 				street,
+				// 				streetNumber
+				// 			}),
+				// 			headers: {
+				// 				'Content-Type': 'application/json',
+				// 			}
+				// 		});
+						
+				// 		civicData = await response.json();
+
+				// 		if (response.ok) {
+				// 			console.log(civicData);
+				// 		};
+				// 	} catch (error) {
+				// 		console.log(error);
+				// 	};
+				// };
+				
+				// getCivicData(country, zipcode, state, city, street, streetNumber);
+				
 			};
 
 		} else {
