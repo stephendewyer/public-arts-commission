@@ -61,7 +61,7 @@ p {
 }
 
 h1 {
-	font-size: 2rem;
+	font-size: 3rem;
 	line-height: 1.5;
 	color: #1C2226;
 	font-weight: 600;
@@ -70,28 +70,28 @@ h1 {
 }
 
 h2 {
-	font-size: 1.8rem;
+	font-size: 2.5rem;
 	line-height: 1.35;
 	color: #1C2226;
 	font-weight: 600;
 }
 
 h3 {
-	font-size: 1.6rem;
+	font-size: 2rem;
 	line-height: 1.2;
 	color: #4C4239;
 	font-weight: 600;
 }
 
 h4 {
-	font-size: 1.4rem;
+	font-size: 1.5rem;
 	line-height: 1;
 	color: #303533;
 	font-weight: 600;
 }
 
 h5 {
-	font-size: 1.2rem;
+	font-size: 1.25rem;
 	line-height: 1;
 	color: #303533;
 	font-weight: 600;
@@ -105,15 +105,15 @@ input[type="search"] {
 
 @media (max-width: 1440px) {
 	h1 {
-		font-size: 1.6rem;
+		font-size: 2.5rem;
 	}
 
 	h2 {
-		font-size: 1.4rem;
+		font-size: 2rem;
 	}
 	
 	h3 {
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 	}
 	
 	h4 {
@@ -137,15 +137,15 @@ input[type="search"] {
 
 @media (max-width: 720px) {
 	h1 {
-		font-size: 1.2rem;
+		font-size: 2rem;
 	}
 
 	h2 {
-		font-size: 1.1rem;
+		font-size: 1.5rem;
 	}
 	
 	h3 {
-		font-size: 1rem;
+		font-size: 1.25rem;
 	}
 	
 	h4 {
