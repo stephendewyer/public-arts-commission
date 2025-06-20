@@ -390,9 +390,11 @@
 		<h2>
 			We are revolutionizing civic technology from the grassroots using the best of art, technology and design.
 		</h2>
-		<ActionButtonSecondary>
-			Learn our story
-		</ActionButtonSecondary>
+		<a href="/story">
+			<ActionButtonSecondary>
+				Learn our story
+			</ActionButtonSecondary>
+		</a>
 	</div>
 </section>
 
