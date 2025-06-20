@@ -392,7 +392,7 @@
 		</h2>
 		<a href="/story">
 			<ActionButtonSecondary>
-				Learn our story
+				learn our story
 			</ActionButtonSecondary>
 		</a>
 	</div>
