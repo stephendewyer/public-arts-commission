@@ -267,7 +267,6 @@
 </svelte:head>
 
 <section class="index_page_container">
-	<h1 class="heading01">The platform for the art community in politics.</h1>
 	<div class="banner_and_logins">
 		<picture class="banner_container">
 			<img class="banner" src={PublicArtsCommissionBanner} alt="public arts commission banner" />
@@ -293,13 +292,19 @@
 			</div>
 		</div>
 	</div>
-	<h2 class="heading01">
-		The American Dream wasn't just imagined.  People made it happen.  We reimagine the American Dream and help make it happen for a stronger, more democratic society by giving the art community a platform in politics.
-	</h2>
-	<h3 class="heading01">
-		Strengthening our political imagination is necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  The art community plays a pivotal role in defining the American Dream, but largely has had no platform in politics.
-		We are building the political platform for the art community.
-	</h3>
+	<div class="introduction">
+		<h1 class="heading01">
+			The platform for the art community in politics.
+		</h1>
+		<h2 class="heading02">
+			The American Dream wasn't just imagined.  People made it happen.  We reimagine the American Dream and help make it happen for a stronger, more democratic society by giving the art community a platform in politics.
+		</h2>
+		<h3 class="heading03">
+			Strengthening our political imagination is necessary to overcome the political cynicism that prevents us from coming together to solve our most demanding problems.  The art community plays a pivotal role in defining the American Dream, but largely has had no platform in politics.
+			We are building the political platform for the art community.
+		</h3>
+	</div>
+	
 	<form 
 		on:submit|preventDefault={searchSubmitHandler}
 		class="search_endorsements_by_address_form"
@@ -386,7 +391,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="learn_our_story">
+	<div class="about">
 		<h2>
 			We are revolutionizing civic technology from the grassroots using the best of art, technology and design.
 		</h2>
@@ -425,10 +430,23 @@
 		width: 100%;
 	}
 
-	.heading01 {
+	.introduction {
 		width: 100%;
 		max-width: 60rem;
 		padding: 0 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.about {
+		width: 100%;
+		max-width: 60rem;
+		padding: 0 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		align-items: center;
 	}
 
 	.search_endorsements_by_address_form {
@@ -436,6 +454,7 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 0 1rem 1rem 1rem;
+		gap: 1rem;
 	}
 
 	.search_endorsement_fields {
@@ -494,6 +513,12 @@
 		align-items: center;
 	}
 
+	#forthcoming_actions {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
 	.forthcoming_actions_heading {
 		text-align: center;
 	}
@@ -519,21 +544,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	.learn_our_story {
-		width: 100%;
-		max-width: 60rem;
-		padding: 0 1rem;
-		display: flex;
-		flex-direction: column;
 		gap: 1rem;
-		align-items: center;
-	}
-
-	.learn_our_story > h2 {
-		padding: 0;
-		margin: 0;
 	}
 
 	@media screen and (max-width: 1140px) {

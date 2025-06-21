@@ -74,6 +74,7 @@ h2 {
 	line-height: 1.35;
 	color: #1C2226;
 	font-weight: 600;
+	margin: 0;
 }
 
 h3 {
@@ -81,6 +82,7 @@ h3 {
 	line-height: 1.2;
 	color: #4C4239;
 	font-weight: 600;
+	margin: 0;
 }
 
 h4 {
@@ -88,6 +90,7 @@ h4 {
 	line-height: 1;
 	color: #303533;
 	font-weight: 600;
+	margin: 0;
 }
 
 h5 {

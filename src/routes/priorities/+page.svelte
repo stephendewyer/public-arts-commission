@@ -1120,9 +1120,9 @@
                     <h2 class="priorities_section_heading">health</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading">
-                            <h2>
+                            <h3>
                                 Medicare for all
-                            </h2>
+                            </h3>
                         </li>
                     </ol>
                 </section>

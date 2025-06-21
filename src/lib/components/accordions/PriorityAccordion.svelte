@@ -24,9 +24,9 @@
         on:click={handleClick}
         on:keyup={handleClick}
     >   
-        <h2 class="heading">
+        <h3 class="heading">
             <slot name="head" />
-        </h2>
+        </h3>
         <div class={open ? "arrow_active" : "arrow"}>
             <img src={Arrow} alt="arrow icon" />
         </div>
@@ -46,7 +46,6 @@
         >
             <slot name="details" />
         </div>
-        
     </div>
 </div>
 <style>
