@@ -13,208 +13,202 @@
         $EndorsedActionSelectedStore = null;
     };
 
-    let endorsedActionData: ActionWithImage | null = null;
-
-    $: endorsedActionData = $EndorsedActionSelectedStore;
-
     let URLPathName: string;
 
-    $: if (endorsedActionData) {
+    $: if ($EndorsedActionSelectedStore) {
 
         URLPathName = $page.url.pathname;
 
     };
-
-    let endorsedActionOpen: boolean = false;
-
-    $: endorsedActionOpen = $EndorsedActionOpenStore;
 
     const closeClickHandler = () => {
         $EndorsedActionOpenStore = false;
         $EndorsedActionSelectedStore = null;
     };
 
-    let actionIsAllDay: boolean;
-    let rawAllDayActionDate: Date;
-    let allDayActionDate: string;
-    let actionRawStartDate: Date;
-    let actionStartDate: string;
-    let actionRawEndDate: Date;
-    let actionEndDate: string;
+    let actionIsAllDay: boolean = false;
+    let rawAllDayActionDate: Date | string = "";
+    let allDayActionDate: string = "";
+    let actionRawStartDate: Date | string = "";
+    let actionStartDate: string = "";
+    let actionRawEndDate: Date | string = "";
+    let actionEndDate: string = ""
 
-    $: if (endorsedActionData?.all_day_event) {
-        actionIsAllDay = endorsedActionData?.all_day_event;
+    $: if ($EndorsedActionSelectedStore?.all_day_event) {
+        actionIsAllDay = $EndorsedActionSelectedStore?.all_day_event;
     };
 
-    $: if (endorsedActionData?.all_day_event_date) {
-        rawAllDayActionDate = new Date(endorsedActionData?.all_day_event_date);
+    $: if ($EndorsedActionSelectedStore?.all_day_event_date) {
+        rawAllDayActionDate = new Date($EndorsedActionSelectedStore?.all_day_event_date);
         allDayActionDate = rawAllDayActionDate?.toUTCString().substring(0, 16);
     };
 
-    $: if (endorsedActionData?.date_start) {
-        actionRawStartDate = new Date(endorsedActionData?.date_start);
+    $: if ($EndorsedActionSelectedStore?.date_start) {
+        actionRawStartDate = new Date($EndorsedActionSelectedStore?.date_start);
         actionStartDate = actionRawStartDate.toUTCString();
     };
 
-    $: if (endorsedActionData?.date_end) {
-        actionRawEndDate = new Date(endorsedActionData?.date_end);
+    $: if ($EndorsedActionSelectedStore?.date_end) {
+        actionRawEndDate = new Date($EndorsedActionSelectedStore?.date_end);
         actionEndDate = actionRawEndDate.toUTCString();
     };
 
 </script>
 
 <aside 
-    class={ (endorsedActionOpen) ? "side_drawer_open" : "side_drawer_closed" }
-    aria-hidden={ (endorsedActionOpen) ? 'false' : 'true'}
+    class={ ($EndorsedActionOpenStore) ? "side_drawer_open" : "side_drawer_closed" }
+    aria-hidden={ ($EndorsedActionOpenStore) ? 'false' : 'true'}
 >
-    <div class="close_button_container">
-        <a 
-            href={URLPathName}
-            data-sveltekit-noscroll
-        >
-            <button 
-                class="close_button"
-                on:click={() => closeClickHandler()}
-                on:keyup={() => closeClickHandler()}
+    {#key $EndorsedActionOpenStore}
+        <div class="close_button_container">
+            <a 
+                href={URLPathName}
+                data-sveltekit-noscroll
             >
-                {@html CloseIcon}
-            </button>
-        </a>
-    </div>
-    <div>
-        <picture>
-            <img src={endorsedActionData?.image_URL} alt={reverseHtmlEntities(endorsedActionData?.alt_text)} />
-        </picture>
-        <h3 class="action_name">{reverseHtmlEntities(endorsedActionData?.action_name)}</h3>
-        <table>
-            <colgroup>
-                <col style="width:40%">
-                <col style="width:60%">
-            </colgroup>  
-            <tbody>
-                <tr>
-                    <td>
-                        date(s):
-                    </td>
-                    <td>
-                        {#if (actionIsAllDay)}
-                            {allDayActionDate}
-                        {:else if (!actionIsAllDay)}
-                            {actionStartDate} - {actionEndDate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        time:
-                    </td>
-                    <td>
-                        {#if (actionIsAllDay)}
-                        all day
-                        {:else}
-                            {endorsedActionData?.time_start} - {endorsedActionData?.time_end}
-                        {/if}
-                    </td>
-                </tr>
-                {#if (endorsedActionData?.time_zone)}
+                <button 
+                    class="close_button"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    {@html CloseIcon}
+                </button>
+            </a>
+        </div>
+        <div>
+            <picture>
+                <img src={$EndorsedActionSelectedStore?.image_URL} alt={reverseHtmlEntities($EndorsedActionSelectedStore?.alt_text)} />
+            </picture>
+            <h3 class="action_name">{reverseHtmlEntities($EndorsedActionSelectedStore?.action_name)}</h3>
+            <table>
+                <colgroup>
+                    <col style="width:40%">
+                    <col style="width:60%">
+                </colgroup>  
+                <tbody>
                     <tr>
                         <td>
-                            time zone:
+                            date(s):
                         </td>
                         <td>
-                            
-                            {endorsedActionData?.time_zone}
+                            {#if (actionIsAllDay)}
+                                {allDayActionDate}
+                            {:else if (!actionIsAllDay)}
+                                {actionStartDate} - {actionEndDate}
+                            {/if}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedActionData?.action_street_address)}
                     <tr>
                         <td>
-                            street address: 
+                            time:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedActionData?.action_street_address)}
+                            {#if (actionIsAllDay)}
+                            all day
+                            {:else}
+                                {$EndorsedActionSelectedStore?.time_start} - {$EndorsedActionSelectedStore?.time_end}
+                            {/if}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedActionData?.action_street_address_02)}
+                    {#if ($EndorsedActionSelectedStore?.time_zone)}
+                        <tr>
+                            <td>
+                                time zone:
+                            </td>
+                            <td>
+                                
+                                {$EndorsedActionSelectedStore?.time_zone}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedActionSelectedStore?.action_street_address)}
+                        <tr>
+                            <td>
+                                street address: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedActionSelectedStore?.action_street_address)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedActionSelectedStore?.action_street_address_02)}
+                        <tr>
+                            <td>
+                                street address 02: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedActionSelectedStore?.action_street_address_02)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedActionSelectedStore?.action_city)}
+                        <tr>
+                            <td>
+                                city: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedActionSelectedStore?.action_city)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedActionSelectedStore?.action_state)}
+                        <tr>
+                            <td>
+                                state: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedActionSelectedStore?.action_state)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedActionSelectedStore?.action_zip_code)}
+                        <tr>
+                            <td>
+                                zip code: 
+                            </td>
+                            <td>
+                                {$EndorsedActionSelectedStore?.action_zip_code}
+                            </td>
+                        </tr>
+                    {/if}
                     <tr>
                         <td>
-                            street address 02: 
+                            country:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedActionData?.action_street_address_02)}
+                            United States of America
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedActionData?.action_city)}
                     <tr>
                         <td>
-                            city: 
+                            website: 
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedActionData?.action_city)}
+                            {#if ($EndorsedActionSelectedStore?.website_URL)}
+                                <a 
+                                    class="external_link_container"
+                                    href={$EndorsedActionSelectedStore?.website_URL} 
+                                    target="_blank"
+                                >
+                                    <div class="external_link_icon">
+                                        {@html ExternalLinkIcon}
+                                    </div>
+                                    <div class="website_URL">
+                                        {$EndorsedActionSelectedStore?.website_URL} 
+                                    </div>
+                                </a>
+                            {/if}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedActionData?.action_state)}
-                    <tr>
-                        <td>
-                            state: 
-                        </td>
-                        <td>
-                            {reverseHtmlEntities(endorsedActionData?.action_state)}
-                        </td>
-                    </tr>
-                {/if}
-                {#if (endorsedActionData?.action_zip_code)}
-                    <tr>
-                        <td>
-                            zip code: 
-                        </td>
-                        <td>
-                            {endorsedActionData?.action_zip_code}
-                        </td>
-                    </tr>
-                {/if}
-                <tr>
-                    <td>
-                        country:
-                    </td>
-                    <td>
-                        United States of America
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        website: 
-                    </td>
-                    <td>
-                        {#if (endorsedActionData?.website_URL)}
-                            <a 
-                                class="external_link_container"
-                                href={endorsedActionData?.website_URL} 
-                                target="_blank"
-                            >
-                                <div class="external_link_icon">
-                                    {@html ExternalLinkIcon}
-                                </div>
-                                <div class="website_URL">
-                                    {endorsedActionData?.website_URL} 
-                                </div>
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="details_row">
-            <p class="details_header">details</p>
-            <p>
-                {reverseHtmlEntities(endorsedActionData?.details)} 
-            </p>
-        </div>       
-    </div>
+                </tbody>
+            </table>
+            <div class="details_row">
+                <p class="details_header">details</p>
+                <p>
+                    {reverseHtmlEntities($EndorsedActionSelectedStore?.details)} 
+                </p>
+            </div>       
+        </div>
+    {/key}
 </aside>
 
 <style>
@@ -281,7 +275,7 @@
     }
 
     .action_name {
-        padding: 0 1rem;
+        padding: 1rem;
         text-align: left;
     }
 

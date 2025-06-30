@@ -13,21 +13,11 @@
         $EndorsedReferendumSelectedStore = null;
     };
 
-    let endorsedReferendumSelected: ReferendumWithImage | null = null;
+    let URLPathName: string = "";
 
-    $: endorsedReferendumSelected = $EndorsedReferendumSelectedStore;
-
-    let URLPathName: string;
-
-    $: if (endorsedReferendumSelected) {
-
+    $: if ($EndorsedReferendumSelectedStore) {
         URLPathName = $page.url.pathname;
-
     };
-
-    let endorsedReferendumSidedrawerOpen: boolean = false;
-
-    $: endorsedReferendumSidedrawerOpen = $EndorsedReferendumOpenStore;
 
     const closeClickHandler = () => {
 
@@ -36,36 +26,36 @@
 
     };
 
-    let rawElectionDate: Date;
+    let rawElectionDate: Date | string = "";
 
-    let electionDate: string;
+    let electionDate: string = "";
 
-    $: if (endorsedReferendumSelected?.election_date) {
-        rawElectionDate = new Date(endorsedReferendumSelected?.election_date);
+    $: if ($EndorsedReferendumSelectedStore?.election_date) {
+        rawElectionDate = new Date($EndorsedReferendumSelectedStore?.election_date);
         electionDate = rawElectionDate?.toUTCString().substring(0, 16);
     };
 
     let referendumStatus: string[] = [];
 
-    $: if (endorsedReferendumSelected?.elected === 1) {
+    $: if ($EndorsedReferendumSelectedStore?.elected === 1) {
 
         referendumStatus = [...referendumStatus, " elected by voters"];
 
     };
     
-    $: if (endorsedReferendumSelected?.rejected === 1) {
+    $: if ($EndorsedReferendumSelectedStore?.rejected === 1) {
 
         referendumStatus = [...referendumStatus, " rejected by voters"];
 
     };
     
-    $: if (endorsedReferendumSelected?.pending_election === 1) {
+    $: if ($EndorsedReferendumSelectedStore?.pending_election === 1) {
 
         referendumStatus = [...referendumStatus, " pending election by voters"];
 
     };
 
-    $: if (endorsedReferendumSelected === null) {
+    $: if ($EndorsedReferendumSelectedStore === null) {
 
         referendumStatus = [];
 
@@ -74,132 +64,132 @@
 </script>
 
 <aside 
-    class={ (endorsedReferendumSidedrawerOpen) ? "side_drawer_open" : "side_drawer_closed" }
-    aria-hidden={ (endorsedReferendumSidedrawerOpen) ? 'false' : 'true'}
+    class={ ($EndorsedReferendumOpenStore) ? "side_drawer_open" : "side_drawer_closed" }
+    aria-hidden={ ($EndorsedReferendumOpenStore) ? 'false' : 'true'}
 >
-    <div class="close_button_container">
-        <a 
-            href={URLPathName}
-            data-sveltekit-noscroll
-        >
-            <button 
-                class="close_button"
-                on:click={() => closeClickHandler()}
-                on:keyup={() => closeClickHandler()}
+    {#key $EndorsedReferendumSelectedStore}
+        <div class="close_button_container">
+            <a 
+                href={URLPathName}
+                data-sveltekit-noscroll
             >
-                {@html CloseIcon}
-            </button>
-        </a>
-    </div>
-    <div>
-        <picture>
-            <img src={endorsedReferendumSelected?.image_URL} alt={reverseHtmlEntities(endorsedReferendumSelected?.alt_text)} />
-        </picture>
-        <h3 class="referendum_name">
-            {reverseHtmlEntities(endorsedReferendumSelected?.referendum_name)}
-        </h3>
-        <table>
-            <colgroup>
-                <col style="width:40%">
-                <col style="width:60%">
-            </colgroup>  
-            <tbody>
-                <tr>
-                    <td>
-                        starting year if enacted:
-                    </td>
-                    <td>
-                        {#if (endorsedReferendumSelected)}
-                            {endorsedReferendumSelected?.starting_year_if_enacted}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        election date:
-                    </td>
-                    <td>
-                        {#if (electionDate)}
-                            {electionDate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        country: 
-                    </td>
-                    <td>
-                        United States of America
-                    </td>
-                </tr>
-                {#if (endorsedReferendumSelected?.state)}
+                <button 
+                    class="close_button"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    {@html CloseIcon}
+                </button>
+            </a>
+        </div>
+        <div>
+            <picture>
+                <img src={$EndorsedReferendumSelectedStore?.image_URL} alt={reverseHtmlEntities($EndorsedReferendumSelectedStore?.alt_text)} />
+            </picture>
+            <h3 class="referendum_name">
+                {reverseHtmlEntities($EndorsedReferendumSelectedStore?.referendum_name)}
+            </h3>
+            <table>
+                <colgroup>
+                    <col style="width:40%">
+                    <col style="width:60%">
+                </colgroup>  
+                <tbody>
                     <tr>
                         <td>
-                            state: 
+                            starting year if enacted:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedReferendumSelected?.state)}
+                            {$EndorsedReferendumSelectedStore?.starting_year_if_enacted ? $EndorsedReferendumSelectedStore.starting_year_if_enacted : ""}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedReferendumSelected?.county)}
                     <tr>
                         <td>
-                            county: 
+                            election date:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedReferendumSelected?.county)}
+                            {electionDate ? electionDate : ""}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedReferendumSelected?.city)}
                     <tr>
                         <td>
-                            city: 
+                            country: 
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedReferendumSelected?.city)}
+                            United States of America
                         </td>
                     </tr>
-                {/if}
-                <tr>
-                    <td>
-                        website: 
-                    </td>
-                    <td>
-                        {#if (endorsedReferendumSelected?.website_URL)}
-                            <a 
-                                class="external_link_container"
-                                href={endorsedReferendumSelected?.website_URL} 
-                                target="_blank"
-                            >
-                                <div class="external_link_icon">
-                                    {@html ExternalLinkIcon}
-                                </div>
-                                <div class="website_URL">
-                                    {endorsedReferendumSelected?.website_URL} 
-                                </div>
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        status: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(referendumStatus.toString())}
-                    </td>
-                </tr>
-            </tbody>
-        </table>  
-        <div class="details_row">
-            <p class="details_header">details</p>
-            <p>
-                {reverseHtmlEntities(endorsedReferendumSelected?.details)} 
-            </p>
-        </div>    
-    </div>
+                    {#if ($EndorsedReferendumSelectedStore?.state)}
+                        <tr>
+                            <td>
+                                state: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedReferendumSelectedStore.state)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedReferendumSelectedStore?.county)}
+                        <tr>
+                            <td>
+                                county: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedReferendumSelectedStore.county)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedReferendumSelectedStore?.city)}
+                        <tr>
+                            <td>
+                                city: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedReferendumSelectedStore.city)}
+                            </td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <td>
+                            website: 
+                        </td>
+                        <td>
+                            {#if ($EndorsedReferendumSelectedStore?.website_URL)}
+                                <a 
+                                    class="external_link_container"
+                                    href={$EndorsedReferendumSelectedStore.website_URL} 
+                                    target="_blank"
+                                >
+                                    <div class="external_link_icon">
+                                        {@html ExternalLinkIcon}
+                                    </div>
+                                    <div class="website_URL">
+                                        {$EndorsedReferendumSelectedStore.website_URL} 
+                                    </div>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            status: 
+                        </td>
+                        <td>
+                            {#key referendumStatus}
+                                {reverseHtmlEntities(referendumStatus.toString())}
+                            {/key}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>  
+            <div class="details_row">
+                <p class="details_header">details</p>
+                <p>
+                    {reverseHtmlEntities($EndorsedReferendumSelectedStore?.details)} 
+                </p>
+            </div>    
+        </div>
+    {/key}
 </aside>
 
 <style>
@@ -266,7 +256,7 @@
     }
 
     .referendum_name {
-        padding: 0 1rem;
+        padding: 1rem;
         text-align: left;
     }
 

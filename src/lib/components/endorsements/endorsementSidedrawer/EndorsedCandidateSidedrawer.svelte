@@ -13,235 +13,224 @@
         $EndorsedCandidateSelectedStore = null;
     };
 
-    let endorsedCandidateData: CandidateWithImage | null = null;
+    let URLPathName: string = "";
 
-    $: endorsedCandidateData = $EndorsedCandidateSelectedStore;
-
-    let URLPathName: string;
-
-    $: if (endorsedCandidateData) {
-
+    $: if ($EndorsedCandidateSelectedStore) {
         URLPathName = $page.url.pathname;
-
     };
-
-    let endorsedCandidateOpen: boolean = false;
-
-    $: endorsedCandidateOpen = $EndorsedCandidateOpenStore;
 
     const closeClickHandler = () => {
         $EndorsedCandidateOpenStore = false;
         $EndorsedCandidateSelectedStore = null;
     };
 
-    let primaryElectionDate: Date | string;
+    let primaryElectionDate: Date | string = "";
 
-    $: rawPrimaryElectionDate = new Date(endorsedCandidateData?.election_date_primary);
+    $: rawPrimaryElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_primary);
 
     let blankDate = new Date("2016-01-01T06:00:00.000Z");
     
     $: if (rawPrimaryElectionDate < blankDate) {
-
         primaryElectionDate = "";
-
     } else {
-
         primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
-
     };
 
     let generalElectionDate: string = "";
 
-    let rawGeneralElectionDate: Date;
+    let rawGeneralElectionDate: Date | string = "";
 
-    $: rawGeneralElectionDate = new Date(endorsedCandidateData?.election_date_general);
+    $: rawGeneralElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_general);
 
     $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
 
     let candidateStatus: string[] = [];
 
-    $: if (endorsedCandidateData?.running_in_primary === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.running_in_primary === 1) {
 
         candidateStatus = [ ...candidateStatus, " running in the primary"];
 
     };
     
-    $: if (endorsedCandidateData?.elected_in_primary === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.elected_in_primary === 1) {
 
         candidateStatus = [ ...candidateStatus, " elected in the primary"];
 
     };
     
-    $: if (endorsedCandidateData?.rejected_in_primary === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.rejected_in_primary === 1) {
 
         candidateStatus = [ ...candidateStatus, " rejected in the primary"];
 
     };
     
-    $: if (endorsedCandidateData?.running_in_general === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.running_in_general === 1) {
 
         candidateStatus = [ ...candidateStatus, " running in the general"];
 
     };
     
-    $: if (endorsedCandidateData?.rejected_in_general === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.rejected_in_general === 1) {
 
         candidateStatus = [ ...candidateStatus, " rejected in the general"];
 
     };
     
-    $: if (endorsedCandidateData?.elected_in_general === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.elected_in_general === 1) {
 
         candidateStatus = [ ...candidateStatus, " elected in the general"];
 
     };
 
-    $: if (endorsedCandidateData?.campaign_ended === 1) {
+    $: if ($EndorsedCandidateSelectedStore?.campaign_ended === 1) {
 
         candidateStatus = [ ...candidateStatus, " campaign ended"];
 
     };
 
-    $: if (endorsedCandidateData === null) {
-
+    $: if (!$EndorsedCandidateOpenStore) {
         candidateStatus = [];
-
     };
 
 </script>
 
+
 <aside 
-    class={ (endorsedCandidateOpen) ? "side_drawer_open" : "side_drawer_closed" }
-    aria-hidden={ (endorsedCandidateOpen) ? 'false' : 'true'}
+    class={ ($EndorsedCandidateOpenStore) ? "side_drawer_open" : "side_drawer_closed" }
+    aria-hidden={ ($EndorsedCandidateOpenStore) ? 'false' : 'true'}
 >
-    <div class="close_button_container">
-        <a 
-            href={URLPathName}
-            data-sveltekit-noscroll
-        >
-            <button 
-                class="close_button"
-                on:click={() => closeClickHandler()}
-                on:keyup={() => closeClickHandler()}
+    {#key $EndorsedCandidateSelectedStore}
+        <div class="close_button_container">
+            <a 
+                href={URLPathName}
+                data-sveltekit-noscroll
             >
-                {@html CloseIcon}
-            </button>
-        </a>
-    </div>
-    <div>
-        <picture>
-            <img src={endorsedCandidateData?.image_URL} alt={reverseHtmlEntities(endorsedCandidateData?.alt_text)} />
-        </picture>
-        <h3 class="campaign_name">{reverseHtmlEntities(endorsedCandidateData?.campaign_name)}</h3>
-        <table>
-            <colgroup>
-                <col style="width:40%">
-                <col style="width:60%">
-            </colgroup>  
-            <tbody>
-                <tr>
-                    <td>
-                        primary election date:
-                    </td>
-                    <td>
-                        {primaryElectionDate}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        general election date:
-                    </td>
-                    <td>
-                        {generalElectionDate}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        starting year for office sought:
-                    </td>
-                    <td>
-                        {endorsedCandidateData?.office_sought_starting_year}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        electorate: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(endorsedCandidateData?.electorate)}
-                    </td>
-                </tr>
-                {#if (endorsedCandidateData?.state)}
+                <button 
+                    class="close_button"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    {@html CloseIcon}
+                </button>
+            </a>
+        </div>
+        <div>
+            <picture>
+                <img src={$EndorsedCandidateSelectedStore?.image_URL} alt={reverseHtmlEntities($EndorsedCandidateSelectedStore?.alt_text)} />
+            </picture>
+            <h3 class="campaign_name">{reverseHtmlEntities($EndorsedCandidateSelectedStore?.campaign_name)}</h3>
+            <table>
+                <colgroup>
+                    <col style="width:40%">
+                    <col style="width:60%">
+                </colgroup>  
+                <tbody>
                     <tr>
                         <td>
-                            state: 
+                            primary election date:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedCandidateData?.state)}
+                            {primaryElectionDate}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedCandidateData?.county)}
                     <tr>
                         <td>
-                            county: 
+                            general election date:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedCandidateData?.county)}
+                            {generalElectionDate}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedCandidateData?.city)}
                     <tr>
                         <td>
-                            city: 
+                            starting year for office sought:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedCandidateData?.city)}
+                            {$EndorsedCandidateSelectedStore?.office_sought_starting_year}
                         </td>
                     </tr>
-                {/if}
-                <tr>
-                    <td>
-                        party: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(endorsedCandidateData?.party)}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        website: 
-                    </td>
-                    <td>
-                        {#if (endorsedCandidateData?.website_URL)}
-                            <a 
-                                class="external_link_container"
-                                href={endorsedCandidateData?.website_URL} 
-                                target="_blank"
-                            >
-                                <div class="external_link_icon">
-                                    {@html ExternalLinkIcon}
-                                </div>
-                                <div class="website_URL">
-                                    {endorsedCandidateData?.website_URL} 
-                                </div>
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        status: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(candidateStatus.toString())}
-                    </td>
-                </tr>
-            </tbody>
-            
-        </table>
-    </div>
+                    <tr>
+                        <td>
+                            electorate: 
+                        </td>
+                        <td>
+                            {reverseHtmlEntities($EndorsedCandidateSelectedStore?.electorate)}
+                        </td>
+                    </tr>
+                    {#if ($EndorsedCandidateSelectedStore?.state)}
+                        <tr>
+                            <td>
+                                state: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedCandidateSelectedStore?.state)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedCandidateSelectedStore?.county)}
+                        <tr>
+                            <td>
+                                county: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedCandidateSelectedStore?.county)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedCandidateSelectedStore?.city)}
+                        <tr>
+                            <td>
+                                city: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedCandidateSelectedStore?.city)}
+                            </td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <td>
+                            party: 
+                        </td>
+                        <td>
+                            {reverseHtmlEntities($EndorsedCandidateSelectedStore?.party)}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            website: 
+                        </td>
+                        <td>
+                            {#if ($EndorsedCandidateSelectedStore?.website_URL)}
+                                <a 
+                                    class="external_link_container"
+                                    href={$EndorsedCandidateSelectedStore?.website_URL} 
+                                    target="_blank"
+                                >
+                                    <div class="external_link_icon">
+                                        {@html ExternalLinkIcon}
+                                    </div>
+                                    <div class="website_URL">
+                                        {$EndorsedCandidateSelectedStore?.website_URL} 
+                                    </div>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            status: 
+                        </td>
+                        <td>
+                            {#key candidateStatus}
+                                {reverseHtmlEntities(candidateStatus.toString())}
+                            {/key}
+                        </td>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+    {/key}
 </aside>
 
 <style>
@@ -303,7 +292,7 @@
     }
 
     .campaign_name {
-        padding: 0 1rem;
+        padding: 1rem;
         text-align: left;
     }
 

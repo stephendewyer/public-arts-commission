@@ -13,16 +13,10 @@
         $EndorsedLegislationSelectedStore = null;
     };
 
-    let endorsedLegislationData: LegislationWithSponsorsAndImage | null = null;
+    let URLPathName: string = "";
 
-    $: endorsedLegislationData = $EndorsedLegislationSelectedStore;
-
-    let URLPathName: string;
-
-    $: if (endorsedLegislationData) {
-
+    $: if ($EndorsedLegislationSelectedStore) {
         URLPathName = $page.url.pathname;
-
     }; 
 
     let sponsorsHouse: SponsorHouse[] = [];
@@ -48,44 +42,43 @@
 
     let legislationStatus: string[] = [];
 
-    $: if (endorsedLegislationData?.passed_in_House === 1) {
+    $: if ($EndorsedLegislationSelectedStore?.passed_in_House === 1) {
 
         legislationStatus = [...legislationStatus, " passed in the House"];
 
     };
     
-    $: if (endorsedLegislationData?.passed_in_Senate === 1) {
+    $: if ($EndorsedLegislationSelectedStore?.passed_in_Senate === 1) {
 
         legislationStatus = [...legislationStatus, " passed in the Senate"];
 
     };
     
-    $: if (endorsedLegislationData?.rejected_in_House === 1) {
+    $: if ($EndorsedLegislationSelectedStore?.rejected_in_House === 1) {
 
         legislationStatus = [...legislationStatus, " rejected in the House"];
 
     };
     
-    $: if (endorsedLegislationData?.rejected_in_Senate === 1) {
+    $: if ($EndorsedLegislationSelectedStore?.rejected_in_Senate === 1) {
 
         legislationStatus = [...legislationStatus, " rejected in the Senate"];
 
     };
     
-    $: if (endorsedLegislationData?.vetoed_by_Executive === 1) {
+    $: if ($EndorsedLegislationSelectedStore?.vetoed_by_Executive === 1) {
 
         legislationStatus = [...legislationStatus, " vetoed by the Executive"];
 
     };
     
-    $: if (endorsedLegislationData?.signed_by_Executive === 1) {
+    $: if ($EndorsedLegislationSelectedStore?.signed_by_Executive === 1) {
 
         legislationStatus = [...legislationStatus, " signed into law by the Executive"];
 
     };
 
-    $: if (endorsedLegislationData === null) {
-
+    $: if (!$EndorsedLegislationOpenStore) {
         legislationStatus = [];
         sponsorsHouse = [];
         sponsorsSenate = [];
@@ -95,12 +88,11 @@
         sponsorsSenateNames = [];
         coSponsorsHouseNames = [];
         coSponsorsSenateNames = [];
-
     };
 
-    $: if (endorsedLegislationData?.sponsors_House) {
+    $: if ($EndorsedLegislationSelectedStore?.sponsors_House) {
 
-        sponsorsHouse = endorsedLegislationData.sponsors_House;
+        sponsorsHouse = $EndorsedLegislationSelectedStore.sponsors_House;
 
         sponsorsHouse.forEach((sponsor) => {
 
@@ -110,9 +102,9 @@
 
     };
 
-    $: if (endorsedLegislationData?.sponsors_Senate) {
+    $: if ($EndorsedLegislationSelectedStore?.sponsors_Senate) {
 
-        sponsorsSenate = endorsedLegislationData.sponsors_Senate;
+        sponsorsSenate = $EndorsedLegislationSelectedStore.sponsors_Senate;
 
         sponsorsSenate.forEach((sponsor) => {
 
@@ -122,9 +114,9 @@
 
     };
     
-    $: if (endorsedLegislationData?.co_sponsors_House) {
+    $: if ($EndorsedLegislationSelectedStore?.co_sponsors_House) {
 
-        coSponsorsHouse = endorsedLegislationData.co_sponsors_House;
+        coSponsorsHouse = $EndorsedLegislationSelectedStore.co_sponsors_House;
 
         coSponsorsHouse.forEach((sponsor) => {
 
@@ -134,9 +126,9 @@
 
     };
 
-    $: if (endorsedLegislationData?.co_sponsors_Senate) {
+    $: if ($EndorsedLegislationSelectedStore?.co_sponsors_Senate) {
 
-        coSponsorsSenate = endorsedLegislationData?.co_sponsors_Senate;
+        coSponsorsSenate = $EndorsedLegislationSelectedStore?.co_sponsors_Senate;
 
         coSponsorsSenate.forEach((sponsor) => {
 
@@ -152,203 +144,207 @@
     class={ (endorsedLegislationOpen) ? "side_drawer_open" : "side_drawer_closed" }
     aria-hidden={ (endorsedLegislationOpen) ? 'false' : 'true'}
 >
-    <div class="close_button_container">
-        <a 
-            href={URLPathName}
-            data-sveltekit-noscroll
-        >
-            <button 
-                class="close_button"
-                on:click={() => closeClickHandler()}
-                on:keyup={() => closeClickHandler()}
+    {#key $EndorsedLegislationSelectedStore}
+        <div class="close_button_container">
+            <a 
+                href={URLPathName}
+                data-sveltekit-noscroll
             >
-                {@html CloseIcon}
-            </button>
-        </a>
-        
-    </div>
-    <div>
-        <picture>
-            <img src={endorsedLegislationData?.image_URL} alt={reverseHtmlEntities(endorsedLegislationData?.alt_text)} />
-        </picture>
-        <h3 class="legislation_name">
-            {reverseHtmlEntities(endorsedLegislationData?.legislation_name)}
-        </h3>
-        <table>
-            <colgroup>
-                <col span="1" style="width:40%">
-                <col span="1" style="width:60%">
-            </colgroup>  
-            <tbody>
-                <tr>
-                    <td>
-                        year released:
-                    </td>
-                    <td>
-                        {endorsedLegislationData?.year_released}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        year introduced in the House:
-                    </td>
-                    <td>
-                        {#if (endorsedLegislationData?.year_introduced_House)}
-                            {endorsedLegislationData?.year_introduced_House}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        year introduced in the Senate:
-                    </td>
-                    <td>
-                        {#if (endorsedLegislationData?.year_introduced_Senate)}
-                            {endorsedLegislationData?.year_introduced_Senate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        House session:
-                    </td>
-                    <td>
-                        {#if (endorsedLegislationData?.session_House)}
-                            {endorsedLegislationData?.session_House}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Senate session:
-                    </td>
-                    <td>
-                        {#if (endorsedLegislationData?.session_Senate)}
-                            {endorsedLegislationData?.session_Senate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        country: 
-                    </td>
-                    <td>
-                        United States of America
-                    </td>
-                </tr>
-                {#if (endorsedLegislationData?.state)}
+                <button 
+                    class="close_button"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    {@html CloseIcon}
+                </button>
+            </a>
+            
+        </div>
+        <div>
+            <picture>
+                <img src={$EndorsedLegislationSelectedStore?.image_URL} alt={reverseHtmlEntities($EndorsedLegislationSelectedStore?.alt_text)} />
+            </picture>
+            <h3 class="legislation_name">
+                {reverseHtmlEntities($EndorsedLegislationSelectedStore?.legislation_name)}
+            </h3>
+            <table>
+                <colgroup>
+                    <col span="1" style="width:40%">
+                    <col span="1" style="width:60%">
+                </colgroup>  
+                <tbody>
                     <tr>
                         <td>
-                            state: 
+                            year released:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedLegislationData?.state)}
+                            {$EndorsedLegislationSelectedStore?.year_released ? $EndorsedLegislationSelectedStore.year_released : ""}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedLegislationData?.county)}
                     <tr>
                         <td>
-                            county: 
+                            year introduced in the House:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedLegislationData?.county)}
+                            {$EndorsedLegislationSelectedStore?.year_introduced_House ? $EndorsedLegislationSelectedStore.year_introduced_House : ""}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedLegislationData?.city)}
                     <tr>
                         <td>
-                            city: 
+                            year introduced in the Senate:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedLegislationData?.city)}
+                            {$EndorsedLegislationSelectedStore?.year_introduced_Senate ? $EndorsedLegislationSelectedStore.year_introduced_Senate : ""}
                         </td>
                     </tr>
-                {/if}
-                <tr>
-                    <td>
-                        House sponsor: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(sponsorsHouseNames.join(', ').toString())}
-                    </td>
-                </tr>
-                <tr>
-                    <td >
-                        House co-sponsor(s): 
-                    </td>
-                    <td>
-                        <ol class="co-sponsors">
-                            {#each coSponsorsHouseNames as coSponsorHouse, i}
-                                <li>
-                                    {reverseHtmlEntities(coSponsorHouse)}
-                                </li>
-                            {/each}
-                        </ol>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Senate sponsor: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(sponsorsSenateNames.join(', ').toString())}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Senate co-sponsor(s): 
-                    </td>
-                    <td>
-                        <ol class="co-sponsors">
-                            {#each coSponsorsSenateNames as coSponsorName, i}
-                                <li>
-                                    {reverseHtmlEntities(coSponsorName)}
-                                </li>
-                            {/each}
-                        </ol>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            House session:
+                        </td>
+                        <td>
+                            {$EndorsedLegislationSelectedStore?.session_House ? $EndorsedLegislationSelectedStore.session_House : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate session:
+                        </td>
+                        <td>
+                            {$EndorsedLegislationSelectedStore?.session_Senate ? $EndorsedLegislationSelectedStore.session_Senate : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            country: 
+                        </td>
+                        <td>
+                            United States of America
+                        </td>
+                    </tr>
+                    {#if ($EndorsedLegislationSelectedStore?.state)}
+                        <tr>
+                            <td>
+                                state: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedLegislationSelectedStore.state)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedLegislationSelectedStore?.county)}
+                        <tr>
+                            <td>
+                                county: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedLegislationSelectedStore.county)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedLegislationSelectedStore?.city)}
+                        <tr>
+                            <td>
+                                city: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedLegislationSelectedStore.city)}
+                            </td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <td>
+                            House sponsor: 
+                        </td>
+                        <td>
+                            {#key sponsorsHouseNames}
+                                {reverseHtmlEntities(sponsorsHouseNames.join(', ').toString())}
+                            {/key}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td >
+                            House co-sponsor(s): 
+                        </td>
+                        <td>
+                            <ol class="co-sponsors">
+                                {#key coSponsorsHouseNames}
+                                    {#each coSponsorsHouseNames as coSponsorHouse, i}
+                                        <li>
+                                            {reverseHtmlEntities(coSponsorHouse)}
+                                        </li>
+                                    {/each}
+                                {/key}
+                            </ol>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate sponsor: 
+                        </td>
+                        <td>
+                            {#key sponsorsSenateNames}
+                                {sponsorsSenateNames.length > 0 ? reverseHtmlEntities(sponsorsSenateNames.join(', ').toString()) : ""}
+                            {/key}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate co-sponsor(s): 
+                        </td>
+                        <td>
+                            <ol class="co-sponsors">
+                                {#key coSponsorsSenateNames}
+                                    {#each coSponsorsSenateNames as coSponsorName, i}
+                                        <li>
+                                            {reverseHtmlEntities(coSponsorName)}
+                                        </li>
+                                    {/each}
+                                {/key}
+                            </ol>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <td>
-                        website: 
-                    </td>
-                    <td>
-                        {#if (endorsedLegislationData?.website_URL)}
-                            <a 
-                                class="external_link_container"
-                                href={endorsedLegislationData?.website_URL} 
-                                target="_blank"
-                            >
-                                <div class="external_link_icon">
-                                    {@html ExternalLinkIcon}
-                                </div>
-                                <div class="website_URL">
-                                    {endorsedLegislationData?.website_URL} 
-                                </div>
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        status: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(legislationStatus.toString())}
-                    </td>
-                </tr>
-            </tbody>
-        </table>   
-        <div class="details_row">
-            <p class="details_header">details</p>
-            <p>
-                {reverseHtmlEntities(endorsedLegislationData?.details)} 
-            </p>
-        </div>              
-    </div>
+                    <tr>
+                        <td>
+                            website: 
+                        </td>
+                        <td>
+                            {#if ($EndorsedLegislationSelectedStore?.website_URL)}
+                                <a 
+                                    class="external_link_container"
+                                    href={$EndorsedLegislationSelectedStore.website_URL} 
+                                    target="_blank"
+                                >
+                                    <div class="external_link_icon">
+                                        {@html ExternalLinkIcon}
+                                    </div>
+                                    <div class="website_URL">
+                                        {$EndorsedLegislationSelectedStore.website_URL} 
+                                    </div>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            status: 
+                        </td>
+                        <td>
+                            {#key legislationStatus}
+                                {reverseHtmlEntities(legislationStatus.toString())}
+                            {/key}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>   
+            <div class="details_row">
+                <p class="details_header">details</p>
+                <p>
+                    {reverseHtmlEntities($EndorsedLegislationSelectedStore?.details)} 
+                </p>
+            </div>              
+        </div>
+    {/key}
 </aside>
 
 <style>
@@ -415,7 +411,7 @@
     }
 
     .legislation_name {
-        padding: 0 1rem;
+        padding: 1rem;
         text-align: left;
     }
 

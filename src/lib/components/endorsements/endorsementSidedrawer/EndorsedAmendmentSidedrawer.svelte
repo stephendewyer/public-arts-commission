@@ -13,21 +13,13 @@
         $EndorsedAmendmentSelectedStore = null;
     };
 
-    let endorsedAmendmentData: AmendmentWithSponsorsAndImage | null = null;
+    let URLPathName: string = "";
 
-    $: endorsedAmendmentData = $EndorsedAmendmentSelectedStore;
-
-    let URLPathName: string;
-
-    $: if (endorsedAmendmentData) {
+    $: if ($EndorsedAmendmentSelectedStore) {
 
         URLPathName = $page.url.pathname;
 
     };
-
-    let endorsedAmendmentOpen: boolean = false;
-
-    $: endorsedAmendmentOpen = $EndorsedAmendmentOpenStore;
 
     const closeClickHandler = () => {
 
@@ -36,13 +28,13 @@
 
     };
 
-    let rawElectionDate: Date;
-    let electionDate: Date | string;
+    let rawElectionDate: Date | string = "";
+    let electionDate: Date | string = "";
     let blankDate = new Date("2016-01-01T06:00:00.000Z");
 
-    $: if (endorsedAmendmentData?.election_date) {
+    $: if ($EndorsedAmendmentSelectedStore?.election_date) {
 
-        rawElectionDate = new Date (endorsedAmendmentData.election_date);
+        rawElectionDate = new Date ($EndorsedAmendmentSelectedStore.election_date);
 
         if (rawElectionDate < blankDate) {
 
@@ -58,49 +50,49 @@
 
     let amendmentStatus: string[] = [];
 
-    $: if (endorsedAmendmentData?.introduced_in_House === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.introduced_in_House === 1) {
 
         amendmentStatus = [...amendmentStatus, " introduced in the House"];
 
     };
     
-    $: if (endorsedAmendmentData?.introduced_in_Senate === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.introduced_in_Senate === 1) {
 
         amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
 
     };
     
-    $: if (endorsedAmendmentData?.twothirds_House_and_Senate_passed === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.twothirds_House_and_Senate_passed === 1) {
 
         amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
 
     };
     
-    $: if (endorsedAmendmentData?.simple_majority_House_and_Senate_passed === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.simple_majority_House_and_Senate_passed === 1) {
 
         amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
 
     };
     
-    $: if (endorsedAmendmentData?.simple_majority_voters_passed === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.simple_majority_voters_passed === 1) {
 
         amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
 
     };
     
-    $: if (endorsedAmendmentData?.ratified_by_state_convenctions === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.ratified_by_state_convenctions === 1) {
 
         amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
 
     };
 
-    $: if (endorsedAmendmentData?.ratified_by_state_legislatures === 1) {
+    $: if ($EndorsedAmendmentSelectedStore?.ratified_by_state_legislatures === 1) {
 
         amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
 
     };
 
-    $: if (endorsedAmendmentData === null) {
+    $: if (!$EndorsedAmendmentOpenStore) {
         amendmentStatus = [];
         sponsorsHouse = [];
         sponsorsSenate = [];
@@ -110,7 +102,6 @@
         sponsorsSenateNames = [];
         coSponsorsHouseNames = [];
         coSponsorsSenateNames = [];
-
     };
 
     let sponsorsHouse: SponsorHouse[];
@@ -124,9 +115,9 @@
     let coSponsorsSenateNames: string[] = [];
 
 
-    $: if (endorsedAmendmentData?.sponsors_House) {
+    $: if ($EndorsedAmendmentSelectedStore?.sponsors_House) {
 
-        sponsorsHouse = endorsedAmendmentData?.sponsors_House;
+        sponsorsHouse = $EndorsedAmendmentSelectedStore?.sponsors_House;
 
         sponsorsHouse.forEach((sponsor) => {
 
@@ -136,9 +127,9 @@
 
     };
 
-    $: if (endorsedAmendmentData?.sponsors_Senate) {
+    $: if ($EndorsedAmendmentSelectedStore?.sponsors_Senate) {
 
-        sponsorsSenate = endorsedAmendmentData?.sponsors_Senate;
+        sponsorsSenate = $EndorsedAmendmentSelectedStore?.sponsors_Senate;
 
         sponsorsSenate.forEach((sponsor) => {
 
@@ -148,9 +139,9 @@
 
     };
     
-    $: if (endorsedAmendmentData?.co_sponsors_House) {
+    $: if ($EndorsedAmendmentSelectedStore?.co_sponsors_House) {
 
-        coSponsorsHouse = endorsedAmendmentData?.co_sponsors_House;
+        coSponsorsHouse = $EndorsedAmendmentSelectedStore?.co_sponsors_House;
 
         coSponsorsHouse.forEach((sponsor) => {
 
@@ -160,9 +151,9 @@
 
     };
 
-    $: if (endorsedAmendmentData?.co_sponsors_Senate) {
+    $: if ($EndorsedAmendmentSelectedStore?.co_sponsors_Senate) {
 
-        coSponsorsSenate = endorsedAmendmentData?.co_sponsors_Senate;
+        coSponsorsSenate = $EndorsedAmendmentSelectedStore?.co_sponsors_Senate;
 
         coSponsorsSenate.forEach((sponsor) => {
 
@@ -175,216 +166,218 @@
 </script>
 
 <aside 
-    class={ (endorsedAmendmentOpen) ? "side_drawer_open" : "side_drawer_closed" }
-    aria-hidden={ (endorsedAmendmentOpen) ? 'false' : 'true'}
+    class={ ($EndorsedAmendmentOpenStore) ? "side_drawer_open" : "side_drawer_closed" }
+    aria-hidden={ ($EndorsedAmendmentOpenStore) ? 'false' : 'true'}
 >
-    <div class="close_button_container">
-        <a 
-            href={URLPathName}
-            data-sveltekit-noscroll
-        >
-            <button 
-                class="close_button"
-                on:click={() => closeClickHandler()}
-                on:keyup={() => closeClickHandler()}
+    {#key $EndorsedAmendmentSelectedStore}
+        <div class="close_button_container">
+            <a 
+                href={URLPathName}
+                data-sveltekit-noscroll
             >
-                {@html CloseIcon}
-            </button>
-        </a>
-    </div>
-    <div>
-        <picture>
-            <img src={endorsedAmendmentData?.image_URL} alt={reverseHtmlEntities(endorsedAmendmentData?.alt_text)} />
-        </picture>
-        <h3 class="amendment_name">
-            {reverseHtmlEntities(endorsedAmendmentData?.amendment_name)}
-        </h3>
-        <table>
-            <colgroup>
-                <col style="width:40%">
-                <col style="width:60%">
-            </colgroup>  
-            <tbody>
-                <tr>
-                    <td>
-                        year released:
-                    </td>
-                    <td>
-                        {endorsedAmendmentData?.year_released}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        year introduced in the House:
-                    </td>
-                    <td>
-                        {#if (endorsedAmendmentData?.year_introduced_House)}
-                            {endorsedAmendmentData?.year_introduced_House}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        year introduced in the Senate:
-                    </td>
-                    <td>
-                        {#if (endorsedAmendmentData?.year_introduced_Senate)}
-                            {endorsedAmendmentData?.year_introduced_Senate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        House session:
-                    </td>
-                    <td>
-                        {#if (endorsedAmendmentData?.session_House)}
-                            {endorsedAmendmentData?.session_House}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Senate session:
-                    </td>
-                    <td>
-                        {#if (endorsedAmendmentData?.session_Senate)}
-                            {endorsedAmendmentData?.session_Senate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        election date:
-                    </td>
-                    <td>
-                        {#if (electionDate)}
-                            {electionDate}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        country: 
-                    </td>
-                    <td>
-                        United States of America
-                    </td>
-                </tr>
-                {#if (endorsedAmendmentData?.state)}
+                <button 
+                    class="close_button"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    {@html CloseIcon}
+                </button>
+            </a>
+        </div>
+        <div>
+            <picture>
+                <img src={$EndorsedAmendmentSelectedStore?.image_URL} alt={reverseHtmlEntities($EndorsedAmendmentSelectedStore?.alt_text)} />
+            </picture>
+            <h3 class="amendment_name">
+                {reverseHtmlEntities($EndorsedAmendmentSelectedStore?.amendment_name)}
+            </h3>
+            <table>
+                <colgroup>
+                    <col style="width:40%">
+                    <col style="width:60%">
+                </colgroup>  
+                <tbody>
                     <tr>
                         <td>
-                            state: 
+                            year released:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedAmendmentData?.state)}
+                            {$EndorsedAmendmentSelectedStore?.year_released ? $EndorsedAmendmentSelectedStore.year_released : ""}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedAmendmentData?.county)}
                     <tr>
                         <td>
-                            county: 
+                            year introduced in the House:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedAmendmentData?.county)}
+                            {$EndorsedAmendmentSelectedStore?.year_introduced_House ? $EndorsedAmendmentSelectedStore.year_introduced_House : ""}
                         </td>
                     </tr>
-                {/if}
-                {#if (endorsedAmendmentData?.city)}
                     <tr>
                         <td>
-                            city: 
+                            year introduced in the Senate:
                         </td>
                         <td>
-                            {reverseHtmlEntities(endorsedAmendmentData?.city)}
+                            {$EndorsedAmendmentSelectedStore?.year_introduced_Senate ? $EndorsedAmendmentSelectedStore.year_introduced_Senate : ""}
                         </td>
                     </tr>
-                {/if}
-                <tr>
-                    <td>
-                        House sponsor: 
-                    </td>
-                    <td>
-                        {#if (sponsorsHouseNames)}
-                            {reverseHtmlEntities(sponsorsHouseNames.join(', ').toString())}
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        House co-sponsor(s): 
-                    </td>
-                    <td>
-                        <ol class="co-sponsors">
-                            {#each coSponsorsHouseNames as coSponsorHouseName, i}
-                                <li>
-                                    {reverseHtmlEntities(coSponsorHouseName)}
-                                </li>
-                            {/each}
-                        </ol>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Senate sponsor: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(sponsorsSenateNames.join(', ').toString())}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Senate co-sponsor(s): 
-                    </td>
-                    <td>
-                        <ol class="co-sponsors">
-                            {#each coSponsorsSenateNames as coSponsorSenateName, i}
-                                <li>
-                                    {reverseHtmlEntities(coSponsorSenateName)}
-                                </li>
-                            {/each}
-                        </ol>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        website: 
-                    </td>
-                    <td>
-                        {#if (endorsedAmendmentData?.website_URL)}
-                            <a 
-                                class="external_link_container"
-                                href={endorsedAmendmentData?.website_URL} 
-                                target="_blank"
-                            >
-                                <div class="external_link_icon">
-                                    {@html ExternalLinkIcon}
-                                </div>
-                                <div class="website_URL">
-                                    {endorsedAmendmentData?.website_URL} 
-                                </div>
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        status: 
-                    </td>
-                    <td>
-                        {reverseHtmlEntities(amendmentStatus.toString())}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="details_row">
-            <p class="details_header">details</p>
-            <p>
-                {reverseHtmlEntities(endorsedAmendmentData?.details)} 
-            </p>
-        </div>   
-    </div>
+                    <tr>
+                        <td>
+                            House session:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.session_House ? $EndorsedAmendmentSelectedStore.session_House : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate session:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.session_Senate ? $EndorsedAmendmentSelectedStore.session_Senate : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            election date:
+                        </td>
+                        <td>
+                            {#key (electionDate)}
+                                {electionDate ? electionDate : ""}
+                            {/key}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            country: 
+                        </td>
+                        <td>
+                            United States of America
+                        </td>
+                    </tr>
+                    {#if ($EndorsedAmendmentSelectedStore?.state)}
+                        <tr>
+                            <td>
+                                state: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.state)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedAmendmentSelectedStore?.county)}
+                        <tr>
+                            <td>
+                                county: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.county)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedAmendmentSelectedStore?.city)}
+                        <tr>
+                            <td>
+                                city: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.city)}
+                            </td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <td>
+                            House sponsor: 
+                        </td>
+                        <td>
+                            {#key sponsorsHouseNames}
+                                {sponsorsHouseNames.length > 0 ? reverseHtmlEntities(sponsorsHouseNames.join(', ').toString()) : ""}
+                            {/key}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            House co-sponsor(s): 
+                        </td>
+                        <td>
+                            <ol class="co-sponsors">
+                                {#key coSponsorsHouseNames}
+                                    {#each coSponsorsHouseNames as coSponsorHouseName, i}
+                                        <li>
+                                            {reverseHtmlEntities(coSponsorHouseName)}
+                                        </li>
+                                    {/each}
+                                {/key}
+                            </ol>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate sponsor: 
+                        </td>
+                        <td>
+                            {#key sponsorsSenateNames}
+                                {sponsorsSenateNames.length > 0 ? reverseHtmlEntities(sponsorsSenateNames.join(', ').toString()) : ""}
+                            {/key}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate co-sponsor(s): 
+                        </td>
+                        <td>
+                            <ol class="co-sponsors">
+                                {#key coSponsorsSenateNames}
+                                    {#each coSponsorsSenateNames as coSponsorSenateName, i}
+                                        <li>
+                                            {reverseHtmlEntities(coSponsorSenateName)}
+                                        </li>
+                                    {/each}
+                                {/key}
+                            </ol>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            website: 
+                        </td>
+                        <td>
+                            {#if ($EndorsedAmendmentSelectedStore?.website_URL)}
+                                <a 
+                                    class="external_link_container"
+                                    href={$EndorsedAmendmentSelectedStore.website_URL} 
+                                    target="_blank"
+                                >
+                                    <div class="external_link_icon">
+                                        {@html ExternalLinkIcon}
+                                    </div>
+                                    <div class="website_URL">
+                                        {$EndorsedAmendmentSelectedStore.website_URL} 
+                                    </div>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            status: 
+                        </td>
+                        <td>
+                            {#key amendmentStatus}
+                                {amendmentStatus.length > 0 ? reverseHtmlEntities(amendmentStatus.toString()) : ""}
+                            {/key}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="details_row">
+                <p class="details_header">details</p>
+                <p>
+                    {$EndorsedAmendmentSelectedStore ? reverseHtmlEntities($EndorsedAmendmentSelectedStore.details) : ""} 
+                </p>
+            </div>   
+        </div>
+    {/key}
 </aside>
 
 <style>
@@ -451,7 +444,7 @@
     }
 
     .amendment_name {
-        padding: 0 1rem;
+        padding: 1rem;
         text-align: left;
     }
 

@@ -886,7 +886,9 @@
                             </PriorityAccordion>
                         </li>
                         <li class="priority_heading">
-                            Jobs, culture and tax credits that support starting and raising families
+                            <h3>
+                                Jobs, culture and tax credits that support starting and raising families
+                            </h3>
                         </li>
                         <li class="priority_heading">
                             <PriorityAccordion>
@@ -1221,6 +1223,10 @@
         width: 100%;
     }
 
+    .priorities_heading {
+        padding: 0 1rem 1rem 1rem;
+    }
+
     .priorities_section_heading {
         padding: 1rem 1rem 0 1rem;
         margin: 0;
@@ -1361,6 +1367,9 @@
     .category_priorities {
         width: 100%;
         max-width: 50rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .priority_heading {
@@ -1437,8 +1446,8 @@
             font-size: 1.25rem;
         }
 
-        .priority_heading > h2 {
-            font-size: 1.25rem;
+        .category_priorities {
+            gap: 0rem;
         }
 
         .arrow_left_scroll {
@@ -1498,8 +1507,7 @@
             font-size: 1rem;
         }
 
-        .priority_heading > h2 {
-            margin: 0;
+        .priority_heading > h3 {
             font-size: 1rem;
         }
 

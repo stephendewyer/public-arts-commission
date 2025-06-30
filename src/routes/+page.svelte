@@ -18,7 +18,7 @@
 	import { page } from '$app/stores';
 	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
 	import CampaignHighlights from '$lib/components/sliders/CampaignHighlights.svelte';
-  import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
+  	import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
 
 	export let data;
 
