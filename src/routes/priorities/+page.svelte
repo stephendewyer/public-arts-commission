@@ -904,6 +904,9 @@
                                             Make the wealthy pay their fair share in taxes;
                                         </li>
                                         <li>
+                                            Change the tax code to eliminate the existance of billionaires, who use their vast wealth to overthrow our democracy by oligarchy;
+                                        </li>
+                                        <li>
                                             Re-enact the Glass-Steagall Act of 1933;
                                         </li>
                                         <li>

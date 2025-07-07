@@ -122,7 +122,7 @@
         runningInPrimary: boolean,
         electedInPrimary: boolean,
         rejectedInPrimary: boolean,
-        runnningInGeneral: boolean,
+        runningInGeneral: boolean,
         electedInGeneral: boolean,
         rejectedInGeneral: boolean,
         campaignEnded: boolean,
@@ -160,7 +160,7 @@
                 runningInPrimary,
                 electedInPrimary,
                 rejectedInPrimary,
-                runnningInGeneral,
+                runningInGeneral,
                 electedInGeneral,
                 rejectedInGeneral,
                 campaignEnded,
@@ -525,7 +525,6 @@
                 </AnimatedCheckbox>
             </div>
         </div>
-        
         <div class="two_columns_checkbox">
             <div class="checkbox_column">
                 <AnimatedCheckbox bind:checked={electedInGeneralChecked}>

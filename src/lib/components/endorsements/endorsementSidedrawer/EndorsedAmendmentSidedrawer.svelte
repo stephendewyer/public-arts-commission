@@ -16,16 +16,12 @@
     let URLPathName: string = "";
 
     $: if ($EndorsedAmendmentSelectedStore) {
-
         URLPathName = $page.url.pathname;
-
     };
 
     const closeClickHandler = () => {
-
         $EndorsedAmendmentOpenStore = false;
         $EndorsedAmendmentSelectedStore = null;
-
     };
 
     let rawElectionDate: Date | string = "";
