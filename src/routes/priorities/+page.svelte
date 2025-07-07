@@ -891,6 +891,11 @@
                             </h3>
                         </li>
                         <li class="priority_heading">
+                            <h3>
+                                A tax code that eliminates billionaires, who use their vast wealth to overthrow our democracy by oligarchy
+                            </h3>
+                        </li>
+                        <li class="priority_heading">
                             <PriorityAccordion>
                                 <span slot="head">
                                     A fairer economy that includes opportunities for everyone, including artists, to live a prosperous life            
@@ -902,9 +907,6 @@
                                     <ol>
                                         <li>
                                             Make the wealthy pay their fair share in taxes;
-                                        </li>
-                                        <li>
-                                            Change the tax code to eliminate the existance of billionaires, who use their vast wealth to overthrow our democracy by oligarchy;
                                         </li>
                                         <li>
                                             Re-enact the Glass-Steagall Act of 1933;
