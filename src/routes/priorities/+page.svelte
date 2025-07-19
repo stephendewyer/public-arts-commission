@@ -1110,6 +1110,11 @@
                                 </div>
                             </PriorityAccordion>
                         </li>
+                        <li class="priority_heading">
+                            <h3>
+                                Increase pay for teachers to levels commensurate with their responsibilities and abilities
+                            </h3>
+                        </li>
                     </ol>
                 </section>
             </IntersectionObserver>
