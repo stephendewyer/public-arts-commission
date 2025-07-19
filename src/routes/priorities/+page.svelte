@@ -1136,6 +1136,49 @@
                                 Medicare for all
                             </h3>
                         </li>
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    End the opioid epidemic that is killing nearly 100,000 U.S. citizens each year and destroying communities                               </span>
+                                <div slot="details">
+                                    Deaths from opioids in the U.S. grew exponentially since 2013.  Men and, in particular, young (military age) men are more than twice as likely to die from opioids than women.  As a result, average life expectancies for men in the U.S. has been declining for the first time in decades, resulting in overall average life expectancy declines in the U.S.  The economic losses are over a trillion dollars as a result of the opioid epidemic.  
+                                    <br/><br/>
+                                    Adversaries of democracy, most notably China, have been using Fentanyl as a biological weapon to weaken the United States.  In 2023, approximately 72,776 people died from a drug overdose involving fentanyl in the United States.  China and increasingly India produce the vast majority of precursor chemicals used to make Fentanyl.  The precursor chemicals are sent to Mexico, where the Mexican cartels make Fentanyl to distribute into the United States.  
+                                    <br/><br/>
+                                    According to a 2024 U.S. House investigation into The People’s Republic of China’s role in the Fentanyl crisis, the PRC has been supporting the flow of fentanyl into the United States in a number of ways including:
+                                    <ol>
+                                        <li>
+                                            Directly subsidizing the manufacturing and export of illicit fentanyl materials and other synthetic narcotics through tax rebates
+                                        </li>
+                                        <li>
+                                            Giving monetary grants and awards to companies openly trafficking illicit fentanyl materials and other synthetic narcotics
+                                        </li>
+                                        <li>
+                                            Holding ownership interest in several PRC companies tied to drug trafficking
+                                        </li>
+                                        <li>
+                                            Failing to prosecute fentanyl and precursor manufacturers
+                                        </li>
+                                        <li>
+                                            Allowing the open sale of fentanyl precursors and other illicit materials on the extensively monitored and controlled PRC internet
+                                        </li>
+                                        <li>
+                                            Censoring content about domestic drug sales, but leaving export-focused narcotics content untouched
+                                        </li>
+                                        <li>
+                                            Strategically and economically benefiting from the fentanyl crisis
+                                        </li>
+                                    </ol>
+                                    Clearly, the PRC is using Fentanyl as a weapon of war.  The U.S. must use an all-of-government approach to fighting the opioid epidemic.  This is not something just the Health Department can handle.
+                                    <br /><br />
+                                    To fight the supply side, the U.S. must hold both state and non-state actors accountable.  Tariffs are an effective tool in holding states accountable for flow of opioids into the U.S.  We must face the facts that NAFTA (North American Free Trade Agreement) played a large role in propelling the Mexican cartels to power.  In addition to holding the Mexican government accountable for complicity in the Mexican drug cartels power gains, we must also end free trade agreements that led to the open borders that the cartels exploit.  We must also hold China and India accountable for sending precursor Fentanyl chemicals into the United States.
+                                    <br /><br />
+                                    On the demand side, the U.S. can fight the opioid epidemic by first and most importantly working to eliminate the reasons behind the “deaths of despair” that include trauma most frequently born from economic hardship.  Second, the U.S. must invest in prevention and treatment of opioid addiction.  We need to stop medical doctors from overly prescribing opioids.  We need to invest in public education and awareness about the dangers of opioids.  We need to make life-saving Naloxone more readily available to fight opioid overdoses.  We need to treat opioid addiction as a disease instead of a moral failing.  Medical insurance needs to cover treatment for opioids. 
+                                    <br /><br />
+                                    By fighting both the supply and demand side of the opioid epidemic, we can build a stronger and more resilient democracy.  
+                                </div>
+                            </PriorityAccordion>
+                        </li>
                     </ol>
                 </section>
             </IntersectionObserver>
