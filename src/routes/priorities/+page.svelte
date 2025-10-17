@@ -86,7 +86,7 @@
 
     let pageNavTabsScrollableElement: HTMLElement;
 
-    $: console.log(currentStickyPosition);
+    // $: console.log(currentStickyPosition);
 
     onMount(() => {
 
@@ -1101,11 +1101,11 @@
                                 </span>
                                 <div slot="details">
                                     <p>
-                                        Quality arts education for everyone is fundamental to developing the understanding of how we see ourselves and the things we do through different perspectives. Everyone should have the right to a quality arts education from kindergarten to higher education.<br /><br />
+                                        Arts education programs in schools are essential to building an innovative workforce and vibrant democracy.  There's a reason why countries that focus only on STEM (science, technology, English and math) instead of STEAM (science, technology, English, art and math) in schools don't innovate.  Quality arts education for everyone is fundamental to developing the understanding of how we see ourselves and the things we do through different perspectives. Everyone should have the right to a quality arts education from kindergarten to higher education.<br /><br />
 
                                         Quality art education programs allow greater social mobility within the field of art, which is necessary for greater equality and diversity. The benefits of an arts education not only help prepare future artists, but also improve performance of students across disciplines.<br /><br />
 
-                                        Art research and teaching at public institutions of education is necessary to advance art for future generations in a just and equitable way. Public art benefits by the advancement of the knowledge of art. To advance our knowledge of art, we need to invest in quality arts education programs for all.
+                                        Art education at public educational institutions is necessary to advance art for future generations in a just and equitable way. Public art benefits by the advancement of the knowledge of art. To advance our knowledge of art, we need to invest in quality arts education programs for all.
                                     </p>
                                 </div>
                             </PriorityAccordion>
@@ -1132,14 +1132,30 @@
                     <h2 class="priorities_section_heading">health</h2>
                     <ol class="category_priorities">
                         <li class="priority_heading">
-                            <h3>
-                                Medicare for all
-                            </h3>
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Enact Medicare for all                            
+                                </span>
+                                <div slot="details">
+                                    Healthcare is a human right.  No one should have to choose between receiving life-saving healthcare and paying bills.  The for-profit medical system in the United States has created an incredibly costly and broken system of healthcare.  About one-fifth of total spending in the U.S. economy is spent on healthcare, while the U.S. has some of the worst health outcomes.  Enacting Medicare for all would help the U.S. focus on improving healthcare outcomes while cutting inefficiences like private healthcare insurance companies.
+                                </div>
+                            </PriorityAccordion>
                         </li>
                         <li class="priority_heading">
                             <PriorityAccordion>
                                 <span slot="head">
-                                    End the opioid epidemic that is killing nearly 100,000 U.S. citizens each year and destroying communities                               </span>
+                                    Lift the cap on residencies for medical doctors to allow supply of doctors to meet increasing demand                          
+                                </span>
+                                <div slot="details">
+                                    In the U.S., hospitals use Medicare funds to pay for medical residencies.  In 1997, Congress passed and the President signed into law the Balanced Budget Act that capped the number of Medicare-funded graduate medical education (GME) residency slots at each hospital to 1996 levels.  In the face of increasing demand for healthcare in the United States, the cap has created a medical doctor shortage.  We need to lift the cap to keep pace with demand for healthcare in the United States, which would lower healthcare costs.
+                                </div>
+                            </PriorityAccordion>
+                        </li>
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    End the opioid epidemic that is killing nearly 100,000 U.S. citizens each year and destroying communities                               
+                                </span>
                                 <div slot="details">
                                     Deaths from opioids in the U.S. grew exponentially since 2013.  Men and, in particular, young (military age) men are more than twice as likely to die from opioids than women.  As a result, average life expectancy for men in the U.S. has been declining for the first time in decades, resulting in overall average life expectancy declines in the U.S.  The economic losses are over a trillion dollars as a result of the opioid epidemic.  
                                     <br/><br/>
