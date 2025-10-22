@@ -4,6 +4,7 @@
     import { onMount } from 'svelte';
     import IntersectionObserver from "svelte-intersection-observer";
     import Arrow from "$lib/images/icons/arrow.svg?raw";
+    import ArtistsUnionWorkersPicketers from "$lib/images/priorities/artists-union-workers-picketing.jpg";
 
     let stickyNavTabs: HTMLElement;
 
@@ -17,17 +18,11 @@
 
     $: currentStickyPosition;
 
-    // $: console.log("currentStickyPosition: ", currentStickyPosition);
-
-    // $: console.log("y: ", y);
-
     $: if (y >= currentStickyPosition) {
         NavTabsSticky = true;
     } else {
         NavTabsSticky = false;
     };
-
-    // $: console.log("nav tabs sticky: ", NavTabsSticky);
 
     let pageNavTabsHeight: number = 0;
     $: pageNavTabsHeight;
@@ -430,12 +425,23 @@
     on:resize={handleWindowResize}
 />
 <div class="page_container">
-    <h1 
-        bind:this={prioritiesHeadingElement}
+    <div 
         class="priorities_heading"
+        bind:this={prioritiesHeadingElement}
     >
-        our priorities guide all our operations
-    </h1>
+        <figure class="priorities_heading_image_container">
+            <img 
+                src={ArtistsUnionWorkersPicketers} 
+                alt="Artists' Union workers picketing in 1930s" 
+            />
+            <figcaption class="banner_figcaption">
+                Artists' Union workers picketing in the 1930s for jobs for unemployed artists.
+            </figcaption>
+        </figure>
+        <h1 class="priorities_heading_text">
+            Our priorities guide our work to realize a reimagined American Dream fueled by artists who have a political platform and seat in government.
+        </h1>
+    </div>
     <div class="priorities">
         <div
             id="priorities_tabs_container"
@@ -1293,7 +1299,33 @@
     }
 
     .priorities_heading {
-        padding: 0 1rem 1rem 1rem;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .priorities_heading_image_container {
+        width: 50%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .priorities_heading_image_container > img {
+        object-fit: cover;
+        height: 40rem;
+        width: 100%;
+    }
+
+    .banner_figcaption {
+        padding: 1rem;
+    }
+
+    .priorities_heading_text {
+        padding: 1rem;
+        width: 50%;
+        max-width: 80rem;
+        margin: 0 auto;
     }
 
     .priorities_section_heading {
@@ -1557,6 +1589,23 @@
     }
 
     @media (max-width: 720px) {
+
+        .priorities_heading {
+            flex-direction: column;
+        }
+
+        .priorities_heading_image_container {
+            width: 100%;
+        }
+
+        .priorities_heading_image_container  > img {
+            height: 20rem;
+        }
+
+        .priorities_heading_text {
+            width: 100%;
+            padding: 0 1rem 1rem 1rem;
+        }
 
         .priorities_section_heading {
             font-size: 2rem;
