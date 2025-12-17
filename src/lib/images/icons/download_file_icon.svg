@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 298.01 409.39">
+  <defs>
+    <style>
+      .download_file_icon {
+        fill: inherit;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <path class="download_file_icon" d="m149.01,318.64l49.44-44.7v-20.46l-26.74,24.17V0h-45.38v277.68l-26.76-24.19v20.46l49.44,44.7Zm-.15-298.03l.15-.13.15.13h-.31Z"/>
+  <rect class="download_file_icon" x="126.32" y="237.69" width="45.38" height="298.01" transform="translate(-237.69 535.71) rotate(-90)"/>
+</svg>

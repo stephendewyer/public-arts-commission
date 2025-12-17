@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 332.93 332.93">
+  <defs>
+    <style>
+      .triangle {
+        fill: #314659;
+        stroke-width: 0px;
+      }
+    </style>
+  </defs>
+  <polygon class="triangle" points="332.93 .02 332.93 332.93 0 0 332.93 .02"/>
+</svg>

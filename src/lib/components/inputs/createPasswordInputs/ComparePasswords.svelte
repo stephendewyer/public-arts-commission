@@ -1,0 +1,167 @@
+<script lang="ts">
+    import PasswordInput from './PasswordInput.svelte';
+    import ReenterPasswordInput from './ReenterPasswordInput.svelte';
+    import PasswordsMismatchMessage from '$lib/components/errorMessages/PasswordsMismatchMessage.svelte';
+    import PasswordsMatchMessage from '$lib/components/successMessages/PasswordsMatchMessage.svelte';
+
+    export let passwordInputValue: string = "";
+    export let passwordReenteredInputValue: string = "";
+    export let passwordIsValid: boolean = true;
+    export let passwordReenteredIsValid: boolean = true;
+    let passwordInputTouched: boolean = false;
+    let passwordReenteredInputTouched: boolean = false;
+
+    export let passwordsMatch: boolean | null = null;
+    export let missingPassword: boolean = false;
+
+    let passwordReenteredInputValueLength: number = 0;
+    
+    let parsedPassword: string = "";
+
+    $: parsedPassword = passwordInputValue.substring(0, passwordReenteredInputValueLength);
+
+    let parsedReenteredPassword: string = "";
+    
+    $: parsedReenteredPassword = passwordReenteredInputValue.substring(0, passwordInputValue.length);
+
+    $: passwordReenteredInputValueLength = passwordReenteredInputValue.length;
+
+    let passwordInputValueChanged: boolean = false;
+
+    $: if (passwordInputValueChanged) {
+        
+        if (
+            !passwordReenteredInputTouched &&
+            passwordReenteredInputValue === ""
+        ) {
+            passwordsMatch = null;
+            missingPassword = false;
+        } else if (
+            (passwordReenteredInputTouched || passwordInputTouched) &&
+            passwordInputValue === "" &&
+            passwordReenteredInputValue === ""
+        ) {
+            missingPassword = true;
+            passwordsMatch = null;
+        } else if (
+            parsedPassword !== passwordReenteredInputValue
+        ) {
+            passwordsMatch = false;
+            missingPassword = false;
+        } else if (
+            (parsedPassword === passwordReenteredInputValue) &&
+            (passwordInputValue.length > passwordReenteredInputValueLength)
+        ) {
+            passwordsMatch = null;
+            missingPassword = false;
+        } else if (
+            (passwordInputValue.length <= passwordReenteredInputValueLength) &&
+            (parsedReenteredPassword !== passwordInputValue)
+        ) {
+            passwordsMatch = false;
+            missingPassword = false;
+        } else if (
+            (passwordReenteredInputValue === passwordInputValue) && 
+            (passwordInputValue !== "") && 
+            (passwordReenteredInputValue !== "")
+        ) {
+            missingPassword = false;
+            passwordsMatch = true;
+        };
+        passwordInputValueChanged = false;
+    };
+
+    let passwordReenteredInputValueChanged: boolean = false;
+
+    $: if (passwordReenteredInputValueChanged) {
+
+        if (passwordInputValue === "" && passwordReenteredInputValue === "") {
+            passwordsMatch = null;
+            missingPassword = true;
+        } else if (passwordInputValue === "" && passwordReenteredInputValue !== "") {
+            passwordsMatch = false;
+            missingPassword = false;
+        } else if ((passwordInputValue.length < passwordReenteredInputValueLength)) {
+            passwordsMatch = false;
+            missingPassword = false;
+        } else if (
+            (passwordInputValue.length > passwordReenteredInputValueLength) && 
+            (parsedPassword === passwordReenteredInputValue)
+        ) {
+            passwordsMatch = null;
+            missingPassword = false;
+        } else if (
+            (passwordInputValue.length >= passwordReenteredInputValueLength) && 
+            (parsedPassword !== passwordReenteredInputValue)
+        ) {
+            passwordsMatch = false;
+            missingPassword = false;
+        } else if (
+            (passwordReenteredInputValue === passwordInputValue) && 
+            (passwordInputValue !== "") && 
+            (passwordReenteredInputValue !== "")
+        ) {
+            missingPassword = false;
+            passwordsMatch = true;
+        };
+        passwordReenteredInputValueChanged = false;
+    };
+
+</script>
+<div class="password_compare">
+    <div class="password_inputs">
+        <div class="password_input">
+            <PasswordInput 
+                isValid={passwordIsValid}
+                placeholder="myPassword"
+                inputID="voter_password"
+                inputName="voter_password"
+                inputLabel={true}
+                bind:value={passwordInputValue}
+                required={true}
+                passwordInputErrorMessage="password required"
+                passwordsMatch={passwordsMatch}
+                bind:inputValueChanged={passwordInputValueChanged}
+                bind:passwordInputTouched={passwordInputTouched}
+            >
+                <slot name="password_label" />
+            </PasswordInput>
+        </div>
+        <div class="password_input">
+            <ReenterPasswordInput 
+                isValid={passwordReenteredIsValid}
+                placeholder="myPassword"
+                inputID="voter_password_reentered"
+                inputName="voter_password_reentered"
+                inputLabel={true}
+                bind:value={passwordReenteredInputValue}
+                required={true}
+                passwordInputErrorMessage="re-entered password required"
+                passwordsMatch={passwordsMatch}
+                bind:inputValueChanged={passwordReenteredInputValueChanged}
+                bind:passwordInputTouched={passwordReenteredInputTouched}
+            >
+                <slot name="re-entered_password_label" />
+            </ReenterPasswordInput>
+        </div>
+    </div>
+    <div class="passwords_check_container">
+        <div class="passwords_check">
+                {#if (passwordsMatch === true)}
+                    <PasswordsMatchMessage>passwords match!</PasswordsMatchMessage>
+                {:else if (passwordsMatch === null)}
+                    <p></p>
+                {:else if (passwordsMatch === false)}
+                    <PasswordsMismatchMessage>passwords do not match!</PasswordsMismatchMessage>
+                {/if}     
+        </div>
+    </div>
+</div>
+
+<style>
+
+    .password_input {
+        padding: 0.5rem 0;
+    }
+
+</style>

@@ -1,0 +1,14 @@
+[
+    {
+        "name": "federal"
+    },
+    {
+        "name": "state"
+    },
+    {
+        "name": "county"
+    },
+    {
+        "name": "city"
+    }
+]
