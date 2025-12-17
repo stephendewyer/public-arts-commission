@@ -3,7 +3,6 @@
 import { verifyAccessToken } from "$lib/server/authentication/auth";
 import { redirect } from '@sveltejs/kit';
 
-
 export async function handle({ event, resolve }) {
 
     const token = event.cookies.get("session");
