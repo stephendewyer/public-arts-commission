@@ -9,7 +9,7 @@
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
   	import { onMount } from 'svelte';
   	import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
@@ -19,10 +19,6 @@
 	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
 	import CampaignHighlights from '$lib/components/sliders/CampaignHighlights.svelte';
   	import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
-
-	export let data;
-
-	$: data;
 
 	let URLPathName: string = page.url.pathname;
 
@@ -85,26 +81,26 @@
 
 	});
 
-	let searchParams: URLSearchParams;
-	
-	$: searchParams = new URLSearchParams(page.url.search);
+	afterNavigate(() => {
+		let searchParams: URLSearchParams = new URLSearchParams(page.url.search);
 
-    $: if (searchParams.get("action_ID") !== null) {
+		if (searchParams.get("action_ID") !== null) {
 
-        const actionID: string | null = searchParams.get("action_ID");
+			const actionID: string | null = searchParams.get("action_ID");
 
-        endorsedActions.filter((action, i) => {
+			endorsedActions.filter((action, i) => {
 
-            if (action.action_ID.toString() === actionID) {
+				if (action.action_ID.toString() === actionID) {
 
-                $EndorsedActionSelectedStore = action;
-                $EndorsedActionOpenStore = true;
+					$EndorsedActionSelectedStore = action;
+					$EndorsedActionOpenStore = true;
 
-            };
+				};
 
-        });
+			});
 
-    };
+		};
+	});	
 	
 	let activeLoginTab: number;
 
