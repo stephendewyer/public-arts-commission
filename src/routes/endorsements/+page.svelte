@@ -52,6 +52,10 @@
 		state: string;
 		zipcode: string;
 		country: string;
+		USCongressionalDistrict: string;
+		StateSenateDistrict: string;
+		StateHouseDistrict: string;
+		CityWard: string;
 	};
 
 	const location: Location = {
@@ -64,7 +68,11 @@
 		county: "",
 		state: "",
 		zipcode: "",
-		country: ""
+		country: "",
+		USCongressionalDistrict: "",
+		StateSenateDistrict: "",
+		StateHouseDistrict: "",
+		CityWard: ""
 	};
 
 	let name: string = "";
@@ -102,6 +110,27 @@
 
 	let pendingReverseGeocode: boolean | null = null;
 
+	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
+		try {
+			const response = await fetch("api/getUSCongressionalDistrict", {
+				method: "POST",
+				body: JSON.stringify({
+					longitude, 
+					latitude
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				}
+			});
+			if (response.ok) {
+				location.USCongressionalDistrict = await response.json();
+			};
+		} catch(error) {
+			console.log(error);
+		};
+				
+	};
+
 	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string | undefined> {
 
 		const response = await fetch("/api/reverseGeocode", {
@@ -135,6 +164,10 @@
 			location.city = reversedGeolocation.addresses[0].address.municipality;
 			location.street= reversedGeolocation.addresses[0].address.street;
 			location.streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
+
+			// get U.S. Congressional District, State Senate District, State House District and City Ward data
+
+			getUSCongressionalDistrict(latitude, longitude);
 
 			// clear categories data
 			filteredEndorsedCandidates.federal = [];
@@ -526,6 +559,10 @@
 		location.streetNumber = "";
 		location.streetPreDir = "";
 		location.county = "";
+		location.USCongressionalDistrict = "";
+		location.StateSenateDistrict = "";
+		location.StateHouseDistrict = "";
+		location.CityWard = "";
 		name = "";
 
 		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
@@ -728,6 +765,10 @@
 			location.street= "";
 			location.streetNumber = "";
 			location.county = "";
+			location.USCongressionalDistrict = "";
+			location.StateSenateDistrict = "";
+			location.StateHouseDistrict = "";
+			location.CityWard = "";
 			name = "";
 			stateValueArray = [];
 			stateValueFirstWord = "";
@@ -1524,6 +1565,12 @@
 									</div>
 								</Checkbox>
 							</div>
+							{#if location.USCongressionalDistrict}
+							<p style="font-size: 1rem">
+								<span>U.S. Congressional District: </span>
+								<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
+							</p>
+						{/if}
 							<div class="year_input_container">
 								<SelectSearchInput 
 									options={Years}
@@ -1625,6 +1672,12 @@
 								</div>
 							</Checkbox>
 						</div>
+						{#if location.USCongressionalDistrict}
+							<p style="font-size: 1rem">
+								<span>U.S. Congressional District: </span>
+								<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
+							</p>
+						{/if}
 						<div class="year_input_container">
 							<SelectSearchInput 
 								options={Years}
