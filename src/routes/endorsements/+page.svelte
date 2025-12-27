@@ -740,8 +740,6 @@
 				// if the first entered value by user is a letter, filter actions by state, city and name
 				// check if search input value includes state
 				// user is not using geocoordinates
-				location.longitude = null;
-				location.latitude = null;
 				States.filter((stateObj) => {
 
 					if (
