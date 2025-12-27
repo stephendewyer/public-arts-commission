@@ -5,8 +5,6 @@ export async function POST({request}) {
     if (request.method !== 'POST') {
         return new Response(JSON.stringify({error: "request method is incorrect"}), {status: 422});
     };
-
-    console.log("reverseGeocode!")
   
     const data = await request.json();
   
@@ -18,7 +16,7 @@ export async function POST({request}) {
       !longitude 
     ) {
       return new Response(JSON.stringify({error: "missing latitude and/or longitude data"}), {status: 422});
-    }
+    };
 
     const geoApiUrl = `https://api.tomtom.com/search/2/reverseGeocode/${latitude},${longitude}.json?key=${TOMTOMAPIKey}&radius=100`;
     
@@ -36,6 +34,6 @@ export async function POST({request}) {
 
         return new Response(JSON.stringify({error: "failed to fetch data from geoApiUrl"}), {status: 422});
 
-    }
+    };
   
-  }
+  };

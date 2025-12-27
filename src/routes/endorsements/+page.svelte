@@ -110,7 +110,29 @@
 
 	let pendingReverseGeocode: boolean | null = null;
 
+	let pendingUSCongressionalDistrict: boolean | null = null;
+
+	// after getUSCongressionalDistrict
+	let getUSCongressionalDistrictResponse: ResponseObj = {
+        success: "",
+        error: "",
+        status: null
+    };
+
+    $: if((getUSCongressionalDistrictResponse.error)) {
+        setTimeout(() => {
+            getUSCongressionalDistrictResponse.success = "";
+            getUSCongressionalDistrictResponse.error = "";
+            status: null;
+        }, 4000)
+    };
+
+	$: if((getUSCongressionalDistrictResponse.success) || (getUSCongressionalDistrictResponse.error)) {
+        pendingUSCongressionalDistrict = false;
+    };
+
 	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
+		pendingUSCongressionalDistrict = true;
 		try {
 			const response = await fetch("api/getUSCongressionalDistrict", {
 				method: "POST",
@@ -122,13 +144,13 @@
 					"Content-Type": "application/json",
 				}
 			});
-			if (response.ok) {
-				location.USCongressionalDistrict = await response.json();
-			};
+			getUSCongressionalDistrictResponse = await response.json();
+			if (getUSCongressionalDistrictResponse.success) {
+				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success;
+			};	
 		} catch(error) {
 			console.log(error);
 		};
-				
 	};
 
 	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string | undefined> {
@@ -536,6 +558,34 @@
 
 	};
 
+	const getGeoCoordinates = async (location: Location) => {
+		let geoCoordinates;
+		try {
+			const response = await fetch("/api/getGeoCoordinates", {
+				method: 'POST',
+				body: JSON.stringify({
+					country: location.country,
+					zipcode: location.zipcode,
+					state: location.state,
+					city: location.city,
+					street: location.street,
+					streetNumber: location.streetNumber,
+					streetPreDir: location.streetPreDir
+				}),
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+			if (response.ok) {
+				geoCoordinates = await response.json();
+				location.latitude = geoCoordinates.y;
+				location.longitude = geoCoordinates.x;
+			};
+		} catch(error) {
+			console.log(error);
+		};
+	};
+
 	// handle changes to searchbar input value
 
 	let statesWithCity: string[] = [];
@@ -550,7 +600,6 @@
 
 		let stateName: string = "";
 		let stateAbbreviation: string = "";
-
 		location.country = "";
 		location.zipcode = "";
 		location.state = "";
@@ -613,6 +662,9 @@
 			// if user has entered only numbers, filter actions using zipcode
 
 			if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+				// user is not using geocoordinates
+				location.longitude = null;
+				location.latitude = null;
 
 				// check if entered value matches zipcode in USCities
 
@@ -661,12 +713,35 @@
 
 				location.county = USCities.find((city) => city.zip_code.toString() === location.zipcode)?.county;
 
-				// use civic data API to get representative districts or wards in federal, state and city levels
+				// get the latitude and longitude using street address
+				// get the latitude and longitude only if street number, street, city and state are entered
+
+				if (
+					location.streetNumber && 
+					location.street && 
+					location.city && 
+					location.state
+				) {
+					getGeoCoordinates(location);
+
+					if (location.longitude && location.latitude) {
+						getUSCongressionalDistrict(location.latitude, location.longitude);
+					};
+				} else {
+					location.USCongressionalDistrict = "";
+				};				
+
+				// get U.S. Congressional District, State Senate District, State House District and City Ward data
+
+				// getUSCongressionalDistrict(latitude, longitude);
 
 			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
 				// if the first entered value by user is a letter, filter actions by state, city and name
 				// check if search input value includes state
+				// user is not using geocoordinates
+				location.longitude = null;
+				location.latitude = null;
 				States.filter((stateObj) => {
 
 					if (
@@ -1565,12 +1640,16 @@
 									</div>
 								</Checkbox>
 							</div>
-							{#if location.USCongressionalDistrict}
-							<p style="font-size: 1rem">
-								<span>U.S. Congressional District: </span>
-								<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
-							</p>
-						{/if}
+							{#if pendingUSCongressionalDistrict}
+								<p style="font-size: 1rem">getting U.S. Congressional District</p>
+							{:else if getUSCongressionalDistrictResponse.error}
+								<p style="font-size: 1rem">failed to get U.S. Congressional District</p>
+							{:else if location.USCongressionalDistrict}
+								<p style="font-size: 1rem">
+									<span>U.S. Congressional District: </span>
+									<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
+								</p>
+							{/if}
 							<div class="year_input_container">
 								<SelectSearchInput 
 									options={Years}
@@ -1672,7 +1751,11 @@
 								</div>
 							</Checkbox>
 						</div>
-						{#if location.USCongressionalDistrict}
+						{#if pendingUSCongressionalDistrict}
+							<p style="font-size: 1rem">getting U.S. Congressional District</p>
+						{:else if getUSCongressionalDistrictResponse.error}
+							<p style="font-size: 1rem">failed to get U.S. Congressional District</p>
+						{:else if location.USCongressionalDistrict}
 							<p style="font-size: 1rem">
 								<span>U.S. Congressional District: </span>
 								<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>

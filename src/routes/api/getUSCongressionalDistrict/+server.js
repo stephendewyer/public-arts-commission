@@ -17,8 +17,18 @@ export async function POST({request}) {
     const districtResponse = await fetch(districtUrl);
     const districtData = await districtResponse.json();
 
-    const USCongressionalDistrict = districtData.result.geographies['119th Congressional Districts'][0].BASENAME;
+    // if latitude and longitude are not in the US, return user is not in the US
 
-    return new Response(JSON.stringify(USCongressionalDistrict), {status: 200});
+    const state = districtData.result.geographies[`119th Congressional Districts`][0].STATE;
+
+    if (!state) {
+
+        return new Response(JSON.stringify({error: "coordinates come from outside United States"}), {status: 400})
+
+    } else {
+        // will need to update Congress session after session
+        const USCongressionalDistrict = districtData.result.geographies[`119th Congressional Districts`][0].BASENAME;
+        return new Response(JSON.stringify({success: USCongressionalDistrict}), {status: 200});
+    };    
 
 };
