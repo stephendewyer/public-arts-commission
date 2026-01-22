@@ -16,6 +16,10 @@
     
     let URLPathName: string = page.url.pathname;
 
+    $: if ($TeamMemberSelectedStore) {
+        URLPathName = page.url.pathname;
+    };
+
     const teamMembers: TeamMember[] = TeamMemberData;
 
     let memberCardSelectId: number | null = null;

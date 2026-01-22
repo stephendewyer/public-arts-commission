@@ -1484,6 +1484,12 @@
         margin: 1rem 0;
     }
 
+    .banner_figcaption {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.65);
+        bottom: 0;
+    }
+
     @media (max-width: 1440px) {
 
         .priorities_section_heading {

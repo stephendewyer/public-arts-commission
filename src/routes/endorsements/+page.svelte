@@ -2,6 +2,7 @@
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import { onMount, onDestroy, afterUpdate } from 'svelte';
+	import { afterNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -124,7 +125,7 @@
             getUSCongressionalDistrictResponse.success = "";
             getUSCongressionalDistrictResponse.error = "";
             status: null;
-        }, 4000)
+        }, 4000);
     };
 
 	$: if((getUSCongressionalDistrictResponse.success) || (getUSCongressionalDistrictResponse.error)) {
@@ -1014,7 +1015,7 @@
 		};
 	};
 
-	afterUpdate(() => {
+	afterNavigate(() => {
 		HandleOpenSidedrawer();
 	});
 
@@ -1370,6 +1371,7 @@
 	let clearFiltersClicked: boolean = false;
 
 	$: if (clearFiltersClicked) {
+		page.url.pathname = "/endorsements";
 		useCurrentLocationChecked = false;
 		searchByStreetAddressInputValue = "";
 		yearInputValue = "";
