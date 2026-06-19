@@ -40,7 +40,7 @@
     <div class="image_container">
         <img src={endorsedActionData.image_URL} alt={reverseHtmlEntities(endorsedActionData.alt_text)} />
     </div>
-    <div class="endorsement_card_overlay" />
+    <div class="endorsement_card_overlay"></div>
     <div 
         class="meatballs_container"
         style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }

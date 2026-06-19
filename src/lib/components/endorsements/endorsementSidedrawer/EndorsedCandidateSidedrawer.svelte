@@ -75,6 +75,7 @@
         if ($EndorsedCandidateSelectedStore?.campaign_ended === 1) {
             candidateStatus = [ ...candidateStatus, " campaign ended"];
         };
+        
     })
 
     $: if (!$EndorsedCandidateOpenStore) {

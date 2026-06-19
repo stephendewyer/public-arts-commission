@@ -2,7 +2,7 @@
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import SearchInput from '$lib/components/inputs/SearchInput.svelte';
     import { onMount, onDestroy, afterUpdate } from 'svelte';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import TabPanel from '$lib/components/tabPanels/Panel.svelte';
@@ -1044,6 +1044,21 @@
 		componentDidMount = false;
 	};
 
+	// handle open side drawer on page mount
+
+	$: if (
+		componentDidMount && 
+		!searchByStreetAddressInputValue && 
+		!useCurrentLocationChecked && 
+		getEndorsedReferendumsDataSuccess && 
+		getEndorsedAmendmentsDataSuccess &&
+		getEndorsedCandidatesDataSuccess &&
+		getEndorsedLegislationDataSuccess
+	) {
+		HandleOpenSidedrawer();
+		componentDidMount = false;
+	};
+
 	const selectYearInputValueChangeHandler = () => {
 
 		// reset current pagination page for each category
@@ -1372,6 +1387,7 @@
 
 	$: if (clearFiltersClicked) {
 		page.url.pathname = "/endorsements";
+		goto(page.url.pathname);
 		useCurrentLocationChecked = false;
 		searchByStreetAddressInputValue = "";
 		yearInputValue = "";
