@@ -6,6 +6,7 @@
     import PreviousButton from "../buttons/PreviousButton.svelte";
     import LeightonRockafellowJrProfile from "$lib/images/sliders/highlighted_campaigns/Lieghton_Rockafellow_Jr.jpg";
     import JuliaSalazarProfile from "$lib/images/sliders/highlighted_campaigns/Julia_Salazar.jpg";
+    import DiopHarrisProfile from "$lib/images/sliders/highlighted_campaigns/Diop_Harris.jpg";
     import { onDestroy } from 'svelte';
     
     interface Slide {
@@ -21,6 +22,15 @@
     let testimonials: Slide[] = [
         {
             index: 1,
+            imageSrc: DiopHarrisProfile,
+            alt: "Diop Harris profile",
+            name: "Diop Harris",
+            campaign: "candidate for U.S. Representative from Michigan CD 4",
+            paragraph: "Public art should not only be reserved for downtown districts, wealthy communities, or institutions with large budgets. As a candidate for Congress, I believe federal investment can help expand access to public art in rural communities, small towns, tribal communities, and working-class neighborhoods that are too often overlooked. I support strengthening federal arts funding and exploring a federal “Percent for Art” approach that dedicates a small portion of eligible federally funded construction and community development projects to public art, cultural interpretation, and placemaking efforts.",
+            date: "2026"
+        },
+        {
+            index: 2,
             imageSrc: LeightonRockafellowJrProfile,
             alt: "Leighton Rockafellow Jr. profile",
             name: "Leighton Rockafellow Jr.",
@@ -29,14 +39,14 @@
             date: "2025"
         },
         {
-            index: 2,
+            index: 3,
             imageSrc: JuliaSalazarProfile,
             alt: "Julia Salazar profile",
             name: "Julia Salazar",
             campaign: "candidate for New York State Senate District 18",
             paragraph: "Artists have always been there to chronicle political movements and moments of great upheaval.  Their work is no less important in the digital age.  It’s my honor to be supported by the Public Arts Commission and all artists who believe in aiding the fight for social justice with the power of art.",
             date: "2018"
-        }
+        },
     ];
 
     let emblaApi: EmblaCarouselType;
