@@ -1309,6 +1309,7 @@
         width: 50%;
         padding: 0;
         margin: 0;
+        position: relative;
     }
 
     .priorities_heading_image_container > img {
