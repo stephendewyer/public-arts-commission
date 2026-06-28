@@ -1,113 +1,152 @@
 <script lang="ts">
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    export let endorsedCandidateData: CandidateWithImage;
+    import { onMount } from "svelte";
+    import { fade } from "svelte/transition";
 
-    let candidateStatus: string[] = [];    
+    let { endorsedCandidateData }: { endorsedCandidateData: CandidateWithImage } = $props();
 
-    $: if (endorsedCandidateData) {
+    let ready = $state(false);
 
-        candidateStatus = [];
+    // runs automatically on the client after the component mounts
+    $effect(() => {
+        ready = true;
+    });
+
+    let candidateStatus: string[] = $state([]);
+
+    onMount(()=> {
 
         if (endorsedCandidateData.running_in_primary === 1) {
             candidateStatus = [ ...candidateStatus, " running in the primary"];
-        }
+        };
         
         if (endorsedCandidateData.elected_in_primary === 1) {
             candidateStatus = [ ...candidateStatus, " elected in the primary"];
-        }
+        };
         
         if (endorsedCandidateData.rejected_in_primary === 1) {
             candidateStatus = [ ...candidateStatus, " rejected in the primary"];
-        }
+        };
         
         if (endorsedCandidateData.running_in_general === 1) {
             candidateStatus = [ ...candidateStatus, " running in the general"];
-        }
+        };
         
         if (endorsedCandidateData.rejected_in_general === 1) {
             candidateStatus = [ ...candidateStatus, " rejected in the general"];
-        }
+        };
         
         if (endorsedCandidateData.elected_in_general === 1) {
             candidateStatus = [ ...candidateStatus, " elected in the general"];
-        }
+        };
 
         if (endorsedCandidateData.campaign_ended === 1) {
             candidateStatus = [ ...candidateStatus, " campaign ended"];
-        }
-    }
+        };
 
-    let primaryIsValid: boolean = true;
+    })
 
-    let primaryElectionDate: Date | string;
+    let primaryIsValid: boolean = $state(true)
 
-    $: rawPrimaryElectionDate = new Date(endorsedCandidateData.election_date_primary);
+    let primaryElectionDate: Date | string = $state(new Date());
+    
+    let rawPrimaryElectionDate: Date = new Date();
+
+    onMount(() => {
+        rawPrimaryElectionDate = new Date(endorsedCandidateData.election_date_primary);
+    });
 
     let blankDate = new Date("2016-01-01T06:00:00.000Z");
-    
-    $: if (rawPrimaryElectionDate < blankDate) {
-        primaryElectionDate = "";
-        primaryIsValid = false;
-    } else {
-        primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
-    }
 
-    let generalElectionDate: string = "";
+    onMount(() => {
+        if (rawPrimaryElectionDate < blankDate) {
+            primaryElectionDate = "";
+            primaryIsValid = false;
+        } else {
+            primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
+        }
+    });
+
+    let generalElectionDate: string = $state("");
 
     let rawGeneralElectionDate: Date;
 
-    $: rawGeneralElectionDate = new Date(endorsedCandidateData.election_date_general);
+    onMount(() => {
+        rawGeneralElectionDate = new Date(endorsedCandidateData.election_date_general);
+        generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
+    });
 
-    $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
-
-    let cardHovered: boolean = false;
+    let cardHovered: boolean = $state(false);
 
     const cardHoverHandler = () => {
         cardHovered = true;
-    }
+    };
 
     const cardExitHandler = () => {
         cardHovered = false;
-    }
+    };
 
 </script>
-<div 
-    tabindex={endorsedCandidateData.campaign_ID}
-    role="treeitem"
-    aria-selected={cardHovered}
-    on:focus={() => cardHoverHandler()}
-    on:blur={() => cardExitHandler()}
-    on:mouseenter={() => cardHoverHandler()}
-    on:mouseover={() => cardHoverHandler()}
-    on:mouseleave={() => cardExitHandler()}
-    on:mouseout={() => cardExitHandler()}
-    class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
->
-    <div class="image_container">
-        <img
-            src={endorsedCandidateData.image_URL} 
-            alt={reverseHtmlEntities(endorsedCandidateData.alt_text)} 
-        />
-    </div>
+{#if ready}
     <div 
-        class="meatballs_container"
-        style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        tabindex={endorsedCandidateData.campaign_ID}
+        role="treeitem"
+        aria-selected={cardHovered}
+        onfocus={() => cardHoverHandler()}
+        onblur={() => cardExitHandler()}
+        onmouseenter={() => cardHoverHandler()}
+        onmouseover={() => cardHoverHandler()}
+        onmouseleave={() => cardExitHandler()}
+        onmouseout={() => cardExitHandler()}
+        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+        in:fade={{ duration: 300 }}
     >
-        {@html MeatBalls}
+        <div class="image_container">
+            <img
+                src={endorsedCandidateData.image_URL} 
+                alt={reverseHtmlEntities(endorsedCandidateData.alt_text)} 
+            />
+        </div>
+        <div 
+            class="meatballs_container"
+            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        >
+            {@html MeatBalls}
+        </div>
+        <div class="card_info_container">
+            <h4 class="card_heading_01">
+                {reverseHtmlEntities(endorsedCandidateData.campaign_name)}
+            </h4>
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    electorate: 
+                </span>
+                {reverseHtmlEntities(endorsedCandidateData.electorate)}
+            </h5>
+            {#if (primaryIsValid)}
+                <h5 class="card_heading_02">
+                    <span class="data_category">
+                        primary election date: 
+                    </span>
+                    {primaryElectionDate}
+                </h5>
+            {/if}
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    general election date: 
+                </span>
+                {generalElectionDate}
+            </h5>
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    status:
+                </span>
+                {reverseHtmlEntities(candidateStatus.toString())}
+            </h5>
+        </div>
     </div>
-    <div class="card_info_container">
-        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedCandidateData.campaign_name)}</h4>
-        <h5 class="card_heading_02"><span class="data_category">electorate: </span>{reverseHtmlEntities(endorsedCandidateData.electorate)}</h5>
-        {#if (primaryIsValid)}
-            <h5 class="card_heading_02"><span class="data_category">primary election date: </span>{primaryElectionDate}</h5>
-        {/if}
-        <h5 class="card_heading_02"><span class="data_category">general election date: </span>{generalElectionDate}</h5>
-        <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {reverseHtmlEntities(candidateStatus.toString())}
-        </h5>
-    </div>
-</div>
+{/if}
 
 <style>
 

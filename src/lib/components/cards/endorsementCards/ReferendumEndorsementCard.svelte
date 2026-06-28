@@ -1,15 +1,22 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
+    import { onMount } from 'svelte';
+    import { fade } from 'svelte/transition';
 
-    export let endorsedReferendumData: ReferendumWithImage;
+    let { endorsedReferendumData }: { endorsedReferendumData: ReferendumWithImage } = $props();
 
-    let referendumStatus: string[] = [];
+    let ready = $state(false);
 
-    $: if (referendumStatus) {
+    // runs automatically on the client after the component mounts
+    $effect(() => {
+        ready = true;
+    });
 
-        referendumStatus = [];
+    let referendumStatus: string[] = $state([]);
 
+    onMount(() => {
+        
         if (endorsedReferendumData.elected === 1) {
 
             referendumStatus = [...referendumStatus, " elected by voters"];
@@ -27,18 +34,21 @@
             referendumStatus = [...referendumStatus, " pending election by voters"];
 
         };
-
-    };    
+    });
     
-    let rawElectionDate: Date;
+    let rawElectionDate: Date = $state(new Date());
 
-    $: rawElectionDate = new Date (endorsedReferendumData.election_date);
+    onMount(() => {
+        rawElectionDate = new Date (endorsedReferendumData.election_date);
+    });
 
-    let electionDate: string;
+    let electionDate: string = $state("");
 
-    $: electionDate = rawElectionDate.toUTCString().substring(0, 16);
+    onMount(() => {
+        electionDate = rawElectionDate.toUTCString().substring(0, 16);
+    });
 
-    let cardHovered: boolean = false;
+    let cardHovered: boolean = $state(false);
 
     const cardHoverHandler = () => {
 
@@ -53,59 +63,62 @@
     };
     
 </script>
-<div 
-    tabindex={endorsedReferendumData.referendum_ID}
-    role="treeitem"
-    aria-selected={cardHovered}
-    on:focus={() => cardHoverHandler()}
-    on:blur={() => cardExitHandler()}
-    on:mouseenter={() => cardHoverHandler()}
-    on:mouseover={() => cardHoverHandler()}
-    on:mouseleave={() => cardExitHandler()}
-    on:mouseout={() => cardExitHandler()}
-    class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
->
-    <div class="image_container">
-        <img 
-            src={endorsedReferendumData.image_URL} 
-            alt={reverseHtmlEntities(endorsedReferendumData.alt_text)} 
-        />
-    </div>
+{#if ready}
     <div 
-        class="meatballs_container"
-        style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        tabindex={endorsedReferendumData.referendum_ID}
+        role="treeitem"
+        aria-selected={cardHovered}
+        onfocus={() => cardHoverHandler()}
+        onblur={() => cardExitHandler()}
+        onmouseenter={() => cardHoverHandler()}
+        onmouseover={() => cardHoverHandler()}
+        onmouseleave={() => cardExitHandler()}
+        onmouseout={() => cardExitHandler()}
+        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+        in:fade={{ duration: 300 }}
     >
-        {@html MeatBalls}
-    </div>
-    <div class="card_info_container">
-        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedReferendumData.referendum_name)}</h4>
-        <h5 class="card_heading_02">
-            <span class="data_category">
-                electorate: 
-            </span>
-            {#if (endorsedReferendumData.city)}
-                {reverseHtmlEntities(endorsedReferendumData.city)}
-            {/if}
-            {#if (endorsedReferendumData.county)}
-                {reverseHtmlEntities(endorsedReferendumData.county)}
-            {/if}
-            {#if (endorsedReferendumData.state)}
-                {reverseHtmlEntities(endorsedReferendumData.state)}
-            {/if}
-            United States of America
-        </h5>
-        {#if (endorsedReferendumData.election_date)}
+        <div class="image_container">
+            <img 
+                src={endorsedReferendumData.image_URL} 
+                alt={reverseHtmlEntities(endorsedReferendumData.alt_text)} 
+            />
+        </div>
+        <div 
+            class="meatballs_container"
+            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        >
+            {@html MeatBalls}
+        </div>
+        <div class="card_info_container">
+            <h4 class="card_heading_01">{reverseHtmlEntities(endorsedReferendumData.referendum_name)}</h4>
             <h5 class="card_heading_02">
                 <span class="data_category">
-                    election date: 
-                </span>{electionDate}
+                    electorate: 
+                </span>
+                {#if (endorsedReferendumData.city)}
+                    {reverseHtmlEntities(endorsedReferendumData.city)}
+                {/if}
+                {#if (endorsedReferendumData.county)}
+                    {reverseHtmlEntities(endorsedReferendumData.county)}
+                {/if}
+                {#if (endorsedReferendumData.state)}
+                    {reverseHtmlEntities(endorsedReferendumData.state)}
+                {/if}
+                United States of America
             </h5>
-        {/if}
-        <h5 class="card_heading_02"><span class="data_category">status:</span>
-            {reverseHtmlEntities(referendumStatus.toString())}
-        </h5>
+            {#if (endorsedReferendumData.election_date)}
+                <h5 class="card_heading_02">
+                    <span class="data_category">
+                        election date: 
+                    </span>{electionDate}
+                </h5>
+            {/if}
+            <h5 class="card_heading_02"><span class="data_category">status:</span>
+                {reverseHtmlEntities(referendumStatus.toString())}
+            </h5>
+        </div>
     </div>
-</div>
+{/if}
 
 <style>
     .endorsement_card {

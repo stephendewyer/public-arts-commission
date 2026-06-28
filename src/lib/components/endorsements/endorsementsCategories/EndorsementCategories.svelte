@@ -274,15 +274,16 @@
                         {#key (categories_data.currentPageCandidates)}
                             <div 
                                 class="endorsement_cards"
-                                in:fade={{ delay: 250, duration: 300 }}
                             >
                                 {#each paginatedEndorsedCandidates as candidate, i}
-                                    <a 
-                                        href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
-                                        data-sveltekit-noscroll
-                                    > 
-                                        <EndorsedCandidateCard endorsedCandidateData={candidate}/>
-                                    </a>
+                                    {#key candidate}
+                                        <a 
+                                            href={`${URLPathName}?candidate_ID=${candidate.candidate_ID}&campaign_name=${candidate.campaign_name.replace(/ /g,"_")}`}
+                                            data-sveltekit-noscroll
+                                        > 
+                                            <EndorsedCandidateCard endorsedCandidateData={candidate}/>
+                                        </a>
+                                    {/key}
                                 {/each} 
                             </div>
                         {/key}
@@ -322,16 +323,17 @@
                     {#if categories_data.getEndorsedReferendumsDataSuccess}
                         {#key (categories_data.currentPageReferendums)}
                             <div 
-                                in:fade={{ delay: 250, duration: 300 }}
                                 class="endorsement_cards"
                             >
                                 {#each paginatedEndorsedReferendums as referendum, i}
-                                    <a 
-                                        href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
-                                        data-sveltekit-noscroll
-                                    > 
-                                        <EndorsedReferendumCard endorsedReferendumData={referendum} />
-                                    </a>
+                                    {#key referendum}
+                                        <a 
+                                            href={`${URLPathName}?referendum_ID=${referendum.referendum_ID}&referendum_name=${referendum.referendum_name.replace(/ /g,"_")}`}
+                                            data-sveltekit-noscroll
+                                        > 
+                                            <EndorsedReferendumCard endorsedReferendumData={referendum} />
+                                        </a>
+                                    {/key}
                                 {/each}
                             </div>
                         {/key}
@@ -371,16 +373,17 @@
                     {#if categories_data.getEndorsedLegislationDataSuccess}
                         {#key (categories_data.currentPageLegislation)}
                             <div 
-                                in:fade={{ delay: 250, duration: 300 }}
                                 class="endorsement_cards"
                             >
                                 {#each paginatedEndorsedLegislation as legislation, i}
-                                    <a 
-                                        href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
-                                        data-sveltekit-noscroll
-                                    > 
-                                        <EndorsedLegislationCard endorsedLegislationData={legislation} />
-                                    </a>
+                                    {#key legislation}
+                                        <a 
+                                            href={`${URLPathName}?legislation_ID=${legislation.legislation_ID}&legislation_name=${legislation.legislation_name.replace(/ /g,"_")}`}
+                                            data-sveltekit-noscroll
+                                        > 
+                                            <EndorsedLegislationCard endorsedLegislationData={legislation} />
+                                        </a>
+                                    {/key}
                                 {/each}
                             </div>
                         {/key}
@@ -421,16 +424,17 @@
                     {#if categories_data.getEndorsedAmendmentsDataSuccess}
                         {#key (categories_data.currentPageAmendments)}
                             <div 
-                                in:fade={{ delay: 250, duration: 300 }}
                                 class="endorsement_cards"
                             >
                                 {#each paginatedEndorsedAmendments as amendment, i}
-                                    <a 
-                                        href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
-                                        data-sveltekit-noscroll
-                                    >
-                                        <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
-                                    </a>
+                                    {#key amendment}
+                                        <a 
+                                            href={`${URLPathName}?amendment_ID=${amendment.amendment_ID}&amendment_name=${amendment.amendment_name.replace(/ /g,"_")}`}
+                                            data-sveltekit-noscroll
+                                        >
+                                            <EndorsedAmendmentCard endorsedAmendmentData={amendment} />
+                                        </a>
+                                    {/key}
                                 {/each}
                             </div>
                         {/key}

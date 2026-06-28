@@ -1,12 +1,10 @@
 <script lang="ts">
     import EndorsementCategories from '$lib/components/endorsements/endorsementsCategories/EndorsementCategories.svelte';
-    import { fade } from 'svelte/transition';
     
-    export let panel_data: Endorsements;
-    export let endorsementNavHeight: number = 0;
+    let { panel_data, endorsementNavHeight }: { panel_data: Endorsements, endorsementNavHeight: number } = $props();
+    
 </script>
 <div 
-    in:fade={{ delay: 250, duration: 300 }}
     class="endorsement_categories_container"
 >
     <EndorsementCategories 

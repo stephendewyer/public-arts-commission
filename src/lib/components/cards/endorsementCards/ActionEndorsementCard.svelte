@@ -1,18 +1,38 @@
 <script lang="ts">
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
+    import { onMount } from 'svelte';
+    import { fade } from "svelte/transition";
 
-    export let endorsedActionData: ActionWithImage;
+    let { endorsedActionData }: {endorsedActionData: ActionWithImage } = $props();
 
-    let actionIsAllDay: boolean = endorsedActionData.all_day_event;
-    let rawAllDayActionDate: Date = new Date(endorsedActionData.all_day_event_date);
-    let allDayActionDate: string = rawAllDayActionDate.toUTCString().substring(0, 16);
-    let actionRawStartDate: Date = new Date(endorsedActionData.date_start);
-    let actionStartDate: string = actionRawStartDate.toUTCString();
-    let actionRawEndDate: Date = new Date(endorsedActionData.date_end);
-    let actionEndDate: string = actionRawEndDate.toUTCString();
+    let ready = $state(false);
 
-    let cardHovered: boolean = false;
+    // runs automatically on the client after the component mounts
+    $effect(() => {
+        ready = true;
+    });
+
+    let actionIsAllDay: boolean = $state(false);
+    let rawAllDayActionDate: Date = $state(new Date());
+    let allDayActionDate: string = $state("");
+    let actionRawStartDate: Date = $state(new Date());
+    let actionStartDate: string = $state("");
+    let actionRawEndDate: Date = $state(new Date());
+    let actionEndDate: string = $state("");
+
+    onMount(() => {
+        actionIsAllDay = endorsedActionData.all_day_event;
+        rawAllDayActionDate = new Date(endorsedActionData.all_day_event_date);
+        allDayActionDate = rawAllDayActionDate.toUTCString().substring(0, 16);
+        actionRawStartDate = new Date(endorsedActionData.date_start);
+        actionStartDate = actionRawStartDate.toUTCString();
+        actionRawEndDate = new Date(endorsedActionData.date_end);
+        actionEndDate = actionRawEndDate.toUTCString();
+    });
+
+    
+    let cardHovered: boolean = $state(false);
 
     const cardHoverHandler = () => {
         cardHovered = true;
@@ -24,55 +44,58 @@
 
 </script>
 
-<div 
-    tabindex={endorsedActionData?.action_ID}
-    role="treeitem"
-    aria-selected={cardHovered}
-    on:focus={() => cardHoverHandler()}
-    on:blur={() => cardExitHandler()}
-    on:mouseenter={() => cardHoverHandler()}
-    on:mouseover={() => cardHoverHandler()}
-    on:mouseleave={() => cardExitHandler()}
-    on:mouseout={() => cardExitHandler()}
-    class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
->
-    
-    <div class="image_container">
-        <img src={endorsedActionData.image_URL} alt={reverseHtmlEntities(endorsedActionData.alt_text)} />
-    </div>
-    <div class="endorsement_card_overlay"></div>
+{#if ready}
     <div 
-        class="meatballs_container"
-        style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        tabindex={endorsedActionData?.action_ID}
+        role="treeitem"
+        aria-selected={cardHovered}
+        onfocus={() => cardHoverHandler()}
+        onblur={() => cardExitHandler()}
+        onmouseenter={() => cardHoverHandler()}
+        onmouseover={() => cardHoverHandler()}
+        onmouseleave={() => cardExitHandler()}
+        onmouseout={() => cardExitHandler()}
+        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+        in:fade={{ duration: 300 }}
     >
-        {@html MeatBalls}
-    </div>
-    <div class="card_info_container">
-        <h5 class="card_heading_02">
-            {#if (actionIsAllDay)}
-                {allDayActionDate}
-            {:else if (!actionIsAllDay)}
-                {actionStartDate} - {actionEndDate}
+        
+        <div class="image_container">
+            <img src={endorsedActionData.image_URL} alt={reverseHtmlEntities(endorsedActionData.alt_text)} />
+        </div>
+        <div class="endorsement_card_overlay"></div>
+        <div 
+            class="meatballs_container"
+            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        >
+            {@html MeatBalls}
+        </div>
+        <div class="card_info_container">
+            <h5 class="card_heading_02">
+                {#if (actionIsAllDay)}
+                    {allDayActionDate}
+                {:else if (!actionIsAllDay)}
+                    {actionStartDate} - {actionEndDate}
+                {/if}
+            </h5>
+            {#if (endorsedActionData.action_street_address)}
+                <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_street_address)}</h5>
             {/if}
-        </h5>
-        {#if (endorsedActionData.action_street_address)}
-            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_street_address)}</h5>
-        {/if}
-        {#if (endorsedActionData.action_street_address_02)}
-            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_street_address_02)}</h5>
-        {/if}
-        {#if (endorsedActionData.action_city)}
-            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_city)}</h5>
-        {/if}
-        {#if (endorsedActionData.action_state)}
-            <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_state)}</h5>
-        {/if}
-        {#if (endorsedActionData.action_zip_code)}
-            <h5 class="card_heading_02">{endorsedActionData.action_zip_code}</h5>
-        {/if}
-        <h4 class="card_heading_01">{reverseHtmlEntities(endorsedActionData?.action_name)}</h4>
+            {#if (endorsedActionData.action_street_address_02)}
+                <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_street_address_02)}</h5>
+            {/if}
+            {#if (endorsedActionData.action_city)}
+                <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_city)}</h5>
+            {/if}
+            {#if (endorsedActionData.action_state)}
+                <h5 class="card_heading_02">{reverseHtmlEntities(endorsedActionData.action_state)}</h5>
+            {/if}
+            {#if (endorsedActionData.action_zip_code)}
+                <h5 class="card_heading_02">{endorsedActionData.action_zip_code}</h5>
+            {/if}
+            <h4 class="card_heading_01">{reverseHtmlEntities(endorsedActionData?.action_name)}</h4>
+        </div>
     </div>
-</div>
+{/if}
 
 <style>
     .endorsement_card {
