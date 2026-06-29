@@ -1,9 +1,9 @@
 <script lang="ts">
     import MeatballsIcon from "$lib/images/icons/meaballs.svg?raw";
 
-    export let memberData: TeamMember;
+    let { memberData }: { memberData: TeamMember } = $props();
 
-    let memberCardHovered: boolean = false;
+    let memberCardHovered: boolean = $state(false);
 
     // update the team member selected store with the value for the member Id of selected member card
 
@@ -22,12 +22,12 @@
     class={(memberCardHovered) ? "card_container_active" : "card_container"}
     role="treeitem"
     aria-selected={memberCardHovered}
-    on:focus={() => memberCardActiveHandler()}
-    on:blur={() => memberCardHandler()}
-    on:mouseenter={() => memberCardActiveHandler()}
-    on:mouseover={() => memberCardActiveHandler()}
-    on:mouseleave={() => memberCardHandler()}
-    on:mouseout={() => memberCardHandler()}
+    onfocus={() => memberCardActiveHandler()}
+    onblur={() => memberCardHandler()}
+    onmouseenter={() => memberCardActiveHandler()}
+    onmouseover={() => memberCardActiveHandler()}
+    onmouseleave={() => memberCardHandler()}
+    onmouseout={() => memberCardHandler()}
 >
     <div 
         class="meatballs_container"

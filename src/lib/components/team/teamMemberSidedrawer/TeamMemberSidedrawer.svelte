@@ -6,36 +6,26 @@
     import { page } from '$app/state';
     import EmailIcon from '$lib/images/icons/email_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
+    import { afterNavigate } from '$app/navigation';
 
-    export let pageSearch;
-
-    $: if (!pageSearch) {
-        $TeamMemberSidedrawerOpenStore = false;
-        $TeamMemberSelectedStore = null;
-    };
-    
-    let URLPathName: string = page.url.pathname;
-
-    $: if ($TeamMemberSelectedStore) {
-        URLPathName = page.url.pathname;
-    };
+    let teamMember: TeamMember | null | undefined = $state(null);
 
     const teamMembers: TeamMember[] = TeamMemberData;
 
-    let memberCardSelectId: number | null = null;
+    afterNavigate(() => {
 
-    $: memberCardSelectId = $TeamMemberSelectedStore;
+        if ($TeamMemberSelectedStore) {
 
-    let teamMember: TeamMember | null | undefined = null;
+            let memberCardSelectId: number | null = $TeamMemberSelectedStore;
 
-    $: if (memberCardSelectId) {
-        teamMember = teamMembers.find((teamMember) => {
-            return (teamMember?.index === memberCardSelectId);
-        });
-    } else {
-        teamMember = null;
-    };
+            teamMember = teamMembers.find((teamMember) => {
+                return (teamMember?.index === memberCardSelectId);
+            });
 
+        };
+
+    });
+    
     const closeClickHandler = () => {
         $TeamMemberSidedrawerOpenStore = false;
         $TeamMemberSelectedStore = null;
@@ -44,16 +34,20 @@
 </script>
 
 <aside 
+    id="side_drawer"
     class={ ($TeamMemberSidedrawerOpenStore) ? "side_drawer_open" : "side_drawer_closed" }
     aria-hidden={ ($TeamMemberSidedrawerOpenStore) ? 'false' : 'true'}
 >
     {#key $TeamMemberSidedrawerOpenStore}
         <div class="close_button_container">
-            <a href={URLPathName} data-sveltekit-noscroll>
+            <a 
+                href={page.url.pathname} 
+                data-sveltekit-noscroll
+            >
                 <button 
                     class="close_button"
-                    on:click={() => closeClickHandler()}
-                    on:keyup={() => closeClickHandler()}
+                    onclick={() => closeClickHandler()}
+                    onkeyup={() => closeClickHandler()}
                 >
                     {@html CloseIcon}
                 </button>
@@ -115,36 +109,26 @@
 
 <style>
 
-    aside {
+    #side_drawer {
         z-index: 52;
+        position: fixed;
+        height: 100vh;
+        overflow-y: scroll;
+        width: 100%;
+        max-width: 40rem;
+        background-color: #F4F5FB;
+        top: 0;
+        left: auto;
+        right: 0;
+        transition: transform 0.3s ease-in-out;
     }
 
     .side_drawer_closed {
-        position: fixed;
-        height: 100vh;
-        overflow-y: scroll;
-        width: 100%;
-        max-width: 40rem;
-        background-color: #F4F5FB;
-        top: 0;
-        left: auto;
-        right: 0;
         transform: translateX(100%);
-        transition: transform 0.3s ease-in-out;
     }
 
     .side_drawer_open {
-        position: fixed;
-        height: 100vh;
-        overflow-y: scroll;
-        width: 100%;
-        max-width: 40rem;
-        background-color: #F4F5FB;
-        top: 0;
-        right: 0;
-        left: auto;
         transform: translateX(0);
-        transition: transform 0.3s ease-in-out;
     }
 
     .close_button_container {
@@ -178,6 +162,9 @@
 
     .info_container {
         padding: 1rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .info_heading {
