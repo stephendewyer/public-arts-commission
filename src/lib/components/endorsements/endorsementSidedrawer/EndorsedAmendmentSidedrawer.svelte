@@ -7,157 +7,145 @@
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
 
-    export let pageSearch;
+    let URLPathName: string = $state("");
+    let rawElectionDate: Date | string = $state("");
+    let electionDate: Date | string = $state("");
+    let blankDate = $state(new Date("2016-01-01T06:00:00.000Z"));
 
-    $: if (!pageSearch) {
-        $EndorsedAmendmentOpenStore = false;
-        $EndorsedAmendmentSelectedStore = null;
-    };
+    let amendmentStatus: string[] = $state([]);
 
-    let URLPathName: string = "";
+    let sponsorsHouse: SponsorHouse[] = $state([]);
+    let sponsorsSenate: SponsorSenate[] = $state([]);
+    let coSponsorsHouse: CoSponsorHouse[] = $state([]);
+    let coSponsorsSenate: CoSponsorSenate[] = $state([]);
 
-    $: if ($EndorsedAmendmentSelectedStore) {
-        URLPathName = page.url.pathname;
-    };
+    let sponsorsHouseNames: string[] = $state([]);
+    let sponsorsSenateNames: string[] = $state([]);
+    let coSponsorsHouseNames: string[] = $state([]);
+    let coSponsorsSenateNames: string[] = $state([]);
+
+    afterNavigate(() => {
+
+        if ($EndorsedAmendmentSelectedStore) {
+
+            URLPathName = page.url.pathname;
+
+            if ($EndorsedAmendmentSelectedStore?.election_date) {
+                rawElectionDate = new Date ($EndorsedAmendmentSelectedStore.election_date);
+                if (rawElectionDate < blankDate) {
+                    electionDate = ""; 
+                } else {
+                    electionDate = rawElectionDate.toUTCString().substring(0, 16);
+                };
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.introduced_in_House === 1) {
+
+                amendmentStatus = [...amendmentStatus, " introduced in the House"];
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.introduced_in_Senate === 1) {
+
+                amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.twothirds_House_and_Senate_passed === 1) {
+
+                amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.simple_majority_House_and_Senate_passed === 1) {
+
+                amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.simple_majority_voters_passed === 1) {
+
+                amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
+
+            };
+
+
+            if ($EndorsedAmendmentSelectedStore?.ratified_by_state_convenctions === 1) {
+
+                amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.ratified_by_state_legislatures === 1) {
+
+                amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.sponsors_House) {
+
+                sponsorsHouse = $EndorsedAmendmentSelectedStore?.sponsors_House;
+
+                sponsorsHouse.forEach((sponsor) => {
+
+                    sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
+                
+                });
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.sponsors_Senate) {
+
+                sponsorsSenate = $EndorsedAmendmentSelectedStore?.sponsors_Senate;
+
+                sponsorsSenate.forEach((sponsor) => {
+
+                    sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
+
+                });
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.co_sponsors_House) {
+
+                coSponsorsHouse = $EndorsedAmendmentSelectedStore?.co_sponsors_House;
+
+                coSponsorsHouse.forEach((sponsor) => {
+
+                    coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
+
+                });
+
+            };
+
+            if ($EndorsedAmendmentSelectedStore?.co_sponsors_Senate) {
+
+                coSponsorsSenate = $EndorsedAmendmentSelectedStore?.co_sponsors_Senate;
+
+                coSponsorsSenate.forEach((sponsor) => {
+
+                    coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
+
+                });
+
+            };
+
+        } else if (!$EndorsedAmendmentSelectedStore) {
+            amendmentStatus = [];
+            sponsorsHouse = [];
+            sponsorsSenate = [];
+            coSponsorsHouse = [];
+            coSponsorsSenate = [];
+            sponsorsHouseNames = [];
+            sponsorsSenateNames = [];
+            coSponsorsHouseNames = [];
+            coSponsorsSenateNames = [];
+        };
+    });
 
     const closeClickHandler = () => {
         $EndorsedAmendmentOpenStore = false;
         $EndorsedAmendmentSelectedStore = null;
-    };
-
-    let rawElectionDate: Date | string = "";
-    let electionDate: Date | string = "";
-    let blankDate = new Date("2016-01-01T06:00:00.000Z");
-
-    $: if ($EndorsedAmendmentSelectedStore?.election_date) {
-        rawElectionDate = new Date ($EndorsedAmendmentSelectedStore.election_date);
-        if (rawElectionDate < blankDate) {
-            electionDate = ""; 
-        } else {
-            electionDate = rawElectionDate.toUTCString().substring(0, 16);
-        };
-    };
-
-    let amendmentStatus: string[] = [];
-
-    afterNavigate(() => {
-
-        if ($EndorsedAmendmentSelectedStore?.introduced_in_House === 1) {
-
-            amendmentStatus = [...amendmentStatus, " introduced in the House"];
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.introduced_in_Senate === 1) {
-
-            amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.twothirds_House_and_Senate_passed === 1) {
-
-            amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.simple_majority_House_and_Senate_passed === 1) {
-
-            amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.simple_majority_voters_passed === 1) {
-
-            amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
-
-        };
-
-
-        if ($EndorsedAmendmentSelectedStore?.ratified_by_state_convenctions === 1) {
-
-            amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.ratified_by_state_legislatures === 1) {
-
-            amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
-
-        };
-
-    });
-
-    let sponsorsHouse: SponsorHouse[];
-    let sponsorsSenate: SponsorSenate[];
-    let coSponsorsHouse: CoSponsorHouse[];
-    let coSponsorsSenate: CoSponsorSenate[];
-
-    let sponsorsHouseNames: string[] = [];
-    let sponsorsSenateNames: string[] = [];
-    let coSponsorsHouseNames: string[] = [];
-    let coSponsorsSenateNames: string[] = [];
-
-    afterNavigate(() => {
-        if ($EndorsedAmendmentSelectedStore?.sponsors_House) {
-
-            sponsorsHouse = $EndorsedAmendmentSelectedStore?.sponsors_House;
-
-            sponsorsHouse.forEach((sponsor) => {
-
-                sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
-            
-            });
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.sponsors_Senate) {
-
-            sponsorsSenate = $EndorsedAmendmentSelectedStore?.sponsors_Senate;
-
-            sponsorsSenate.forEach((sponsor) => {
-
-                sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
-
-            });
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.co_sponsors_House) {
-
-            coSponsorsHouse = $EndorsedAmendmentSelectedStore?.co_sponsors_House;
-
-            coSponsorsHouse.forEach((sponsor) => {
-
-                coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
-
-            });
-
-        };
-
-        if ($EndorsedAmendmentSelectedStore?.co_sponsors_Senate) {
-
-            coSponsorsSenate = $EndorsedAmendmentSelectedStore?.co_sponsors_Senate;
-
-            coSponsorsSenate.forEach((sponsor) => {
-
-                coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
-
-            });
-
-        };
-
-    });
-
-    $: if (!$EndorsedAmendmentOpenStore) {
-        amendmentStatus = [];
-        sponsorsHouse = [];
-        sponsorsSenate = [];
-        coSponsorsHouse = [];
-        coSponsorsSenate = [];
-        sponsorsHouseNames = [];
-        sponsorsSenateNames = [];
-        coSponsorsHouseNames = [];
-        coSponsorsSenateNames = [];
     };
 
 </script>
@@ -174,8 +162,8 @@
             >
                 <button 
                     class="close_button"
-                    on:click={() => closeClickHandler()}
-                    on:keyup={() => closeClickHandler()}
+                    onclick={() => closeClickHandler()}
+                    onkeyup={() => closeClickHandler()}
                 >
                     {@html CloseIcon}
                 </button>

@@ -5,50 +5,48 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    
-    export let pageSearch;
+    import { afterNavigate } from '$app/navigation';
 
-    $: if (!pageSearch) {
-        $EndorsedActionOpenStore = false;
-        $EndorsedActionSelectedStore = null;
-    };
+    let URLPathName: string = $state("");
+    let actionIsAllDay: boolean = $state(false);
+    let rawAllDayActionDate: Date | string = $state("");
+    let allDayActionDate: string = $state("");
+    let actionRawStartDate: Date | string = $state("");
+    let actionStartDate: string = $state("");
+    let actionRawEndDate: Date | string = $state("");
+    let actionEndDate: string = $state("");
 
-    let URLPathName: string;
+    afterNavigate(() => {
 
-    $: if ($EndorsedActionSelectedStore) {
-        URLPathName = page.url.pathname;
-    };
+        if ($EndorsedActionSelectedStore) {
+
+            URLPathName = page.url.pathname;
+
+            if ($EndorsedActionSelectedStore?.all_day_event) {
+                actionIsAllDay = $EndorsedActionSelectedStore?.all_day_event;
+            };
+
+            if ($EndorsedActionSelectedStore?.all_day_event_date) {
+                rawAllDayActionDate = new Date($EndorsedActionSelectedStore?.all_day_event_date);
+                allDayActionDate = rawAllDayActionDate?.toUTCString().substring(0, 16);
+            };
+
+            if ($EndorsedActionSelectedStore?.date_start) {
+                actionRawStartDate = new Date($EndorsedActionSelectedStore?.date_start);
+                actionStartDate = actionRawStartDate.toUTCString();
+            };
+
+            if ($EndorsedActionSelectedStore?.date_end) {
+                actionRawEndDate = new Date($EndorsedActionSelectedStore?.date_end);
+                actionEndDate = actionRawEndDate.toUTCString();
+            };
+        };
+
+    });
 
     const closeClickHandler = () => {
         $EndorsedActionOpenStore = false;
         $EndorsedActionSelectedStore = null;
-    };
-
-    let actionIsAllDay: boolean = false;
-    let rawAllDayActionDate: Date | string = "";
-    let allDayActionDate: string = "";
-    let actionRawStartDate: Date | string = "";
-    let actionStartDate: string = "";
-    let actionRawEndDate: Date | string = "";
-    let actionEndDate: string = ""
-
-    $: if ($EndorsedActionSelectedStore?.all_day_event) {
-        actionIsAllDay = $EndorsedActionSelectedStore?.all_day_event;
-    };
-
-    $: if ($EndorsedActionSelectedStore?.all_day_event_date) {
-        rawAllDayActionDate = new Date($EndorsedActionSelectedStore?.all_day_event_date);
-        allDayActionDate = rawAllDayActionDate?.toUTCString().substring(0, 16);
-    };
-
-    $: if ($EndorsedActionSelectedStore?.date_start) {
-        actionRawStartDate = new Date($EndorsedActionSelectedStore?.date_start);
-        actionStartDate = actionRawStartDate.toUTCString();
-    };
-
-    $: if ($EndorsedActionSelectedStore?.date_end) {
-        actionRawEndDate = new Date($EndorsedActionSelectedStore?.date_end);
-        actionEndDate = actionRawEndDate.toUTCString();
     };
 
 </script>
@@ -65,8 +63,8 @@
             >
                 <button 
                     class="close_button"
-                    on:click={() => closeClickHandler()}
-                    on:keyup={() => closeClickHandler()}
+                    onclick={() => closeClickHandler()}
+                    onkeyup={() => closeClickHandler()}
                 >
                     {@html CloseIcon}
                 </button>

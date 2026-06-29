@@ -5,61 +5,59 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-  import { afterNavigate } from '$app/navigation';
+    import { afterNavigate } from '$app/navigation';
 
-    export let pageSearch;
+    let URLPathName: string = $state("");
 
-    $: if (!pageSearch) {
-        $EndorsedReferendumOpenStore = false;
-        $EndorsedReferendumSelectedStore = null;
-    };
+    let rawElectionDate: Date | string = $state("");
 
-    let URLPathName: string = "";
+    let electionDate: string = $state("");
 
-    $: if ($EndorsedReferendumSelectedStore) {
-        URLPathName = page.url.pathname;
-    };
-
-    const closeClickHandler = () => {
-        $EndorsedReferendumOpenStore = false;
-        $EndorsedReferendumSelectedStore = null;
-    };
-
-    let rawElectionDate: Date | string = "";
-
-    let electionDate: string = "";
-
-    $: if ($EndorsedReferendumSelectedStore?.election_date) {
-        rawElectionDate = new Date($EndorsedReferendumSelectedStore?.election_date);
-        electionDate = rawElectionDate?.toUTCString().substring(0, 16);
-    };
-
-    let referendumStatus: string[] = [];
+    let referendumStatus: string[] = $state([]);
 
     afterNavigate(() => {
 
-        if ($EndorsedReferendumSelectedStore?.elected === 1) {
+        if ($EndorsedReferendumSelectedStore) {
 
-            referendumStatus = [...referendumStatus, " elected by voters"];
+            URLPathName = page.url.pathname;
 
-        };
+            if ($EndorsedReferendumSelectedStore?.elected === 1) {
 
-        if ($EndorsedReferendumSelectedStore?.rejected === 1) {
+                referendumStatus = [...referendumStatus, " elected by voters"];
 
-            referendumStatus = [...referendumStatus, " rejected by voters"];
+            };
 
-        };
+            if ($EndorsedReferendumSelectedStore?.rejected === 1) {
 
-        if ($EndorsedReferendumSelectedStore?.pending_election === 1) {
+                referendumStatus = [...referendumStatus, " rejected by voters"];
 
-            referendumStatus = [...referendumStatus, " pending election by voters"];
+            };
+
+            if ($EndorsedReferendumSelectedStore?.pending_election === 1) {
+
+                referendumStatus = [...referendumStatus, " pending election by voters"];
+
+            };
+
+            if ($EndorsedReferendumSelectedStore?.election_date) {
+
+                rawElectionDate = new Date($EndorsedReferendumSelectedStore?.election_date);
+
+                electionDate = rawElectionDate?.toUTCString().substring(0, 16);
+
+            };
+
+        } else if (!$EndorsedReferendumSelectedStore) {
+
+            referendumStatus = [];
 
         };
 
     });
 
-    $: if ($EndorsedReferendumOpenStore) {
-        referendumStatus = [];
+    const closeClickHandler = () => {
+        $EndorsedReferendumOpenStore = false;
+        $EndorsedReferendumSelectedStore = null;
     };
 
 </script>
@@ -76,8 +74,8 @@
             >
                 <button 
                     class="close_button"
-                    on:click={() => closeClickHandler()}
-                    on:keyup={() => closeClickHandler()}
+                    onclick={() => closeClickHandler()}
+                    onkeyup={() => closeClickHandler()}
                 >
                     {@html CloseIcon}
                 </button>

@@ -6,81 +6,81 @@
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
-    
-    export let pageSearch;
 
-    $: if (!pageSearch) {
-        $EndorsedCandidateOpenStore = false;
-        $EndorsedCandidateSelectedStore = null;
-    };
+    let URLPathName: string = $state("");
 
-    let URLPathName: string = "";
+    let primaryElectionDate: Date | string = $state("");
 
-    $: if ($EndorsedCandidateSelectedStore) {
-        URLPathName = page.url.pathname;
-    };
+    let rawPrimaryElectionDate: Date | string = $state("");
+
+    let blankDate: Date | string = $state(new Date("2016-01-01T06:00:00.000Z"));
+
+    let generalElectionDate: string = $state("");
+
+    let rawGeneralElectionDate: Date | string = $state("");
+
+    let candidateStatusHistory: string[] = $state([]);
+
+    afterNavigate(() => {
+
+        if ($EndorsedCandidateSelectedStore) {
+            // handle processing of data for the sidedrawer after open
+
+            URLPathName = page.url.pathname;
+
+            rawPrimaryElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_primary);
+
+            if (rawPrimaryElectionDate < blankDate) {
+                primaryElectionDate = "";
+            } else {
+                primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
+            };
+
+            rawGeneralElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_general);
+
+            generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
+
+            if ($EndorsedCandidateSelectedStore?.running_in_primary === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " running in the primary"];
+            };
+
+            if ($EndorsedCandidateSelectedStore?.elected_in_primary === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " elected in the primary"];
+            };
+
+            if ($EndorsedCandidateSelectedStore?.rejected_in_primary === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " rejected in the primary"];
+            };
+            
+            if ($EndorsedCandidateSelectedStore?.running_in_general === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " running in the general"];
+            };
+
+            if ($EndorsedCandidateSelectedStore?.rejected_in_general === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " rejected in the general"];
+            };
+
+            if ($EndorsedCandidateSelectedStore?.elected_in_general === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " elected in the general"];
+            };
+
+            if ($EndorsedCandidateSelectedStore?.campaign_ended === 1) {
+                candidateStatusHistory = [ ...candidateStatusHistory, " campaign ended"];
+            };
+
+        } else if (!$EndorsedCandidateSelectedStore) {
+
+            candidateStatusHistory = [];
+
+        };
+
+    });
 
     const closeClickHandler = () => {
         $EndorsedCandidateOpenStore = false;
         $EndorsedCandidateSelectedStore = null;
     };
 
-    let primaryElectionDate: Date | string = "";
-
-    $: rawPrimaryElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_primary);
-
-    let blankDate = new Date("2016-01-01T06:00:00.000Z");
-    
-    $: if (rawPrimaryElectionDate < blankDate) {
-        primaryElectionDate = "";
-    } else {
-        primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
-    };
-
-    let generalElectionDate: string = "";
-
-    let rawGeneralElectionDate: Date | string = "";
-
-    $: rawGeneralElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_general);
-
-    $: generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
-
-    let candidateStatus: string[] = [];
-
-    afterNavigate(() => {
-        if ($EndorsedCandidateSelectedStore?.running_in_primary === 1) {
-            candidateStatus = [ ...candidateStatus, " running in the primary"];
-        };
-
-        if ($EndorsedCandidateSelectedStore?.elected_in_primary === 1) {
-            candidateStatus = [ ...candidateStatus, " elected in the primary"];
-        };
-
-        if ($EndorsedCandidateSelectedStore?.rejected_in_primary === 1) {
-            candidateStatus = [ ...candidateStatus, " rejected in the primary"];
-        };
-        
-        if ($EndorsedCandidateSelectedStore?.running_in_general === 1) {
-            candidateStatus = [ ...candidateStatus, " running in the general"];
-        };
-
-        if ($EndorsedCandidateSelectedStore?.rejected_in_general === 1) {
-            candidateStatus = [ ...candidateStatus, " rejected in the general"];
-        };
-
-        if ($EndorsedCandidateSelectedStore?.elected_in_general === 1) {
-            candidateStatus = [ ...candidateStatus, " elected in the general"];
-        };
-
-        if ($EndorsedCandidateSelectedStore?.campaign_ended === 1) {
-            candidateStatus = [ ...candidateStatus, " campaign ended"];
-        };
-        
-    })
-
-    $: if (!$EndorsedCandidateOpenStore) {
-        candidateStatus = [];
-    };
 
 </script>
 
@@ -97,8 +97,8 @@
             >
                 <button 
                     class="close_button"
-                    on:click={() => closeClickHandler()}
-                    on:keyup={() => closeClickHandler()}
+                    onclick={() => closeClickHandler()}
+                    onkeyup={() => closeClickHandler()}
                 >
                     {@html CloseIcon}
                 </button>
@@ -211,9 +211,7 @@
                             status: 
                         </td>
                         <td>
-                            {#key candidateStatus}
-                                {reverseHtmlEntities(candidateStatus.toString())}
-                            {/key}
+                            {reverseHtmlEntities(candidateStatusHistory.toString())}
                         </td>
                     </tr>
                 </tbody>

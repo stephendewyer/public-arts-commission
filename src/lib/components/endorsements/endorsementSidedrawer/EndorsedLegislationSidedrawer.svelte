@@ -5,145 +5,137 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-  import { afterNavigate } from '$app/navigation';
+    import { afterNavigate } from '$app/navigation';
 
-    export let pageSearch;
+    let URLPathName: string = $state("");
 
-    $: if (!pageSearch) {
-        $EndorsedLegislationOpenStore = false;
-        $EndorsedLegislationSelectedStore = null;
-    };
+    let sponsorsHouse: SponsorHouse[] = $state([]);
+    let sponsorsSenate: SponsorSenate[]  = $state([]);
+    let coSponsorsHouse: CoSponsorHouse[]  = $state([]);
+    let coSponsorsSenate: CoSponsorSenate[]  = $state([]);
 
-    let URLPathName: string = "";
+    let sponsorsHouseNames: string[] = $state([]);
+    let sponsorsSenateNames: string[] = $state([]);
+    let coSponsorsHouseNames: string[] = $state([]);
+    let coSponsorsSenateNames: string[] = $state([]);
 
-    $: if ($EndorsedLegislationSelectedStore) {
-        URLPathName = page.url.pathname;
-    }; 
+    let legislationStatus: string[] = $state([]);
 
-    let sponsorsHouse: SponsorHouse[] = [];
-    let sponsorsSenate: SponsorSenate[]  = [];
-    let coSponsorsHouse: CoSponsorHouse[]  = [];
-    let coSponsorsSenate: CoSponsorSenate[]  = [];
+    afterNavigate(() => {
 
-    let sponsorsHouseNames: string[] = [];
-    let sponsorsSenateNames: string[] = [];
-    let coSponsorsHouseNames: string[] = [];
-    let coSponsorsSenateNames: string[] = [];
+        if ($EndorsedLegislationSelectedStore) {
 
-    let endorsedLegislationOpen: boolean = false;
+            URLPathName = page.url.pathname;
 
-    $: endorsedLegislationOpen = $EndorsedLegislationOpenStore;
+            if ($EndorsedLegislationSelectedStore?.passed_in_House === 1) {
+
+                legislationStatus = [...legislationStatus, " passed in the House"];
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.passed_in_Senate === 1) {
+
+                legislationStatus = [...legislationStatus, " passed in the Senate"];
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.rejected_in_House === 1) {
+
+                legislationStatus = [...legislationStatus, " rejected in the House"];
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.rejected_in_Senate === 1) {
+
+                legislationStatus = [...legislationStatus, " rejected in the Senate"];
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.vetoed_by_Executive === 1) {
+
+                legislationStatus = [...legislationStatus, " vetoed by the Executive"];
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.signed_by_Executive === 1) {
+
+                legislationStatus = [...legislationStatus, " signed into law by the Executive"];
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.sponsors_House) {
+
+                sponsorsHouse = $EndorsedLegislationSelectedStore.sponsors_House;
+
+                sponsorsHouse.forEach((sponsor) => {
+
+                    sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
+                
+                });
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.sponsors_Senate) {
+
+                sponsorsSenate = $EndorsedLegislationSelectedStore.sponsors_Senate;
+
+                sponsorsSenate.forEach((sponsor) => {
+
+                    sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
+
+                });
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.co_sponsors_House) {
+
+                coSponsorsHouse = $EndorsedLegislationSelectedStore.co_sponsors_House;
+
+                coSponsorsHouse.forEach((sponsor) => {
+
+                    coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
+
+                });
+
+            };
+
+            if ($EndorsedLegislationSelectedStore?.co_sponsors_Senate) {
+
+                coSponsorsSenate = $EndorsedLegislationSelectedStore?.co_sponsors_Senate;
+
+                coSponsorsSenate.forEach((sponsor) => {
+
+                    coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
+
+                });
+
+            };
+
+        } else if (!$EndorsedLegislationOpenStore) {
+            legislationStatus = [];
+            sponsorsHouse = [];
+            sponsorsSenate = [];
+            coSponsorsHouse = [];
+            coSponsorsSenate = [];
+            sponsorsHouseNames = [];
+            sponsorsSenateNames = [];
+            coSponsorsHouseNames = [];
+            coSponsorsSenateNames = [];
+        }; 
+
+    });
+
 
     const closeClickHandler = () => {
         $EndorsedLegislationOpenStore = false;
         $EndorsedLegislationSelectedStore = null;
     };
 
-    let legislationStatus: string[] = [];
-
-    afterNavigate(() => {
-        if ($EndorsedLegislationSelectedStore?.passed_in_House === 1) {
-
-            legislationStatus = [...legislationStatus, " passed in the House"];
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.passed_in_Senate === 1) {
-
-            legislationStatus = [...legislationStatus, " passed in the Senate"];
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.rejected_in_House === 1) {
-
-            legislationStatus = [...legislationStatus, " rejected in the House"];
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.rejected_in_Senate === 1) {
-
-            legislationStatus = [...legislationStatus, " rejected in the Senate"];
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.vetoed_by_Executive === 1) {
-
-            legislationStatus = [...legislationStatus, " vetoed by the Executive"];
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.signed_by_Executive === 1) {
-
-            legislationStatus = [...legislationStatus, " signed into law by the Executive"];
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.sponsors_House) {
-
-            sponsorsHouse = $EndorsedLegislationSelectedStore.sponsors_House;
-
-            sponsorsHouse.forEach((sponsor) => {
-
-                sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
-            
-            });
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.sponsors_Senate) {
-
-            sponsorsSenate = $EndorsedLegislationSelectedStore.sponsors_Senate;
-
-            sponsorsSenate.forEach((sponsor) => {
-
-                sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
-
-            });
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.co_sponsors_House) {
-
-            coSponsorsHouse = $EndorsedLegislationSelectedStore.co_sponsors_House;
-
-            coSponsorsHouse.forEach((sponsor) => {
-
-                coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
-
-            });
-
-        };
-
-        if ($EndorsedLegislationSelectedStore?.co_sponsors_Senate) {
-
-            coSponsorsSenate = $EndorsedLegislationSelectedStore?.co_sponsors_Senate;
-
-            coSponsorsSenate.forEach((sponsor) => {
-
-                coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
-
-            });
-
-        };
-    });
-
-    $: if (!$EndorsedLegislationOpenStore) {
-        legislationStatus = [];
-        sponsorsHouse = [];
-        sponsorsSenate = [];
-        coSponsorsHouse = [];
-        coSponsorsSenate = [];
-        sponsorsHouseNames = [];
-        sponsorsSenateNames = [];
-        coSponsorsHouseNames = [];
-        coSponsorsSenateNames = [];
-    };
-
 </script>
 
 <aside 
-    class={ (endorsedLegislationOpen) ? "side_drawer_open" : "side_drawer_closed" }
-    aria-hidden={ (endorsedLegislationOpen) ? 'false' : 'true'}
+    class={ ($EndorsedLegislationOpenStore) ? "side_drawer_open" : "side_drawer_closed" }
+    aria-hidden={ ($EndorsedLegislationOpenStore) ? 'false' : 'true'}
 >
     {#key $EndorsedLegislationSelectedStore}
         <div class="close_button_container">
@@ -153,8 +145,8 @@
             >
                 <button 
                     class="close_button"
-                    on:click={() => closeClickHandler()}
-                    on:keyup={() => closeClickHandler()}
+                    onclick={() => closeClickHandler()}
+                    onkeyup={() => closeClickHandler()}
                 >
                     {@html CloseIcon}
                 </button>

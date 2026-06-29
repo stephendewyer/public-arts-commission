@@ -7,7 +7,6 @@
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import { page } from '$app/state';
     import { afterUpdate, onMount } from 'svelte';
-    import { fade } from 'svelte/transition';
 
     export let endorsementNavHeight: number = 0;
     export let categories_data: Endorsements;

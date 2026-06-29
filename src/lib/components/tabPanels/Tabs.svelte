@@ -17,7 +17,9 @@
             tabindex={-i}
         >
             {#if tab.hasCapitol}
-                <div class={activeTab === tab.index ? "capitolIcon_active" : "capitolIcon"}>
+                <div 
+                    id="capitol_icon" 
+                    class={activeTab === tab.index ? "capitol_icon_active" : "capitol_icon_passive"}>
                     {@html CapitolIcon}
                 </div>
             {/if}
@@ -57,7 +59,7 @@
         opacity: 100%;
     }
 
-    .tab:hover > .capitolIcon {
+    .tab:hover > .capitol_icon_passive {
         fill: #28387C;
     }
 
@@ -106,18 +108,20 @@
 		overflow: visible;
 	}
 
-    .capitolIcon {
-        width: 100%;
-        max-width: 4rem;
-        fill: #4C4239;
+    #capitol_icon {
         transition: fill 0.2s linear;
+        width: 100%;
+        max-width: 2.5rem;
     }
 
-    .capitolIcon_active {
-        width: 100%;
-        max-width: 4rem;
+    .capitol_icon_passive {
         fill: #4C4239;
-        transition: fill 0.2s linear;
+    }
+
+    .capitol_icon_active {
+        width: 100%;
+        max-width: 2.5rem;
+        fill: #4C4239;
     }
 
     @media (max-width: 1440px) {
@@ -151,13 +155,10 @@
             padding: 0 0.5rem;
         }
 
-        .capitolIcon {
+        #capitol_icon {
             max-width: 2rem;
         }
 
-        .capitolIcon_active {
-            max-width: 2rem;
-        }
     }
 
 </style>
