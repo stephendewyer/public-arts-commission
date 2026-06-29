@@ -20,11 +20,6 @@
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
 	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
   	import CampaignApplicationActionConfirmModal from '$lib/components/modals/CampaignApplicationActionConfirmModal.svelte';
-	import { page } from '$app/state';
-
-	let pageSearch: string = "";
-
-	$: pageSearch = page.url.search;
 
 	let openMobileNav: boolean = false;
 
@@ -80,7 +75,7 @@
 		/>
 	{/if}
 	<SideDrawer bind:openMobileNav />
-	<TeamMemberSideDrawer pageSearch={pageSearch}/>
+	<TeamMemberSideDrawer />
 	<CreateVoterAccountPromptModal />
 	<EndorsedActionSidedrawer />
 	<EndorsedAmendmentSidedrawer />

@@ -97,8 +97,6 @@
 
 	let activeEndorsementsTab: number = 0;
 
-	$: activeEndorsementsTab = 0;
-
 	// set the latitude and longitude with user's position.coords
 
 	let reversedGeolocation: ReverseGeoLocation;

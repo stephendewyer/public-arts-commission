@@ -734,7 +734,13 @@
                                             Enact a ban on super PACs in Democratic Party primary and general elections;
                                         </li>
                                         <li>
-                                            Remove the influence of the wealthy and large corporations in deciding leadership on Congress;                            </li>
+                                            Stop the DCCC (Democratic Congressional Campaign Committee) and the DSCC (Democratic Senatorial Campaign Committee) from influencing Democratic primary elections;
+                                        </li>
+                                        <li>
+                                            Enact the Susan Collins rule, which would prohibit members of Congress from funneling money to their spouces through oversight activities of federal agencies;
+                                        </li>
+                                        <li>
+                                            Remove the influence of the wealthy and large corporations in deciding leadership in Congress;                            </li>
                                         <li>
                                             Ban members of Congress and their families from owning and trading stocks;                            </li>
                                         <li>
