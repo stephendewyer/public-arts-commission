@@ -6,9 +6,7 @@
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
-    import { onMount } from 'svelte';
 
-    let URLPathName: string = $state("");
     let rawElectionDate: Date | string = $state("");
     let electionDate: Date | string = $state("");
     let blankDate = $state(new Date("2016-01-01T06:00:00.000Z"));
@@ -25,17 +23,9 @@
     let coSponsorsHouseNames: string[] = $state([]);
     let coSponsorsSenateNames: string[] = $state([]);
 
-    // get the URL pathname after mount since data loads after navigation
-    
-    onMount(() => {
-        URLPathName = page.url.pathname;
-    });
-
     afterNavigate(() => {
 
         if ($EndorsedAmendmentSelectedStore) {
-
-            URLPathName = page.url.pathname;
 
             if ($EndorsedAmendmentSelectedStore?.election_date) {
                 rawElectionDate = new Date ($EndorsedAmendmentSelectedStore.election_date);
@@ -164,7 +154,7 @@
     {#key $EndorsedAmendmentSelectedStore}
         <div class="close_button_container">
             <a 
-                href={URLPathName}
+                href={page.url.pathname}
                 data-sveltekit-noscroll
             >
                 <button 

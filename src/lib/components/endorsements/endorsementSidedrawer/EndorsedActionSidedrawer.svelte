@@ -6,9 +6,7 @@
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
-  import { onMount } from 'svelte';
 
-    let URLPathName: string = $state("");
     let actionIsAllDay: boolean = $state(false);
     let rawAllDayActionDate: Date | string = $state("");
     let allDayActionDate: string = $state("");
@@ -20,7 +18,6 @@
     afterNavigate(() => {
 
         if ($EndorsedActionSelectedStore) {
-
 
             if ($EndorsedActionSelectedStore?.all_day_event) {
                 actionIsAllDay = $EndorsedActionSelectedStore?.all_day_event;
@@ -44,12 +41,6 @@
 
     });
 
-    // get the URL pathname after mount since data loads after navigation
-    
-    onMount(() => {
-        URLPathName = page.url.pathname;
-    });
-
     const closeClickHandler = () => {
         $EndorsedActionOpenStore = false;
         $EndorsedActionSelectedStore = null;
@@ -64,7 +55,7 @@
     {#key $EndorsedActionOpenStore}
         <div class="close_button_container">
             <a 
-                href={URLPathName}
+                href={page.url.pathname}
                 data-sveltekit-noscroll
             >
                 <button 

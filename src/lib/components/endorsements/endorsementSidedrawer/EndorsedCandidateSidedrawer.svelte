@@ -6,9 +6,6 @@
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
-    import { onMount } from 'svelte';
-
-    let URLPathName: string = $state("");
 
     let primaryElectionDate: Date | string = $state("");
 
@@ -22,18 +19,10 @@
 
     let candidateStatusHistory: string[] = $state([]);
 
-    // get the URL pathname after mount since data loads after navigation
-    
-    onMount(() => {
-        URLPathName = page.url.pathname;
-    });
-
     afterNavigate(() => {
 
         if ($EndorsedCandidateSelectedStore) {
             // handle processing of data for the sidedrawer after open
-
-            URLPathName = page.url.pathname;
 
             rawPrimaryElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_primary);
 
@@ -99,7 +88,7 @@
     {#key $EndorsedCandidateSelectedStore}
         <div class="close_button_container">
             <a 
-                href={URLPathName}
+                href={page.url.pathname}
                 data-sveltekit-noscroll
             >
                 <button 
