@@ -32,51 +32,23 @@
 
 	let backdrop: boolean = false;
 
-	let openCreateVoterAccountPrompt: boolean = $ModalOpenStore;
-
-	$: openCreateVoterAccountPrompt = $ModalOpenStore;
-
-	let teamMemberSideDrawerOpen: boolean;
-
-	$: teamMemberSideDrawerOpen = $TeamMemberSidedrawerOpenStore;
-
-	let endorsedCandidateSideDrawerOpen: boolean;
-
-	$: endorsedCandidateSideDrawerOpen = $EndorsedCandidateOpenStore;
-
-	let endorsedAmendmentSideDrawerOpen: boolean;
-
-	$: endorsedAmendmentSideDrawerOpen = $EndorsedAmendmentOpenStore;
-
-	let endorsedReferendumSideDrawerOpen: boolean;
-
-	$: endorsedReferendumSideDrawerOpen = $EndorsedReferendumOpenStore;
-
-	let endorsedLegislationSideDrawerOpen: boolean;
-
-	$: endorsedLegislationSideDrawerOpen = $EndorsedLegislationOpenStore;
-
-	let endorsedActionSideDrawerOpen: boolean;
-
-	$: endorsedActionSideDrawerOpen = $EndorsedActionOpenStore;
-
 	$: if (
 
 		openMobileNav || 
 
-		teamMemberSideDrawerOpen || 
+		$TeamMemberSidedrawerOpenStore || 
 
-		openCreateVoterAccountPrompt ||
+		$ModalOpenStore ||
 
-		endorsedActionSideDrawerOpen ||
+		$EndorsedActionOpenStore ||
 
-		endorsedAmendmentSideDrawerOpen ||
+		$EndorsedAmendmentOpenStore ||
 
-		endorsedCandidateSideDrawerOpen ||
+		$EndorsedCandidateOpenStore ||
 
-		endorsedLegislationSideDrawerOpen ||
+		$EndorsedLegislationOpenStore ||
 
-		endorsedReferendumSideDrawerOpen
+		$EndorsedReferendumOpenStore
 
 	) {
 
@@ -110,11 +82,11 @@
 	<SideDrawer bind:openMobileNav />
 	<TeamMemberSideDrawer pageSearch={pageSearch}/>
 	<CreateVoterAccountPromptModal />
-	<EndorsedActionSidedrawer pageSearch={pageSearch}/>
-	<EndorsedAmendmentSidedrawer pageSearch={pageSearch}/>
-	<EndorsedCandidateSidedrawer pageSearch={pageSearch}/>
-	<EndorsedLegislationSidedrawer pageSearch={pageSearch}/>
-	<EndorsedReferendumSidedrawer pageSearch={pageSearch}/>
+	<EndorsedActionSidedrawer />
+	<EndorsedAmendmentSidedrawer />
+	<EndorsedCandidateSidedrawer />
+	<EndorsedLegislationSidedrawer />
+	<EndorsedReferendumSidedrawer />
 	<DeleteConfirmationModal />
 	<CampaignApplicationActionConfirmModal />
 </div>

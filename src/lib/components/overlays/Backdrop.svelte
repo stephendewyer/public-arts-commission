@@ -18,18 +18,6 @@
 
     let openTeamMember: boolean = false;
 
-    let modalOpen: boolean = $ModalOpenStore;
-
-    let openEndorsedAction: boolean = $EndorsedActionOpenStore;
-
-    let openEndorsedAmendment: boolean = $EndorsedAmendmentOpenStore;
-
-    let openEndorsedCandidate: boolean = $EndorsedCandidateOpenStore;
-
-    let openEndorsedLegislation: boolean = $EndorsedLegislationOpenStore;
-
-    let openEndorsedReferendum: boolean = $EndorsedReferendumOpenStore;
-
     let open: boolean = false;
 
     let URLPathName = page.url.pathname;
@@ -54,12 +42,12 @@
     $: if (
         openMobileNav ||
         openTeamMember ||
-        modalOpen ||
-        openEndorsedReferendum ||
-        openEndorsedLegislation ||
-        openEndorsedCandidate ||
-        openEndorsedAmendment ||
-        openEndorsedAction
+        $ModalOpenStore ||
+        $EndorsedReferendumOpenStore ||
+        $EndorsedLegislationOpenStore ||
+        $EndorsedCandidateOpenStore ||
+        $EndorsedAmendmentOpenStore ||
+        $EndorsedActionOpenStore
     ) {
         open = !open;
     };
@@ -69,13 +57,14 @@
 <a 
     href={URLPathName} 
     data-sveltekit-noscroll
+    aria-label="backdrop"
 >
     <div 
         class="backdrop"
-        on:click={() => backdropClickedHandler()} 
-        on:keydown={() => backdropClickedHandler()}
+        onclick={() => backdropClickedHandler()} 
+        onkeydown={() => backdropClickedHandler()}
         aria-hidden={!open}
-    />
+    ></div>
 </a>
 
 <style>

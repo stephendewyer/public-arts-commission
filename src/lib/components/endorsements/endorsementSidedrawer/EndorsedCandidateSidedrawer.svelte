@@ -6,6 +6,7 @@
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
+    import { onMount } from 'svelte';
 
     let URLPathName: string = $state("");
 
@@ -20,6 +21,12 @@
     let rawGeneralElectionDate: Date | string = $state("");
 
     let candidateStatusHistory: string[] = $state([]);
+
+    // get the URL pathname after mount since data loads after navigation
+    
+    onMount(() => {
+        URLPathName = page.url.pathname;
+    });
 
     afterNavigate(() => {
 
