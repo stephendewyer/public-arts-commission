@@ -7,76 +7,66 @@
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { afterNavigate } from '$app/navigation';
 
-    let primaryElectionDate: Date | string = $state("");
+    let blankDate: Date | string = new Date("2016-01-01T06:00:00.000Z");
 
-    let rawPrimaryElectionDate: Date | string = $state("");
+    let rawPrimaryElectionDate: Date | string = $derived(new Date($EndorsedCandidateSelectedStore?.election_date_primary));
 
-    let blankDate: Date | string = $state(new Date("2016-01-01T06:00:00.000Z"));
-
-    let generalElectionDate: string = $state("");
-
-    let rawGeneralElectionDate: Date | string = $state("");
-
-    let candidateStatusHistory: string[] = $state([]);
-
-    afterNavigate(() => {
-
-        if ($EndorsedCandidateSelectedStore) {
-            // handle processing of data for the sidedrawer after open
-
-            rawPrimaryElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_primary);
-
-            if (rawPrimaryElectionDate < blankDate) {
-                primaryElectionDate = "";
-            } else {
-                primaryElectionDate = rawPrimaryElectionDate.toUTCString().substring(0, 16);;
-            };
-
-            rawGeneralElectionDate = new Date($EndorsedCandidateSelectedStore?.election_date_general);
-
-            generalElectionDate = rawGeneralElectionDate.toUTCString().substring(0, 16);
-
-            if ($EndorsedCandidateSelectedStore?.running_in_primary === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " running in the primary"];
-            };
-
-            if ($EndorsedCandidateSelectedStore?.elected_in_primary === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " elected in the primary"];
-            };
-
-            if ($EndorsedCandidateSelectedStore?.rejected_in_primary === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " rejected in the primary"];
-            };
-            
-            if ($EndorsedCandidateSelectedStore?.running_in_general === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " running in the general"];
-            };
-
-            if ($EndorsedCandidateSelectedStore?.rejected_in_general === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " rejected in the general"];
-            };
-
-            if ($EndorsedCandidateSelectedStore?.elected_in_general === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " elected in the general"];
-            };
-
-            if ($EndorsedCandidateSelectedStore?.campaign_ended === 1) {
-                candidateStatusHistory = [ ...candidateStatusHistory, " campaign ended"];
-            };
-
-        } else if (!$EndorsedCandidateSelectedStore) {
-
-            candidateStatusHistory = [];
-
+    let primaryElectionDate: Date | string = $derived.by(() => {
+        if (rawPrimaryElectionDate < blankDate) {
+            return "";
+        } else {
+            return rawPrimaryElectionDate.toUTCString().substring(0, 16);;
         };
 
     });
+    
+    let rawGeneralElectionDate: Date | string = $derived(new Date($EndorsedCandidateSelectedStore?.election_date_general));
+
+    let generalElectionDate: string = $derived(rawGeneralElectionDate.toUTCString().substring(0, 16));
+
+    let candidateStatusHistory: string[] = $state([]);
+
+    const getCandidateStatusHistory = (candidateStatusHistory: string[]) => {
+
+        if ($EndorsedCandidateSelectedStore?.running_in_primary === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " running in the primary"];
+        };
+
+        if ($EndorsedCandidateSelectedStore?.elected_in_primary === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " elected in the primary"];
+        };
+
+        if ($EndorsedCandidateSelectedStore?.rejected_in_primary === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " rejected in the primary"];
+        };
+        
+        if ($EndorsedCandidateSelectedStore?.running_in_general === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " running in the general"];
+        };
+
+        if ($EndorsedCandidateSelectedStore?.rejected_in_general === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " rejected in the general"];
+        };
+
+        if ($EndorsedCandidateSelectedStore?.elected_in_general === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " elected in the general"];
+        };
+
+        if ($EndorsedCandidateSelectedStore?.campaign_ended === 1) {
+            candidateStatusHistory = [ ...candidateStatusHistory, " campaign ended"];
+        };
+
+        return candidateStatusHistory;
+
+    };
+    
+
+    let candidateStatusHistoryUpdated: string[] = $derived(getCandidateStatusHistory(candidateStatusHistory));
 
     const closeClickHandler = () => {
         $EndorsedCandidateOpenStore = false;
         $EndorsedCandidateSelectedStore = null;
     };
-
 
 </script>
 
@@ -207,7 +197,7 @@
                             status: 
                         </td>
                         <td>
-                            {reverseHtmlEntities(candidateStatusHistory.toString())}
+                            {reverseHtmlEntities(candidateStatusHistoryUpdated.toString())}
                         </td>
                     </tr>
                 </tbody>
