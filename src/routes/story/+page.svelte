@@ -92,6 +92,18 @@
             <tr>
                 <td>
                     <h3 style="white-space: nowrap;">
+                        1941
+                    </h3>
+                </td>
+                <td>
+                    <p>
+                        U.S. officially becomes involved in WW2.  The mobilization of industries for the war ended expansion of the New Deal.  FDR's Second Bill of Rights has never become a reality.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3 style="white-space: nowrap;">
                         1979 - 1980
                     </h3>
                 </td>
