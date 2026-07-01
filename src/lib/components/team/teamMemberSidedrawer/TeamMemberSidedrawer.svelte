@@ -6,24 +6,17 @@
     import { page } from '$app/state';
     import EmailIcon from '$lib/images/icons/email_icon.svg?raw';
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
-    import { afterNavigate } from '$app/navigation';
-
-    let teamMember: TeamMember | null | undefined = $state(null);
 
     const teamMembers: TeamMember[] = TeamMemberData;
 
-    afterNavigate(() => {
+    let memberCardSelectId: number = $derived($TeamMemberSelectedStore);
 
-        if ($TeamMemberSelectedStore) {
-
-            let memberCardSelectId: number | null = $TeamMemberSelectedStore;
-
-            teamMember = teamMembers.find((teamMember) => {
-                return (teamMember?.index === memberCardSelectId);
-            });
-
-        };
-
+    let teamMember: TeamMember | null | undefined = $derived.by(() => {
+            
+        return teamMembers.find((teamMember) => {
+            return (teamMember?.index === memberCardSelectId);
+        });
+        
     });
     
     const closeClickHandler = () => {
