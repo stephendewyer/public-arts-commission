@@ -5,41 +5,19 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    import { afterNavigate } from '$app/navigation';
 
-    let actionIsAllDay: boolean = $state(false);
-    let rawAllDayActionDate: Date | string = $state("");
-    let allDayActionDate: string = $state("");
-    let actionRawStartDate: Date | string = $state("");
-    let actionStartDate: string = $state("");
-    let actionRawEndDate: Date | string = $state("");
-    let actionEndDate: string = $state("");
+    let actionIsAllDay: boolean = $derived( $EndorsedActionSelectedStore?.all_day_event ? $EndorsedActionSelectedStore?.all_day_event : false );
 
-    afterNavigate(() => {
+    let rawAllDayActionDate: Date | string  = $derived(new Date($EndorsedActionSelectedStore?.all_day_event_date));
 
-        if ($EndorsedActionSelectedStore) {
+    let allDayActionDate: Date | string = $derived( $EndorsedActionSelectedStore?.all_day_event_date ? rawAllDayActionDate?.toUTCString().substring(0, 16) : "");
 
-            if ($EndorsedActionSelectedStore?.all_day_event) {
-                actionIsAllDay = $EndorsedActionSelectedStore?.all_day_event;
-            };
+    let actionRawStartDate: Date | string = $derived(new Date($EndorsedActionSelectedStore?.date_start));
 
-            if ($EndorsedActionSelectedStore?.all_day_event_date) {
-                rawAllDayActionDate = new Date($EndorsedActionSelectedStore?.all_day_event_date);
-                allDayActionDate = rawAllDayActionDate?.toUTCString().substring(0, 16);
-            };
-
-            if ($EndorsedActionSelectedStore?.date_start) {
-                actionRawStartDate = new Date($EndorsedActionSelectedStore?.date_start);
-                actionStartDate = actionRawStartDate.toUTCString();
-            };
-
-            if ($EndorsedActionSelectedStore?.date_end) {
-                actionRawEndDate = new Date($EndorsedActionSelectedStore?.date_end);
-                actionEndDate = actionRawEndDate.toUTCString();
-            };
-        };
-
-    });
+    let actionStartDate: string = $derived($EndorsedActionSelectedStore?.date_start ? actionRawStartDate.toUTCString() : "");
+    
+    let actionRawEndDate: Date | string = $derived(new Date($EndorsedActionSelectedStore?.date_end));
+    let actionEndDate: string = $derived($EndorsedActionSelectedStore?.date_end ? actionRawEndDate.toUTCString() : "");
 
     const closeClickHandler = () => {
         $EndorsedActionOpenStore = false;

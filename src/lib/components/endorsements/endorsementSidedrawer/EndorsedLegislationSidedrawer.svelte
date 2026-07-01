@@ -5,122 +5,147 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    import { afterNavigate } from '$app/navigation';
-
-    let sponsorsHouse: SponsorHouse[] = $state([]);
-    let sponsorsSenate: SponsorSenate[]  = $state([]);
-    let coSponsorsHouse: CoSponsorHouse[]  = $state([]);
-    let coSponsorsSenate: CoSponsorSenate[]  = $state([]);
-
-    let sponsorsHouseNames: string[] = $state([]);
-    let sponsorsSenateNames: string[] = $state([]);
-    let coSponsorsHouseNames: string[] = $state([]);
-    let coSponsorsSenateNames: string[] = $state([]);
 
     let legislationStatus: string[] = $state([]);
 
-    afterNavigate(() => {
+    const getLegislationStatus = (legislationStatus: string[]) => {
+        
+        if ($EndorsedLegislationSelectedStore?.passed_in_House === 1) {
 
-        if ($EndorsedLegislationSelectedStore) {
+            legislationStatus = [...legislationStatus, " passed in the House"];
 
-            if ($EndorsedLegislationSelectedStore?.passed_in_House === 1) {
+        };
 
-                legislationStatus = [...legislationStatus, " passed in the House"];
+        if ($EndorsedLegislationSelectedStore?.passed_in_Senate === 1) {
 
-            };
+            legislationStatus = [...legislationStatus, " passed in the Senate"];
 
-            if ($EndorsedLegislationSelectedStore?.passed_in_Senate === 1) {
+        };
 
-                legislationStatus = [...legislationStatus, " passed in the Senate"];
+        if ($EndorsedLegislationSelectedStore?.rejected_in_House === 1) {
 
-            };
+            legislationStatus = [...legislationStatus, " rejected in the House"];
 
-            if ($EndorsedLegislationSelectedStore?.rejected_in_House === 1) {
+        };
 
-                legislationStatus = [...legislationStatus, " rejected in the House"];
+        if ($EndorsedLegislationSelectedStore?.rejected_in_Senate === 1) {
 
-            };
+            legislationStatus = [...legislationStatus, " rejected in the Senate"];
 
-            if ($EndorsedLegislationSelectedStore?.rejected_in_Senate === 1) {
+        };
 
-                legislationStatus = [...legislationStatus, " rejected in the Senate"];
+        if ($EndorsedLegislationSelectedStore?.vetoed_by_Executive === 1) {
 
-            };
+            legislationStatus = [...legislationStatus, " vetoed by the Executive"];
 
-            if ($EndorsedLegislationSelectedStore?.vetoed_by_Executive === 1) {
+        };
 
-                legislationStatus = [...legislationStatus, " vetoed by the Executive"];
+        if ($EndorsedLegislationSelectedStore?.signed_by_Executive === 1) {
 
-            };
+            legislationStatus = [...legislationStatus, " signed into law by the Executive"];
 
-            if ($EndorsedLegislationSelectedStore?.signed_by_Executive === 1) {
+        };
 
-                legislationStatus = [...legislationStatus, " signed into law by the Executive"];
+        return legislationStatus;
 
-            };
+    };
 
-            if ($EndorsedLegislationSelectedStore?.sponsors_House) {
+    let legislationStatusUpdated: string[] = $derived(getLegislationStatus(legislationStatus));
 
-                sponsorsHouse = $EndorsedLegislationSelectedStore.sponsors_House;
+    let sponsorsHouseNames: string[] = $state([]);
 
-                sponsorsHouse.forEach((sponsor) => {
+    const getSponsorHouseNames = (sponsorsHouseNames: string[]) => {
+        if ($EndorsedLegislationSelectedStore?.sponsors_House) {
 
-                    sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
-                
-                });
+            $EndorsedLegislationSelectedStore.sponsors_House.forEach((sponsor: SponsorHouse) => {
 
-            };
+                sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
+            
+            });
 
-            if ($EndorsedLegislationSelectedStore?.sponsors_Senate) {
+            return sponsorsHouseNames;
 
-                sponsorsSenate = $EndorsedLegislationSelectedStore.sponsors_Senate;
+        } else {
 
-                sponsorsSenate.forEach((sponsor) => {
+            return [];
 
-                    sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
+        };
 
-                });
+    };
 
-            };
+    let sponsorsHouseNamesUpdated: string[] = $derived(getSponsorHouseNames(sponsorsHouseNames));
 
-            if ($EndorsedLegislationSelectedStore?.co_sponsors_House) {
+    let coSponsorsHouseNames: string[] = $state([]);
 
-                coSponsorsHouse = $EndorsedLegislationSelectedStore.co_sponsors_House;
+    const getCoSponsorsHouseNames = (coSponsorsHouseNames: string[]) => {
 
-                coSponsorsHouse.forEach((sponsor) => {
+        if ($EndorsedLegislationSelectedStore?.co_sponsors_House) {
 
-                    coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
+            $EndorsedLegislationSelectedStore.co_sponsors_House.forEach((sponsor: CoSponsorHouse) => {
 
-                });
+                coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
 
-            };
+            });
 
-            if ($EndorsedLegislationSelectedStore?.co_sponsors_Senate) {
+            return coSponsorsHouseNames;
 
-                coSponsorsSenate = $EndorsedLegislationSelectedStore?.co_sponsors_Senate;
+        } else {
 
-                coSponsorsSenate.forEach((sponsor) => {
+            return [];
 
-                    coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
+        };
 
-                });
+    };
 
-            };
+    let coSponsorsHouseNamesUpdated = $derived(getCoSponsorsHouseNames(coSponsorsHouseNames));
 
-        } else if (!$EndorsedLegislationOpenStore) {
-            legislationStatus = [];
-            sponsorsHouse = [];
-            sponsorsSenate = [];
-            coSponsorsHouse = [];
-            coSponsorsSenate = [];
-            sponsorsHouseNames = [];
-            sponsorsSenateNames = [];
-            coSponsorsHouseNames = [];
-            coSponsorsSenateNames = [];
-        }; 
+    let sponsorsSenateNames: string[] = $state([]);
 
-    });
+    const getSponsorsSenateNames = (sponsorsSenateNames: string[]) => {
 
+        if ($EndorsedLegislationSelectedStore?.sponsors_Senate) {
+
+            $EndorsedLegislationSelectedStore.sponsors_Senate.forEach((sponsor: SponsorSenate) => {
+
+                sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
+
+            });
+
+            return sponsorsSenateNames;
+
+        } else {
+
+            return [];
+
+        };
+
+    };
+
+    let updatedSponsorsSenateNames: string[] = $derived(getSponsorsSenateNames(sponsorsSenateNames));
+    
+    let coSponsorsSenateNames: string[] = $state([]);
+
+    const getCoSponsorsSenateNames = (coSponsorsSenateNames: string[]) => {
+
+        if ($EndorsedLegislationSelectedStore?.co_sponsors_Senate) {
+
+            $EndorsedLegislationSelectedStore?.co_sponsors_Senate.forEach((sponsor: CoSponsorSenate) => {
+
+                coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
+
+            });
+
+            return coSponsorsSenateNames;
+
+        } else {
+            
+            return [];
+
+        };
+
+    };
+
+    let coSponsorsSenateNamesUpdated: string[] = $derived(getCoSponsorsSenateNames(coSponsorsSenateNames));
 
     const closeClickHandler = () => {
         $EndorsedLegislationOpenStore = false;
@@ -245,9 +270,7 @@
                             House sponsor: 
                         </td>
                         <td>
-                            {#key sponsorsHouseNames}
-                                {reverseHtmlEntities(sponsorsHouseNames.join(', ').toString())}
-                            {/key}
+                            {reverseHtmlEntities(sponsorsHouseNamesUpdated.join(', ').toString())}
                         </td>
                     </tr>
                     <tr>
@@ -256,13 +279,11 @@
                         </td>
                         <td>
                             <ol class="co-sponsors">
-                                {#key coSponsorsHouseNames}
-                                    {#each coSponsorsHouseNames as coSponsorHouse, i}
-                                        <li>
-                                            {reverseHtmlEntities(coSponsorHouse)}
-                                        </li>
-                                    {/each}
-                                {/key}
+                                {#each coSponsorsHouseNamesUpdated as coSponsorHouse, i}
+                                    <li>
+                                        {reverseHtmlEntities(coSponsorHouse)}
+                                    </li>
+                                {/each}
                             </ol>
                         </td>
                     </tr>
@@ -271,9 +292,7 @@
                             Senate sponsor: 
                         </td>
                         <td>
-                            {#key sponsorsSenateNames}
-                                {sponsorsSenateNames.length > 0 ? reverseHtmlEntities(sponsorsSenateNames.join(', ').toString()) : ""}
-                            {/key}
+                            {updatedSponsorsSenateNames.length > 0 ? reverseHtmlEntities(updatedSponsorsSenateNames.join(', ').toString()) : ""}
                         </td>
                     </tr>
                     <tr>
@@ -282,13 +301,11 @@
                         </td>
                         <td>
                             <ol class="co-sponsors">
-                                {#key coSponsorsSenateNames}
-                                    {#each coSponsorsSenateNames as coSponsorName, i}
-                                        <li>
-                                            {reverseHtmlEntities(coSponsorName)}
-                                        </li>
-                                    {/each}
-                                {/key}
+                                {#each coSponsorsSenateNamesUpdated as coSponsorName, i}
+                                    <li>
+                                        {reverseHtmlEntities(coSponsorName)}
+                                    </li>
+                                {/each}
                             </ol>
                         </td>
                     </tr>
@@ -319,9 +336,7 @@
                             status: 
                         </td>
                         <td>
-                            {#key legislationStatus}
-                                {reverseHtmlEntities(legislationStatus.toString())}
-                            {/key}
+                            {reverseHtmlEntities(legislationStatusUpdated.toString())}
                         </td>
                     </tr>
                 </tbody>

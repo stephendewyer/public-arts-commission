@@ -5,7 +5,6 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    import { afterNavigate } from '$app/navigation';
 
     let blankDate: Date | string = new Date("2016-01-01T06:00:00.000Z");
 

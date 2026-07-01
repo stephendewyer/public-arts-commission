@@ -5,140 +5,179 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    import { afterNavigate } from '$app/navigation';
 
-    let rawElectionDate: Date | string = $state("");
-    let electionDate: Date | string = $state("");
-    let blankDate = $state(new Date("2016-01-01T06:00:00.000Z"));
+    let rawElectionDate: Date | string = $derived( $EndorsedAmendmentSelectedStore?.election_date ? $EndorsedAmendmentSelectedStore.election_date : "");
+
+    let blankDate = new Date("2016-01-01T06:00:00.000Z");
+
+    let electionDate: string = $derived.by(() => {
+
+        if ($EndorsedAmendmentSelectedStore?.election_date) {
+
+            if (rawElectionDate < blankDate) {
+
+               return ""; 
+
+            } else {
+
+                return new Date(rawElectionDate).toUTCString().substring(0, 16);
+                
+            };
+
+        } else {
+
+            return ""
+
+        };
+
+    });
 
     let amendmentStatus: string[] = $state([]);
 
-    let sponsorsHouse: SponsorHouse[] = $state([]);
-    let sponsorsSenate: SponsorSenate[] = $state([]);
-    let coSponsorsHouse: CoSponsorHouse[] = $state([]);
-    let coSponsorsSenate: CoSponsorSenate[] = $state([]);
+    const getAmendmentStatus = (amendmentStatus: string[]) => {
+
+        if ($EndorsedAmendmentSelectedStore?.introduced_in_House === 1) {
+
+            amendmentStatus = [...amendmentStatus, " introduced in the House"];
+
+        };
+
+        if ($EndorsedAmendmentSelectedStore?.introduced_in_Senate === 1) {
+
+            amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
+
+        };
+
+        if ($EndorsedAmendmentSelectedStore?.twothirds_House_and_Senate_passed === 1) {
+
+            amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
+
+        };
+
+        if ($EndorsedAmendmentSelectedStore?.simple_majority_House_and_Senate_passed === 1) {
+
+            amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
+
+        };
+
+        if ($EndorsedAmendmentSelectedStore?.simple_majority_voters_passed === 1) {
+
+            amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
+
+        };
+
+
+        if ($EndorsedAmendmentSelectedStore?.ratified_by_state_convenctions === 1) {
+
+            amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
+
+        };
+
+        if ($EndorsedAmendmentSelectedStore?.ratified_by_state_legislatures === 1) {
+
+            amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
+
+        };
+
+        return amendmentStatus;
+
+    };
+
+    let amendmentStatusUpdated: string[] = $derived(getAmendmentStatus(amendmentStatus));
 
     let sponsorsHouseNames: string[] = $state([]);
-    let sponsorsSenateNames: string[] = $state([]);
+
+    const getSponsorsHouseNames = (sponsorsHouseNames: string[]) => {
+
+        if ($EndorsedAmendmentSelectedStore?.sponsors_House) {
+
+            $EndorsedAmendmentSelectedStore?.sponsors_House.forEach((sponsor: SponsorHouse) => {
+
+                sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
+            
+            });
+
+            return sponsorsHouseNames;
+
+        } else {
+
+            return [];
+
+        };
+
+    };
+
+    let sponsorsHouseNamesUpdated: string[] = $derived(getSponsorsHouseNames(sponsorsHouseNames));
+
     let coSponsorsHouseNames: string[] = $state([]);
+
+    const getCoSponsorsHouseNames = (coSponsorsHouseNames: string[]) => {
+
+        if ($EndorsedAmendmentSelectedStore?.co_sponsors_House) {
+
+            $EndorsedAmendmentSelectedStore?.co_sponsors_House.forEach((sponsor: CoSponsorHouse) => {
+
+                coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
+
+            });
+
+            return coSponsorsHouseNames;
+
+        } else {
+
+            return [];
+
+        };
+
+    };
+
+    let coSponsorsHouseNamesUpdated: string[] = $derived(getCoSponsorsHouseNames(coSponsorsHouseNames));
+
+    let sponsorsSenateNames: string[] = $state([]);
+
+    const getSponsorsSenateNames = (sponsorsSenateNames: string[]) => {
+
+        if ($EndorsedAmendmentSelectedStore?.sponsors_Senate) {
+
+            $EndorsedAmendmentSelectedStore?.sponsors_Senate.forEach((sponsor: SponsorSenate) => {
+
+                sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
+
+            });
+
+            return sponsorsSenateNames;
+
+        } else {
+
+            return [];
+
+        };
+
+    };
+
+    let sponsorsSenateUpdated: string[] = $derived(getSponsorsSenateNames(sponsorsSenateNames));
+    
     let coSponsorsSenateNames: string[] = $state([]);
 
-    afterNavigate(() => {
+    const getCoSponsorSenateNames = (coSponsorsSenateNames: string[]) => {
 
-        if ($EndorsedAmendmentSelectedStore) {
+        if ($EndorsedAmendmentSelectedStore?.co_sponsors_Senate) {
 
-            if ($EndorsedAmendmentSelectedStore?.election_date) {
-                rawElectionDate = new Date ($EndorsedAmendmentSelectedStore.election_date);
-                if (rawElectionDate < blankDate) {
-                    electionDate = ""; 
-                } else {
-                    electionDate = rawElectionDate.toUTCString().substring(0, 16);
-                };
-            };
+            $EndorsedAmendmentSelectedStore?.co_sponsors_Senate.forEach((sponsor: CoSponsorSenate) => {
 
-            if ($EndorsedAmendmentSelectedStore?.introduced_in_House === 1) {
+                coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
 
-                amendmentStatus = [...amendmentStatus, " introduced in the House"];
+            });
 
-            };
+            return coSponsorsSenateNames;
 
-            if ($EndorsedAmendmentSelectedStore?.introduced_in_Senate === 1) {
-
-                amendmentStatus = [...amendmentStatus, " introduced in the Senate"];
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.twothirds_House_and_Senate_passed === 1) {
-
-                amendmentStatus = [...amendmentStatus, " passed by two-thirds majorities in the House and Senate"];
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.simple_majority_House_and_Senate_passed === 1) {
-
-                amendmentStatus = [...amendmentStatus, " passed by simple majorities in the House and Senate"];
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.simple_majority_voters_passed === 1) {
-
-                amendmentStatus = [...amendmentStatus, " passed by a simple majority of voters"];
-
-            };
-
-
-            if ($EndorsedAmendmentSelectedStore?.ratified_by_state_convenctions === 1) {
-
-                amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.ratified_by_state_legislatures === 1) {
-
-                amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state legislatures"];
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.sponsors_House) {
-
-                sponsorsHouse = $EndorsedAmendmentSelectedStore?.sponsors_House;
-
-                sponsorsHouse.forEach((sponsor) => {
-
-                    sponsorsHouseNames = [...sponsorsHouseNames, sponsor.sponsor_name];
-                
-                });
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.sponsors_Senate) {
-
-                sponsorsSenate = $EndorsedAmendmentSelectedStore?.sponsors_Senate;
-
-                sponsorsSenate.forEach((sponsor) => {
-
-                    sponsorsSenateNames = [...sponsorsSenateNames, sponsor.sponsor_name];
-
-                });
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.co_sponsors_House) {
-
-                coSponsorsHouse = $EndorsedAmendmentSelectedStore?.co_sponsors_House;
-
-                coSponsorsHouse.forEach((sponsor) => {
-
-                    coSponsorsHouseNames = [...coSponsorsHouseNames, sponsor.co_sponsor_name];
-
-                });
-
-            };
-
-            if ($EndorsedAmendmentSelectedStore?.co_sponsors_Senate) {
-
-                coSponsorsSenate = $EndorsedAmendmentSelectedStore?.co_sponsors_Senate;
-
-                coSponsorsSenate.forEach((sponsor) => {
-
-                    coSponsorsSenateNames = [...coSponsorsSenateNames, sponsor.co_sponsor_name];
-
-                });
-
-            };
-
-        } else if (!$EndorsedAmendmentSelectedStore) {
-            amendmentStatus = [];
-            sponsorsHouse = [];
-            sponsorsSenate = [];
-            coSponsorsHouse = [];
-            coSponsorsSenate = [];
-            sponsorsHouseNames = [];
-            sponsorsSenateNames = [];
-            coSponsorsHouseNames = [];
-            coSponsorsSenateNames = [];
+        } else {
+            return [];
         };
-    });
+
+    };
+
+    let coSponsorsSenateNamesUpdated = $derived(getCoSponsorSenateNames(coSponsorsSenateNames));
 
     const closeClickHandler = () => {
         $EndorsedAmendmentOpenStore = false;
@@ -224,9 +263,7 @@
                             election date:
                         </td>
                         <td>
-                            {#key (electionDate)}
-                                {electionDate ? electionDate : ""}
-                            {/key}
+                            {electionDate ? electionDate : ""}
                         </td>
                     </tr>
                     <tr>
@@ -272,9 +309,7 @@
                             House sponsor: 
                         </td>
                         <td>
-                            {#key sponsorsHouseNames}
-                                {sponsorsHouseNames.length > 0 ? reverseHtmlEntities(sponsorsHouseNames.join(', ').toString()) : ""}
-                            {/key}
+                            {sponsorsHouseNamesUpdated.length > 0 ? reverseHtmlEntities(sponsorsHouseNamesUpdated.join(', ').toString()) : ""}
                         </td>
                     </tr>
                     <tr>
@@ -283,13 +318,11 @@
                         </td>
                         <td>
                             <ol class="co-sponsors">
-                                {#key coSponsorsHouseNames}
-                                    {#each coSponsorsHouseNames as coSponsorHouseName, i}
-                                        <li>
-                                            {reverseHtmlEntities(coSponsorHouseName)}
-                                        </li>
-                                    {/each}
-                                {/key}
+                                {#each coSponsorsHouseNamesUpdated as coSponsorHouseName, i}
+                                    <li>
+                                        {reverseHtmlEntities(coSponsorHouseName)}
+                                    </li>
+                                {/each}
                             </ol>
                         </td>
                     </tr>
@@ -298,9 +331,7 @@
                             Senate sponsor: 
                         </td>
                         <td>
-                            {#key sponsorsSenateNames}
-                                {sponsorsSenateNames.length > 0 ? reverseHtmlEntities(sponsorsSenateNames.join(', ').toString()) : ""}
-                            {/key}
+                            {sponsorsSenateUpdated.length > 0 ? reverseHtmlEntities(sponsorsSenateUpdated.join(', ').toString()) : ""}
                         </td>
                     </tr>
                     <tr>
@@ -309,13 +340,11 @@
                         </td>
                         <td>
                             <ol class="co-sponsors">
-                                {#key coSponsorsSenateNames}
-                                    {#each coSponsorsSenateNames as coSponsorSenateName, i}
-                                        <li>
-                                            {reverseHtmlEntities(coSponsorSenateName)}
-                                        </li>
-                                    {/each}
-                                {/key}
+                                {#each coSponsorsSenateNamesUpdated as coSponsorSenateName, i}
+                                    <li>
+                                        {reverseHtmlEntities(coSponsorSenateName)}
+                                    </li>
+                                {/each}
                             </ol>
                         </td>
                     </tr>
@@ -345,9 +374,7 @@
                             status: 
                         </td>
                         <td>
-                            {#key amendmentStatus}
-                                {amendmentStatus.length > 0 ? reverseHtmlEntities(amendmentStatus.toString()) : ""}
-                            {/key}
+                            {amendmentStatusUpdated.length > 0 ? reverseHtmlEntities(amendmentStatusUpdated.toString()) : ""}
                         </td>
                     </tr>
                 </tbody>

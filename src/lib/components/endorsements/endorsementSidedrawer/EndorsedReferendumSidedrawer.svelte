@@ -13,43 +13,38 @@
 
     let referendumStatus: string[] = $state([]);
 
-    afterNavigate(() => {
+    const getReferendumStatus = (referendumStatus: string[]) => {
 
-        if ($EndorsedReferendumSelectedStore) {
+        if ($EndorsedReferendumSelectedStore?.elected === 1) {
 
-            if ($EndorsedReferendumSelectedStore?.elected === 1) {
-
-                referendumStatus = [...referendumStatus, " elected by voters"];
-
-            };
-
-            if ($EndorsedReferendumSelectedStore?.rejected === 1) {
-
-                referendumStatus = [...referendumStatus, " rejected by voters"];
-
-            };
-
-            if ($EndorsedReferendumSelectedStore?.pending_election === 1) {
-
-                referendumStatus = [...referendumStatus, " pending election by voters"];
-
-            };
-
-            if ($EndorsedReferendumSelectedStore?.election_date) {
-
-                rawElectionDate = new Date($EndorsedReferendumSelectedStore?.election_date);
-
-                electionDate = rawElectionDate?.toUTCString().substring(0, 16);
-
-            };
-
-        } else if (!$EndorsedReferendumSelectedStore) {
-
-            referendumStatus = [];
+            referendumStatus = [...referendumStatus, " elected by voters"];
 
         };
 
-    });
+        if ($EndorsedReferendumSelectedStore?.rejected === 1) {
+
+            referendumStatus = [...referendumStatus, " rejected by voters"];
+
+        };
+
+        if ($EndorsedReferendumSelectedStore?.pending_election === 1) {
+
+            referendumStatus = [...referendumStatus, " pending election by voters"];
+
+        };
+
+        if ($EndorsedReferendumSelectedStore?.election_date) {
+
+            rawElectionDate = new Date($EndorsedReferendumSelectedStore?.election_date);
+
+            electionDate = rawElectionDate?.toUTCString().substring(0, 16);
+
+        };
+
+        return referendumStatus;
+    };
+
+    let referendumStatusUpdated: string[] = $derived(getReferendumStatus(referendumStatus));
 
     const closeClickHandler = () => {
         $EndorsedReferendumOpenStore = false;
@@ -170,9 +165,7 @@
                             status: 
                         </td>
                         <td>
-                            {#key referendumStatus}
-                                {reverseHtmlEntities(referendumStatus.toString())}
-                            {/key}
+                            {reverseHtmlEntities(referendumStatusUpdated.toString())}
                         </td>
                     </tr>
                 </tbody>
