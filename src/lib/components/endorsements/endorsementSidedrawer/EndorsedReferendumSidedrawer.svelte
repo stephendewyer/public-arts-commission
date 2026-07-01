@@ -5,11 +5,8 @@
     import ExternalLinkIcon from '$lib/images/icons/external_link_icon.svg?raw';
     import { page } from '$app/state';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
-    import { afterNavigate } from '$app/navigation';
 
-    let rawElectionDate: Date | string = $state("");
-
-    let electionDate: string = $state("");
+    let electionDate: string = $derived($EndorsedReferendumSelectedStore?.election_date ? new Date($EndorsedReferendumSelectedStore?.election_date).toUTCString().substring(0, 16) : "");
 
     let referendumStatus: string[] = $state([]);
 
@@ -30,14 +27,6 @@
         if ($EndorsedReferendumSelectedStore?.pending_election === 1) {
 
             referendumStatus = [...referendumStatus, " pending election by voters"];
-
-        };
-
-        if ($EndorsedReferendumSelectedStore?.election_date) {
-
-            rawElectionDate = new Date($EndorsedReferendumSelectedStore?.election_date);
-
-            electionDate = rawElectionDate?.toUTCString().substring(0, 16);
 
         };
 

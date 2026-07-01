@@ -173,10 +173,6 @@
         font-size: 1rem;
     }
 
-    .data_category {
-        color: #28387C;
-    }
-
     @media (max-width: 1440px) {
 
         .image_container > img {
