@@ -5,23 +5,15 @@
     import ReferendumsEndorsedPanel from '$lib/components/adminDashboard/ReferendumsPanels/ReferendumsEndorsedPanel.svelte';
     import ReferendumsNominatedPanel from '$lib/components/adminDashboard/ReferendumsPanels/ReferendumsNominatedPanel.svelte';
 
-    export let panel_data: any[] = [];
+    let { panel_data }: { panel_data: any[] } = $props();
 
-    let activeTab: number = 1;
-
-    $: activeTab;
-
-    let tabPanels: any[];
+    let activeTab: number = $state(1);
 	
-	let endorsedReferendums: ReferendumWithImage[];
+	let endorsedReferendums: ReferendumWithImage[] = $derived([...panel_data[0].table]);
 
-	$: endorsedReferendums = [...panel_data[0].table];
+	let nominatedReferendums: ReferendumWithImageNominated[] = $derived([...panel_data[1].table]);
 
-	let nominatedReferendums: ReferendumWithImageNominated[];
-
-	$: nominatedReferendums = [...panel_data[1].table];
-
-	$: tabPanels = [
+	let tabPanels: any[] = $derived([
 		{
 			id: uuidv4(),
             index: 1,
@@ -46,7 +38,7 @@
 					table: nominatedReferendums
 			}
 		}
-	];
+	]);
 
 </script>
 

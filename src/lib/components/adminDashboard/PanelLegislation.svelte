@@ -5,23 +5,15 @@
     import LegislationEndorsedPanel from '$lib/components/adminDashboard/LegislationPanels/LegislationEndorsedPanel.svelte';
     import LegislationNominatedPanel from '$lib/components/adminDashboard/LegislationPanels/LegislationNominatedPanel.svelte';
 
-    export let panel_data: any[] = [];
+    let { panel_data }: { panel_data: any[] } = $props();
 
-    let activeTab: number = 1;
+    let activeTab: number = $state(1);
 
-    $: activeTab;
+	let endorsedLegislation: LegislationWithSponsorsAndImage[] = $derived([...panel_data[0].table]);
 
-    let tabPanels: any[];
-	
-	let endorsedLegislation: LegislationWithSponsorsAndImage[];
+	let nominatedLegislation: LegislationWithSponsorsAndImageNominated[] = $derived([...panel_data[1].table]);
 
-	$: endorsedLegislation = [...panel_data[0].table];
-
-	let nominatedLegislation: LegislationWithSponsorsAndImageNominated[];
-
-	$: nominatedLegislation = [...panel_data[1].table];
-
-	$: tabPanels = [
+	let tabPanels: any[] = $derived([
 		{
 			id: uuidv4(),
             index: 1,
@@ -46,7 +38,7 @@
 					table: nominatedLegislation
 			}
 		}
-	];
+	]);
 
 </script>
 

@@ -10,35 +10,25 @@
     import { EndorsedAmendmentOpenStore } from "$lib/stores/EndorsedAmendmentOpenStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any} = $props();
 
-    let activeTab: number = 0;
+    let activeTab: number = $state(0);
 
-    $: activeTab;
-
-    let endorsedAmendments: AmendmentWithSponsorsAndImage[] = [];
-
-    $: endorsedAmendments = [...panel_data.table];
+    let endorsedAmendments: AmendmentWithSponsorsAndImage[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedEndorsedAmendments: AmendmentWithSponsorsAndImage[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedEndorsedAmendments = endorsedAmendments.slice(firstPageIndex, lastPageIndex);
+    let paginatedEndorsedAmendments: AmendmentWithSponsorsAndImage[] = $derived(endorsedAmendments.slice(firstPageIndex, lastPageIndex));
 
     const editClickHandler = (amendmentID: number | undefined) => {
 
@@ -149,25 +139,29 @@
 
     };
 
-    $: if ($DeleteConfirmedStore === true) {
+    $effect(() => {
 
-        // delete the candidate row from the database
+        if ($DeleteConfirmedStore === true) {
 
-        ConfirmedDelete();  
+            // delete the candidate row from the database
 
-        // load new data from endorsed candidates table in database
+            ConfirmedDelete();  
 
-        GetAmendmentEndorsements();
+            // load new data from endorsed candidates table in database
 
-        // load the DeleteConfirmedStore to false
+            GetAmendmentEndorsements();
 
-        $DeleteConfirmedStore = false;
+            // load the DeleteConfirmedStore to false
 
-    };
+            $DeleteConfirmedStore = false;
+
+        };
+
+    });
 
     const moreInfoClickHandler = (amendmentID: number | undefined, index: number ) => {
 
-        $EndorsedAmendmentSelectedStore = endorsedAmendments[index];
+        $EndorsedAmendmentSelectedStore = endorsedAmendments.find((amendment) => amendment.amendment_ID === amendmentID);
 
         $EndorsedAmendmentOpenStore = true;
 
@@ -231,8 +225,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => editClickHandler(amendment.amendment_ID)}
-                            on:keyup={() => editClickHandler(amendment.amendment_ID)}
+                            onclick={() => editClickHandler(amendment.amendment_ID)}
+                            onkeyup={() => editClickHandler(amendment.amendment_ID)}
                             class="icon_container"
                         >
                             {@html EditIcon}
@@ -240,13 +234,13 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => deleteClickHandler(
+                            onclick={() => deleteClickHandler(
                                 amendment.amendment_ID, 
                                 amendment.amendment_name,
                                 amendment.image_ID,
                                 amendment.public_ID
                             )}
-                            on:keyup={() => deleteClickHandler(
+                            onkeyup={() => deleteClickHandler(
                                 amendment.amendment_ID, 
                                 amendment.amendment_name,
                                 amendment.image_ID,
@@ -259,8 +253,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(amendment.amendment_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(amendment.amendment_ID, i)}
+                            onclick={() => moreInfoClickHandler(amendment.amendment_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(amendment.amendment_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

@@ -10,37 +10,27 @@
     import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    $: panel_data;
-
-    let endorsedActions: ActionWithImage[];
-
-    $: endorsedActions = [...panel_data.table];
+    let endorsedActions: ActionWithImage[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedEndorsedActions: ActionWithImage[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedEndorsedActions = endorsedActions.slice(firstPageIndex, lastPageIndex);
+    let paginatedEndorsedActions: ActionWithImage[] = $derived(endorsedActions.slice(firstPageIndex, lastPageIndex));
 
     const moreInfoClickHandler = (actionID: number | undefined, index: number ) => {
 
-        $EndorsedActionSelectedStore = endorsedActions[index];
+        $EndorsedActionSelectedStore = endorsedActions.find((action) => actionID === action.action_ID);
 
         $EndorsedActionOpenStore = true;
 
@@ -155,21 +145,25 @@
 
     };
 
-    $: if ($DeleteConfirmedStore === true) {
+    $effect(() => {
 
-        // delete the candidate row from the database
+        if ($DeleteConfirmedStore === true) {
 
-        ConfirmedDelete();  
+            // delete the candidate row from the database
 
-        // load new data from endorsed candidates table in database
+            ConfirmedDelete();  
 
-        GetActionEndorsements();
+            // load new data from endorsed candidates table in database
 
-        // load the DeleteConfirmedStore to false
+            GetActionEndorsements();
 
-        $DeleteConfirmedStore = false;
+            // load the DeleteConfirmedStore to false
 
-    };
+            $DeleteConfirmedStore = false;
+
+        };
+
+    });
     
 </script>
 
@@ -260,8 +254,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => editClickHandler(action.action_ID)}
-                            on:keyup={() => editClickHandler(action.action_ID)}
+                            onclick={() => editClickHandler(action.action_ID)}
+                            onkeyup={() => editClickHandler(action.action_ID)}
                             class="icon_container"
                         >
                             {@html EditIcon}
@@ -269,13 +263,13 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => deleteClickHandler(
+                            onclick={() => deleteClickHandler(
                                 action.action_ID, 
                                 action.action_name,
                                 action.image_ID,
                                 action.public_ID
                             )}
-                            on:keyup={() => deleteClickHandler(
+                            onkeyup={() => deleteClickHandler(
                                 action.action_ID, 
                                 action.action_name,
                                 action.image_ID,
@@ -288,8 +282,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(action.action_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(action.action_ID, i)}
+                            onclick={() => moreInfoClickHandler(action.action_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(action.action_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

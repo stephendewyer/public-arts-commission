@@ -10,33 +10,23 @@
     import { DeleteConfirmedStore } from "$lib/stores/DeleteConfirmedStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    $: panel_data;
-
-    let endorsedCandidates: CandidateWithImage[];
-
-    $: endorsedCandidates = [...panel_data.table];
+    let endorsedCandidates: CandidateWithImage[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let endorsedCandidatesCurrentPage: number;
-
-    $: endorsedCandidatesCurrentPage = 1;
+    let endorsedCandidatesCurrentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndexEndorsedCandidates: number;
-    $: firstPageIndexEndorsedCandidates = (endorsedCandidatesCurrentPage -1) * pageSize;
+    let firstPageIndexEndorsedCandidates: number = $derived((endorsedCandidatesCurrentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndexEndorsedCandidates: number;
-    $: lastPageIndexEndorsedCandidates = firstPageIndexEndorsedCandidates + pageSize;
-
-    let paginatedEndorsedCandidates: CandidateWithImage[];
-
+    let lastPageIndexEndorsedCandidates: number = $derived(firstPageIndexEndorsedCandidates + pageSize);
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedEndorsedCandidates = endorsedCandidates.slice(firstPageIndexEndorsedCandidates, lastPageIndexEndorsedCandidates);
+
+    let paginatedEndorsedCandidates: CandidateWithImage[] = $derived(endorsedCandidates.slice(firstPageIndexEndorsedCandidates, lastPageIndexEndorsedCandidates));
 
     const editClickHandler = (campaignID: number | undefined) => {
 
@@ -147,25 +137,28 @@
 
     };
 
-    $: if ($DeleteConfirmedStore === true) {
+    $effect(() => {
 
-        // delete the candidate row from the database
+        if ($DeleteConfirmedStore === true) {
 
-        ConfirmedDelete();  
+            // delete the candidate row from the database
 
-        // load new data from endorsed candidates table in database
+            ConfirmedDelete();  
 
-        GetCandidateEndorsements();
+            // load new data from endorsed candidates table in database
 
-        // load the DeleteConfirmedStore to false
+            GetCandidateEndorsements();
 
-        $DeleteConfirmedStore = false;
+            // load the DeleteConfirmedStore to false
 
-    };
+            $DeleteConfirmedStore = false;
+
+        };
+    });
 
     const moreInfoClickHandler = (campaignID: number | undefined, index: number ) => {
 
-        $EndorsedCandidateSelectedStore = endorsedCandidates[index];
+        $EndorsedCandidateSelectedStore = endorsedCandidates.find((candidate) =>  candidate.candidate_ID === campaignID);
 
         $EndorsedCandidateOpenStore = true;
 
@@ -220,8 +213,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => editClickHandler(campaign.candidate_ID)}
-                            on:keyup={() => editClickHandler(campaign.candidate_ID)}
+                            onclick={() => editClickHandler(campaign.candidate_ID)}
+                            onkeyup={() => editClickHandler(campaign.candidate_ID)}
                             class="icon_container"
                         >
                             {@html EditIcon}
@@ -229,13 +222,13 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => deleteClickHandler(
+                            onclick={() => deleteClickHandler(
                                 campaign.candidate_ID, 
                                 campaign.campaign_name,
                                 campaign.image_ID,
                                 campaign.public_ID
                             )}
-                            on:keyup={() => deleteClickHandler(
+                            onkeyup={() => deleteClickHandler(
                                 campaign.candidate_ID, 
                                 campaign.campaign_name,
                                 campaign.image_ID,
@@ -248,8 +241,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(campaign.candidate_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(campaign.candidate_ID, i)}
+                            onclick={() => moreInfoClickHandler(campaign.candidate_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(campaign.candidate_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

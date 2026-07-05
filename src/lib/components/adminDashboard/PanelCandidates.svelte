@@ -6,29 +6,17 @@
 	import CandidatesEndorsedPanel from './CandidatesPanels/CandidatesEndorsedPanel.svelte';
 	import CandidatesNominatedPanel from './CandidatesPanels/CandidatesNominatedPanel.svelte';
 
-    export let panel_data: any[];
-
-	// $: console.log(panel_data)
+    let { panel_data } : {panel_data: any[]} = $props();
         
-    let activeTab: number;
-
-	$: activeTab = 1;
-
-	let tabPanels: any[];
+    let activeTab: number = $state(1);
 	
-	let endorsedCandidates: CandidateWithImage[];
+	let endorsedCandidates: CandidateWithImage[] = $derived([...panel_data[0].table]);
 
-	$: endorsedCandidates = [...panel_data[0].table];
+	let nominatedCandidates: CandidateWithImageNominated[] = $derived([...panel_data[1].table]);
 
-	let nominatedCandidates: CandidateWithImageNominated[];
+	let candidateApplications: CampaignApplication[] = $derived([...panel_data[2].table]);
 
-	$: nominatedCandidates = [...panel_data[1].table];
-
-	let candidateApplications: CampaignApplication[];
-
-	$: candidateApplications = [...panel_data[2].table];
-
-	$: tabPanels = [
+	let tabPanels: any[] = $derived([
 		{
 			id: uuidv4(),
             index: 1,
@@ -65,7 +53,7 @@
 					table: nominatedCandidates
 			}
 		}
-	];
+	]);
 
 </script>
 <div class="tabpanel_container">

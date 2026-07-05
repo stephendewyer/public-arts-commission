@@ -6,37 +6,27 @@
     import { EndorsedActionOpenStore } from "$lib/stores/EndorsedActionOpenStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    $: panel_data;
-
-    let nominatedActions: ActionWithImageNominated[];
-
-    $: nominatedActions = [...panel_data.table];
+    let nominatedActions: ActionWithImageNominated[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedNominatedActions: ActionWithImageNominated[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedNominatedActions = nominatedActions.slice(firstPageIndex, lastPageIndex);
+    let paginatedNominatedActions: ActionWithImageNominated[] = $derived(nominatedActions.slice(firstPageIndex, lastPageIndex));
 
     const moreInfoClickHandler = (actionID: number | undefined, index: number ) => {
 
-        $EndorsedActionSelectedStore = nominatedActions[index];
+        $EndorsedActionSelectedStore = nominatedActions.find((action) => action.action_ID === actionID);
 
         $EndorsedActionOpenStore = true;
 
@@ -159,8 +149,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(action.action_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(action.action_ID, i)}
+                            onclick={() => moreInfoClickHandler(action.action_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(action.action_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

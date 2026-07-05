@@ -10,35 +10,25 @@
     import { ModalOpenStore } from "$lib/stores/ModelOpenStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    let endorsedLegislation: LegislationWithSponsorsAndImage[] = [];
-
-    $: endorsedLegislation = [...panel_data.table];
+    let endorsedLegislation: LegislationWithSponsorsAndImage[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedEndorsedLegislation: LegislationWithSponsorsAndImage[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedEndorsedLegislation = endorsedLegislation.slice(firstPageIndex, lastPageIndex);
+    let paginatedEndorsedLegislation: LegislationWithSponsorsAndImage[] = $derived(endorsedLegislation.slice(firstPageIndex, lastPageIndex));
 
-    let activeTab: number = 0;
-
-    $: activeTab;
+    let activeTab: number = $state(0);
 
     const editClickHandler = (legislationID: number | undefined) => {
 
@@ -149,25 +139,28 @@
 
     };
 
-    $: if ($DeleteConfirmedStore === true) {
+    $effect(() => {
 
-        // delete the candidate row from the database
+        if ($DeleteConfirmedStore === true) {
 
-        ConfirmedDelete();  
+            // delete the candidate row from the database
 
-        // load new data from endorsed candidates table in database
+            ConfirmedDelete();  
 
-        GetLegislationEndorsements();
+            // load new data from endorsed candidates table in database
 
-        // load the DeleteConfirmedStore to false
+            GetLegislationEndorsements();
 
-        $DeleteConfirmedStore = false;
+            // load the DeleteConfirmedStore to false
 
-    };
+            $DeleteConfirmedStore = false;
+
+        };
+    });
 
     const moreInfoClickHandler = (legislationID: number | undefined, index: number ) => {
 
-        $EndorsedLegislationSelectedStore = endorsedLegislation[index];
+        $EndorsedLegislationSelectedStore = endorsedLegislation.find((bill) => bill.legislation_ID === legislationID);
 
         $EndorsedLegislationOpenStore = true;
 
@@ -232,8 +225,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => editClickHandler(legislation.legislation_ID)}
-                            on:keyup={() => editClickHandler(legislation.legislation_ID)}
+                            onclick={() => editClickHandler(legislation.legislation_ID)}
+                            onkeyup={() => editClickHandler(legislation.legislation_ID)}
                             class="icon_container"
                         >
                             {@html EditIcon}
@@ -241,13 +234,13 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => deleteClickHandler(
+                            onclick={() => deleteClickHandler(
                                 legislation.legislation_ID, 
                                 legislation.legislation_name,
                                 legislation.image_ID,
                                 legislation.public_ID
                             )}
-                            on:keyup={() => deleteClickHandler(
+                            onkeyup={() => deleteClickHandler(
                                 legislation.legislation_ID, 
                                 legislation.legislation_name,
                                 legislation.image_ID,
@@ -260,8 +253,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(legislation.legislation_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                            onclick={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

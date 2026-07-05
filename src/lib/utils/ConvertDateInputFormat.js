@@ -1,5 +1,5 @@
 export const ConvertDateInputFormat = (/** @type {Date} */ dateString) => {
-    let date = new Date(dateString),
+    let date = new Date(dateString.toUTCString()),
     month = '' + (date.getMonth() + 1),
     day = '' + date.getDate(),
     year = date.getFullYear();

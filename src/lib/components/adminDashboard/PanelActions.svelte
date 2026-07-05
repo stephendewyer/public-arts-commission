@@ -5,23 +5,15 @@
     import ActionsEndorsedPanel from '$lib/components/adminDashboard/ActionsPanels/ActionsEndorsedPanel.svelte';
     import ActionsNominatedPanel from '$lib/components/adminDashboard/ActionsPanels/ActionsNominatedPanel.svelte';
 
-    export let panel_data: any[] = [];
+    let { panel_data }: { panel_data: any[]} = $props();
 
-    let activeTab: number = 1;
-
-    $: activeTab;
-
-    let tabPanels: any[];
+    let activeTab: number = $state(1);
 	
-	let endorsedActions: ActionWithImage[];
+	let endorsedActions: ActionWithImage[] = $derived([...panel_data[0].table]);
 
-	$: endorsedActions = [...panel_data[0].table];
+	let nominatedActions: ActionWithImageNominated[] = $derived([...panel_data[1].table]);
 
-	let nominatedActions: ActionWithImageNominated[];
-
-	$: nominatedActions = [...panel_data[1].table];
-
-	$: tabPanels = [
+	let tabPanels: any[] = $derived([
 		{
 			id: uuidv4(),
             index: 1,
@@ -46,7 +38,8 @@
 					table: nominatedActions
 			}
 		}
-	];
+	]);
+	
 </script>
 <div class="tabpanel_container">
     <div class="tabs_container">

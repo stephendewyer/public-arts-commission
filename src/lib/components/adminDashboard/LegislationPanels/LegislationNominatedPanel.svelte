@@ -6,39 +6,29 @@
     import { EndorsedLegislationOpenStore } from "$lib/stores/EndorsedLegislationOpenStore";
     import { EndorsedLegislationSelectedStore } from "$lib/stores/EndorsedLegislationSelectedStore";
 
-    export let panel_data: any;
+    let { panel_data }: {panel_data: any } = $props();
 
-    let nominatedLegislation: LegislationWithSponsorsAndImageNominated[] = [];
-
-    $: nominatedLegislation = [...panel_data.table];
+    let nominatedLegislation: LegislationWithSponsorsAndImageNominated[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedNominatedLegislation: LegislationWithSponsorsAndImageNominated[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedNominatedLegislation = nominatedLegislation.slice(firstPageIndex, lastPageIndex);
+    let paginatedNominatedLegislation: LegislationWithSponsorsAndImageNominated[] = $derived(nominatedLegislation.slice(firstPageIndex, lastPageIndex));
 
-    let activeTab: number = 0;
-
-    $: activeTab;
+    let activeTab: number = $state(0);
 
     const moreInfoClickHandler = (legislationID: number | undefined, index: number ) => {
 
-        $EndorsedLegislationSelectedStore = nominatedLegislation[index];
+        $EndorsedLegislationSelectedStore = nominatedLegislation.find((bill) => legislationID === bill.legislation_ID);
 
         $EndorsedLegislationOpenStore = true;
 
@@ -125,8 +115,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(legislation.legislation_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                            onclick={() => moreInfoClickHandler(legislation.legislation_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(legislation.legislation_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

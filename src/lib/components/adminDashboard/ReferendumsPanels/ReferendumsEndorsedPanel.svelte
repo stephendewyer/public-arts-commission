@@ -10,31 +10,23 @@
     import { EndorsedReferendumSelectedStore } from "$lib/stores/EndorsedReferendumSelectedStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    let endorsedReferendums: ReferendumWithImage[] = [];
-
-    $: endorsedReferendums = [...panel_data.table];
+    let endorsedReferendums: ReferendumWithImage[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedEndorsedReferendums: ReferendumWithImage[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize)
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedEndorsedReferendums = endorsedReferendums.slice(firstPageIndex, lastPageIndex);
+    let paginatedEndorsedReferendums: ReferendumWithImage[] = $derived(endorsedReferendums.slice(firstPageIndex, lastPageIndex));
 
     const editClickHandler = (referendumID: number | undefined) => {
 
@@ -145,25 +137,27 @@
 
     };
 
-    $: if ($DeleteConfirmedStore === true) {
+    $effect(() => {
+        if ($DeleteConfirmedStore === true) {
 
-        // delete the candidate row from the database
+            // delete the candidate row from the database
 
-        ConfirmedDelete();  
+            ConfirmedDelete();  
 
-        // load new data from endorsed candidates table in database
+            // load new data from endorsed candidates table in database
 
-        GetReferendumEndorsements();
+            GetReferendumEndorsements();
 
-        // load the DeleteConfirmedStore to false
+            // load the DeleteConfirmedStore to false
 
-        $DeleteConfirmedStore = false;
+            $DeleteConfirmedStore = false;
 
-    };
+        };
+    });
 
     const moreInfoClickHandler = (referendumID: number | undefined, index: number ) => {
 
-        $EndorsedReferendumSelectedStore = endorsedReferendums[index];
+        $EndorsedReferendumSelectedStore = endorsedReferendums.find((referendum) => referendumID === referendum.referendum_ID);
 
         $EndorsedReferendumOpenStore = true;
 
@@ -227,8 +221,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => editClickHandler(referendum.referendum_ID)}
-                            on:keyup={() => editClickHandler(referendum.referendum_ID)}
+                            onclick={() => editClickHandler(referendum.referendum_ID)}
+                            onkeyup={() => editClickHandler(referendum.referendum_ID)}
                             class="icon_container"
                         >
                             {@html EditIcon}
@@ -236,13 +230,13 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => deleteClickHandler(
+                            onclick={() => deleteClickHandler(
                                 referendum.referendum_ID, 
                                 referendum.referendum_name,
                                 referendum.image_ID,
                                 referendum.public_ID
                             )}
-                            on:keyup={() => deleteClickHandler(
+                            onkeyup={() => deleteClickHandler(
                                 referendum.referendum_ID, 
                                 referendum.referendum_name,
                                 referendum.image_ID,
@@ -255,8 +249,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(referendum.referendum_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                            onclick={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

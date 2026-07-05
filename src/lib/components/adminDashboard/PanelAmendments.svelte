@@ -5,23 +5,15 @@
     import AmendmentsEndorsedPanel from '$lib/components/adminDashboard/AmendmentsPanels/AmendmentsEndorsedPanel.svelte';
     import AmendmentsNominatedPanel from '$lib/components/adminDashboard/AmendmentsPanels/AmendmentsNominatedPanel.svelte';
 
-    export let panel_data: any[] = [];
+    let { panel_data } : { panel_data: any[] } = $props();
 
-    let activeTab: number = 1;
-
-    $: activeTab;
-
-    let tabPanels: any[];
+    let activeTab: number = $state(1);
 	
-	let endorsedAmendments: AmendmentWithSponsorsAndImage[];
+	let endorsedAmendments: AmendmentWithSponsorsAndImage[] = $derived([...panel_data[0].table]);
 
-	$: endorsedAmendments = [...panel_data[0].table];
-
-	let nominatedAmendments: AmendmentWithSponsorsAndImageNominated[];
-
-	$: nominatedAmendments = [...panel_data[1].table];
-
-	$: tabPanels = [
+	let nominatedAmendments: AmendmentWithSponsorsAndImageNominated[] = $derived([...panel_data[1].table]);
+	
+	let tabPanels: any[] = $derived([
 		{
 			id: uuidv4(),
             index: 1,
@@ -46,7 +38,7 @@
 					table: nominatedAmendments
 			}
 		}
-	];
+	]);
 
 </script>
 <div class="tabpanel_container">

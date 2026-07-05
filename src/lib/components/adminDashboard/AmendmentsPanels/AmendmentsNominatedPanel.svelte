@@ -5,39 +5,29 @@
     import { EndorsedAmendmentOpenStore } from "$lib/stores/EndorsedAmendmentOpenStore";
     import { goto } from "$app/navigation";
 
-    export let panel_data: any;
+    let { panel_data }: {panel_data: any } = $props();
 
-    let activeTab: number = 0;
+    let activeTab: number = $state(0);
 
-    $: activeTab;
-
-    let nominatedAmendments: AmendmentWithSponsorsAndImageNominated[] = [];
-
-    $: nominatedAmendments = [...panel_data.table];
+    let nominatedAmendments: AmendmentWithSponsorsAndImageNominated[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedNominatedAmendments: AmendmentWithSponsorsAndImageNominated[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedNominatedAmendments = nominatedAmendments.slice(firstPageIndex, lastPageIndex);
+    let paginatedNominatedAmendments: AmendmentWithSponsorsAndImageNominated[] = $derived(nominatedAmendments.slice(firstPageIndex, lastPageIndex));
 
     const moreInfoClickHandler = (amendmentID: number | undefined, index: number ) => {
 
-        $EndorsedAmendmentSelectedStore = nominatedAmendments[index];
+        $EndorsedAmendmentSelectedStore = nominatedAmendments.find((amendment) => amendment.amendment_ID === amendmentID);
 
         $EndorsedAmendmentOpenStore = true;
 
@@ -124,8 +114,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(amendment.amendment_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(amendment.amendment_ID, i)}
+                            onclick={() => moreInfoClickHandler(amendment.amendment_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(amendment.amendment_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

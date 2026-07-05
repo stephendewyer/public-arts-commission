@@ -4,41 +4,31 @@
     import { EndorsedCandidateOpenStore } from "$lib/stores/EndorsedCandidateOpenStore";
     import Pagination from "../../pagination/Pagination.svelte";
     import TableActionButton from "$lib/components/buttons/TableActionButton.svelte";
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
 
-    let pathName: string = $page.url.pathname;
+    let pathName: string = page.url.pathname;
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    $: panel_data;
-
-    let candidateApplications: CampaignApplication[];
-
-    $: candidateApplications = [...panel_data.table];
+    let candidateApplications: CampaignApplication[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedCandidateApplications: CampaignApplication[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedCandidateApplications = candidateApplications.slice(firstPageIndex, lastPageIndex);
+    let paginatedCandidateApplications: CampaignApplication[] = $derived(candidateApplications.slice(firstPageIndex, lastPageIndex));
 
     const moreInfoClickHandler = (campaignID: number | undefined, index: number ) => {
 
-        $EndorsedCandidateSelectedStore = candidateApplications[index];
+        $EndorsedCandidateSelectedStore = candidateApplications.find((application) =>  application.campaign_application_ID === campaignID);
 
         $EndorsedCandidateOpenStore = true;
 
@@ -115,8 +105,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(campaign.campaign_application_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(campaign.campaign_application_ID, i)}
+                            onclick={() => moreInfoClickHandler(campaign.campaign_application_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(campaign.campaign_application_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />

@@ -5,35 +5,27 @@
     import { EndorsedReferendumSelectedStore } from "$lib/stores/EndorsedReferendumSelectedStore";
     import TableActionButton from "$lib/components/buttons/TableActionButton.svelte";
 
-    export let panel_data: any;
+    let { panel_data }: { panel_data: any } = $props();
 
-    let nominatedReferendums: ReferendumWithImageNominated[] = [];
-
-    $: nominatedReferendums = [...panel_data.table];
+    let nominatedReferendums: ReferendumWithImageNominated[] = $derived([...panel_data.table]);
 
     // set the amount of items to appear on the page
     let pageSize: number = 10;
 
-    let currentPage: number;
-
-    $: currentPage = 1;
+    let currentPage: number = $state(1);
 
     // set the index of the first item to appear on the page
-    let firstPageIndex: number;
-    $: firstPageIndex = (currentPage -1) * pageSize;
+    let firstPageIndex: number = $derived((currentPage -1) * pageSize);
 
     // set the index for the page after the first page
-    let lastPageIndex: number;
-    $: lastPageIndex = firstPageIndex + pageSize;
-
-    let paginatedNominatedReferendums: ReferendumWithImageNominated[];
+    let lastPageIndex: number = $derived(firstPageIndex + pageSize);
 
     // use the first page index and last page index to slice the correct items to appear on the page
-    $: paginatedNominatedReferendums = nominatedReferendums.slice(firstPageIndex, lastPageIndex);
+    let paginatedNominatedReferendums: ReferendumWithImageNominated[] = $derived(nominatedReferendums.slice(firstPageIndex, lastPageIndex));
 
     const moreInfoClickHandler = (referendumID: number | undefined, index: number ) => {
 
-        $EndorsedReferendumSelectedStore = nominatedReferendums[index];
+        $EndorsedReferendumSelectedStore = nominatedReferendums.find((referendum) => referendum.referendum_ID === referendumID);
 
         $EndorsedReferendumOpenStore = true;
 
@@ -119,8 +111,8 @@
                     </td>
                     <td>
                         <button 
-                            on:click={() => moreInfoClickHandler(referendum.referendum_ID, i)}
-                            on:keyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                            onclick={() => moreInfoClickHandler(referendum.referendum_ID, i)}
+                            onkeyup={() => moreInfoClickHandler(referendum.referendum_ID, i)}
                             class="more_info_container"
                         >
                             <MoreInfoButton />
