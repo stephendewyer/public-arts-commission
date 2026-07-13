@@ -43,16 +43,47 @@
         },
         {
             label: "endorsements",
-            expandable: false,
-            content: null,
-            slug: "/endorsements"
+            expandable: true,
+            content: [
+                {
+                    label: "find my voter location",
+                    expandable: false,
+                    content: null,
+                    slug: "/endorsements/find-my-voter-location"
+                },
+                {
+                    label: "candidates",
+                    expandable: false,
+                    content: null,
+                    slug: "/endorsements/candidates-endorsed"
+                },
+                {
+                    label: "legislation",
+                    expandable: false,
+                    content: null,
+                    slug: "/endorsements/legislation-endorsed"
+                },
+                {
+                    label: "referendums",
+                    expandable: false,
+                    content: null,
+                    slug: "/endorsements/referendums-endorsed"
+                },
+                {
+                    label: "amendments",
+                    expandable: false,
+                    content: null,
+                    slug: "/endorsements/amendments-endorsed"
+                },
+                {
+                    label: "actions",
+                    expandable: false,
+                    content: null,
+                    slug: "/endorsements/actions-endorsed"
+                }
+            ],
+            slug: "#"
         }, 
-        {
-            label: "actions",
-            expandable: false,
-            content: null,
-            slug: "/actions"
-        },
         {
             label: "priorities",
             expandable: false,

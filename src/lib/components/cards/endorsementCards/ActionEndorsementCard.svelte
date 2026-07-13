@@ -47,7 +47,7 @@
 
 {#if ready}
     <a 
-        href={`${page.url.pathname}/?action_ID=${endorsedActionData.action_ID}&action_name=${endorsedActionData.action_name.replace(/ /g,"_")}`}
+        href={`${!page.url.pathname.includes("endorsements") ? "" : page.url.pathname}/?action_ID=${endorsedActionData.action_ID}&action_name=${endorsedActionData.action_name.replace(/ /g,"_")}`}
         data-sveltekit-noscroll
     >
         <div 

@@ -367,7 +367,7 @@
 		</h2>
 		<CampaignHighlights/>
 	</div>
-	<!-- <div 
+	<div 
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
@@ -389,7 +389,7 @@
 				{/if}
 			</div>
 		</div>
-	</div> -->
+	</div>
 	<div class="about">
 		<h2>
 			We are revolutionizing civic technology from the grassroots using the best of art, technology and design.

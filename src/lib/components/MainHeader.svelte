@@ -7,7 +7,7 @@
 	import LogoutButton from '$lib/components/buttons/LogoutButton.svelte';
 	import { afterNavigate } from '$app/navigation';
 
-	let { sideDrawer }: { sideDrawer: boolean } = $props();
+	let { sideDrawer = $bindable() }: { sideDrawer: boolean } = $props();
 
 	// IMPORTANT!  update user on page change using page state
 	interface User {
@@ -99,7 +99,8 @@
 						page.url.pathname === "/endorsements/candidates-endorsed" ||
 						page.url.pathname === "/endorsements/legislation-endorsed" ||
 						page.url.pathname === "/endorsements/referendums-endorsed" ||
-						page.url.pathname === "/endorsements/amendments-endorsed" 
+						page.url.pathname === "/endorsements/amendments-endorsed" ||
+						page.url.pathname === "/endorsements/find-my-voter-location"
 						? 'page' : undefined
 					}
 				>

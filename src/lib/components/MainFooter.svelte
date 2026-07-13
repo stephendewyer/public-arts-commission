@@ -173,16 +173,6 @@
                             </li>
                             <li class="footer_nav_column">
                                 <a 
-                                    href="/actions" 
-                                    aria-label="link to actions page" 
-                                    class="footer_nav_tab"
-                                    aria-current={page.url.pathname === '/actions' ? 'page' : undefined}
-                                >
-                                    actions
-                                </a>
-                            </li>
-                            <li class="footer_nav_column">
-                                <a 
                                     href="/priorities" 
                                     aria-label="link to priorities page" 
                                     class="footer_nav_tab"
