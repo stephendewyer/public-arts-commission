@@ -20,8 +20,6 @@
 	import CampaignHighlights from '$lib/components/sliders/CampaignHighlights.svelte';
   	import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
 
-	let URLPathName: string = page.url.pathname;
-
 	const currentDate: Date = new Date();
 
 	// load all the endorsed actions
@@ -81,10 +79,10 @@
 
 	});
 
-	let searchParams: URLSearchParams = $state(new URLSearchParams(page.url.search));
+	
 
 	$effect(() => {
-
+		let searchParams: URLSearchParams = $state(new URLSearchParams(page.url.search));
 		if (searchParams.get("action_ID") !== null) {
 
 			const actionID: string | null = searchParams.get("action_ID");
@@ -310,7 +308,7 @@
 	</div>
 	
 	<form 
-		on:submit={(e) => searchSubmitHandler(e)}
+		onsubmit={(e) => searchSubmitHandler(e)}
 		class="search_endorsements_by_address_form"
 	>
 		<h2>
@@ -369,7 +367,7 @@
 		</h2>
 		<CampaignHighlights/>
 	</div>
-	<div 
+	<!-- <div 
 		id="forthcoming_actions"
 		class="forthcoming actions"
 	>
@@ -382,19 +380,16 @@
 					<LoaderAnimation />
 				{:else if getEndorsedActionsDataSuccess}
 					{#each futureEndorsedActions as action, i}
-						<a 
-							href={`${URLPathName}?action_ID=${action.action_ID}&action_name=${action.action_name.replace(/ /g,"_")}`}
-							data-sveltekit-noscroll
-						> 
-							<ActionEndorsementCard endorsedActionData={action} />
-						</a>
+						<ActionEndorsementCard 
+							endorsedActionData={action} 
+						/>
 					{/each}
 				{:else if !getEndorsedActionsDataSuccess}
 					<p>failed to load endorsed forthcoming actions</p>
 				{/if}
 			</div>
 		</div>
-	</div>
+	</div> -->
 	<div class="about">
 		<h2>
 			We are revolutionizing civic technology from the grassroots using the best of art, technology and design.

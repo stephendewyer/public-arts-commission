@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from '$app/state';
+    import { page } from '$app/state';
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { onMount } from 'svelte';

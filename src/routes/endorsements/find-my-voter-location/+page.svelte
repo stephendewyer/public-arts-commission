@@ -3,12 +3,15 @@
 
 </script>
 
-<div class="page">
+<div class="page" id="page_container">
     <h1>
         Please excuse our appearence while this page is under construction.
     </h1>
-    <ul>
+    <h2>
         Our endorsements:
+    </h2>
+    <ul class="endorsement_categories" >
+        
         <li>
             <a href="/endorsements/candidates-endorsed">
                 <ActionButton>
@@ -49,5 +52,19 @@
 </div>
 
 <style>
+    #page_container {
+        width: 100%;
+        max-width: 80rem;
+        padding: 0 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+        margin: 0 auto;
+    }
+    .endorsement_categories {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
 
 </style>
