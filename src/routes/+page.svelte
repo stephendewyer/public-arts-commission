@@ -9,7 +9,7 @@
 	import Tabs from '$lib/components/tabPanels/Tabs.svelte';
 	import Panel from '$lib/components/tabPanels/Panel.svelte';
 	import { v4 as uuidv4 } from 'uuid';
-	import { afterNavigate, goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
   	import { onMount } from 'svelte';
   	import ActionEndorsementCard from '$lib/components/cards/endorsementCards/ActionEndorsementCard.svelte';
 	import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
@@ -26,17 +26,17 @@
 
 	// load all the endorsed actions
 
-	let endorsedActions: ActionWithImage[] = [];
+	let endorsedActions: ActionWithImage[] = $state([]);
 
 	// load all the future actions
 
-	let futureEndorsedActions: ActionWithImage[] = [];
+	let futureEndorsedActions: ActionWithImage[] = $state([]);
 
 	// begin get endorsed candidates data from database
 
-	let pendingEndorsedActionsData: boolean = false;
+	let pendingEndorsedActionsData: boolean = $state(false);
 
-	let getEndorsedActionsDataSuccess: boolean | null = null;
+	let getEndorsedActionsDataSuccess: boolean | null = $state(null);
 
 	async function getEndorsedActionsData() {
 
@@ -81,8 +81,9 @@
 
 	});
 
-	afterNavigate(() => {
-		let searchParams: URLSearchParams = new URLSearchParams(page.url.search);
+	let searchParams: URLSearchParams = $state(new URLSearchParams(page.url.search));
+
+	$effect(() => {
 
 		if (searchParams.get("action_ID") !== null) {
 
@@ -100,35 +101,37 @@
 			});
 
 		};
-	});	
+	});
 	
-	let activeLoginTab: number;
+	let activeLoginTab: number = $state(0);
 
-	let useCurrentLocationChecked: boolean;
+	let useCurrentLocationChecked: boolean = $state(false);
 
-	let disableButton: boolean = true;
-
-	$: activeLoginTab = 0;
-
-	$: useCurrentLocationChecked;
+	let disableButton: boolean = $state(true);
 
 	// once user clicks "use my current location" checkbox, 
 
-	let searchValue: string;
+	let searchValue: string = $state("");
     
 	// define the latitude and longitude variables
-	let latitude: number | null = null;
-	let longitude: number | null = null;	
+	let latitude: number | null = $state(null);
+	let longitude: number | null = $state(null);	
 
 	// set the latitude and longitude with user's position.coords
 
-	let reversedGeolocation: ReverseGeoLocation;
+	let reversedGeolocation: ReverseGeoLocation = $state({
+        addresses: [],
+        summary: {
+            queryTime: 0,
+            numResults: 0
+        }
+    });
 
 	// after submit
 
-	let addressLoadSuccess: boolean | null = null;
+	let addressLoadSuccess: boolean | null = $state(null);
 
-	let pending: boolean = false;
+	let pending: boolean = $state(false);
 
 	// use the user's geolocation to get the user's address
 
@@ -202,12 +205,15 @@
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
 
-	$: if (useCurrentLocationChecked) { 
+	$effect(() => {
 
-		pending = true;
+		if (useCurrentLocationChecked) { 
 
-		findUserLocation() 
-	} 
+			pending = true;
+
+			findUserLocation() 
+		} 
+	});
 
 	const searchInputValueChangeHandler = () => {
 
@@ -227,11 +233,13 @@
 
 	};
 
-	const searchSubmitHandler = () => {
+	const searchSubmitHandler = (e: Event) => {
+
+		e.preventDefault();
 
 		const addressSlug = searchValue.replace(/ /g,"_");
 
-		goto(`/endorsements?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`);
+		goto(`/endorsements/find-my-voter-location?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`);
 
 	};
 
@@ -302,7 +310,7 @@
 	</div>
 	
 	<form 
-		on:submit|preventDefault={searchSubmitHandler}
+		on:submit={(e) => searchSubmitHandler(e)}
 		class="search_endorsements_by_address_form"
 	>
 		<h2>

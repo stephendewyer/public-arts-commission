@@ -1,8 +1,8 @@
 import States from '$lib/data/states.titlecase.json';
 
 export const SearchActionsByNameAndLocationFilter = (
-    /** @type {{ search: { action_name: string; zip_code: string; state: string; city: string; county: string; }; }} */ store, 
-    /** @type {{ searchTerms: { government_level: string; action_name: string; state: string; county: string; city: string; }; }} */ item
+    /** @type { SearchActionTerms } */ store, 
+    /** @type {{ searchTerms: SearchActionTerms}} */ item
 ) => {
 
     let handledStateName;
@@ -11,7 +11,7 @@ export const SearchActionsByNameAndLocationFilter = (
 
     States.forEach((state) => {
 
-        if (state.abbreviation === store.search.state) {
+        if (state.abbreviation === store.state) {
 
             handleStateName = true;
 
@@ -21,9 +21,9 @@ export const SearchActionsByNameAndLocationFilter = (
 
     });
 
-    const searchName = store.search.action_name.toLowerCase();
-    const searchCity = store.search.city?.toLowerCase();
-    const searchCounty = store.search.county?.toLowerCase();
+    const searchName = store.action_name.toLowerCase();
+    const searchCity = store.city?.toLowerCase();
+    const searchCounty = store.county?.toLowerCase();
 
     /**
      * @type {string | any}
@@ -36,7 +36,7 @@ export const SearchActionsByNameAndLocationFilter = (
 
     } else {
 
-        searchState = store.search.state?.toLowerCase();
+        searchState = store.state?.toLowerCase();
 
     };
 

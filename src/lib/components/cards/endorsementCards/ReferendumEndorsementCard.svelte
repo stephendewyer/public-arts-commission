@@ -3,6 +3,7 @@
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
+    import { page } from '$app/state';
 
     let { endorsedReferendumData }: { endorsedReferendumData: ReferendumWithImage } = $props();
 
@@ -64,60 +65,65 @@
     
 </script>
 {#if ready}
-    <div 
-        tabindex={endorsedReferendumData.referendum_ID}
-        role="treeitem"
-        aria-selected={cardHovered}
-        onfocus={() => cardHoverHandler()}
-        onblur={() => cardExitHandler()}
-        onmouseenter={() => cardHoverHandler()}
-        onmouseover={() => cardHoverHandler()}
-        onmouseleave={() => cardExitHandler()}
-        onmouseout={() => cardExitHandler()}
-        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
-        in:fade={{ duration: 300 }}
+    <a
+        href={`${page.url.pathname}?referendum_ID=${endorsedReferendumData.referendum_ID}&referendum_name=${endorsedReferendumData.referendum_name.replace(/ /g,"_")}`}
+        data-sveltekit-noscroll
     >
-        <div class="image_container">
-            <img 
-                src={endorsedReferendumData.image_URL} 
-                alt={reverseHtmlEntities(endorsedReferendumData.alt_text)} 
-            />
-        </div>
         <div 
-            class="meatballs_container"
-            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+            tabindex={endorsedReferendumData.referendum_ID}
+            role="treeitem"
+            aria-selected={cardHovered}
+            onfocus={() => cardHoverHandler()}
+            onblur={() => cardExitHandler()}
+            onmouseenter={() => cardHoverHandler()}
+            onmouseover={() => cardHoverHandler()}
+            onmouseleave={() => cardExitHandler()}
+            onmouseout={() => cardExitHandler()}
+            class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+            in:fade={{ duration: 300 }}
         >
-            {@html MeatBalls}
-        </div>
-        <div class="card_info_container">
-            <h4 class="card_heading_01">{reverseHtmlEntities(endorsedReferendumData.referendum_name)}</h4>
-            <h5 class="card_heading_02">
-                <span class="data_category">
-                    electorate: 
-                </span>
-                {#if (endorsedReferendumData.city)}
-                    {reverseHtmlEntities(endorsedReferendumData.city)}
-                {/if}
-                {#if (endorsedReferendumData.county)}
-                    {reverseHtmlEntities(endorsedReferendumData.county)}
-                {/if}
-                {#if (endorsedReferendumData.state)}
-                    {reverseHtmlEntities(endorsedReferendumData.state)}
-                {/if}
-                United States of America
-            </h5>
-            {#if (endorsedReferendumData.election_date)}
+            <div class="image_container">
+                <img 
+                    src={endorsedReferendumData.image_URL} 
+                    alt={reverseHtmlEntities(endorsedReferendumData.alt_text)} 
+                />
+            </div>
+            <div 
+                class="meatballs_container"
+                style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+            >
+                {@html MeatBalls}
+            </div>
+            <div class="card_info_container">
+                <h4 class="card_heading_01">{reverseHtmlEntities(endorsedReferendumData.referendum_name)}</h4>
                 <h5 class="card_heading_02">
                     <span class="data_category">
-                        election date: 
-                    </span>{electionDate}
+                        electorate: 
+                    </span>
+                    {#if (endorsedReferendumData.city)}
+                        {reverseHtmlEntities(endorsedReferendumData.city)}
+                    {/if}
+                    {#if (endorsedReferendumData.county)}
+                        {reverseHtmlEntities(endorsedReferendumData.county)}
+                    {/if}
+                    {#if (endorsedReferendumData.state)}
+                        {reverseHtmlEntities(endorsedReferendumData.state)}
+                    {/if}
+                    United States of America
                 </h5>
-            {/if}
-            <h5 class="card_heading_02"><span class="data_category">status:</span>
-                {reverseHtmlEntities(referendumStatus.toString())}
-            </h5>
+                {#if (endorsedReferendumData.election_date)}
+                    <h5 class="card_heading_02">
+                        <span class="data_category">
+                            election date: 
+                        </span>{electionDate}
+                    </h5>
+                {/if}
+                <h5 class="card_heading_02"><span class="data_category">status:</span>
+                    {reverseHtmlEntities(referendumStatus.toString())}
+                </h5>
+            </div>
         </div>
-    </div>
+    </a>
 {/if}
 
 <style>
@@ -203,11 +209,13 @@
 
         .endorsement_card {
             min-width: 14rem;
+            max-width: 100%;
         }
 
 
         .endorsement_card_hovered {
             min-width: 14rem;
+            max-width: 100%;
         }
 
         .image_container {

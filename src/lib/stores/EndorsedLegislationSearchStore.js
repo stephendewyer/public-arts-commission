@@ -1,55 +1,57 @@
 import { writable } from 'svelte/store';
-import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter';
 
-export const createEndorsedLegislationSearchStore = (/** @type {SearchLegislationWithSponsorsAndImage[]} */ data) => {
+export const createEndorsedLegislationSearchStore = () => {
 
-    const { subscribe, set, update } = writable({
-        data: data,
-        filtered: data,
-        search: {
-            year: "",
+    const { subscribe, update } = writable(
+        {
+            year: [],
             government_level: "",
             state: "",
             county: "",
             city: "",
-            name: ""
-        },
-    });
+            name: "",
+            sponsors: [],
+            cosponsors: [],
+            introduced_in_Senate_only: false,
+            introduced_in_House_only: false,
+            scheduled_for_vote_in_House_only: false,
+            scheduled_for_vote_in_Senate_only: false,
+            approved_in_House_only: false,
+            approved_in_Senate_only: false,
+            signed_into_law_by_Executive_only: false,
+            vetoed_by_Executive_only: false,
+            overridden_Executive_veto_only: false
+        }
+    );
 
     return {
         subscribe,
-        set,
-        update,
+        
+        setSearch(/** @type {SearchTermsLegislation} */ search) {
+            // @ts-ignore
+            update(() => search);
+        },
+
+        reset() {
+            update(() => ({
+                year: [],
+                government_level: "",
+                state: "",
+                county: "",
+                city: "",
+                name: "",
+                sponsors: [],
+                cosponsors: [],
+                introduced_in_Senate_only: false,
+                introduced_in_House_only: false,
+                scheduled_for_vote_in_House_only: false,
+                scheduled_for_vote_in_Senate_only: false,
+                approved_in_House_only: false,
+                approved_in_Senate_only: false,
+                signed_into_law_by_Executive_only: false,
+                vetoed_by_Executive_only: false,
+                overridden_Executive_veto_only: false
+            }));
+        }
     };
-};
-
-export const searchEndorsedLegislationHandler = (/** @type {any} */ store) => {
-
-    const searchYear = store.search.year.toString();
-
-    // filter the endorsed candidates data
-    store.filtered = store.data.filter((/** @type {any} */ item) => {
-
-        // apply year filter first
-
-        // if search by year is empty, continue with search by street address
-
-        if (searchYear === "") {
-
-            return SearchEndorsementsByStreetAddressFilter(store, item);
-
-        // else if search year matches item searchTerm year, continue with filters
-
-        } else if (item.searchTerms.year === searchYear) {
-
-            return SearchEndorsementsByStreetAddressFilter(store, item);
-
-        } else {
-
-            return;
-
-        };
-
-    });
-
 };

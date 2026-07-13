@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { onMount } from 'svelte';
@@ -99,82 +100,87 @@
 </script>
 
 {#if ready}
-    <div 
-        tabindex={endorsedAmendmentData?.amendment_ID}
-        role="treeitem"
-        aria-selected={cardHovered}
-        onfocus={() => cardHoverHandler()}
-        onblur={() => cardExitHandler()}
-        onmouseenter={() => cardHoverHandler()}
-        onmouseover={() => cardHoverHandler()}
-        onmouseleave={() => cardExitHandler()}
-        onmouseout={() => cardExitHandler()}
-        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
-        in:fade={{ duration: 300 }}
+    <a 
+        href={`${page.url.pathname}?amendment_ID=${endorsedAmendmentData.amendment_ID}&amendment_name=${endorsedAmendmentData.amendment_name.replace(/ /g,"_")}`}
+        data-sveltekit-noscroll
     >
-        <div class="image_container">
-            <img src={endorsedAmendmentData.image_URL} alt={reverseHtmlEntities(endorsedAmendmentData.alt_text)} />
-
-        </div>
         <div 
-            class="meatballs_container"
-            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+            tabindex={endorsedAmendmentData?.amendment_ID}
+            role="treeitem"
+            aria-selected={cardHovered}
+            onfocus={() => cardHoverHandler()}
+            onblur={() => cardExitHandler()}
+            onmouseenter={() => cardHoverHandler()}
+            onmouseover={() => cardHoverHandler()}
+            onmouseleave={() => cardExitHandler()}
+            onmouseout={() => cardExitHandler()}
+            class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+            in:fade={{ duration: 300 }}
         >
-            {@html MeatBalls}
+            <div class="image_container">
+                <img src={endorsedAmendmentData.image_URL} alt={reverseHtmlEntities(endorsedAmendmentData.alt_text)} />
+
+            </div>
+            <div 
+                class="meatballs_container"
+                style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+            >
+                {@html MeatBalls}
+            </div>
+            <div class="card_info_container">
+                <h4 class="card_heading_01">{reverseHtmlEntities(endorsedAmendmentData.amendment_name)}</h4>
+                <h5 class="card_heading_02">
+                    <span class="data_category">
+                        electorate/jurisdiction: 
+                    </span>
+                    {#if (endorsedAmendmentData.city)}
+                        {reverseHtmlEntities(endorsedAmendmentData.city)}
+                    {/if}
+                    {#if (endorsedAmendmentData.county)}
+                        {reverseHtmlEntities(endorsedAmendmentData.county)}
+                    {/if}
+                    {#if (endorsedAmendmentData.state)}
+                        {reverseHtmlEntities(endorsedAmendmentData.state)}
+                    {/if}
+                    United States of America
+                </h5>
+                {#if (endorsedAmendmentData.election_date)}
+                    <h5 class="card_heading_02">
+                        <span class="data_category">
+                            election date: 
+                        </span>{electionDate}
+                    </h5>
+                {/if}
+                {#if (endorsedAmendmentData.year_released)}
+                    <h5 class="card_heading_02">
+                        <span class="data_category">
+                            year released:
+                        </span>
+                        {endorsedAmendmentData.year_released}
+                    </h5>
+                {/if}
+                {#if (endorsedAmendmentData.year_introduced_House)}
+                    <h5 class="card_heading_02">
+                        <span class="data_category">
+                            year introduced in House:
+                        </span>
+                        {endorsedAmendmentData.year_introduced_House}
+                    </h5>
+                {/if}
+                {#if (endorsedAmendmentData.year_introduced_Senate)}
+                    <h5 class="card_heading_02">
+                        <span class="data_category">
+                            year introduced in Senate:
+                        </span>
+                        {endorsedAmendmentData.year_introduced_Senate}
+                    </h5>
+                {/if}
+                <h5 class="card_heading_02"><span class="data_category">status:</span>
+                    {reverseHtmlEntities(amendmentStatus.toString())}
+                </h5>
+            </div>
         </div>
-        <div class="card_info_container">
-            <h4 class="card_heading_01">{reverseHtmlEntities(endorsedAmendmentData.amendment_name)}</h4>
-            <h5 class="card_heading_02">
-                <span class="data_category">
-                    electorate/jurisdiction: 
-                </span>
-                {#if (endorsedAmendmentData.city)}
-                    {reverseHtmlEntities(endorsedAmendmentData.city)}
-                {/if}
-                {#if (endorsedAmendmentData.county)}
-                    {reverseHtmlEntities(endorsedAmendmentData.county)}
-                {/if}
-                {#if (endorsedAmendmentData.state)}
-                    {reverseHtmlEntities(endorsedAmendmentData.state)}
-                {/if}
-                United States of America
-            </h5>
-            {#if (endorsedAmendmentData.election_date)}
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        election date: 
-                    </span>{electionDate}
-                </h5>
-            {/if}
-            {#if (endorsedAmendmentData.year_released)}
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        year released:
-                    </span>
-                    {endorsedAmendmentData.year_released}
-                </h5>
-            {/if}
-            {#if (endorsedAmendmentData.year_introduced_House)}
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        year introduced in House:
-                    </span>
-                    {endorsedAmendmentData.year_introduced_House}
-                </h5>
-            {/if}
-            {#if (endorsedAmendmentData.year_introduced_Senate)}
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        year introduced in Senate:
-                    </span>
-                    {endorsedAmendmentData.year_introduced_Senate}
-                </h5>
-            {/if}
-            <h5 class="card_heading_02"><span class="data_category">status:</span>
-                {reverseHtmlEntities(amendmentStatus.toString())}
-            </h5>
-        </div>
-    </div>
+    </a>
 {/if}
 
 <style>

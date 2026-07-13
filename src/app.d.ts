@@ -96,6 +96,14 @@ declare global {
 		data: any;
     }
 
+	interface EndorsementTabPanel {
+		id: string;
+		index: number;
+		label: string;
+		hasCapitol: boolean;
+		data: SearchReferendumWithImage[] | SearchLegislationWithSponsorsAndImage[] | SearchEndorsedCandidateWithImage[] | SearchActionWithImage[] | SearchAmendmentWithSponsorsAndImage[];
+	};
+
 	interface GeolocationCoordinates {
 		accuracy: number;
 		altitude: number;
@@ -193,6 +201,7 @@ declare global {
 		running_in_general: number;
 		elected_in_general: number;
 		rejected_in_general: number;
+		incumbent: number;
 		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
@@ -225,6 +234,7 @@ declare global {
 		running_in_general: number;
 		elected_in_general: number;
 		rejected_in_general: number;
+		incumbent: number;
 		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
@@ -244,15 +254,22 @@ declare global {
 		public_ID: string;
 	}
 
+	interface SearchTermsCandidate {
+		year: string;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		name: string;
+		in_active_election: boolean;
+		in_active_primary_election: boolean;
+		in_active_general_election: boolean;
+		elected_into_office: boolean;
+		nonincumbent: boolean;
+	}
+
 	interface SearchEndorsedCandidateWithImage {
-		searchTerms: {
-			year: string;
-			government_level: string;
-			state: string;
-			county: string;
-			city: string;
-			name: string;
-		};
+		searchTerms: SearchTermsCandidate;
 		candidate_ID: number;
 		image_ID: number;
 		campaign_name: string;
@@ -271,6 +288,7 @@ declare global {
 		running_in_general: number;
 		elected_in_general: number;
 		rejected_in_general: number;
+		incumbent: number;
 		campaign_ended: number;
 		contact_name_first: string;
 		contact_name_last: string;
@@ -339,6 +357,9 @@ declare global {
 		rejected_in_Senate: number;
 		vetoed_by_Executive: number;
 		signed_by_Executive: number;
+		scheduled_vote_House: number;
+		scheduled_vote_Senate: number;
+		overridden_Executive_veto: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -371,6 +392,9 @@ declare global {
 		rejected_in_Senate: number;
 		vetoed_by_Executive: number;
 		signed_by_Executive: number;
+		scheduled_vote_House: number;
+		scheduled_vote_Senate: number;
+		overridden_Executive_veto: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -409,6 +433,9 @@ declare global {
 		rejected_in_Senate: number;
 		vetoed_by_Executive: number;
 		signed_by_Executive: number;
+		scheduled_vote_House: number;
+		scheduled_vote_Senate: number;
+		overridden_Executive_veto: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -430,15 +457,28 @@ declare global {
 		public_ID: string;
 	}
 
+	interface SearchTermsLegislation {
+		year: string[] | never[],
+		government_level: string,
+		state: string,
+		county: string,
+		city: string,
+		name: string,
+		sponsors: string[] | never[],
+		cosponsors: string[] | never[],
+		introduced_in_Senate_only: boolean,
+		introduced_in_House_only: boolean,
+		scheduled_for_vote_in_House_only: boolean,
+		scheduled_for_vote_in_Senate_only: boolean,
+		approved_in_House_only: boolean,
+		approved_in_Senate_only: boolean,
+		signed_into_law_by_Executive_only: boolean,
+		vetoed_by_Executive_only: boolean,
+		overridden_Executive_veto_only: boolean
+	}
+
 	interface SearchLegislationWithSponsorsAndImage {
-		searchTerms: {
-			year: string;
-			government_level: string;
-			state: string;
-			county: string;
-			city: string;
-			name: string;
-		};
+		searchTerms: SearchTermsLegislation;
 		legislation_ID: number;
 		image_ID: number;
 		legislation_name: string;
@@ -459,6 +499,9 @@ declare global {
 		rejected_in_Senate: number;
 		vetoed_by_Executive: number;
 		signed_by_Executive: number;
+		scheduled_vote_House: number;
+		scheduled_vote_Senate: number;
+		overridden_Executive_veto: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -487,6 +530,9 @@ declare global {
 		year_released: number;
 		year_introduced_House: number;
 		year_introduced_Senate: number;
+		scheduled_vote_House: number;
+		scheduled_vote_Senate: number;
+		overridden_Executive_veto: number;
 		government_level: string;
 		state: string;
 		county: string;
@@ -533,8 +579,13 @@ declare global {
 		twothirds_House_and_Senate_passed: number;
 		simple_majority_House_and_Senate_passed: number;
 		simple_majority_voters_passed: number;
-		ratified_by_state_convenctions: number;
+		ratified_by_state_conventions: number;
 		ratified_by_state_legislatures: number;
+		scheduled_for_vote_in_House: number;
+		scheduled_for_vote_in_Senate: number;
+		enacted_into_law: number;
+		on_ballot_for_election_by_voters: number;
+		approved_by_voters: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -567,8 +618,13 @@ declare global {
 		twothirds_House_and_Senate_passed: number;
 		simple_majority_House_and_Senate_passed: number;
 		simple_majority_voters_passed: number;
-		ratified_by_state_convenctions: number;
+		ratified_by_state_conventions: number;
 		ratified_by_state_legislatures: number;
+		scheduled_for_vote_in_House: number;
+		scheduled_for_vote_in_Senate: number;
+		enacted_into_law: number;
+		on_ballot_for_election_by_voters: number;
+		approved_by_voters: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -607,8 +663,13 @@ declare global {
 		twothirds_House_and_Senate_passed: number;
 		simple_majority_House_and_Senate_passed: number;
 		simple_majority_voters_passed: number;
-		ratified_by_state_convenctions: number;
+		ratified_by_state_conventions: number;
 		ratified_by_state_legislatures: number;
+		scheduled_for_vote_in_House: number;
+		scheduled_for_vote_in_Senate: number;
+		enacted_into_law: number;
+		on_ballot_for_election_by_voters: number;
+		approved_by_voters: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -630,16 +691,31 @@ declare global {
 		co_sponsors_Senate: CoSponsorsSenate[];
 	}
 
+	interface SearchTermsAmendment {
+		year: string[];
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		name: string;
+		sponsors: string[];
+		cosponsors: string[];
+		introduced_in_House: boolean;
+		introduced_in_Senate: boolean;
+		twothirds_House_and_Senate_passed: boolean;
+		simple_majority_House_and_Senate_passed: boolean;
+		simple_majority_voters_passed: boolean;
+		ratified_by_state_conventions: boolean;
+		ratified_by_state_legislatures: boolean;
+		scheduled_for_vote_in_House: boolean;
+		scheduled_for_vote_in_Senate: boolean;
+		enacted_into_law: boolean;
+		on_ballot_for_election_by_voters: boolean;
+		approved_by_voters: boolean;
+	}
+
 	interface SearchAmendmentWithSponsorsAndImage {
-		searchTerms: {
-			year_election: string;
-			year_released: string;
-			government_level: string;
-			state: string;
-			county: string;
-			city: string;
-			name: string;
-		};
+		searchTerms: SearchTermsAmendment;
 		amendment_ID: number;
 		image_ID: number;
 		amendment_name: string;
@@ -660,8 +736,13 @@ declare global {
 		twothirds_House_and_Senate_passed: number;
 		simple_majority_House_and_Senate_passed: number;
 		simple_majority_voters_passed: number;
-		ratified_by_state_convenctions: number;
+		ratified_by_state_conventions: number;
 		ratified_by_state_legislatures: number;
+		scheduled_for_vote_in_House: number;
+		scheduled_for_vote_in_Senate: number;
+		enacted_into_law: number;
+		on_ballot_for_election_by_voters: number;
+		approved_by_voters: number;
 		contact_name_first: string;
 		contact_name_last: string;
 		contact_phone_number: E164Number | null;
@@ -699,6 +780,11 @@ declare global {
 		details: string;
 		introduced_in_House: number;
 		introduced_in_Senate: number;
+		scheduled_for_vote_in_House: number;
+		scheduled_for_vote_in_Senate: number;
+		enacted_into_law: number;
+		on_ballot_for_election_by_voters: number;
+		approved_by_voters: number;
 		session_House: string;
 		session_Senate: string;
 		admin_ID: number;
@@ -733,6 +819,7 @@ declare global {
 		action_street_address_02: string;
 		action_city: string;
 		action_state: string;
+		action_county: string;
 		action_zip_code: number;
 		government_level: string;
 		website_URL: string;
@@ -748,19 +835,22 @@ declare global {
 		contact_email: string;
 	}
 
-	interface SearchActionWithImage {
-		searchTerms: {
-            year: {
-                all_day_event_date: string;
-                date_start: string;
-                date_end: string;
-            };
-            action_name: string;
-            zipcode: string;
-			state: string;
-			city: string;
-            government_level: string;
+	interface SearchActionTerms {
+		year: {
+			all_day_event_date: string;
+			date_start: string;
+			date_end: string;
 		};
+		action_name: string;
+		zipcode: string;
+		state: string;
+		city: string;
+		county: string;
+		government_level: string;
+	};
+
+	interface SearchActionWithImage {
+		searchTerms: SearchActionTerms;
 		action_ID: number;
 		image_ID: number;
 		action_name: string;
@@ -811,6 +901,7 @@ declare global {
 		action_street_address_02: string;
 		action_city: string;
 		action_state: string;
+		action_county: string;
 		action_zip_code: number;
 		government_level: string;
 		website_URL: string;
@@ -847,6 +938,7 @@ declare global {
 		action_street_address: string;
 		action_street_address_02: string;
 		action_city: string;
+		action_county: string;
 		action_state: string;
 		action_zip_code: number;
 		government_level: string;
@@ -923,15 +1015,19 @@ declare global {
 		public_ID: string;
 	}
 
+	interface SearchTermsReferendum {
+		year: number | any;
+		election_date: Date | any;
+		government_level: string;
+		state: string;
+		county: string;
+		city: string;
+		name: string;
+		status: string;
+	};
+
 	interface SearchReferendumWithImage {
-		searchTerms: {
-            year: string;
-            government_level: string;
-            state: string;
-            county: string;
-            city: string;
-            name: string;
-        };
+		searchTerms: SearchTermsReferendum;
 		referendum_ID: number;
 		image_ID: number;
 		referendum_name: string;

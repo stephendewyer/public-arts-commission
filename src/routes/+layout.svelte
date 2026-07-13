@@ -13,11 +13,11 @@
 	import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
 	import { EndorsedCandidateOpenStore } from '$lib/stores/EndorsedCandidateOpenStore';
 	import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
-  	import EndorsedActionSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedActionSidedrawer.svelte';
-  	import EndorsedAmendmentSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedAmendmentSidedrawer.svelte';
-  	import EndorsedCandidateSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedCandidateSidedrawer.svelte';
-  	import EndorsedLegislationSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
-  	import EndorsedReferendumSidedrawer from '$lib/components/endorsements/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
+  	import EndorsedActionSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedActionSidedrawer.svelte';
+  	import EndorsedAmendmentSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedAmendmentSidedrawer.svelte';
+  	import EndorsedCandidateSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedCandidateSidedrawer.svelte';
+  	import EndorsedLegislationSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedLegislationSidedrawer.svelte';
+  	import EndorsedReferendumSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
 	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
   	import CampaignApplicationActionConfirmModal from '$lib/components/modals/CampaignApplicationActionConfirmModal.svelte';
 

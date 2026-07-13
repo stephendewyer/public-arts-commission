@@ -1,56 +1,63 @@
 import { writable } from 'svelte/store';
-import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter';
 
-export const createEndorsedAmendmentsSearchStore = (/** @type {SearchAmendmentWithSponsorsAndImage[]} */ data) => {
+export const createEndorsedAmendmentsSearchStore = () => {
 
-    const { subscribe, set, update } = writable({
-        data: data,
-        filtered: data,
-        search: {
-            year_released: "",
-            year_election: "",
+    const { subscribe, update } = writable(
+        {
+            year: [],
             government_level: "",
             state: "",
             county: "",
             city: "",
-            name: ""
-        },
-    });
+            name: "",
+            sponsors: [],
+            cosponsors: [],
+            introduced_in_House: false,
+            introduced_in_Senate: false,
+            twothirds_House_and_Senate_passed: false,
+            simple_majority_House_and_Senate_passed: false,
+            simple_majority_voters_passed: false,
+            ratified_by_state_conventions: false,
+            ratified_by_state_legislatures: false,
+            scheduled_for_vote_in_House: false,
+            scheduled_for_vote_in_Senate: false,
+            enacted_into_law: false,
+            on_ballot_for_election_by_voters: false,
+            approved_by_voters: false,
+        }
+    );
 
     return {
         subscribe,
-        set,
-        update,
+        
+        setSearch(/** @type {SearchTermsAmendment} */ search) {
+            // @ts-ignore
+            update(() => search);
+        },
+
+        reset() {
+            update(() => ({
+                year: [],
+                government_level: "",
+                state: "",
+                county: "",
+                city: "",
+                name: "",
+                sponsors: [],
+                cosponsors: [],
+                introduced_in_House: false,
+                introduced_in_Senate: false,
+                twothirds_House_and_Senate_passed: false,
+                simple_majority_House_and_Senate_passed: false,
+                simple_majority_voters_passed: false,
+                ratified_by_state_conventions: false,
+                ratified_by_state_legislatures: false,
+                scheduled_for_vote_in_House: false,
+                scheduled_for_vote_in_Senate: false,
+                enacted_into_law: false,
+                on_ballot_for_election_by_voters: false,
+                approved_by_voters: false,
+            }));
+        }
     };
-};
-
-export const searchEndorsedAmendmentsHandler = (/** @type {any} */ store) => {
-
-    const searchYearRelease = store.search.year_released?.toString();
-    const searchYearElection = store.search.year_election?.toString();
-    
-    // filter the endorsed candidates data
-    store.filtered = store.data.filter((/** @type {any} */ item) => {
-        // apply year filter first
-
-        // if search by year is empty, continue with search by street address
-
-        if (searchYearElection === "" && searchYearRelease === "") {
-
-            return SearchEndorsementsByStreetAddressFilter(store, item);
-
-        // else if search year matches item searchTerm year, continue with filters
-
-        } else if ((new Date(item.searchTerms.year_election).getFullYear().toString()) === searchYearElection || item.searchTerms.year_released === searchYearRelease) {
-
-            return SearchEndorsementsByStreetAddressFilter(store, item);
-
-        } else {
-
-            return;
-
-        };
-
-    });
-
 };

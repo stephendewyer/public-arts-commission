@@ -7,9 +7,9 @@
 	import LogoutButton from '$lib/components/buttons/LogoutButton.svelte';
 	import { afterNavigate } from '$app/navigation';
 
-	export let sideDrawer: boolean = false;
+	let { sideDrawer }: { sideDrawer: boolean } = $props();
 
-	// IMPORTANT!  update user on page change using $page store
+	// IMPORTANT!  update user on page change using page state
 	interface User {
         id: number;
         email: string;
@@ -18,11 +18,11 @@
         exp: number;
     };
 
-	let user: User | null = null;
+	let user: User | null = $state(null);
 
-	let callbackURL: string = "";
-	let logoURL: string = "/";
-	let logoutAPIroute: string = "";
+	let callbackURL: string = $state("");
+	let logoURL: string = $state("/");
+	let logoutAPIroute: string = $state("");
 
 	afterNavigate(() => {
         user = page.data.streamed.user;
@@ -44,16 +44,24 @@
         };
     });
 	
-	let aboutTabPanelIsActive: boolean;
-	let loginTabPanelIsActive: boolean;
+	let aboutTabPanelIsActive: boolean = $state(false);
+	let loginTabPanelIsActive: boolean = $state(false);
+	let endorsementsTabPanelIsActive: boolean = $state(false);
 
-	let login_panel_height: number;
+	let login_panel_height: number = $state(0);
 
-	let about_panel_height: number;
+	let about_panel_height: number = $state(0);
 
-	$: login_panel_height = 0;
+	let endorsements_panel_height: number = $state(0);
 
-	$: about_panel_height = 0;
+
+	const expandEndorsementsTabHandler = () => {
+		endorsementsTabPanelIsActive = true;
+	};
+
+	const collapseEndorsementsTabHandler = () => {
+		endorsementsTabPanelIsActive = false;
+	};
 
 	const collapseAboutTabHandler = () => {
 		aboutTabPanelIsActive = false;
@@ -85,15 +93,93 @@
 				</li>
 				<li 
 					class="nav_tab"
-					aria-current={page.url.pathname === '/endorsements' ? 'page' : undefined}
+					aria-current={
+						page.url.pathname === '/endorsements' || 
+						page.url.pathname === "/endorsements/actions-endorsed" ||
+						page.url.pathname === "/endorsements/candidates-endorsed" ||
+						page.url.pathname === "/endorsements/legislation-endorsed" ||
+						page.url.pathname === "/endorsements/referendums-endorsed" ||
+						page.url.pathname === "/endorsements/amendments-endorsed" 
+						? 'page' : undefined
+					}
 				>
-					<a href="/endorsements">endorsements</a>
-				</li>
-				<li 
-					class="nav_tab"
-					aria-current={page.url.pathname === '/actions' ? 'page' : undefined}
-				>
-					<a href="/actions">actions</a>
+					<div
+						class="tabpanel"
+						role="tabpanel"
+						tabindex="0"
+						onmouseleave={() => collapseEndorsementsTabHandler()}
+						onmouseout={() => collapseEndorsementsTabHandler()}
+						onblur={() => collapseEndorsementsTabHandler()}
+						onmouseenter={() => expandEndorsementsTabHandler()}
+						onmouseover={() => expandEndorsementsTabHandler()}
+						onfocus={() => expandEndorsementsTabHandler()}
+					>
+						<div 
+							id="tab_header_endorsements"
+							class="menu_tab_header"
+							role="tab"
+							aria-selected={endorsementsTabPanelIsActive}
+							aria-controls="tab_panel_endorsements"
+							tabindex="0"
+							
+						>
+							<div class="tabPanel_header_text">endorsements</div>
+							<div class={ endorsementsTabPanelIsActive ? "arrow_active" : "arrow" }>
+								{@html Arrow}
+							</div>
+						</div>
+						<div
+							id="tab_panel_endorsements"
+							role="tabpanel"
+							tabindex="0"
+							aria-labelledby="tab_header_about"
+							class="panel_container"
+						>
+							<div 
+								class="panel"
+								style={ endorsementsTabPanelIsActive ? `height: ${endorsements_panel_height}px;` : 'height: 0px;'}
+							>
+								<ul
+									id="endorsements_panel"
+									class="panel_items"
+									style={ endorsementsTabPanelIsActive ? "opacity: 100%;" : "opacity: 0%;"}
+									bind:clientHeight={endorsements_panel_height}
+								>
+									<li>
+										<a href="/endorsements/find-my-voter-location" style="text-align: center">
+											find my voter location
+										</a>
+									</li>
+									<li>
+										<a href="/endorsements/candidates-endorsed">
+											candidates
+										</a>
+									</li>
+									<li>
+										<a href="/endorsements/legislation-endorsed">
+											legislation
+										</a>
+									</li>
+									<li>
+										<a href="/endorsements/referendums-endorsed">
+											referendums
+										</a>
+									</li>
+									<li>
+										<a href="/endorsements/amendments-endorsed">
+											amendments
+										</a>
+									</li>
+									<li>
+										<a href="/endorsements/actions-endorsed">
+											actions
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
 				</li>
 				<li 
 					class="nav_tab"
@@ -159,12 +245,12 @@
 						class="tabpanel"
 						role="tabpanel"
 						tabindex="0"
-						on:mouseleave={() => collapseAboutTabHandler()}
-						on:mouseout={() => collapseAboutTabHandler()}
-						on:blur={() => collapseAboutTabHandler()}
-						on:mouseenter={() => expandAboutTabHandler()}
-						on:mouseover={() => expandAboutTabHandler()}
-						on:focus={() => expandAboutTabHandler()}
+						onmouseleave={() => collapseAboutTabHandler()}
+						onmouseout={() => collapseAboutTabHandler()}
+						onblur={() => collapseAboutTabHandler()}
+						onmouseenter={() => expandAboutTabHandler()}
+						onmouseover={() => expandAboutTabHandler()}
+						onfocus={() => expandAboutTabHandler()}
 					>
 						<div 
 							id="tab_header_about"
@@ -178,7 +264,6 @@
 								{@html Arrow}
 							</div>
 						</div>
-						<div>
 							<div
 								id="tab_panel_about"
 								role="tabpanel"
@@ -203,7 +288,6 @@
 										</li>
 									</ul>
 								</div>
-							</div>
 						</div>
 					</div>
 				</li>
@@ -216,12 +300,12 @@
 						class="tabpanel"
 						role="tabpanel"
 						tabindex="0"
-						on:mouseleave={() => collapseAboutTabHandler()}
-						on:mouseout={() => collapseAboutTabHandler()}
-						on:blur={() => collapseAboutTabHandler()}
-						on:mouseenter={() => expandAboutTabHandler()}
-						on:mouseover={() => expandAboutTabHandler()}
-						on:focus={() => expandAboutTabHandler()}
+						onmouseleave={() => collapseAboutTabHandler()}
+						onmouseout={() => collapseAboutTabHandler()}
+						onblur={() => collapseAboutTabHandler()}
+						onmouseenter={() => expandAboutTabHandler()}
+						onmouseover={() => expandAboutTabHandler()}
+						onfocus={() => expandAboutTabHandler()}
 					>
 						<div 
 							id="tab_header_about"
@@ -285,12 +369,12 @@
 						class="tabpanel"
 						role="tabpanel"
 						tabindex="0"
-						on:mouseleave={() => collapseLoginTabHandler()}
-						on:mouseout={() => collapseLoginTabHandler()}
-						on:blur={() => collapseLoginTabHandler()}
-						on:mouseenter={() => expandLoginTabHandler()}
-						on:mouseover={() => expandLoginTabHandler()}
-						on:focus={() => expandLoginTabHandler()}
+						onmouseleave={() => collapseLoginTabHandler()}
+						onmouseout={() => collapseLoginTabHandler()}
+						onblur={() => collapseLoginTabHandler()}
+						onmouseenter={() => expandLoginTabHandler()}
+						onmouseover={() => expandLoginTabHandler()}
+						onfocus={() => expandLoginTabHandler()}
 					>
 						<div
 							id="tab_header_login"
@@ -480,9 +564,12 @@
 	.panel_container {
 		position: relative;
 		width: 100%;
+		padding: 0;
+		margin: 0;
 	}
 
 	.panel {
+		z-index: 11;
 		left: 0;
 		right: 0;
 		background-color: #DBE4D7;

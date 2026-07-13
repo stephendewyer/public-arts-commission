@@ -98,14 +98,78 @@
                                 </a>
                             </li>
                             <li class="footer_nav_column">
-                                <a 
-                                    href="/endorsements" 
-                                    aria-label="link to endorsements page" 
+                                <div 
                                     class="footer_nav_tab"
-                                    aria-current={page.url.pathname === '/endorsements' ? 'page' : undefined}
+                                    aria-current={
+                                        page.url.pathname === "/endorsements/find-my-voter-location" || 
+                                        page.url.pathname === "/endorsements/candidates-endorsed" ||
+                                        page.url.pathname === "/endorsements/legislation-endorsed" ||
+                                        page.url.pathname === "/endorsements/referendums-endorsed" ||
+                                        page.url.pathname === "/endorsements/amendments-endorsed" ||
+                                        page.url.pathname === "/endorsements/actions-endorsed"
+                                        ? 'page' : undefined
+                                    }
                                 >
-                                    endorsements
-                                </a>
+                                    <div style="text-decoration: underline;">
+                                        about
+                                    </div>
+                                    <ul class="footer_nav_tabs_panel">
+                                        <li>
+                                            <a 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={page.url.pathname === '/endorsements/find-my-voter-location' ? 'page' : undefined}
+                                                href="/endorsements/find-my-voter-location" style="text-align: center"
+                                            >
+                                                find my voter location
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={page.url.pathname === '/endorsements/candidates-endorsed' ? 'page' : undefined}
+                                                href="/endorsements/candidates-endorsed"
+                                            >
+                                                candidates
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={page.url.pathname === '/endorsements/legislation-endorsed' ? 'page' : undefined}
+                                                href="/endorsements/legislation-endorsed"
+                                            >
+                                                legislation
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={page.url.pathname === '/endorsements/referendums-endorsed' ? 'page' : undefined}
+                                                href="/endorsements/referendums-endorsed"
+                                            >
+                                                referendums
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={page.url.pathname === '/endorsements/amendments-endorsed' ? 'page' : undefined}
+                                                href="/endorsements/amendments-endorsed"
+                                            >
+                                                amendments
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a 
+                                                class="footer_nav_tab_secondary"
+                                                aria-current={page.url.pathname === '/endorsements/actions-endorsed' ? 'page' : undefined}
+                                                href="/endorsements/actions-endorsed"
+                                            >
+                                                actions
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="footer_nav_column">
                                 <a 

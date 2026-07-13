@@ -1,0 +1,13 @@
+[
+    {
+        "name": "endorsements",
+        "index": 1,
+        "children": [
+            {
+                "name": "candidates",
+                "index": 1.1,
+                "children": []
+            }
+        ]
+    }
+]

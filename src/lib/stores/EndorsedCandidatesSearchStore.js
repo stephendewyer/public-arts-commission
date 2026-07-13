@@ -1,55 +1,44 @@
 import { writable } from 'svelte/store';
-import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter';
 
-export const createEndorsedCandidatesSearchStore = (/** @type {SearchEndorsedCandidateWithImage[]} */ data) => {
+export const createEndorsedCandidatesSearchStore = () => {
 
-    const { subscribe, set, update } = writable({
-        data: data,
-        filtered: data,
-        search: {
+    const { subscribe, update } = writable(
+        {
             year: "",
             government_level: "",
             state: "",
             county: "",
             city: "",
-            name: ""
-        },
-    });
+            name: "",
+            in_active_election: false,
+            in_active_primary_election: false,
+            in_active_general_election: false,
+            elected_into_office: false,
+            nonincumbent: false,
+        }
+    );
 
     return {
         subscribe,
-        set,
-        update,
+        
+        setSearch(/** @type {SearchTermsCandidate} */ search) {
+            update(() => search);
+        },
+
+        reset() {
+            update(() => ({
+                year: "",
+                government_level: "",
+                state: "",
+                county: "",
+                city: "",
+                name: "",
+                in_active_election: false,
+                in_active_primary_election: false,
+                in_active_general_election: false,
+                elected_into_office: false,
+                nonincumbent: false,
+            }));
+        }
     };
-};
-
-export const searchEndorsedCandidatesHandler = (/** @type {any} */ store) => {
-
-    const searchYear = store.search.year.toString();
-
-    // filter the endorsed candidates data
-    store.filtered = store.data.filter((/** @type {any} */ item) => {
-
-        // apply year filter first
-
-        // if search by year is empty, continue with search by street address
-
-        if (searchYear === "") {
-
-            return SearchEndorsementsByStreetAddressFilter(store, item);
-
-        // else if search year matches item searchTerm year, continue with filters
-
-        } else if (item.searchTerms.year === searchYear) {
-
-            return SearchEndorsementsByStreetAddressFilter(store, item);
-
-        } else {
-
-            return;
-
-        };
-
-    });
-
 };
