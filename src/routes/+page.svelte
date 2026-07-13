@@ -19,6 +19,7 @@
 	import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
 	import CampaignHighlights from '$lib/components/sliders/CampaignHighlights.svelte';
   	import ActionButtonSecondary from '$lib/components/buttons/ActionButtonSecondary.svelte';
+	import NewsletterSubscribe from '$lib/components/forms/NewsletterSubscribe.svelte';
 
 	const currentDate: Date = new Date();
 
@@ -400,6 +401,7 @@
 			</ActionButtonSecondary>
 		</a>
 	</div>
+	<NewsletterSubscribe />
 </section>
 
 <style>
