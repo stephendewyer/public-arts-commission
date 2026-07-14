@@ -238,7 +238,7 @@
 
 		const addressSlug = searchValue.replace(/ /g,"_");
 
-		goto(`/endorsements/find-my-voter-location?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`);
+		goto(`/endorsements/find-my-local-government?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`);
 
 	};
 
@@ -359,7 +359,7 @@
 		<ActionButton
 			bind:disable={disableButton}
 		>
-			search endorsements
+			find my local government
 		</ActionButton>
 	</form>
 	<div class="highlighted_campaigns">
