@@ -35,52 +35,6 @@
 
 	let pendingReverseGeocode: boolean | null = $state(null);
 
-	let pendingUSCongressionalDistrict: boolean | null = $state(null);
-
-	// after getUSCongressionalDistrict
-	let getUSCongressionalDistrictResponse: ResponseObj = $state({
-        success: "",
-        error: "",
-        status: null
-    });
-
-    $effect(() => {
-        if((getUSCongressionalDistrictResponse.error)) {
-            setTimeout(() => {
-                getUSCongressionalDistrictResponse.success = "";
-                getUSCongressionalDistrictResponse.error = "";
-                status: null;
-            }, 4000);
-        };
-
-        if((getUSCongressionalDistrictResponse.success) || (getUSCongressionalDistrictResponse.error)) {
-            pendingUSCongressionalDistrict = false;
-        };
-    });
-
-
-	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
-		pendingUSCongressionalDistrict = true;
-		try {
-			const response = await fetch("/api/getUSCongressionalDistrict", {
-				method: "POST",
-				body: JSON.stringify({
-					longitude, 
-					latitude
-				}),
-				headers: {
-					"Content-Type": "application/json",
-				}
-			});
-			getUSCongressionalDistrictResponse = await response.json();
-			if (getUSCongressionalDistrictResponse.success) {
-				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success;
-			};	
-		} catch(error) {
-			console.log(error);
-		};
-	};
-
     let searchByStreetAddressInputValue: string = $state("");
 
 	const location: VoterLocation = $state({
@@ -121,7 +75,6 @@
 			
 			// show the user's address as the value in the searchEndorsements searchInput
 			searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
-
 			location.country = reversedGeolocation.addresses[0].address.country;
 			location.zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
 			location.state = reversedGeolocation.addresses[0].address.countrySubdivision;
@@ -130,12 +83,7 @@
 			location.street= reversedGeolocation.addresses[0].address.street;
 			location.streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
 
-			// get U.S. Congressional District, State Senate District, State House District and City Ward data
-
-			getUSCongressionalDistrict(latitude, longitude);
-
             // set the search
-
 
 			return searchByStreetAddressInputValue;
 
@@ -175,9 +123,177 @@
             pendingReverseGeocode = true;
             findUserLocation();
         };
+    });	
+
+	let statesWithCity: string[] = $state([]);
+
+	const searchByStreetAddressInputValueChangeHandler = () => {
+
+		location.country = "";
+		location.zipcode = "";
+		location.state = "";
+		location.city = "";
+		location.street= "";
+		location.streetNumber = "";
+		location.streetPreDir = "";
+		location.county = "";
+		location.USCongressionalDistrict = "";
+		location.StateSenateDistrict = "";
+		location.StateHouseDistrict = "";
+		location.CityWard = "";
+
+		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
+		
+		if (
+			useCurrentLocationChecked && 
+			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
+		) {
+			useCurrentLocationChecked = false;
+		};
+
+		let stateName: string = "";
+		let stateAbbreviation: string = "";
+		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
+		let searchBarInputValueFirstWord: string | number = "";
+
+		if (searchBarInputValueArray[0].includes(",")) {
+			searchBarInputValueFirstWord = searchBarInputValueArray[0].replace(",", "");
+		} else {
+			searchBarInputValueFirstWord = searchBarInputValueArray[0];
+		};
+
+		let searchBarInputValueSecondWord: string = "";
+
+		if (searchBarInputValueArray.length > 1) {
+			if (searchBarInputValueArray[1].includes(",")) {
+				searchBarInputValueSecondWord = searchBarInputValueArray[1].replace(",", "");
+			} else {
+				searchBarInputValueSecondWord = searchBarInputValueArray[1];
+			};
+		};
+
+		let stateValueArray: string[] = [];
+		let stateValueFirstWord: string = "";
+		let cityValueArray: string[] = [];
+		let cityValueFirstWord: string = "";
+		let countyValueArray: string[] = [];
+		let countyValueFirstWord: string = "";
+
+		// IMPORTANT: street address parser must have an input length greater than zero
+
+		// if search by address input value is greater than zero and use my current location is not checked, 
+		// use address-parser to parse search by address input value
+
+		if (
+			!useCurrentLocationChecked
+		) {
+
+			if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
+
+				// if the first entered value by user is a letter, filter actions by state, city and name
+				// check if search input value includes state
+				// user is not using geocoordinates
+				States.filter((stateObj) => {
+
+					if (
+						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
+						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
+					) {
+						location.state = stateObj.name;
+						stateName = stateObj.name.toLowerCase();
+						stateAbbreviation = stateObj.abbreviation.toLowerCase();
+						stateValueArray = [...location.state.split(" ")];
+						stateValueFirstWord = stateValueArray[0].replace(",", "");
+
+					};
+
+				});
+
+				// check if search input value includes city
+
+				statesWithCity = [];
+
+				if (location.state) {
+
+					USCities.filter((cityObj: CityObject) => {
+
+						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
+
+							// check to see if cityObj.state matches state
+
+							// make sure state is abbreviation
+
+							States.filter((stateObj) => {
+
+								if (stateObj.name === location.state) {
+
+									location.state = stateObj.abbreviation;
+
+								};
+
+							});
+
+							if (location.state === cityObj.state) {
+
+								location.city = cityObj.city;
+								cityValueArray = [...location.city.split(" ")];
+								cityValueFirstWord = cityValueArray[0].replace(",", "");
+
+							};
+
+						};
+
+					});
+
+				} else if (!location.state) {
+
+					// create an array of all possible states for city
+					USCities.forEach((cityObj: CityObject) => {
+						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
+							location.city = cityObj.city;
+							cityValueArray = [...location.city.split(" ")];
+							cityValueFirstWord = cityValueArray[0].replace(",", "");
+							// check if city and state combination already is in statesWithCity and if false, add to statesWithCity
+							if (
+								(statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) &&
+								(searchBarInputValueArray.length <= 2)
+							) {
+								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
+							};
+						};
+					});
+				};       
+
+			};
+
+		};
+
+	};
+
+	let pendingUSCongressionalDistrict: boolean | null = $state(null);
+
+	// after getUSCongressionalDistrict
+	let getUSCongressionalDistrictResponse: ResponseObj = $state({
+        success: "",
+        error: "",
+        status: null
     });
 
-    const getGeoCoordinates = async (location: VoterLocation) => {
+    $effect(() => {
+        if((getUSCongressionalDistrictResponse.error)) {
+            setTimeout(() => {
+                getUSCongressionalDistrictResponse.success = "";
+                getUSCongressionalDistrictResponse.error = "";
+                status: null;
+            }, 4000);
+        };
+
+        if((getUSCongressionalDistrictResponse.success) || (getUSCongressionalDistrictResponse.error)) {
+            pendingUSCongressionalDistrict = false;
+        };
+    });
+
+	const getGeoCoordinates = async (location: VoterLocation) => {
 		let geoCoordinates;
 		try {
 			const response = await fetch("/api/getGeoCoordinates", {
@@ -204,12 +320,32 @@
 			console.log(error);
 		};
 	};
+	
+	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
+		pendingUSCongressionalDistrict = true;
+		try {
+			const response = await fetch("/api/getUSCongressionalDistrict", {
+				method: "POST",
+				body: JSON.stringify({
+					longitude, 
+					latitude
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				}
+			});
+			getUSCongressionalDistrictResponse = await response.json();
+			if (getUSCongressionalDistrictResponse.success) {
+				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success;
+			};	
+		} catch(error) {
+			console.log(error);
+		};
+	};
 
-    // handle changes to searchbar input value
+	const searchLocalGovernment = (e: Event) => {
 
-	let statesWithCity: string[] = $state([])
-
-	const searchByStreetAddressInputValueChangeHandler = () => {
+		e.preventDefault();
 
 		let stateName: string = "";
 		let stateAbbreviation: string = "";
@@ -252,21 +388,25 @@
 		let countyValueArray: string[] = [];
 		let countyValueFirstWord: string = "";
 
-		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
-
-		if (
-			useCurrentLocationChecked && 
-			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
-		) {
-			useCurrentLocationChecked = false;
-		};
-
 		// IMPORTANT: street address parser must have an input length greater than zero
 
 		// if search by address input value is greater than zero and use my current location is not checked, 
 		// use address-parser to parse search by address input value
 
-		if (
+		if (useCurrentLocationChecked) {
+
+			if ( location.longitude && location.latitude ) {
+
+				// get the U.S. Congressional District using longitude and latitude
+				getUSCongressionalDistrict(location.latitude, location.longitude);
+
+			} else {
+
+				location.USCongressionalDistrict = "";
+
+			};		
+
+		} else if (
 			!useCurrentLocationChecked
 		) {
 
@@ -333,9 +473,11 @@
 					location.city && 
 					location.state
 				) {
+					// get the geocoordinates to find local governemnt
 					getGeoCoordinates(location);
 
 					if (location.longitude && location.latitude) {
+						// get the U.S. Congressional District using longitude and latitude
 						getUSCongressionalDistrict(location.latitude, location.longitude);
 					};
 				} else {
@@ -424,40 +566,10 @@
 
 			};
 
-		} else {
-
-			location.country = "";
-			location.zipcode = "";
-			location.state = "";
-			location.city = "";
-			location.street= "";
-			location.streetNumber = "";
-			location.county = "";
-			location.USCongressionalDistrict = "";
-			location.StateSenateDistrict = "";
-			location.StateHouseDistrict = "";
-			location.CityWard = "";
-			stateValueArray = [];
-			stateValueFirstWord = "";
-			cityValueArray = [];
-			cityValueFirstWord = "";
-			countyValueArray = [];
-			countyValueFirstWord = "";
-
 		};
 
 	};
 
-	// if option is selected, run filters
-
-	let searchbarOptionSelected: boolean = $state(false);
-
-	$effect(() => {
-        if (searchbarOptionSelected) {
-            searchByStreetAddressInputValueChangeHandler();
-            searchbarOptionSelected = false;
-        };
-    });	
 
     let disableSearchButton: boolean = $state(false);
 
@@ -478,7 +590,7 @@
         id="filters"
         noValidate 
         autoComplete="off"
-        onsubmit={(e) => e.preventDefault()}
+        onsubmit={(e) => searchLocalGovernment(e)}
     >
         <h2 style="text-align: center">
             find my local government
@@ -494,7 +606,6 @@
                 bind:searchInputValue={searchByStreetAddressInputValue}
                 searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
                 options={statesWithCity}
-                bind:optionSelected={searchbarOptionSelected}
             >
                 street address, city, state or zip code
             </SearchInput>
@@ -567,20 +678,13 @@
 
 <style>
 
-    #page_container {
-        width: 100%;
-        max-width: 80rem;
-        padding: 0 1rem;
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-        margin: 0 auto;
-    }
-
     #filters {
         display: flex;
         flex-direction: column;
         gap: 1rem;
+		width: 100%;
+		max-width: 60rem;
+		margin: 0 auto;
     }
 
 	.use_current_location_label {
