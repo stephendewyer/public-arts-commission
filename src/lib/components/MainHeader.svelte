@@ -100,7 +100,7 @@
 						page.url.pathname === "/endorsements/legislation-endorsed" ||
 						page.url.pathname === "/endorsements/referendums-endorsed" ||
 						page.url.pathname === "/endorsements/amendments-endorsed" ||
-						page.url.pathname === "/endorsements/find-my-voter-location"
+						page.url.pathname === "/endorsements/find-my-local-government"
 						? 'page' : undefined
 					}
 				>
@@ -147,8 +147,8 @@
 									bind:clientHeight={endorsements_panel_height}
 								>
 									<li>
-										<a href="/endorsements/find-my-voter-location" style="text-align: center">
-											find my voter location
+										<a href="/endorsements/find-my-local-government" style="text-align: center">
+											find my local government
 										</a>
 									</li>
 									<li>

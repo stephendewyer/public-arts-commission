@@ -48,7 +48,7 @@
 
         };
         
-        if (endorsedAmendmentData?.ratified_by_state_convenctions === 1) {
+        if (endorsedAmendmentData?.ratified_by_state_conventions === 1) {
 
             amendmentStatus = [...amendmentStatus, " ratified by three-fourths of state conventions called in each state"];
 
@@ -263,13 +263,15 @@
     }
 
     @media (max-width: 720px) {
-
         .endorsement_card {
             min-width: 14rem;
+            max-width: 100%;
         }
+
 
         .endorsement_card_hovered {
             min-width: 14rem;
+            max-width: 100%;
         }
 
         .image_container {

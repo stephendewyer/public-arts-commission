@@ -253,26 +253,7 @@
 
     });
 
-	// define the location object
-
-	interface Location {
-		latitude: number | null;
-		longitude: number | null;
-		streetPreDir: string;
-		streetNumber: string;
-		street: string;
-		city: string;
-		county: string;
-		state: string;
-		zipcode: string;
-		country: string;
-		USCongressionalDistrict: string;
-		StateSenateDistrict: string;
-		StateHouseDistrict: string;
-		CityWard: string;
-	};
-
-	const location: Location = $state({
+	const location: VoterLocation = $state({
 		latitude: null,
 		longitude: null,
 		streetPreDir: "",
@@ -464,7 +445,7 @@
 		navigator.geolocation.getCurrentPosition(success, error);
 	};
 
-    const getGeoCoordinates = async (location: Location) => {
+    const getGeoCoordinates = async (location: VoterLocation) => {
 		let geoCoordinates;
 		try {
 			const response = await fetch("/api/getGeoCoordinates", {
@@ -1224,24 +1205,26 @@
 				</form>
 			</div>
 		{/if}
-		<div 
-			bind:clientHeight={endorsementResultsHeight}
-			bind:this={resultsElement}
-			class="results"
-		>
-			{#if pendingEndorsedLegislationData}
-				<LoaderAnimation />
-			{:else if getEndorsedLegislationDataSuccess}
-				<Panel 
-					bind:tabPanels={endorsementTabPanels} 
-					bind:activeTab={activeEndorsementsTab}
-					bind:currentPage
-					endorsementNavHeight={endorsementNavHeight}
-					endorsementsType={endorsementsType}
-				></Panel>
-			{:else}
-				failed to load referendums
-			{/if}
+		<div class="results_container">
+			<div 
+				bind:clientHeight={endorsementResultsHeight}
+				bind:this={resultsElement}
+				class="results"
+			>
+				{#if pendingEndorsedLegislationData}
+					<LoaderAnimation />
+				{:else if getEndorsedLegislationDataSuccess}
+					<Panel 
+						bind:tabPanels={endorsementTabPanels} 
+						bind:activeTab={activeEndorsementsTab}
+						bind:currentPage
+						endorsementNavHeight={endorsementNavHeight}
+						endorsementsType={endorsementsType}
+					></Panel>
+				{:else}
+					failed to load referendums
+				{/if}
+			</div>
 		</div>
 	</div>
 	<div 
@@ -1312,6 +1295,11 @@
 	}
 
 	.filters_not_sticky {
+		position: relative;
+	}
+
+	.results_container {
+		width: 100%;
 		position: relative;
 	}
 

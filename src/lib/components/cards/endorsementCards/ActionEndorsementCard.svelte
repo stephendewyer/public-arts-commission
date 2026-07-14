@@ -194,14 +194,15 @@
     }
 
     @media (max-width: 720px) {
-
         .endorsement_card {
             min-width: 14rem;
+            max-width: 100%;
         }
 
 
         .endorsement_card_hovered {
             min-width: 14rem;
+            max-width: 100%;
         }
 
         .image_container > img {

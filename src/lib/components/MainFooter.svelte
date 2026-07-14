@@ -101,7 +101,7 @@
                                 <div 
                                     class="footer_nav_tab"
                                     aria-current={
-                                        page.url.pathname === "/endorsements/find-my-voter-location" || 
+                                        page.url.pathname === "/endorsements/find-my-local-government" || 
                                         page.url.pathname === "/endorsements/candidates-endorsed" ||
                                         page.url.pathname === "/endorsements/legislation-endorsed" ||
                                         page.url.pathname === "/endorsements/referendums-endorsed" ||
@@ -117,10 +117,10 @@
                                         <li>
                                             <a 
                                                 class="footer_nav_tab_secondary"
-                                                aria-current={page.url.pathname === '/endorsements/find-my-voter-location' ? 'page' : undefined}
-                                                href="/endorsements/find-my-voter-location" style="text-align: center"
+                                                aria-current={page.url.pathname === '/endorsements/find-my-local-government' ? 'page' : undefined}
+                                                href="/endorsements/find-my-local-government" style="text-align: center"
                                             >
-                                                find my voter location
+                                                find my local government
                                             </a>
                                         </li>
                                         <li>

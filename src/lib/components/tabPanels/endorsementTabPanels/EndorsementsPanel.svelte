@@ -7,7 +7,7 @@
     import Pagination from "$lib/components/pagination/Pagination.svelte";
 
     let { 
-        tabPanels =$bindable(), 
+        tabPanels = $bindable(), 
         endorsementNavHeight = $bindable(), 
         activeTab = $bindable(), 
         currentPage = $bindable(),

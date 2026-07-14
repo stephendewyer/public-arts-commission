@@ -34,22 +34,7 @@
 
     // once user clicks "use my current location" checkbox, 
 
-    // define the location object
-
-	interface Location {
-		latitude: number | null;
-		longitude: number | null;
-		streetPreDir: string;
-		streetNumber: string;
-		street: string;
-		city: string;
-		county: string;
-		state: string;
-		zipcode: string;
-		country: string;
-	};
-
-	const location: Location = $state({
+	const location: VoterLocation = $state({
 		latitude: null,
 		longitude: null,
 		streetPreDir: "",
@@ -59,7 +44,11 @@
 		county: "",
 		state: "",
 		zipcode: "",
-		country: ""
+		country: "",
+		USCongressionalDistrict: "",
+		StateSenateDistrict: "",
+		StateHouseDistrict: "",
+		CityWard: ""
 	});
 
 	// define the location variables
@@ -942,24 +931,26 @@
 				</form>
 			</div>
 		{/if}
-		<div 
-			bind:clientHeight={endorsementResultsHeight}
-			bind:this={resultsElement}
-			class="results"
-		>
-			{#if pendingEndorsedActionsData}
-				<LoaderAnimation />
-			{:else if getEndorsedActionsDataSuccess}
-				<Panel 
-					bind:tabPanels={endorsementTabPanels} 
-					bind:activeTab={activeEndorsementsTab}
-					bind:currentPage
-					endorsementNavHeight={endorsementNavHeight}
-					endorsementsType={endorsementsType}
-				></Panel>
-			{:else}
-				failed to load referendums
-			{/if}
+		<div class="results_container">
+			<div 
+				bind:clientHeight={endorsementResultsHeight}
+				bind:this={resultsElement}
+				class="results"
+			>
+				{#if pendingEndorsedActionsData}
+					<LoaderAnimation />
+				{:else if getEndorsedActionsDataSuccess}
+					<Panel 
+						bind:tabPanels={endorsementTabPanels} 
+						bind:activeTab={activeEndorsementsTab}
+						bind:currentPage
+						endorsementNavHeight={endorsementNavHeight}
+						endorsementsType={endorsementsType}
+					></Panel>
+				{:else}
+					failed to load referendums
+				{/if}
+			</div>
 		</div>
 	</div>
 	<div 
@@ -1030,6 +1021,11 @@
 	}
 
 	.filters_not_sticky {
+		position: relative;
+	}
+
+	.results_container {
+		width: 100%;
 		position: relative;
 	}
 

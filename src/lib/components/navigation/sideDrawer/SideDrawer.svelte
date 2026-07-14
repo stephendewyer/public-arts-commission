@@ -46,10 +46,10 @@
             expandable: true,
             content: [
                 {
-                    label: "find my voter location",
+                    label: "find my local government",
                     expandable: false,
                     content: null,
-                    slug: "/endorsements/find-my-voter-location"
+                    slug: "/endorsements/find-my-local-government"
                 },
                 {
                     label: "candidates",

@@ -119,6 +119,23 @@ declare global {
 		timestamp: number;
 	}
 
+	interface VoterLocation {
+		latitude: number | null;
+		longitude: number | null;
+		streetPreDir: string;
+		streetNumber: string;
+		street: string;
+		city: string;
+		county: string;
+		state: string;
+		zipcode: string;
+		country: string;
+		USCongressionalDistrict: string;
+		StateSenateDistrict: string;
+		StateHouseDistrict: string;
+		CityWard: string;
+	};
+
 	interface summaryReverseGeoLocation {
 		queryTime: number;
 		numResults: number;
@@ -1236,26 +1253,6 @@ declare global {
 		path: string;
 		completed: boolean;
 	}
-
-	interface Endorsements {
-        currentPageAmendments: number;
-        currentPageCandidates: number;
-        currentPageLegislation: number;
-        currentPageReferendums: number;
-        endorsed_amendments: AmendmentWithSponsorsAndImage[];
-        endorsed_candidates: CandidateWithImage[];
-        endorsed_legislation: LegislationWithSponsorsAndImage[];
-        endorsed_referendums: ReferendumWithImage[];
-        getEndorsedAmendmentsDataSuccess: boolean | null;
-        getEndorsedCandidatesDataSuccess: boolean | null;
-        getEndorsedLegislationDataSuccess: boolean | null;
-        getEndorsedReferendumsDataSuccess: boolean | null;
-        pendingEndorsedAmendmentsData: boolean | null;
-        pendingEndorsedCandidatesData: boolean | null;
-        pendingEndorsedLegislationData: boolean | null;
-        pendingEndorsedReferendumsData: boolean | null;
-        user: User | undefined;
-    }
 
 }
 
