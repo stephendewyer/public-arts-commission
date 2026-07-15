@@ -180,7 +180,15 @@
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
 
-		// clear the search paramaters
+		// clear the search paramaters only if search parameters
+		if (searchParams.get("current_address_checked") === "true") {
+			const url = new URL(page.url.pathname, window.location.origin);
+			goto(url.toString(), { 
+				replaceState: true, 
+				keepFocus: true, 
+				noScroll: true 
+			});
+		};
 		// Navigates to the current path without the query string
 
 		location.country = "";

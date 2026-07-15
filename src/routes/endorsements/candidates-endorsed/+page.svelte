@@ -894,9 +894,6 @@
 
 	$effect(() => {
 
-		console.log("endorsementResultsHeight: ", endorsementResultsHeight);
-		console.log("(scrollableSearchHeight + clearFiltersButtonHeight): ", (scrollableSearchHeight + clearFiltersButtonHeight))
-
         if (endorsementResultsHeight <= (scrollableSearchHeight + clearFiltersButtonHeight)) {
             // quilt search results height is less than search container = no search absolute position
             // handle for both mobile and desktop
