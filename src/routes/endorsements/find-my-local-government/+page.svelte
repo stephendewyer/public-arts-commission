@@ -15,27 +15,17 @@
     import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import ActionButtonSecondary from "$lib/components/buttons/ActionButtonSecondary.svelte";
+  import { goto } from "$app/navigation";
 
-    // set the latitude and longitude with user's position.coords
+	let searchByStreetAddressInputValue: string = $state("");
 
-	let reversedGeolocation: ReverseGeoLocation = $state({
-        addresses: [],
-        summary: {
-            queryTime: 0,
-            numResults: 0
-        }
-    });
+	let useCurrentLocationChecked: boolean = $state(false);
 
-	// use the user's geolocation to get the user's address
+	// get the search params from URL
 
-    let useCurrentLocationChecked: boolean = $state(false);
-	// after submit
+	let searchParams: URLSearchParams = $derived(new URLSearchParams(page.url.search));
 
-	let addressLoadSuccess: boolean | null = $state(null);
-
-	let pendingReverseGeocode: boolean | null = $state(null);
-
-    let searchByStreetAddressInputValue: string = $state("");
+	let countryUnitedStates: boolean = $state(true);
 
 	const location: VoterLocation = $state({
 		latitude: null,
@@ -54,6 +44,57 @@
 		CityWard: ""
 	});
 
+	onMount(() => {
+
+		// handle data in search
+
+		if (page.url.search) {
+
+			// check to see if address is in the U.S.
+			if (searchParams.get("country") === "United_States") {
+				countryUnitedStates = true;
+			};
+
+			if (searchParams.get("current_address_checked") === "true") {
+				useCurrentLocationChecked = true;
+			};
+
+			const addressParam = searchParams.get("address");
+
+			if (addressParam !== null) {
+				searchByStreetAddressInputValue = addressParam.toString().replaceAll('_', ' ');
+			};
+
+			if (searchParams.get("latitude") !== null) {
+				location.latitude = Number(searchParams.get("latitude"));
+			};
+
+			if (searchParams.get("longitude") !== null) {
+				location.longitude = Number(searchParams.get("longitude"));
+			};
+
+		};
+
+	});
+
+    // set the latitude and longitude with user's position.coords
+
+	let reversedGeolocation: ReverseGeoLocation = $state({
+        addresses: [],
+        summary: {
+            queryTime: 0,
+            numResults: 0
+        }
+    });
+
+	// use the user's geolocation to get the user's address
+
+	// after submit
+
+	let addressLoadSuccess: boolean | null = $state(null);
+
+	let pendingReverseGeocode: boolean | null = $state(null);
+	
 	async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string | undefined> {
 
 		const response = await fetch("/api/reverseGeocode", {
@@ -117,17 +158,30 @@
 		navigator.geolocation.getCurrentPosition(success, error);
 	};
 
-        // if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
+    // if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
     $effect(() => {
-        if (useCurrentLocationChecked) { 
-            pendingReverseGeocode = true;
-            findUserLocation();
-        };
+		// handle find user location only if search parameters don't already have the address
+        if (
+			useCurrentLocationChecked && (
+				searchParams.get("current_address_checked") !== "true"
+			)) { 
+				pendingReverseGeocode = true;
+				findUserLocation();
+        } else if (
+			// get the address from the search parameters
+			useCurrentLocationChecked && 
+			searchParams.get("current_address_checked") === "true"
+		) {
+			addressLoadSuccess = true;
+		};
     });	
 
 	let statesWithCity: string[] = $state([]);
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
+
+		// clear the search paramaters
+		// Navigates to the current path without the query string
 
 		location.country = "";
 		location.zipcode = "";
@@ -144,10 +198,10 @@
 
 		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
 		
-		if (
-			useCurrentLocationChecked && 
-			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
-		) {
+		if (useCurrentLocationChecked && searchParams.get("current_address_checked") === "true") {
+			useCurrentLocationChecked = false;
+		} else if (reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
+		{
 			useCurrentLocationChecked = false;
 		};
 
@@ -574,13 +628,13 @@
     let disableSearchButton: boolean = $state(false);
 
     $effect(() => {
-        if (searchByStreetAddressInputValue !== "") {
-            disableSearchButton = false;
-        } else if (useCurrentLocationChecked) {
-            disableSearchButton = false;
-        } else {
-            disableSearchButton = true;
-        };
+		if (useCurrentLocationChecked && !countryUnitedStates) {
+			disableSearchButton = true;
+		} else if (!searchByStreetAddressInputValue && countryUnitedStates){
+			disableSearchButton = true;
+		} else {
+			disableSearchButton = false;
+		};
     });
 
 </script>
@@ -610,8 +664,11 @@
                 street address, city, state or zip code
             </SearchInput>
         {:else if !addressLoadSuccess}
-            <p>failed to load address</p>
+            <p style="color: red;">failed to load address</p>
         {/if}
+		{#if !countryUnitedStates}
+			<p style="color: red;">Address must be within the United States.  Please enter a valid United States address.</p>
+		{/if}
         <Checkbox 
             bind:checked={useCurrentLocationChecked}
         >

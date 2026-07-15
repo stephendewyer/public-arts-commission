@@ -116,6 +116,9 @@
 	let latitude: number | null = $state(null);
 	let longitude: number | null = $state(null);	
 
+	// define the country variable
+	let country: string = $state("");
+
 	// set the latitude and longitude with user's position.coords
 
 	let reversedGeolocation: ReverseGeoLocation = $state({
@@ -165,6 +168,8 @@
 
 		// show the user's address as the value in the searchEndorsements searchInput
 
+		country = reversedGeolocation.addresses[0].address.country;
+
 		searchValue = reversedGeolocation.addresses[0].address.freeformAddress;
 
 		return searchValue;
@@ -210,7 +215,7 @@
 
 			pending = true;
 
-			findUserLocation() 
+			findUserLocation();
 		} 
 	});
 
@@ -236,9 +241,11 @@
 
 		e.preventDefault();
 
-		const addressSlug = searchValue.replace(/ /g,"_");
+		const addressSlug: string = searchValue.replace(/ /g,"_");
 
-		goto(`/endorsements/find-my-local-government?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`);
+		const countrySlug: string = country.replace(/ /g,"_");
+
+		goto(`/endorsements/find-my-local-government?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}&latitude=${latitude}&longitude=${longitude}&country=${countrySlug}`);
 
 	};
 
