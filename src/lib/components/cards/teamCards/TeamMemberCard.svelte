@@ -101,4 +101,16 @@
         line-height: 1.5rem;
     }
 
+    @media (max-width: 720px) {
+        .card_container {
+            min-width: 14rem;
+            max-width: 100%;
+        }
+
+        .card_container_active {
+            min-width: 14rem;
+            max-width: 100%;
+        }
+    }
+
 </style>
