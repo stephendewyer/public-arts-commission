@@ -1,13 +1,133 @@
 <div id="mc_embed_shell">
-      <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">
   <style type="text/css">
-        #mc_embed_signup{background:none; false;clear:left; font:14px Helvetica,Arial,sans-serif; max-width: 600px; width: 100%;}
-        /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-           We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
+
+    #mc_embed_shell {
+      width: 100%;
+      padding: 0 1rem;
+      max-width: 40rem;
+    }
+
+    #mc_embed_signup {
+      background:none; 
+      false;clear:left;
+      font-size: 1rem; 
+      width: 100%;
+    }
+
+    #mc_embed_signup_scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .mc-field-group {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .mc-field-group > label {
+      font-weight: bold;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1C2226;
+      padding: 0 0 0.5rem 0;
+    }
+
+    .button {
+      margin: 1rem auto;
+      color: #3A2B35;
+      fill: #3A2B35;
+      background-color: #E3CDB2;
+      border: none;
+      padding: 0.5rem 2rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3rem;
+      cursor: pointer;
+      transition: gap 0.2s ease-out, background-color 0.2s linear, color 0.2s linear, fill 0.2s linear;
+    }
+
+    .button:hover {
+      color: #D8EAC5;
+      fill: #D8EAC5;
+      background-color: #3A2B35;
+    }
+
+    .mc-field-group > input {
+      background-color: #EFF9F2;
+      border-radius: 3rem;
+      color: #484B47;
+      font-size: 1.4rem;
+      padding: 0.5rem 1rem;
+      border-width: 2px;
+      border-color: #EFF9F2;
+      border-style: solid;
+      will-change: border-color;
+      transition: border-color 0.2s linear;
+      outline: none;
+      width: 100%;
+    }
+
+    .mc-field-group > input:hover {
+      border-color: #CB6D44;
+      transition: border-color 0.2s linear;
+    }
+
+    .mc-field-group > input:focus {
+      border-color: #1C2226;
+      transition: border-color 0.2s linear;
+    }
+
+
+    @media (max-width: 1140px) {
+
+      .mc-field-group > input {
+        font-size: 1.2rem;
+      }
+
+      .invalid_input {
+        font-size: 1.2rem;
+      }
+
+      .mc-field-group > label {
+        font-size: 1.2rem;
+        padding: 0 0 0.4rem 0;
+      }
+
+      .button {
+          font-size: 1.25rem;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .mc-field-group > input {
+        font-size: 1rem;
+      }
+
+      .mc-field-group > label {
+        padding: 0 0 0.3rem 0;
+        font-size: 1rem;
+      }
+
+      .button {
+        font-size: 1rem;
+      }
+    }
+    /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
+        We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
 </style>
 <div id="mc_embed_signup">
     <form action="https://publicartscommission.us15.list-manage.com/subscribe/post?u=4ab15f53049e8198529e0fff2&amp;id=02f6134a15&amp;f_id=00a9a4e0f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
-        <div id="mc_embed_signup_scroll"><h2>Subscribe to our newsletter</h2>
+        <div id="mc_embed_signup_scroll">
+          <h2>
+            subscribe to our newsletter
+          </h2>
             <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
             <div class="mc-field-group"><label for="mce-EMAIL">email address <span class="asterisk">*</span></label><input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required={true} value=""></div><div class="mc-field-group"><label for="mce-FNAME">first name </label><input type="text" name="FNAME" class=" text" id="mce-FNAME" value=""></div><div class="mc-field-group"><label for="mce-LNAME">last name </label><input type="text" name="LNAME" class=" text" id="mce-LNAME" value=""></div><div class="mc-field-group"><label for="mce-MMERGE7">state or territory </label><input type="text" name="MMERGE7" class=" text" id="mce-MMERGE7" value=""></div>
         <div id="mce-responses" class="clear foot">
@@ -20,8 +140,7 @@
     </div>
         <div class="optionalParent">
             <div class="clear foot">
-                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
-                <p style="margin: 0px auto;"><a href="http://eepurl.com/2e_pLTK507" title="Mailchimp - email marketing made easy and fun"><span style="display: inline-block; background-color: transparent; border-radius: 4px;"><img class="refferal_badge" src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" style="width: 220px; height: 40px; display: flex; padding: 2px 0px; justify-content: center; align-items: center;"></span></a></p>
+                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="subscribe">
             </div>
         </div>
     </div>

@@ -636,6 +636,173 @@
             </p>
         {/if}
     </form>
+	<!-- <table>
+                <colgroup>
+                    <col style="width:40%">
+                    <col style="width:60%">
+                </colgroup>  
+                <tbody>
+                    <tr>
+                        <td>
+                            year released:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.year_released ? $EndorsedAmendmentSelectedStore.year_released : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            year introduced in the House:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.year_introduced_House ? $EndorsedAmendmentSelectedStore.year_introduced_House : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            year introduced in the Senate:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.year_introduced_Senate ? $EndorsedAmendmentSelectedStore.year_introduced_Senate : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            House session:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.session_House ? $EndorsedAmendmentSelectedStore.session_House : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate session:
+                        </td>
+                        <td>
+                            {$EndorsedAmendmentSelectedStore?.session_Senate ? $EndorsedAmendmentSelectedStore.session_Senate : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            election date:
+                        </td>
+                        <td>
+                            {electionDate ? electionDate : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            country: 
+                        </td>
+                        <td>
+                            United States of America
+                        </td>
+                    </tr>
+                    {#if ($EndorsedAmendmentSelectedStore?.state)}
+                        <tr>
+                            <td>
+                                state: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.state)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedAmendmentSelectedStore?.county)}
+                        <tr>
+                            <td>
+                                county: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.county)}
+                            </td>
+                        </tr>
+                    {/if}
+                    {#if ($EndorsedAmendmentSelectedStore?.city)}
+                        <tr>
+                            <td>
+                                city: 
+                            </td>
+                            <td>
+                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.city)}
+                            </td>
+                        </tr>
+                    {/if}
+                    <tr>
+                        <td>
+                            House sponsor: 
+                        </td>
+                        <td>
+                            {sponsorsHouseNamesUpdated.length > 0 ? reverseHtmlEntities(sponsorsHouseNamesUpdated.join(', ').toString()) : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            House co-sponsor(s): 
+                        </td>
+                        <td>
+                            <ol class="co-sponsors">
+                                {#each coSponsorsHouseNamesUpdated as coSponsorHouseName, i}
+                                    <li>
+                                        {reverseHtmlEntities(coSponsorHouseName)}
+                                    </li>
+                                {/each}
+                            </ol>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate sponsor: 
+                        </td>
+                        <td>
+                            {sponsorsSenateUpdated.length > 0 ? reverseHtmlEntities(sponsorsSenateUpdated.join(', ').toString()) : ""}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Senate co-sponsor(s): 
+                        </td>
+                        <td>
+                            <ol class="co-sponsors">
+                                {#each coSponsorsSenateNamesUpdated as coSponsorSenateName, i}
+                                    <li>
+                                        {reverseHtmlEntities(coSponsorSenateName)}
+                                    </li>
+                                {/each}
+                            </ol>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            website: 
+                        </td>
+                        <td>
+                            {#if ($EndorsedAmendmentSelectedStore?.website_URL)}
+                                <a 
+                                    class="external_link_container"
+                                    href={$EndorsedAmendmentSelectedStore.website_URL} 
+                                    target="_blank"
+                                >
+                                    <div class="external_link_icon">
+                                        {@html ExternalLinkIcon}
+                                    </div>
+                                    <div class="website_URL">
+                                        {$EndorsedAmendmentSelectedStore.website_URL} 
+                                    </div>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            status: 
+                        </td>
+                        <td>
+                            {amendmentStatusUpdated.length > 0 ? reverseHtmlEntities(amendmentStatusUpdated.toString()) : ""}
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
     <!-- <ul class="endorsement_categories" >
         <li>
             <a href="/endorsements/candidates-endorsed">
