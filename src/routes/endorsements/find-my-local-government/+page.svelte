@@ -75,6 +75,8 @@
 
 		};
 
+		searchByStreetAddressInputValueChangeHandler();
+
 	});
 
     // set the latitude and longitude with user's position.coords
@@ -179,6 +181,8 @@
 	let statesWithCity: string[] = $state([]);
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
+
+		console.log(searchByStreetAddressInputValue)
 
 		// clear the search paramaters only if search parameters
 		if (searchParams.get("current_address_checked") === "true") {
