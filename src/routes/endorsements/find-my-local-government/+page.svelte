@@ -754,7 +754,10 @@
             search
         </SubmitButtonSecondary>
         {#if pendingCivicDivisions}
-            <p style="font-size: 1rem">getting local governments</p>
+		<div class="pending_civic_divisions">
+			<LoaderAnimation /><p class="loading_paragraph">getting local governments</p>
+		</div>
+            
         {:else if getDivisionsGoogleResponse.error || getDivisionsUSCensusResponse.error}
             <p style="font-size: 1rem">failed to get local governments</p>
         {:else if location.USCongressionalDistrict}
@@ -850,6 +853,23 @@
         width: 1.25rem;
     }
 
+	.pending_civic_divisions {
+		display: flex;
+		flex-direction: row;
+		align-self: center;
+		justify-content: center;
+		width: 100%;
+		gap: 1rem;
+	}
+
+	.loading_paragraph {
+		font-size: 2rem;
+		font-weight: bold;
+		display: flex;
+		flex-wrap: row;
+		align-items: center;
+	}
+
 	table {
         border-spacing: 0;
         width: 100%;
@@ -885,6 +905,10 @@
             font-size: 1.125rem;
         }
 
+		.loading_paragraph {
+			font-size: 1.5rem;
+		}
+
     }
 
     @media (max-width: 720px) {
@@ -895,6 +919,10 @@
             hyphens: auto;
             font-size: 1rem;
         }
+
+		.loading_paragraph {
+			font-size: 1.25rem;
+		}
 
     }
 
