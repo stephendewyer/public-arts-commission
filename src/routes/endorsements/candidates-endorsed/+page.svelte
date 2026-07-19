@@ -254,6 +254,7 @@
 		USCongressionalDistrict: "",
 		StateSenateDistrict: "",
 		StateHouseDistrict: "",
+		StateUnicameralDistrict: "",
 		CityWard: ""
 	});
 
@@ -329,9 +330,11 @@
 			});
 			getUSCongressionalDistrictResponse = await response.json();
 			if (getUSCongressionalDistrictResponse.success) {
-				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success.USCongressional;
-				location.StateHouseDistrict = getUSCongressionalDistrictResponse.success.stateHouse;
-				location.StateSenateDistrict = getUSCongressionalDistrictResponse.success.stateSenate;
+				const districts = getUSCongressionalDistrictResponse.success;
+				location.USCongressionalDistrict = districts.congressional;
+				location.StateUnicameralDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "unicameral")?.district;
+				location.StateHouseDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "lower")?.district;
+				location.StateSenateDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "upper")?.district;
 			};	
 		} catch(error) {
 			console.log(error);
@@ -1055,6 +1058,10 @@
 									<span>State House District: </span>
 									<span style={"font-weight: bold"}>{location.StateHouseDistrict}</span>
 								</p>
+								<p style="font-size: 1rem">
+									<span>State Unicameral District (Nebraska): </span>
+									<span style={"font-weight: bold"}>{location.StateUnicameralDistrict}</span>
+								</p>
 							{/if}
 							<div class="year_input_container">
 								<SelectSearchInput 
@@ -1158,6 +1165,10 @@
 							<p style="font-size: 1rem">
 								<span>State House District: </span>
 								<span style={"font-weight: bold"}>{location.StateHouseDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>State Unicameral District (Nebraska): </span>
+								<span style={"font-weight: bold"}>{location.StateUnicameralDistrict}</span>
 							</p>
 						{/if}
 						<div class="year_input_container">

@@ -23,46 +23,109 @@ export async function POST({request}) {
 
         /**
          * @param {{ [x: string]: any[]; }} geographies
-         * @param {RegExp} pattern
+         * @param {string} suffix
          */
-        function findGeography(
+        const getGeography = (
             geographies,
-            pattern
-        ) {
-            const key = Object.keys(geographies)
-                .find(k => pattern.test(k));
+            suffix
+        ) => {
+            const key = Object.keys(geographies).find(key =>
+                key.endsWith(suffix)
+            );
 
-            return key
-                ? geographies[key]?.[0]
-                : null;
+            return key ? geographies[key][0] : null;
         };
 
 
-        const USCongressional =
-            findGeography(
-                geographies,
-                /Congressional District/i
+        /**
+         * @param {{ [x: string]: any; SLDU?: any; SLDL?: district; }} district
+         */
+        const getDistrictNumber = (district) => {
+
+            if (!district) return null;
+
+            const cdKey = Object.keys(district).find(key =>
+                /^CD\d+FP$/.test(key)
             );
 
-        const stateSenate =
-            findGeography(
+            if (cdKey) return district[cdKey];
+
+            if (district.SLDU) return district.SLDU;
+            if (district.SLDL) return district.SLDL;
+
+            // Census Geocoder commonly provides this
+            if ("BASENAME" in district) return district.BASENAME;
+
+            return null;
+        };
+
+        // extract the Congressional and State legislative districts
+
+        /**
+         * @param {{ [x: string]: LegislativeDistrict[]; }} geographies
+         */
+        const extractStateLegislativeDistricts = (
+            geographies
+        ) => {
+            const districts = [];
+
+            const upper = getGeography(
                 geographies,
-                /Upper/i
+                "State Legislative Districts - Upper"
             );
 
-        const stateHouse =
-            findGeography(
+            if (upper) {
+                districts.push({
+                    chamber: "upper",
+                    district: getDistrictNumber(upper) ? getDistrictNumber(upper) : ""
+                });
+            }
+
+            const lower = getGeography(
                 geographies,
-                /Lower/i
+                "State Legislative Districts - Lower"
             );
 
-        const results = { 
-            USCongressional: USCongressional.BASENAME, 
-            stateSenate: stateSenate.BASENAME, 
-            stateHouse: stateHouse.BASENAME
-        }
+            if (lower) {
+                districts.push({
+                    chamber: "lower",
+                    district: getDistrictNumber(lower)
+                });
+            }
+
+            // Nebraska
+            if (districts.length === 0) {
+                const unicameral = getGeography(
+                    geographies,
+                    "State Legislative Districts"
+                );
+
+                if (unicameral) {
+                    districts.push({
+                        chamber: "unicameral",
+                        district: getDistrictNumber(unicameral)
+                    });
+                }
+            };
+
+            return districts;
+        };
+
+        const congressional = getGeography(
+            geographies,
+            "Congressional Districts"
+        );
+
+        const districts = {
+            congressional: congressional
+                ? getDistrictNumber(congressional)
+                : null,
+            stateLegislative: extractStateLegislativeDistricts(geographies)
+        };
+
+        console.log(districts);
     
-        return new Response(JSON.stringify({success: results}), {status: 200});
+        return new Response(JSON.stringify({success: districts}), {status: 200});
     };
     
 };

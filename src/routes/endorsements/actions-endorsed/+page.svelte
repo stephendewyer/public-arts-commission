@@ -48,6 +48,7 @@
 		USCongressionalDistrict: "",
 		StateSenateDistrict: "",
 		StateHouseDistrict: "",
+		StateUnicameralDistrict: "",
 		CityWard: ""
 	});
 

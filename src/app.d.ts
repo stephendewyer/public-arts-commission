@@ -63,6 +63,16 @@ declare global {
 		}
 	};
 
+	interface LegislativeDistrict {
+		chamber: 'upper' | 'lower' | 'unicameral';
+		district: string;
+	}
+
+	interface Districts {
+		congressional?: string;
+		stateLegislative: LegislativeDistrict[];
+	}
+
 	interface ResponseObj {
         success: string | any;
         error: string;
@@ -122,7 +132,12 @@ declare global {
 		index: number;
 		label: string;
 		hasCapitol: boolean;
-		data: SearchReferendumWithImage[] | SearchLegislationWithSponsorsAndImage[] | SearchEndorsedCandidateWithImage[] | SearchActionWithImage[] | SearchAmendmentWithSponsorsAndImage[];
+		data: 
+			SearchReferendumWithImage[] | 
+			SearchLegislationWithSponsorsAndImage[] | 
+			SearchEndorsedCandidateWithImage[] | 
+			SearchActionWithImage[] | 
+			SearchAmendmentWithSponsorsAndImage[];
 	};
 
 	interface GeolocationCoordinates {
@@ -154,6 +169,7 @@ declare global {
 		USCongressionalDistrict: string;
 		StateSenateDistrict: string;
 		StateHouseDistrict: string;
+		StateUnicameralDistrict: string;
 		CityWard: string;
 	};
 

@@ -39,6 +39,7 @@
 		zipcode: "",
 		country: "",
 		USCongressionalDistrict: "",
+		StateUnicameralDistrict: "",
 		StateSenateDistrict: "",
 		StateHouseDistrict: "",
 		CityWard: ""
@@ -428,9 +429,10 @@
 			if (getDivisionsUSCensusResponse.success) {
 				// extract the data
 				const districts = getDivisionsUSCensusResponse.success;
-				location.USCongressionalDistrict = districts.USCongressional;
-				location.StateSenateDistrict = districts.stateSenate;
-				location.StateHouseDistrict = districts.stateHouse;
+				location.USCongressionalDistrict = districts.congressional;
+				location.StateUnicameralDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "unicameral")?.district;
+				location.StateHouseDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "lower")?.district;
+				location.StateSenateDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "upper")?.district;
 			};	
 		} catch(error) {
 			console.log(error);
@@ -805,6 +807,14 @@
 						</td>
 						<td>
 							{location.StateSenateDistrict}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							State Unicameral District (Nebraska):
+						</td>
+						<td>
+							{location.StateUnicameralDistrict}
 						</td>
 					</tr>
 					<tr>
