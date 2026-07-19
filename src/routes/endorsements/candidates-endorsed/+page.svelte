@@ -317,7 +317,7 @@
 	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
 		pendingUSCongressionalDistrict = true;
 		try {
-			const response = await fetch("/api/getUSCongressionalDistrict", {
+			const response = await fetch("/api/getDivisionsUSCensus", {
 				method: "POST",
 				body: JSON.stringify({
 					longitude, 
@@ -329,7 +329,9 @@
 			});
 			getUSCongressionalDistrictResponse = await response.json();
 			if (getUSCongressionalDistrictResponse.success) {
-				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success;
+				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success.USCongressional;
+				location.StateHouseDistrict = getUSCongressionalDistrictResponse.success.stateHouse;
+				location.StateSenateDistrict = getUSCongressionalDistrictResponse.success.stateSenate;
 			};	
 		} catch(error) {
 			console.log(error);
@@ -1045,6 +1047,14 @@
 									<span>U.S. Congressional District: </span>
 									<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
 								</p>
+								<p style="font-size: 1rem">
+									<span>State Senate District: </span>
+									<span style={"font-weight: bold"}>{location.StateSenateDistrict}</span>
+								</p>
+								<p style="font-size: 1rem">
+									<span>State House District: </span>
+									<span style={"font-weight: bold"}>{location.StateHouseDistrict}</span>
+								</p>
 							{/if}
 							<div class="year_input_container">
 								<SelectSearchInput 
@@ -1140,6 +1150,14 @@
 							<p style="font-size: 1rem">
 								<span>U.S. Congressional District: </span>
 								<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>State Senate District: </span>
+								<span style={"font-weight: bold"}>{location.StateSenateDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>State House District: </span>
+								<span style={"font-weight: bold"}>{location.StateHouseDistrict}</span>
 							</p>
 						{/if}
 						<div class="year_input_container">
