@@ -769,6 +769,14 @@
 				<tbody>
 					<tr>
 						<td>
+							country:
+						</td>
+						<td>
+							{location.country}
+						</td>
+					</tr>
+					<tr>
+						<td>
 							state:
 						</td>
 						<td>
@@ -817,7 +825,7 @@
 					</tr>
 					<tr>
 						<td>
-							Ward:
+							Ward or Council District:
 						</td>
 						<td>
 							{location.CityWard}
@@ -825,6 +833,7 @@
 					</tr>
 				</tbody>
 			</table>
+			<p>Data sourced from U.S. Census Bureau and Google Civic API DivisionsByAddress and accounts for latest Congressional mapping.</p>
         {/if}
     </form>
 </div>
