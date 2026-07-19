@@ -21,6 +21,20 @@ export async function POST({request}) {
 
         const geographies = districtData.result.geographies;
 
+        const getStateFips = (/** @type {{ [x: string]: any; }} */ geographies) => {
+            const states = geographies["States"];
+
+            if (!states || !states[0]) {
+                return null;
+            }
+
+            return states[0].STATE;
+        };
+
+        const stateFips = getStateFips(geographies);
+
+        // console.log("State FIPS:", stateFips);
+
         /**
          * @param {{ [x: string]: any[]; }} geographies
          * @param {string} suffix
@@ -61,11 +75,10 @@ export async function POST({request}) {
 
         // extract the Congressional and State legislative districts
 
-        /**
-         * @param {{ [x: string]: LegislativeDistrict[]; }} geographies
-         */
+
         const extractStateLegislativeDistricts = (
-            geographies
+            /** @type {{ [x: string]: any[]; }} */ geographies, 
+            /** @type {undefined} */ stateFips
         ) => {
             const districts = [];
 
@@ -76,8 +89,11 @@ export async function POST({request}) {
 
             if (upper) {
                 districts.push({
-                    chamber: "upper",
-                    district: getDistrictNumber(upper) ? getDistrictNumber(upper) : ""
+                    chamber: stateFips === "31"
+                        ? "unicameral"
+                        : "upper",
+
+                    district: getDistrictNumber(upper) ?? ""
                 });
             }
 
@@ -120,10 +136,13 @@ export async function POST({request}) {
             congressional: congressional
                 ? getDistrictNumber(congressional)
                 : null,
-            stateLegislative: extractStateLegislativeDistricts(geographies)
+            stateLegislative: extractStateLegislativeDistricts(
+                geographies, 
+                stateFips
+            )
         };
 
-        console.log(districts);
+        // console.log(districts);
     
         return new Response(JSON.stringify({success: districts}), {status: 200});
     };
