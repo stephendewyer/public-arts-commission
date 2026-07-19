@@ -15,7 +15,7 @@
     import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import ActionButtonSecondary from "$lib/components/buttons/ActionButtonSecondary.svelte";
-  import { goto } from "$app/navigation";
+	import { goto } from "$app/navigation";
 
 	let searchByStreetAddressInputValue: string = $state("");
 
@@ -208,11 +208,14 @@
 		
 		if (useCurrentLocationChecked && searchParams.get("current_address_checked") === "true") {
 			useCurrentLocationChecked = false;
-		} else if (reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
-		{
+		} else if (
+			useCurrentLocationChecked && (
+				reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue
+			)
+		) {
 			useCurrentLocationChecked = false;
 		};
-
+		
 		let stateName: string = "";
 		let stateAbbreviation: string = "";
 		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
@@ -332,61 +335,80 @@
 
 	};
 
-	let pendingUSCongressionalDistrict: boolean | null = $state(null);
+	let pendingGeocoordinates: boolean | null = $state(null);
 
-	// after getUSCongressionalDistrict
-	let getUSCongressionalDistrictResponse: ResponseObj = $state({
+	let getGeoCoordinatesResponse: ResponseObj = $state({
         success: "",
         error: "",
         status: null
     });
 
-    $effect(() => {
-        if((getUSCongressionalDistrictResponse.error)) {
-            setTimeout(() => {
-                getUSCongressionalDistrictResponse.success = "";
-                getUSCongressionalDistrictResponse.error = "";
-                status: null;
-            }, 4000);
-        };
-
-        if((getUSCongressionalDistrictResponse.success) || (getUSCongressionalDistrictResponse.error)) {
-            pendingUSCongressionalDistrict = false;
-        };
-    });
 
 	const getGeoCoordinates = async (location: VoterLocation) => {
-		let geoCoordinates;
-		try {
-			const response = await fetch("/api/getGeoCoordinates", {
-				method: 'POST',
-				body: JSON.stringify({
-					country: location.country,
-					zipcode: location.zipcode,
-					state: location.state,
-					city: location.city,
-					street: location.street,
-					streetNumber: location.streetNumber,
-					streetPreDir: location.streetPreDir
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			});
-			if (response.ok) {
-				geoCoordinates = await response.json();
-				location.latitude = geoCoordinates.y;
-				location.longitude = geoCoordinates.x;
+		pendingGeocoordinates = true;
+		const response = await fetch("/api/getGeoCoordinates", {
+			method: 'POST',
+			body: JSON.stringify({
+				country: location.country,
+				zipcode: location.zipcode,
+				state: location.state,
+				city: location.city,
+				street: location.street,
+				streetNumber: location.streetNumber,
+				streetPreDir: location.streetPreDir
+			}),
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		if (!response.ok) {
+			console.log(getGeoCoordinatesResponse.error)
+		} else {
+			getGeoCoordinatesResponse = await response.json();
+			pendingGeocoordinates = false;
+			return {
+				latitude: getGeoCoordinatesResponse.success.y,
+				longitude: getGeoCoordinatesResponse.success.x
 			};
-		} catch(error) {
-			console.log(error);
-		};
 	};
-	
-	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
-		pendingUSCongressionalDistrict = true;
+	};
+
+	let pendingCivicDivisions: boolean | null = $state(null);
+
+	// after getCivicDivisions
+	let getDivisionsUSCensusResponse: ResponseObj = $state({
+        success: "",
+        error: "",
+        status: null
+    });
+
+	let getDivisionsGoogleResponse: ResponseObj = $state({
+        success: "",
+        error: "",
+        status: null
+    });
+
+	const extractGoogleDistricts = (location: VoterLocation, divisions: Record<string, { name: string }>): VoterLocation => {
+		for (const [ocdId, division] of Object.entries(divisions)) {
+			ocdId.split("/").forEach((part) => {
+
+				if (part.startsWith('ward:') || part.startsWith("council_disctrict") ) {
+					location.CityWard = part.substring(5);
+				};
+
+			});
+		};
+
+		return location;
+	};
+
+	const getCivicDivisions = async (latitude: number | null, longitude: number | null, searchByStreetAddressInputValue: string | null, country: string) => {
+
+		// use the U.S. Census to get U.S. Congressional District, State House District and State Senate District
+		pendingCivicDivisions = true;
+
 		try {
-			const response = await fetch("/api/getUSCongressionalDistrict", {
+			const response = await fetch("/api/getDivisionsUSCensus", {
 				method: "POST",
 				body: JSON.stringify({
 					longitude, 
@@ -396,34 +418,71 @@
 					"Content-Type": "application/json",
 				}
 			});
-			getUSCongressionalDistrictResponse = await response.json();
-			if (getUSCongressionalDistrictResponse.success) {
-				location.USCongressionalDistrict = getUSCongressionalDistrictResponse.success;
+
+			getDivisionsUSCensusResponse = await response.json();
+
+			if (getDivisionsUSCensusResponse.success) {
+				// extract the data
+				const districts = getDivisionsUSCensusResponse.success;
+				location.USCongressionalDistrict = districts.USCongressional;
+				location.StateSenateDistrict = districts.stateSenate;
+				location.StateHouseDistrict = districts.stateHouse;
 			};	
 		} catch(error) {
 			console.log(error);
 		};
+
+		// use the Google API to get city divisions if any
+
+		try {
+			const response = await fetch("/api/getDivisionsGoogle", {
+				method: "POST",
+				body: JSON.stringify({
+					address: searchByStreetAddressInputValue
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				}
+			});
+			getDivisionsGoogleResponse = await response.json();
+
+			if (getDivisionsGoogleResponse.success) {
+				// extract the city districts
+				extractGoogleDistricts(location, getDivisionsGoogleResponse.success)
+			};	
+		} catch(error) {
+			console.log(error);
+		};
+
 	};
 
-	const searchLocalGovernment = (e: Event) => {
+    $effect(() => {
+
+		if (
+			// handle if user has geocoordinates after page load
+			!useCurrentLocationChecked &&
+			getDivisionsUSCensusResponse.success && 
+			getGeoCoordinatesResponse.success &&
+			getDivisionsGoogleResponse.success
+		) {
+			pendingCivicDivisions = false;
+		} else if (
+			// handle if user has geocoordinates before page load
+			useCurrentLocationChecked &&
+			getDivisionsUSCensusResponse.success && 
+			getDivisionsGoogleResponse.success
+		) {
+			pendingCivicDivisions = false;
+		};
+
+    });
+
+	const searchLocalGovernment = async (e: Event) => {
 
 		e.preventDefault();
 
 		let stateName: string = "";
 		let stateAbbreviation: string = "";
-		location.country = "";
-		location.zipcode = "";
-		location.state = "";
-		location.city = "";
-		location.street= "";
-		location.streetNumber = "";
-		location.streetPreDir = "";
-		location.county = "";
-		location.USCongressionalDistrict = "";
-		location.StateSenateDistrict = "";
-		location.StateHouseDistrict = "";
-		location.CityWard = "";
-
 		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
 		let searchBarInputValueFirstWord: string | number = "";
 
@@ -457,16 +516,13 @@
 
 		if (useCurrentLocationChecked) {
 
-			if ( location.longitude && location.latitude ) {
-
-				// get the U.S. Congressional District using longitude and latitude
-				getUSCongressionalDistrict(location.latitude, location.longitude);
-
-			} else {
-
-				location.USCongressionalDistrict = "";
-
-			};		
+			// get the civic divisions by street address
+			await getCivicDivisions(
+				location.latitude, 
+				location.longitude, 
+				searchByStreetAddressInputValue, 
+				location.country
+			);
 
 		} else if (
 			!useCurrentLocationChecked
@@ -526,29 +582,32 @@
 
 				location.county = USCities.find((city) => city.zip_code.toString() === location.zipcode)?.county;
 
-				// get the latitude and longitude using street address
-				// get the latitude and longitude only if street number, street, city and state are entered
+				// get the civic divisions only if street number, street, city, state and zipcode are entered
 
 				if (
 					location.streetNumber && 
 					location.street && 
 					location.city && 
-					location.state
+					location.state &&
+					location.zipcode
 				) {
-					// get the geocoordinates to find local governemnt
-					getGeoCoordinates(location);
+					// get the geocordinates
+					
+					const coords = await getGeoCoordinates(location);
+					
+					location.latitude = coords?.latitude;
+					location.longitude = coords?.longitude;
 
-					if (location.longitude && location.latitude) {
-						// get the U.S. Congressional District using longitude and latitude
-						getUSCongressionalDistrict(location.latitude, location.longitude);
-					};
+					// get the civic divisons
+					await getCivicDivisions(
+						coords?.latitude, 
+						coords?.longitude, 
+						`${location.streetNumber} ${location.street}, ${location.city}, ${location.state} ${location.zipcode}`, 
+						location.country
+					);
 				} else {
-					location.USCongressionalDistrict = "";
+					console.log("Must have valid street address to get civic divisions");
 				};				
-
-				// get U.S. Congressional District, State Senate District, State House District and City Ward data
-
-				// getUSCongressionalDistrict(latitude, longitude);
 
 			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
@@ -657,7 +716,7 @@
         <h2 style="text-align: center">
             find my local government
         </h2>
-        {#if pendingReverseGeocode}
+        {#if pendingReverseGeocode || pendingGeocoordinates}
             <LoaderAnimation />
         {:else if addressLoadSuccess || !useCurrentLocationChecked}
             <SearchInput 
@@ -690,222 +749,77 @@
         <SubmitButtonSecondary disable={disableSearchButton}>
             search
         </SubmitButtonSecondary>
-        {#if pendingUSCongressionalDistrict}
-            <p style="font-size: 1rem">getting U.S. Congressional District</p>
-        {:else if getUSCongressionalDistrictResponse.error}
-            <p style="font-size: 1rem">failed to get U.S. Congressional District</p>
+        {#if pendingCivicDivisions}
+            <p style="font-size: 1rem">getting local governments</p>
+        {:else if getDivisionsGoogleResponse.error || getDivisionsUSCensusResponse.error}
+            <p style="font-size: 1rem">failed to get local governments</p>
         {:else if location.USCongressionalDistrict}
-            <p style="font-size: 1rem">
-                <span>U.S. Congressional District: </span>
-                <span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
-            </p>
+            <table>
+				<colgroup>
+					<col style="width:40%">
+					<col style="width:60%">
+				</colgroup>
+				<tbody>
+					<tr>
+						<td>
+							state:
+						</td>
+						<td>
+							{location.state}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							U.S. Congressional District:
+						</td>
+						<td>
+							{location.USCongressionalDistrict}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							State House District:
+						</td>
+						<td>
+							{location.StateHouseDistrict}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							State Senate District: 
+						</td>
+						<td>
+							{location.StateSenateDistrict}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							County:
+						</td>
+						<td>
+							{location.county}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							City:
+						</td>
+						<td>
+							{location.city}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Ward:
+						</td>
+						<td>
+							{location.CityWard}
+						</td>
+					</tr>
+				</tbody>
+			</table>
         {/if}
     </form>
-	<!-- <table>
-                <colgroup>
-                    <col style="width:40%">
-                    <col style="width:60%">
-                </colgroup>  
-                <tbody>
-                    <tr>
-                        <td>
-                            year released:
-                        </td>
-                        <td>
-                            {$EndorsedAmendmentSelectedStore?.year_released ? $EndorsedAmendmentSelectedStore.year_released : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            year introduced in the House:
-                        </td>
-                        <td>
-                            {$EndorsedAmendmentSelectedStore?.year_introduced_House ? $EndorsedAmendmentSelectedStore.year_introduced_House : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            year introduced in the Senate:
-                        </td>
-                        <td>
-                            {$EndorsedAmendmentSelectedStore?.year_introduced_Senate ? $EndorsedAmendmentSelectedStore.year_introduced_Senate : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            House session:
-                        </td>
-                        <td>
-                            {$EndorsedAmendmentSelectedStore?.session_House ? $EndorsedAmendmentSelectedStore.session_House : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Senate session:
-                        </td>
-                        <td>
-                            {$EndorsedAmendmentSelectedStore?.session_Senate ? $EndorsedAmendmentSelectedStore.session_Senate : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            election date:
-                        </td>
-                        <td>
-                            {electionDate ? electionDate : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            country: 
-                        </td>
-                        <td>
-                            United States of America
-                        </td>
-                    </tr>
-                    {#if ($EndorsedAmendmentSelectedStore?.state)}
-                        <tr>
-                            <td>
-                                state: 
-                            </td>
-                            <td>
-                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.state)}
-                            </td>
-                        </tr>
-                    {/if}
-                    {#if ($EndorsedAmendmentSelectedStore?.county)}
-                        <tr>
-                            <td>
-                                county: 
-                            </td>
-                            <td>
-                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.county)}
-                            </td>
-                        </tr>
-                    {/if}
-                    {#if ($EndorsedAmendmentSelectedStore?.city)}
-                        <tr>
-                            <td>
-                                city: 
-                            </td>
-                            <td>
-                                {reverseHtmlEntities($EndorsedAmendmentSelectedStore.city)}
-                            </td>
-                        </tr>
-                    {/if}
-                    <tr>
-                        <td>
-                            House sponsor: 
-                        </td>
-                        <td>
-                            {sponsorsHouseNamesUpdated.length > 0 ? reverseHtmlEntities(sponsorsHouseNamesUpdated.join(', ').toString()) : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            House co-sponsor(s): 
-                        </td>
-                        <td>
-                            <ol class="co-sponsors">
-                                {#each coSponsorsHouseNamesUpdated as coSponsorHouseName, i}
-                                    <li>
-                                        {reverseHtmlEntities(coSponsorHouseName)}
-                                    </li>
-                                {/each}
-                            </ol>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Senate sponsor: 
-                        </td>
-                        <td>
-                            {sponsorsSenateUpdated.length > 0 ? reverseHtmlEntities(sponsorsSenateUpdated.join(', ').toString()) : ""}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Senate co-sponsor(s): 
-                        </td>
-                        <td>
-                            <ol class="co-sponsors">
-                                {#each coSponsorsSenateNamesUpdated as coSponsorSenateName, i}
-                                    <li>
-                                        {reverseHtmlEntities(coSponsorSenateName)}
-                                    </li>
-                                {/each}
-                            </ol>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            website: 
-                        </td>
-                        <td>
-                            {#if ($EndorsedAmendmentSelectedStore?.website_URL)}
-                                <a 
-                                    class="external_link_container"
-                                    href={$EndorsedAmendmentSelectedStore.website_URL} 
-                                    target="_blank"
-                                >
-                                    <div class="external_link_icon">
-                                        {@html ExternalLinkIcon}
-                                    </div>
-                                    <div class="website_URL">
-                                        {$EndorsedAmendmentSelectedStore.website_URL} 
-                                    </div>
-                                </a>
-                            {/if}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            status: 
-                        </td>
-                        <td>
-                            {amendmentStatusUpdated.length > 0 ? reverseHtmlEntities(amendmentStatusUpdated.toString()) : ""}
-                        </td>
-                    </tr>
-                </tbody>
-            </table> -->
-    <!-- <ul class="endorsement_categories" >
-        <li>
-            <a href="/endorsements/candidates-endorsed">
-                <ActionButton>
-                    candidates
-                </ActionButton>
-            </a>
-        </li>
-        <li>
-            <a href="/endorsements/legislation-endorsed">
-                <ActionButton>
-                    legislation
-                </ActionButton>
-            </a>
-        </li>
-        <li>
-            <a href="/endorsements/referendums-endorsed">
-                <ActionButton>
-                    referendums
-                </ActionButton>
-            </a>
-        </li>
-        <li>
-            <a href="/endorsements/amendments-endorsed">
-                <ActionButton>
-                    amendments
-                </ActionButton>
-            </a>
-
-        </li>
-        <li>
-            <a href="/endorsements/actions-endorsed">
-                <ActionButton>
-                    actions
-                </ActionButton>
-            </a>
-        </li>
-    </ul> -->
 </div>
 
 <style>
@@ -917,6 +831,7 @@
 		width: 100%;
 		max-width: 60rem;
 		margin: 0 auto;
+		padding: 0 1rem;
     }
 
 	.use_current_location_label {
@@ -931,10 +846,5 @@
         width: 1.25rem;
     }
 
-    .endorsement_categories {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
 
 </style>

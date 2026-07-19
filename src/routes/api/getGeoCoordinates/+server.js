@@ -23,7 +23,7 @@ export async function POST({request}) {
 
         const geocoordinates = geoResults.result.addressMatches[0].coordinates;
 
-        return new Response(JSON.stringify(geocoordinates), {status: 200});
+        return new Response(JSON.stringify({success: geocoordinates}), {status: 200});
 
     };
 

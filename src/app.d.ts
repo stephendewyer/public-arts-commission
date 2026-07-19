@@ -42,8 +42,29 @@ declare global {
 		user_ID: number;
 	};
 
+	interface DivisionsByAddress {
+		kind: "civicinfo#divisionsByAddressResponse",
+		normalizedInput: {
+			locationName: string,
+			line1: string,
+			line2: string,
+			line3: string,
+			city: string,
+			state: string,
+			zip: string
+		},
+		divisions: {
+			key: {
+				name: string,
+				alsoKnownAs: [
+					string
+				]
+			}
+		}
+	};
+
 	interface ResponseObj {
-        success: string;
+        success: string | any;
         error: string;
         status: number | null;
     };
