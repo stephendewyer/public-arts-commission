@@ -846,5 +846,53 @@
         width: 1.25rem;
     }
 
+	table {
+        border-spacing: 0;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    tbody tr:nth-child(odd) {
+        background-color: #FBF4F9
+    }
+
+    tbody > tr > td {
+        padding: 1rem;
+        overflow-wrap: break-word;
+        hyphens: auto;
+        font-size: 1.25rem;
+    }
+
+    tbody td:nth-child(odd) {
+        overflow-wrap: break-word;
+        hyphens: auto;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-start;
+    }
+
+	@media (max-width: 1140px) {
+
+        tbody > tr > td {
+            padding: 0.75rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            font-size: 1.125rem;
+        }
+
+    }
+
+    @media (max-width: 720px) {
+
+        tbody > tr > td {
+            padding: 0.5rem 1rem;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            font-size: 1rem;
+        }
+
+    }
+
 
 </style>
