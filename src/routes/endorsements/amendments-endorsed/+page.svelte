@@ -1006,7 +1006,6 @@
 	<meta name="description" content="find public arts commission-endorsed amendments" />
 	<meta property="og:image" content={PublicArtsCommissionBanner} 
 />
-
 </svelte:head>
 <svelte:window 
 	bind:innerHeight

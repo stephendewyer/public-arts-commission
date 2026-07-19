@@ -87,9 +87,11 @@
 			{#if (!user)}
 				<li 
 					class="nav_tab"
-					aria-current={page.url.pathname === '/products' ? 'page' : undefined}
+					aria-current={page.url.pathname === "/find-my-local-government" ? 'page' : undefined}
 				>
-					<a href="/products">products</a>
+					<a href="/find-my-local-government" style="text-align: center">
+						find my local government
+					</a>
 				</li>
 				<li 
 					class="nav_tab"
@@ -99,8 +101,7 @@
 						page.url.pathname === "/endorsements/candidates-endorsed" ||
 						page.url.pathname === "/endorsements/legislation-endorsed" ||
 						page.url.pathname === "/endorsements/referendums-endorsed" ||
-						page.url.pathname === "/endorsements/amendments-endorsed" ||
-						page.url.pathname === "/endorsements/find-my-local-government"
+						page.url.pathname === "/endorsements/amendments-endorsed" 
 						? 'page' : undefined
 					}
 				>
@@ -147,11 +148,6 @@
 									bind:clientHeight={endorsements_panel_height}
 								>
 									<li>
-										<a href="/endorsements/find-my-local-government" style="text-align: center">
-											find my local government
-										</a>
-									</li>
-									<li>
 										<a href="/endorsements/candidates-endorsed">
 											candidates
 										</a>
@@ -187,6 +183,12 @@
 					aria-current={page.url.pathname === '/priorities' ? 'page' : undefined}
 				>
 					<a href="/priorities">priorities</a>
+				</li>
+				<li 
+					class="nav_tab"
+					aria-current={page.url.pathname === '/products' ? 'page' : undefined}
+				>
+					<a href="/products">products</a>
 				</li>
 			{:else if (user?.role === "voter")}
 				<li>

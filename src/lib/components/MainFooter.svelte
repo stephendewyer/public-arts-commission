@@ -89,19 +89,18 @@
                         <ul class="footer_nav_tabs_row">
                             <li class="footer_nav_column">
                                 <a 
-                                    href="/products" 
-                                    aria-label="link to products page" 
+                                    href="/find-my-local-government" 
+                                    aria-label="link to find my local government page" 
                                     class="footer_nav_tab"
-                                    aria-current={page.url.pathname === '/products' ? 'page' : undefined}
+                                    aria-current={page.url.pathname === '/find-my-local-government' ? 'page' : undefined}
                                 >
-                                    products
+                                    find my local government
                                 </a>
                             </li>
                             <li class="footer_nav_column">
                                 <div 
                                     class="footer_nav_tab"
                                     aria-current={
-                                        page.url.pathname === "/endorsements/find-my-local-government" || 
                                         page.url.pathname === "/endorsements/candidates-endorsed" ||
                                         page.url.pathname === "/endorsements/legislation-endorsed" ||
                                         page.url.pathname === "/endorsements/referendums-endorsed" ||
@@ -111,18 +110,9 @@
                                     }
                                 >
                                     <div style="text-decoration: underline;">
-                                        about
+                                        endorsements
                                     </div>
                                     <ul class="footer_nav_tabs_panel">
-                                        <li>
-                                            <a 
-                                                class="footer_nav_tab_secondary"
-                                                aria-current={page.url.pathname === '/endorsements/find-my-local-government' ? 'page' : undefined}
-                                                href="/endorsements/find-my-local-government" style="text-align: center"
-                                            >
-                                                find my local government
-                                            </a>
-                                        </li>
                                         <li>
                                             <a 
                                                 class="footer_nav_tab_secondary"
@@ -179,6 +169,16 @@
                                     aria-current={page.url.pathname === '/priorities' ? 'page' : undefined}
                                 >
                                     priorities
+                                </a>
+                            </li>
+                            <li class="footer_nav_column">
+                                <a 
+                                    href="/products" 
+                                    aria-label="link to products page" 
+                                    class="footer_nav_tab"
+                                    aria-current={page.url.pathname === '/products' ? 'page' : undefined}
+                                >
+                                    products
                                 </a>
                             </li>
                         </ul>

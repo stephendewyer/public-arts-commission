@@ -245,7 +245,7 @@
 
 		const countrySlug: string = country.replace(/ /g,"_");
 
-		goto(`/endorsements/find-my-local-government?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}&latitude=${latitude}&longitude=${longitude}&country=${countrySlug}`);
+		goto(`/find-my-local-government?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}&latitude=${latitude}&longitude=${longitude}&country=${countrySlug}`);
 
 	};
 
@@ -320,7 +320,7 @@
 		class="search_endorsements_by_address_form"
 	>
 		<h2>
-		search endorsements by street address
+			search endorsements by street address
 		</h2>
 		<div class="search_endorsement_fields">
 			<div class="search_endorsements_by_address_input">

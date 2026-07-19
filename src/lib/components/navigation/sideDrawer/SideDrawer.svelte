@@ -36,21 +36,15 @@
 
     const mobileNavTabs: AccordionTab[] = [
         {
-            label: "products",
+            label: "find my local government",
             expandable: false,
             content: null,
-            slug: "/products"
+            slug: "/find-my-local-government"
         },
         {
             label: "endorsements",
             expandable: true,
             content: [
-                {
-                    label: "find my local government",
-                    expandable: false,
-                    content: null,
-                    slug: "/endorsements/find-my-local-government"
-                },
                 {
                     label: "candidates",
                     expandable: false,
@@ -89,6 +83,12 @@
             expandable: false,
             content: null,
             slug: "/priorities"
+        },
+        {
+            label: "products",
+            expandable: false,
+            content: null,
+            slug: "/products"
         },
         {
             label: "about",
