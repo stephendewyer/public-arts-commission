@@ -712,6 +712,13 @@
 
 </script>
 
+<svelte:head>
+	<title>find my local government - public arts commission</title>
+	<meta name="description" content="find my local government using geolocation and/or street address" />
+	<meta property="og:image" content={PublicArtsCommissionBanner} 
+/>
+</svelte:head>
+
 <div class="page" id="page_container">
     <form 
         id="filters"
