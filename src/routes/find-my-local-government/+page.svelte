@@ -141,6 +141,7 @@
 	// if getCurrentPosition is a success, 
 
 	const success = (position: GeoLocationPosition) => {
+		findUserLocationSuccess = true;
 		location.latitude = position.coords.latitude;
 		location.longitude = position.coords.longitude;
 		reverseGeocode(location.latitude, location.longitude);
@@ -148,16 +149,41 @@
 
 	// log an error if getCurrentPosition fails
 
+	let fundUserLocationErrorMessage: string = $state("");
+	let findUserLocationSuccess: boolean | null = $state(null)
+
 	const error = (error: any) => {
 		pendingReverseGeocode = false;
 		addressLoadSuccess = false;
-		console.log("Unable to retrieve your location!" + error);
+		findUserLocationSuccess = false;
+		switch (error.code) {
+			case error.PERMISSION_DENIED:
+				fundUserLocationErrorMessage = "Geolocation was denied.  Please allow geolocation from your browser.";
+				break;
+			case error.POSITION_UNAVAILABLE: 
+				fundUserLocationErrorMessage = "Location information is unavailable.";
+				break;
+			case error.TIMEOUT:
+				fundUserLocationErrorMessage = "The request to get your location timed out.";
+			default:
+				fundUserLocationErrorMessage = "An unknown geolocation error occurred.";
+		};
+
 	};
 
 	// get user's location using JavaScript geolocation
 
-	const findUserLocation = () => {
-		navigator.geolocation.getCurrentPosition(success, error);
+	const findUserLocation = async () => {
+		const permission = await navigator.permissions.query({
+			name: "geolocation"
+		});
+
+		if (permission.state === "denied") {
+			findUserLocationSuccess = false;
+			fundUserLocationErrorMessage = "Location permission is disabled.  Please enable it in your browser";
+		};
+
+		navigator.geolocation.getCurrentPosition( success, error );
 	};
 
     // if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
@@ -177,8 +203,6 @@
 			addressLoadSuccess = true;
 		};
     });	
-
-	let statesWithCity: string[] = $state([]);
 
 	let disableSearchButton: boolean = $state(true);
 
@@ -515,8 +539,8 @@
             find my local government
         </h2>
         {#if pendingReverseGeocode || pendingGeocoordinates}
-            <LoaderAnimation />
-        {:else if addressLoadSuccess || !useCurrentLocationChecked}
+            <LoaderAnimation />			
+        {:else}
             <SearchInput 
                 placeholder="1000 MyStreet, MyCity, MyState  10000"
                 inputID="address"
@@ -527,12 +551,14 @@
             >
                 street address
             </SearchInput>
-        {:else if !addressLoadSuccess}
-            <p style="color: red;">failed to load address</p>
+			{#if (!findUserLocationSuccess && findUserLocationSuccess !== null)}
+				<p style="color: red;">{fundUserLocationErrorMessage}</p>
+			{:else if  !addressLoadSuccess}
+				<p style="color: red;">failed to load address</p>
+			{:else if !countryUnitedStates}
+				<p style="color: red;">Address must be within the United States.  Please enter a valid United States address.</p>
+			{/if}
         {/if}
-		{#if !countryUnitedStates}
-			<p style="color: red;">Address must be within the United States.  Please enter a valid United States address.</p>
-		{/if}
         <Checkbox 
             bind:checked={useCurrentLocationChecked}
         >
