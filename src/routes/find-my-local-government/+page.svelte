@@ -5,8 +5,6 @@
     import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
     import { onMount } from 'svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
-    import Years from '$lib/data/years.json';
-	import SelectSearchInput from '$lib/components/inputs/SelectSearchInput.svelte';
 	import { parse } from "@universe/address-parser";
 	import USCities from '$lib/data/USCities.json';
     import States from '$lib/data/states.titlecase.json';
@@ -16,6 +14,7 @@
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
     import ActionButtonSecondary from "$lib/components/buttons/ActionButtonSecondary.svelte";
 	import { goto } from "$app/navigation";
+	import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
 
 	let searchByStreetAddressInputValue: string = $state("");
 
@@ -181,33 +180,19 @@
 
 	let statesWithCity: string[] = $state([]);
 
+	let disableSearchButton: boolean = $state(true);
+
 	const searchByStreetAddressInputValueChangeHandler = () => {
-
-		console.log(searchByStreetAddressInputValue)
-
 		// clear the search paramaters only if search parameters
 		if (searchParams.get("current_address_checked") === "true") {
 			const url = new URL(page.url.pathname, window.location.origin);
+			// Navigates to the current path without the query string
 			goto(url.toString(), { 
 				replaceState: true, 
 				keepFocus: true, 
 				noScroll: true 
 			});
 		};
-		// Navigates to the current path without the query string
-
-		location.country = "";
-		location.zipcode = "";
-		location.state = "";
-		location.city = "";
-		location.street= "";
-		location.streetNumber = "";
-		location.streetPreDir = "";
-		location.county = "";
-		location.USCongressionalDistrict = "";
-		location.StateSenateDistrict = "";
-		location.StateHouseDistrict = "";
-		location.CityWard = "";
 
 		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
 		
@@ -221,124 +206,9 @@
 			useCurrentLocationChecked = false;
 		};
 		
-		let stateName: string = "";
-		let stateAbbreviation: string = "";
-		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
-		let searchBarInputValueFirstWord: string | number = "";
-
-		if (searchBarInputValueArray[0].includes(",")) {
-			searchBarInputValueFirstWord = searchBarInputValueArray[0].replace(",", "");
-		} else {
-			searchBarInputValueFirstWord = searchBarInputValueArray[0];
-		};
-
-		let searchBarInputValueSecondWord: string = "";
-
-		if (searchBarInputValueArray.length > 1) {
-			if (searchBarInputValueArray[1].includes(",")) {
-				searchBarInputValueSecondWord = searchBarInputValueArray[1].replace(",", "");
-			} else {
-				searchBarInputValueSecondWord = searchBarInputValueArray[1];
-			};
-		};
-
-		let stateValueArray: string[] = [];
-		let stateValueFirstWord: string = "";
-		let cityValueArray: string[] = [];
-		let cityValueFirstWord: string = "";
-		let countyValueArray: string[] = [];
-		let countyValueFirstWord: string = "";
-
-		// IMPORTANT: street address parser must have an input length greater than zero
-
-		// if search by address input value is greater than zero and use my current location is not checked, 
-		// use address-parser to parse search by address input value
-
-		if (
-			!useCurrentLocationChecked
-		) {
-
-			if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
-
-				// if the first entered value by user is a letter, filter actions by state, city and name
-				// check if search input value includes state
-				// user is not using geocoordinates
-				States.filter((stateObj) => {
-
-					if (
-						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
-						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
-					) {
-						location.state = stateObj.name;
-						stateName = stateObj.name.toLowerCase();
-						stateAbbreviation = stateObj.abbreviation.toLowerCase();
-						stateValueArray = [...location.state.split(" ")];
-						stateValueFirstWord = stateValueArray[0].replace(",", "");
-
-					};
-
-				});
-
-				// check if search input value includes city
-
-				statesWithCity = [];
-
-				if (location.state) {
-
-					USCities.filter((cityObj: CityObject) => {
-
-						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
-
-							// check to see if cityObj.state matches state
-
-							// make sure state is abbreviation
-
-							States.filter((stateObj) => {
-
-								if (stateObj.name === location.state) {
-
-									location.state = stateObj.abbreviation;
-
-								};
-
-							});
-
-							if (location.state === cityObj.state) {
-
-								location.city = cityObj.city;
-								cityValueArray = [...location.city.split(" ")];
-								cityValueFirstWord = cityValueArray[0].replace(",", "");
-
-							};
-
-						};
-
-					});
-
-				} else if (!location.state) {
-
-					// create an array of all possible states for city
-					USCities.forEach((cityObj: CityObject) => {
-						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
-							location.city = cityObj.city;
-							cityValueArray = [...location.city.split(" ")];
-							cityValueFirstWord = cityValueArray[0].replace(",", "");
-							// check if city and state combination already is in statesWithCity and if false, add to statesWithCity
-							if (
-								(statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) &&
-								(searchBarInputValueArray.length <= 2)
-							) {
-								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
-							};
-						};
-					});
-				};       
-
-			};
-
-		};
-
 	};
+
+	let searchErrorMessage: string = $state("");
 
 	let pendingGeocoordinates: boolean | null = $state(null);
 
@@ -348,34 +218,41 @@
         status: null
     });
 
-
 	const getGeoCoordinates = async (location: VoterLocation) => {
 		pendingGeocoordinates = true;
-		const response = await fetch("/api/getGeoCoordinates", {
-			method: 'POST',
-			body: JSON.stringify({
-				country: location.country,
-				zipcode: location.zipcode,
-				state: location.state,
-				city: location.city,
-				street: location.street,
-				streetNumber: location.streetNumber,
-				streetPreDir: location.streetPreDir
-			}),
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		});
-		if (!response.ok) {
-			console.log(getGeoCoordinatesResponse.error)
-		} else {
+
+		try {
+			const response = await fetch("/api/getGeoCoordinates", {
+				method: 'POST',
+				body: JSON.stringify({
+					country: location.country,
+					zipcode: location.zipcode,
+					state: location.state,
+					city: location.city,
+					street: location.street,
+					streetNumber: location.streetNumber,
+					streetPreDir: location.streetPreDir
+				}),
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+
 			getGeoCoordinatesResponse = await response.json();
 			pendingGeocoordinates = false;
-			return {
-				latitude: getGeoCoordinatesResponse.success.y,
-				longitude: getGeoCoordinatesResponse.success.x
+
+			if (!response.ok) {
+				searchErrorMessage = getGeoCoordinatesResponse.error;
+			} else if (getGeoCoordinatesResponse.success) {
+				return {
+					latitude: getGeoCoordinatesResponse.success.y,
+					longitude: getGeoCoordinatesResponse.success.x
+				};
 			};
-	};
+		} catch(error) {
+			console.log(error);
+		};
+
 	};
 
 	let pendingCivicDivisions: boolean | null = $state(null);
@@ -426,7 +303,9 @@
 
 			getDivisionsUSCensusResponse = await response.json();
 
-			if (getDivisionsUSCensusResponse.success) {
+			if (!response.ok) {
+				searchErrorMessage = getDivisionsUSCensusResponse.error;
+			} else if (getDivisionsUSCensusResponse.success) {
 				// extract the data
 				const districts = getDivisionsUSCensusResponse.success;
 				location.USCongressionalDistrict = districts.congressional;
@@ -452,7 +331,9 @@
 			});
 			getDivisionsGoogleResponse = await response.json();
 
-			if (getDivisionsGoogleResponse.success) {
+			if (!response.ok) {
+				searchErrorMessage = getDivisionsGoogleResponse.error;
+			} else if (getDivisionsGoogleResponse.success) {
 				// extract the city districts
 				extractGoogleDistricts(location, getDivisionsGoogleResponse.success)
 			};	
@@ -479,16 +360,20 @@
 			getDivisionsGoogleResponse.success
 		) {
 			pendingCivicDivisions = false;
+		} else if (
+			// handle if error getting data
+			getDivisionsUSCensusResponse.error ||
+			getGeoCoordinatesResponse.error ||
+			getDivisionsGoogleResponse.error 
+		) {
+			pendingCivicDivisions = false;
 		};
-
     });
 
 	const searchLocalGovernment = async (e: Event) => {
 
 		e.preventDefault();
 
-		let stateName: string = "";
-		let stateAbbreviation: string = "";
 		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
 		let searchBarInputValueFirstWord: string | number = "";
 
@@ -507,13 +392,6 @@
 				searchBarInputValueSecondWord = searchBarInputValueArray[1];
 			};
 		};
-
-		let stateValueArray: string[] = [];
-		let stateValueFirstWord: string = "";
-		let cityValueArray: string[] = [];
-		let cityValueFirstWord: string = "";
-		let countyValueArray: string[] = [];
-		let countyValueFirstWord: string = "";
 
 		// IMPORTANT: street address parser must have an input length greater than zero
 
@@ -534,40 +412,7 @@
 			!useCurrentLocationChecked
 		) {
 
-			// if user has entered only numbers, filter actions using zipcode
-
-			if (/^-?\d+$/.test(searchByStreetAddressInputValue)) {
-				// user is not using geocoordinates
-				location.longitude = null;
-				location.latitude = null;
-
-				// check if entered value matches zipcode in USCities
-
-				USCities.filter((cityObj: CityObject) => {
-
-					if (cityObj.zip_code.toString() === searchByStreetAddressInputValue) {
-
-						location.zipcode = cityObj.zip_code.toString();
-						location.state = cityObj.state;
-						location.city = cityObj.city;
-						stateValueArray = [...location.state.split(" ")];
-						stateValueFirstWord = stateValueArray[0].replace(",", "");
-						cityValueArray = [...location.city.split(" ")];
-						cityValueFirstWord = cityValueArray[0].replace(",", "");
-						countyValueArray = [...location.county.split(" ")];
-						countyValueFirstWord = countyValueArray[0].replace(",", "");
-
-						return;
-
-					} else {
-
-						return;
-
-					};
-
-				});
-
-			} else if (
+			if (
 				// if user enters numbers followed by strings, user is searching by street address
 				/^-?\d+$/.test(searchBarInputValueFirstWord) && !(/^-?\d+$/.test(searchBarInputValueSecondWord))
 			) {
@@ -598,117 +443,57 @@
 					location.zipcode
 				) {
 					// get the geocordinates
-					
 					const coords = await getGeoCoordinates(location);
-					
+
 					location.latitude = coords?.latitude;
 					location.longitude = coords?.longitude;
-
+					
 					// get the civic divisons
-					await getCivicDivisions(
-						coords?.latitude, 
-						coords?.longitude, 
-						`${location.streetNumber} ${location.street}, ${location.city}, ${location.state} ${location.zipcode}`, 
-						location.country
-					);
+					if (location?.latitude && location?.longitude) {
+						await getCivicDivisions(
+							coords?.latitude, 
+							coords?.longitude, 
+							`${location.streetNumber} ${location.street}, ${location.city}, ${location.state} ${location.zipcode}`, 
+							location.country
+						);
+					};
+					
 				} else {
-					console.log("Must have valid street address to get civic divisions");
+					getGeoCoordinatesResponse.error = "Must have valid U.S. street address to get civic divisions";
+					searchErrorMessage = getGeoCoordinatesResponse.error;
 				};				
 
-			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
-
-				// if the first entered value by user is a letter, filter actions by state, city and name
-				// check if search input value includes state
-				// user is not using geocoordinates
-				States.filter((stateObj) => {
-
-					if (
-						searchByStreetAddressInputValue.includes(stateObj.abbreviation) ||
-						searchByStreetAddressInputValue.toLowerCase().includes(stateObj.name.toLowerCase())
-					) {
-						location.state = stateObj.name;
-						stateName = stateObj.name.toLowerCase();
-						stateAbbreviation = stateObj.abbreviation.toLowerCase();
-						stateValueArray = [...location.state.split(" ")];
-						stateValueFirstWord = stateValueArray[0].replace(",", "");
-
-					};
-
-				});
-
-				// check if search input value includes city
-
-				statesWithCity = [];
-
-				if (location.state) {
-
-					USCities.filter((cityObj: CityObject) => {
-
-						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
-
-							// check to see if cityObj.state matches state
-
-							// make sure state is abbreviation
-
-							States.filter((stateObj) => {
-
-								if (stateObj.name === location.state) {
-
-									location.state = stateObj.abbreviation;
-
-								};
-
-							});
-
-							if (location.state === cityObj.state) {
-
-								location.city = cityObj.city;
-								cityValueArray = [...location.city.split(" ")];
-								cityValueFirstWord = cityValueArray[0].replace(",", "");
-
-							};
-
-						};
-
-					});
-
-				} else if (!location.state) {
-
-					// create an array of all possible states for city
-					USCities.forEach((cityObj: CityObject) => {
-						if (searchByStreetAddressInputValue.toLowerCase().includes(cityObj.city.toLowerCase())) {
-							location.city = cityObj.city;
-							cityValueArray = [...location.city.split(" ")];
-							cityValueFirstWord = cityValueArray[0].replace(",", "");
-							// check if city and state combination already is in statesWithCity and if false, add to statesWithCity
-							if (
-								(statesWithCity.includes(`${cityObj.city}, ${cityObj.state}`) === false) &&
-								(searchBarInputValueArray.length <= 2)
-							) {
-								statesWithCity = [...statesWithCity, `${cityObj.city}, ${cityObj.state}`];
-							};
-						};
-					});
-				};           
-
+			} else {
+				getGeoCoordinatesResponse.error = "Must have valid U.S. street address to get civic divisions";
+				searchErrorMessage = getGeoCoordinatesResponse.error;
 			};
 
 		};
 
 	};
 
-
-    let disableSearchButton: boolean = $state(false);
-
-    $effect(() => {
-		if (useCurrentLocationChecked && !countryUnitedStates) {
-			disableSearchButton = true;
-		} else if (!searchByStreetAddressInputValue && countryUnitedStates){
-			disableSearchButton = true;
-		} else {
-			disableSearchButton = false;
+	$effect(() => {
+		if (
+			getGeoCoordinatesResponse.error || 
+			getDivisionsGoogleResponse.error ||
+			getDivisionsUSCensusResponse.error
+		) {
+			setTimeout(() => {
+				getGeoCoordinatesResponse.error = "";
+				getDivisionsGoogleResponse.error = "";
+				getDivisionsUSCensusResponse.error = "";
+				status: null;
+			}, 4000)
 		};
-    });
+	});
+
+	$effect(() => {
+		if (searchByStreetAddressInputValue !== "") {
+			disableSearchButton = false;
+		} else {
+			disableSearchButton = true;
+		};
+	});
 
 </script>
 
@@ -733,15 +518,14 @@
             <LoaderAnimation />
         {:else if addressLoadSuccess || !useCurrentLocationChecked}
             <SearchInput 
-                placeholder="1000 MyStreet, MyCity, MyState  10000 | City, State | State | 10000"
+                placeholder="1000 MyStreet, MyCity, MyState  10000"
                 inputID="address"
                 inputName="address"
                 inputLabel={true}
                 bind:searchInputValue={searchByStreetAddressInputValue}
                 searchInputValueChange={() => searchByStreetAddressInputValueChangeHandler()}
-                options={statesWithCity}
             >
-                street address, city, state or zip code
+                street address
             </SearchInput>
         {:else if !addressLoadSuccess}
             <p style="color: red;">failed to load address</p>
@@ -763,13 +547,18 @@
             search
         </SubmitButtonSecondary>
         {#if pendingCivicDivisions}
-		<div class="pending_civic_divisions">
-			<LoaderAnimation /><p class="loading_paragraph">getting local governments</p>
-		</div>
-            
-        {:else if getDivisionsGoogleResponse.error || getDivisionsUSCensusResponse.error}
-            <p style="font-size: 1rem">failed to get local governments</p>
-        {:else if location.USCongressionalDistrict}
+			<div class="pending_civic_divisions">
+				<LoaderAnimation /><p class="loading_paragraph">getting local governments</p>
+			</div>
+		{:else if 
+			getGeoCoordinatesResponse.error || 
+			getDivisionsGoogleResponse.error ||
+			getDivisionsUSCensusResponse.error
+		}
+			<ErrorFlashMessage>{searchErrorMessage}</ErrorFlashMessage>
+        {:else if 
+			location.USCongressionalDistrict
+		}
             <table>
 				<colgroup>
 					<col style="width:40%">
