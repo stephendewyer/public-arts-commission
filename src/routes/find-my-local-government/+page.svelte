@@ -208,7 +208,10 @@
 
 	const searchByStreetAddressInputValueChangeHandler = () => {
 		// clear the search paramaters only if search parameters
-		if (searchParams.get("current_address_checked") === "true") {
+		if (
+			searchParams.get("current_address_checked") === "true" &&
+			searchParams.get("address") !== searchByStreetAddressInputValue.replace(/ /g,"_")
+		) {
 			const url = new URL(page.url.pathname, window.location.origin);
 			// Navigates to the current path without the query string
 			goto(url.toString(), { 
@@ -553,7 +556,7 @@
             </SearchInput>
 			{#if (!findUserLocationSuccess && findUserLocationSuccess !== null)}
 				<p style="color: red;">{fundUserLocationErrorMessage}</p>
-			{:else if  !addressLoadSuccess}
+			{:else if !addressLoadSuccess && addressLoadSuccess !== null}
 				<p style="color: red;">failed to load address</p>
 			{:else if !countryUnitedStates}
 				<p style="color: red;">Address must be within the United States.  Please enter a valid United States address.</p>

@@ -158,6 +158,8 @@
 
 			addressLoadSuccess = true;
 
+			disableButton = false;
+
 		} else if (!response.ok) {
 
 			pending = false;
@@ -177,34 +179,49 @@
 	};
 
 	const success = (position: GeoLocationPosition) => {
-
-		disableButton = false;
-
+		findUserLocationSuccess = true;
 		latitude = position.coords.latitude;
 		longitude = position.coords.longitude;
-
 		reverseGeocode(latitude, longitude);
-
 	};
 
 	// log an error if getCurrentPosition fails
 
+	let fundUserLocationErrorMessage: string = $state("");
+	let findUserLocationSuccess: boolean | null = $state(null)
+
 	const error = (error: any) => {
-
 		pending = false;
-
 		addressLoadSuccess = false;
-
-		console.log("Unable to retrieve your location!" + error);
+		findUserLocationSuccess = false;
+		switch (error.code) {
+			case error.PERMISSION_DENIED:
+				fundUserLocationErrorMessage = "Geolocation was denied.  Please allow geolocation from your browser.";
+				break;
+			case error.POSITION_UNAVAILABLE: 
+				fundUserLocationErrorMessage = "Location information is unavailable.";
+				break;
+			case error.TIMEOUT:
+				fundUserLocationErrorMessage = "The request to get your location timed out.";
+			default:
+				fundUserLocationErrorMessage = "An unknown geolocation error occurred.";
+		};
 
 	};
 
 	// get user's location using JavaScript geolocation
 
-	const findUserLocation = () => {
+	const findUserLocation = async () => {
+		const permission = await navigator.permissions.query({
+			name: "geolocation"
+		});
 
-		navigator.geolocation.getCurrentPosition(success, error)
+		if (permission.state === "denied") {
+			findUserLocationSuccess = false;
+			fundUserLocationErrorMessage = "Location permission is disabled.  Please enable it in your browser";
+		};
 
+		navigator.geolocation.getCurrentPosition( success, error );
 	};
 
 	// if user activates the get current location checkbox, call the findUserLocation checkbox, else clear the searchValue
@@ -327,7 +344,7 @@
 				{#if useCurrentLocationChecked}
 					{#if pending}
 						<LoaderAnimation />
-					{:else if addressLoadSuccess}
+					{:else}
 						<SearchInput 
 							placeholder="1000 MyStreet, MyCity, MyState  10000"
 							inputID="address"
@@ -336,8 +353,11 @@
 							bind:searchInputValue={searchValue}
 							searchInputValueChange={() => searchInputValueChangeHandler()}
 						/>
-					{:else if !addressLoadSuccess}
-						<p>failed to load address</p>
+						{#if (!findUserLocationSuccess && findUserLocationSuccess !== null)}
+							<p style="color: red;">{fundUserLocationErrorMessage}</p>
+						{:else if  !addressLoadSuccess}
+							<p style="color: red;">failed to load address</p>
+						{/if}
 					{/if}
 				{:else}
 					<SearchInput 
