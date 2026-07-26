@@ -232,6 +232,8 @@
 		) {
 			useCurrentLocationChecked = false;
 		};
+
+		location.USCongressionalDistrict = "";
 		
 	};
 
