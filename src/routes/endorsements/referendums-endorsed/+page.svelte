@@ -24,6 +24,7 @@
 	import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 	import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter.js';
+	import { VoterLocationStore } from '$lib/stores/VoterLocationStore';
 
 	let { data } = $props();
 
@@ -63,57 +64,94 @@
 
 	};
 
-    onMount(() => {
-		getEndorsedReferendums();
+	let location: VoterLocation = $state({
+		latitude: null,
+		longitude: null,
+		streetPreDir: "",
+		streetNumber: "",
+		street: "",
+		city: "",
+		county: "",
+		state: "",
+		zipcode: "",
+		country: "",
+		USCongressionalDistrict: "",
+		StateSenateDistrict: "",
+		StateHouseDistrict: "",
+		StateUnicameralDistrict: "",
+		CityWard: ""
+	});
+
+    onMount(async () => {
+		// get the VoterLocationStore
+		location = {...$VoterLocationStore};
+
+		// get the endorsed referendums
+		await getEndorsedReferendums();
     });
 
-    // handle open sidedrawer 
+    // handle search params input values on page load
 
-    const HandleOpenSidedrawer = () => {
+    const loadSearchParams = () => {
+
+		const searchParams: URLSearchParams = page.url.searchParams;
+
+		useCurrentLocationChecked = searchParams.get("current_address_checked") === "true";
 		
-		if (page.url.search) {
+		const address: string | null = searchParams.get("address");
 
-			let searchParams: URLSearchParams;
-
-			searchParams = new URLSearchParams(page.url.search);
-
-			let searchAddress: string | null = null;
-
-			if (
-				searchParams.get("current_address_checked") === "true" && 
-				!searchParams.get("address")
-			) {
-				useCurrentLocationChecked = true;
-			} else if (
-				searchParams.get("current_address_checked") === "true" && 
-				searchParams.get("address")
-			) {
-				searchAddress = searchParams.get("address");
-				if (searchAddress !== null) {
-					// filter results by address
-					searchByStreetAddressInputValue = searchAddress.replace(/_/g, ' ');
-				};
-			} else if (searchParams.get("referendum_ID") !== null) {
-
-				const referendumID: string | null = searchParams.get("referendum_ID");
-
-				searchEndorsedReferendums.filter((referendum, i) => {
-
-					if (referendum.referendum_ID.toString() === referendumID) {
-
-						$EndorsedReferendumSelectedStore = referendum;
-						$EndorsedReferendumOpenStore = true;
-
-					};
-
-				});
-
-			};
+		if (address) {
+			searchByStreetAddressInputValue = address.replaceAll("_", " ");
 		};
 	};
 
+	// handle opening referendum drawer on page load with search params
+
+	let initializedFromUrl = $state(false);
+
 	$effect(() => {
-		HandleOpenSidedrawer();
+		if (
+			initializedFromUrl ||
+			!getEndorsedReferendumsDataSuccess
+		) {
+			return;
+		}
+
+		initializedFromUrl = true;
+
+		loadSearchParams();
+
+		if (
+			searchByStreetAddressInputValue &&
+			!useCurrentLocationChecked
+		) {
+			searchByStreetAddressInputValueChangeHandler();
+		}
+	});
+
+	// handle opening referendum drawer after page load
+
+	$effect(() => {
+		if (!getEndorsedReferendumsDataSuccess) return;
+
+		const referendumID = page.url.searchParams.get("referendum_ID");
+
+		if (!referendumID) {
+			$EndorsedReferendumOpenStore = false;
+			return;
+		}
+
+		const referendum = searchEndorsedReferendums.find(
+			r => r.referendum_ID.toString() === referendumID
+		);
+
+		if (!referendum) {
+			$EndorsedReferendumOpenStore = false;
+			return;
+		};
+
+		$EndorsedReferendumOpenStore = true;
+		$EndorsedReferendumSelectedStore = referendum;
 	});
 
     const searchEndorsedReferendums: SearchReferendumWithImage[] = $derived.by(() => {
@@ -224,48 +262,6 @@
         );
         
     });	
-
-    onMount(() => {
-
-        // handle location input search data present on page mount
-
-        if (
-            searchByStreetAddressInputValue && 
-            !useCurrentLocationChecked && 
-            getEndorsedReferendumsDataSuccess
-        ) {
-            // searchByStreetAddressInputValueChangeHandler();
-        };
-
-        // handle open side drawer on page mount
-
-        if (
-            !searchByStreetAddressInputValue && 
-            !useCurrentLocationChecked && 
-            getEndorsedReferendumsDataSuccess
-        ) {
-            HandleOpenSidedrawer();
-        };
-
-    });
-
-	const location: VoterLocation = $state({
-		latitude: null,
-		longitude: null,
-		streetPreDir: "",
-		streetNumber: "",
-		street: "",
-		city: "",
-		county: "",
-		state: "",
-		zipcode: "",
-		country: "",
-		USCongressionalDistrict: "",
-		StateSenateDistrict: "",
-		StateHouseDistrict: "",
-		StateUnicameralDistrict: "",
-		CityWard: ""
-	});
 
 	let name: string = $state("");
 	let yearInputValue: string = $state("");

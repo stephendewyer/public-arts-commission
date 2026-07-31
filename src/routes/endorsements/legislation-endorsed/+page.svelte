@@ -24,6 +24,7 @@
 	import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 	import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter.js';
+	import { VoterLocationStore } from '$lib/stores/VoterLocationStore';
 
 	let { data } = $props();
 
@@ -63,57 +64,94 @@
 
 	};
 
-    onMount(() => {
-		getEndorsedLegislation();
+	let location: VoterLocation = $state({
+		latitude: null,
+		longitude: null,
+		streetPreDir: "",
+		streetNumber: "",
+		street: "",
+		city: "",
+		county: "",
+		state: "",
+		zipcode: "",
+		country: "",
+		USCongressionalDistrict: "",
+		StateSenateDistrict: "",
+		StateHouseDistrict: "",
+		StateUnicameralDistrict: "",
+		CityWard: ""
+	});
+
+    onMount(async () => {
+		// get the VoterLocationStore
+		location = {...$VoterLocationStore};
+
+		// get the endorsed legislation
+		await getEndorsedLegislation();
     });
 
-    // handle open sidedrawer 
+	// handle search params input values on page load
 
-    const HandleOpenSidedrawer = () => {
+    const loadSearchParams = () => {
+
+		const searchParams: URLSearchParams = page.url.searchParams;
+
+		useCurrentLocationChecked = searchParams.get("current_address_checked") === "true";
 		
-		if (page.url.search) {
+		const address: string | null = searchParams.get("address");
 
-			let searchParams: URLSearchParams;
-
-			searchParams = new URLSearchParams(page.url.search);
-
-			let searchAddress: string | null = null;
-
-			if (
-				searchParams.get("current_address_checked") === "true" && 
-				!searchParams.get("address")
-			) {
-				useCurrentLocationChecked = true;
-			} else if (
-				searchParams.get("current_address_checked") === "true" && 
-				searchParams.get("address")
-			) {
-				searchAddress = searchParams.get("address");
-				if (searchAddress !== null) {
-					// filter results by address
-					searchByStreetAddressInputValue = searchAddress.replace(/_/g, ' ');
-				};
-			} else if (searchParams.get("legislation_ID") !== null) {
-
-				const legislationID: string | null = searchParams.get("legislation_ID");
-
-				searchEndorsedLegislation.filter((legislation, i) => {
-
-					if (legislation.legislation_ID.toString() === legislationID) {
-
-						$EndorsedLegislationSelectedStore = legislation;
-						$EndorsedLegislationOpenStore = true;
-
-					};
-
-				});
-
-			};
+		if (address) {
+			searchByStreetAddressInputValue = address.replaceAll("_", " ");
 		};
 	};
 
+	// handle opening legislation drawer on page load with search params
+
+	let initializedFromUrl = $state(false);
+
 	$effect(() => {
-		HandleOpenSidedrawer();
+		if (
+			initializedFromUrl ||
+			!getEndorsedLegislationDataSuccess
+		) {
+			return;
+		}
+
+		initializedFromUrl = true;
+
+		loadSearchParams();
+
+		if (
+			searchByStreetAddressInputValue &&
+			!useCurrentLocationChecked
+		) {
+			searchByStreetAddressInputValueChangeHandler();
+		}
+	});
+
+	// handle opening legislation drawer after page load
+
+	$effect(() => {
+		if (!getEndorsedLegislationDataSuccess) return;
+
+		const legislationID = page.url.searchParams.get("legislation_ID");
+
+		if (!legislationID) {
+			$EndorsedLegislationOpenStore = false;
+			return;
+		}
+
+		const legislation = searchEndorsedLegislation.find(
+			l => l.legislation_ID.toString() === legislationID
+		);
+
+		if (!legislation) {
+			$EndorsedLegislationOpenStore = false;
+			return;
+		};
+
+		$EndorsedLegislationOpenStore = true;
+		$EndorsedLegislationSelectedStore = legislation;
 	});
 
     const searchEndorsedLegislation: SearchLegislationWithSponsorsAndImage[] = $derived.by(() => {
@@ -228,48 +266,6 @@
         );
         
     });	
-
-    onMount(() => {
-
-        // handle location input search data present on page mount
-
-        if (
-            searchByStreetAddressInputValue && 
-            !useCurrentLocationChecked && 
-            getEndorsedLegislationDataSuccess
-        ) {
-            searchByStreetAddressInputValueChangeHandler();
-        };
-
-        // handle open side drawer on page mount
-
-        if (
-            !searchByStreetAddressInputValue && 
-            !useCurrentLocationChecked && 
-            getEndorsedLegislationDataSuccess
-        ) {
-            HandleOpenSidedrawer();
-        };
-
-    });
-
-	const location: VoterLocation = $state({
-		latitude: null,
-		longitude: null,
-		streetPreDir: "",
-		streetNumber: "",
-		street: "",
-		city: "",
-		county: "",
-		state: "",
-		zipcode: "",
-		country: "",
-		USCongressionalDistrict: "",
-		StateSenateDistrict: "",
-		StateHouseDistrict: "",
-		StateUnicameralDistrict: "",
-		CityWard: ""
-	});
 
 	let name: string = $state("");
 	let yearInputValue: string = $state("");

@@ -4,8 +4,9 @@
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
     import { page } from '$app/state';
+    import { goto } from '$app/navigation';
 
-    let { endorsedReferendumData }: { endorsedReferendumData: ReferendumWithImage } = $props();
+    let { endorsedReferendumData }: { endorsedReferendumData: SearchReferendumWithImage } = $props();
 
     let ready = $state(false);
 
@@ -62,6 +63,21 @@
         cardHovered = false;
 
     };
+
+    const handleClick = async (referendum: SearchReferendumWithImage) => {
+        const params: URLSearchParams = new URLSearchParams(page.url.search);
+        params.set("referendum_ID", referendum.referendum_ID.toString());
+        params.set("referendum_name", referendum.referendum_name.replace(/ /g,"_"));
+
+        await goto(
+            `${page.url.pathname}?${params.toString()}`,
+            {
+                replaceState: true,
+                noScroll: true,
+                keepFocus: true
+            }
+        );
+    };
     
 </script>
 {#if ready}
@@ -79,6 +95,8 @@
             onmouseover={() => cardHoverHandler()}
             onmouseleave={() => cardExitHandler()}
             onmouseout={() => cardExitHandler()}
+            onclick={() => handleClick(endorsedReferendumData)}
+            onkeyup={() => handleClick(endorsedReferendumData)}
             class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
             in:fade={{ duration: 300 }}
         >

@@ -7,14 +7,12 @@
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
 	import { parse } from "@universe/address-parser";
 	import USCities from '$lib/data/USCities.json';
-    import States from '$lib/data/states.titlecase.json';
     import Checkbox from '$lib/components/inputs/AnimatedCheckbox.svelte';
     import { page } from '$app/state';
-    import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import SubmitButtonSecondary from "$lib/components/buttons/SubmitButtonSecondary.svelte";
-    import ActionButtonSecondary from "$lib/components/buttons/ActionButtonSecondary.svelte";
 	import { goto } from "$app/navigation";
 	import ErrorFlashMessage from "$lib/components/flashMessages/ErrorFlashMessage.svelte";
+	import { VoterLocationStore } from "$lib/stores/VoterLocationStore.js";
 
 	let searchByStreetAddressInputValue: string = $state("");
 
@@ -206,6 +204,8 @@
 
 	let disableSearchButton: boolean = $state(true);
 
+	let addressSlug: string = $derived(searchByStreetAddressInputValue.replace(/ /g,"_"));
+
 	const searchByStreetAddressInputValueChangeHandler = () => {
 		// clear the search paramaters only if search parameters
 		if (
@@ -232,9 +232,9 @@
 		) {
 			useCurrentLocationChecked = false;
 		};
-
+		// change USCongressionalDistrict to undefined to remove search results
 		location.USCongressionalDistrict = "";
-		
+
 	};
 
 	let searchErrorMessage: string = $state("");
@@ -365,6 +365,8 @@
 			} else if (getDivisionsGoogleResponse.success) {
 				// extract the city districts
 				extractGoogleDistricts(location, getDivisionsGoogleResponse.success)
+				// IMPORTANT!  UPDATE THE VoterLocationStore
+				VoterLocationStore.updateLocation({...location});
 			};	
 		} catch(error) {
 			console.log(error);
@@ -486,7 +488,7 @@
 							location.country
 						);
 					};
-					
+
 				} else {
 					getGeoCoordinatesResponse.error = "Must have valid U.S. street address to get civic divisions";
 					searchErrorMessage = getGeoCoordinatesResponse.error;
@@ -522,6 +524,7 @@
 		} else {
 			disableSearchButton = true;
 		};
+
 	});
 
 </script>
@@ -673,6 +676,38 @@
 			<p>Data sourced from U.S. Census Bureau and Google Civic API DivisionsByAddress and accounts for latest Congressional mapping.</p>
         {/if}
     </form>
+	<div class="endorsements">
+		<h2>
+			find endorsed...
+		</h2>
+		<div class="endorsement_categories">
+			<a href={`/endorsements/candidates-endorsed?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`}>
+				<ActionButton>
+					candidates
+				</ActionButton>
+			</a>
+			<a href={`/endorsements/legislation-endorsed?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`}>
+				<ActionButton>
+					legislation
+				</ActionButton>
+			</a>
+			<a href={`/endorsements/referendums-endorsed?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`}>
+				<ActionButton>
+					referendums
+				</ActionButton>
+			</a>
+			<a href={`/endorsements/amendments-endorsed?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`}>
+				<ActionButton>
+					amendments
+				</ActionButton>
+			</a>
+			<a href={`/endorsements/actions-endorsed?current_address_checked=${useCurrentLocationChecked}&address=${addressSlug}`}>
+				<ActionButton>
+					actions
+				</ActionButton>
+			</a>
+		</div>
+	</div>
 </div>
 
 <style>
@@ -741,6 +776,23 @@
         flex-direction: column-reverse;
         justify-content: flex-start;
     }
+
+	.endorsements {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		width: 100%;
+		max-width: 60rem;
+		margin: 0 auto;
+	}
+
+	.endorsement_categories {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0 1rem;
+		width: 100%;
+	}
 
 	@media (max-width: 1140px) {
 

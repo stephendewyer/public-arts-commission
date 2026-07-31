@@ -1,11 +1,12 @@
 <script lang="ts">
+    import { goto } from '$app/navigation';
     import { page } from '$app/state';
     import MeatBalls from '$lib/images/icons/meaballs.svg?raw';
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { onMount } from 'svelte';
     import { fade } from 'svelte/transition';
 
-    let { endorsedLegislationData }: { endorsedLegislationData: LegislationWithSponsorsAndImage } = $props();
+    let { endorsedLegislationData }: { endorsedLegislationData: SearchLegislationWithSponsorsAndImage } = $props();
 
     let ready = $state(false);
 
@@ -68,85 +69,97 @@
         cardHovered = false;
 
     };
+
+    const handleClick = async (legislation: SearchLegislationWithSponsorsAndImage) => {
+        const params: URLSearchParams = new URLSearchParams(page.url.search);
+        params.set("legislation_ID", legislation.legislation_ID.toString());
+        params.set("legislation_name", legislation.legislation_name.replace(/ /g,"_"));
+
+        await goto(
+            `${page.url.pathname}?${params.toString()}`,
+            {
+                replaceState: true,
+                noScroll: true,
+                keepFocus: true
+            }
+        );
+    };
     
 </script>
 {#if ready}
-    <a 
-        href={`${page.url.pathname}?legislation_ID=${endorsedLegislationData.legislation_ID}&legislation_name=${endorsedLegislationData.legislation_name.replace(/ /g,"_")}`}
-        data-sveltekit-noscroll
-    > 
+    <div 
+        tabindex={endorsedLegislationData.legislation_ID}
+        role="treeitem"
+        aria-selected={cardHovered}
+        onfocus={() => cardHoverHandler()}
+        onblur={() => cardExitHandler()}
+        onmouseenter={() => cardHoverHandler()}
+        onmouseover={() => cardHoverHandler()}
+        onmouseleave={() => cardExitHandler()}
+        onmouseout={() => cardExitHandler()}
+        onclick={() => handleClick(endorsedLegislationData)}
+        onkeyup={() => handleClick(endorsedLegislationData)}
+        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+        in:fade={{ duration: 300 }}
+    >
+        <div class="image_container">
+            <img 
+                src={endorsedLegislationData.image_URL} 
+                alt={reverseHtmlEntities(endorsedLegislationData.alt_text)} 
+            />
+        </div>
         <div 
-            tabindex={endorsedLegislationData.legislation_ID}
-            role="treeitem"
-            aria-selected={cardHovered}
-            onfocus={() => cardHoverHandler()}
-            onblur={() => cardExitHandler()}
-            onmouseenter={() => cardHoverHandler()}
-            onmouseover={() => cardHoverHandler()}
-            onmouseleave={() => cardExitHandler()}
-            onmouseout={() => cardExitHandler()}
-            class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
-            in:fade={{ duration: 300 }}
+            class="meatballs_container"
+            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
         >
-            <div class="image_container">
-                <img 
-                    src={endorsedLegislationData.image_URL} 
-                    alt={reverseHtmlEntities(endorsedLegislationData.alt_text)} 
-                />
-            </div>
-            <div 
-                class="meatballs_container"
-                style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
-            >
-                {@html MeatBalls}
-            </div>
-            <div class="card_info_container">
-                <h4 class="card_heading_01">{reverseHtmlEntities(endorsedLegislationData.legislation_name)}</h4>
+            {@html MeatBalls}
+        </div>
+        <div class="card_info_container">
+            <h4 class="card_heading_01">{reverseHtmlEntities(endorsedLegislationData.legislation_name)}</h4>
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    jurisdiction: 
+                </span>
+                {#if (endorsedLegislationData.city)}
+                    {reverseHtmlEntities(endorsedLegislationData.city)}
+                {/if}
+                {#if (endorsedLegislationData.county)}
+                    {reverseHtmlEntities(endorsedLegislationData.county)}
+                {/if}
+                {#if (endorsedLegislationData.state)}
+                    {reverseHtmlEntities(endorsedLegislationData.state)}
+                {/if}
+                United States of America
+            </h5>
+            {#if (endorsedLegislationData.year_released)}
                 <h5 class="card_heading_02">
                     <span class="data_category">
-                        jurisdiction: 
+                        year released:
                     </span>
-                    {#if (endorsedLegislationData.city)}
-                        {reverseHtmlEntities(endorsedLegislationData.city)}
-                    {/if}
-                    {#if (endorsedLegislationData.county)}
-                        {reverseHtmlEntities(endorsedLegislationData.county)}
-                    {/if}
-                    {#if (endorsedLegislationData.state)}
-                        {reverseHtmlEntities(endorsedLegislationData.state)}
-                    {/if}
-                    United States of America
+                    {endorsedLegislationData.year_released}
                 </h5>
-                {#if (endorsedLegislationData.year_released)}
-                    <h5 class="card_heading_02">
-                        <span class="data_category">
-                            year released:
-                        </span>
-                        {endorsedLegislationData.year_released}
-                    </h5>
-                {/if}
-                {#if (endorsedLegislationData.year_introduced_House)}
-                    <h5 class="card_heading_02">
-                        <span class="data_category">
-                            year introduced in House:
-                        </span>
-                        {endorsedLegislationData.year_introduced_House}
-                    </h5>
-                {/if}
-                {#if (endorsedLegislationData.year_introduced_Senate)}
-                    <h5 class="card_heading_02">
-                        <span class="data_category">
-                            year introduced in Senate:
-                        </span>
-                        {endorsedLegislationData.year_introduced_Senate}
-                    </h5>
-                {/if}
-                <h5 class="card_heading_02"><span class="data_category">status:</span>
-                    {reverseHtmlEntities(legislationStatus.toString())}
+            {/if}
+            {#if (endorsedLegislationData.year_introduced_House)}
+                <h5 class="card_heading_02">
+                    <span class="data_category">
+                        year introduced in House:
+                    </span>
+                    {endorsedLegislationData.year_introduced_House}
                 </h5>
-            </div>
+            {/if}
+            {#if (endorsedLegislationData.year_introduced_Senate)}
+                <h5 class="card_heading_02">
+                    <span class="data_category">
+                        year introduced in Senate:
+                    </span>
+                    {endorsedLegislationData.year_introduced_Senate}
+                </h5>
+            {/if}
+            <h5 class="card_heading_02"><span class="data_category">status:</span>
+                {reverseHtmlEntities(legislationStatus.toString())}
+            </h5>
         </div>
-    </a>
+    </div>
 {/if}
 
 <style>

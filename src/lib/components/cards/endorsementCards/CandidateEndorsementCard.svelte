@@ -1,11 +1,12 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { page } from "$app/state";
     import MeatBalls from "$lib/images/icons/meaballs.svg?raw";
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import { onMount } from "svelte";
     import { fade } from "svelte/transition";
 
-    let { endorsedCandidateData }: { endorsedCandidateData: CandidateWithImage } = $props();
+    let { endorsedCandidateData }: { endorsedCandidateData: SearchEndorsedCandidateWithImage } = $props();
 
     let ready = $state(false);
 
@@ -88,70 +89,82 @@
         cardHovered = false;
     };
 
+    const handleClick = async (candidate: SearchEndorsedCandidateWithImage) => {
+        const params: URLSearchParams = new URLSearchParams(page.url.search);
+        params.set("candidate_ID", candidate.candidate_ID.toString());
+        params.set("campaign_name", candidate.campaign_name.replace(/ /g,"_"));
+
+        await goto(
+            `${page.url.pathname}?${params.toString()}`,
+            {
+                replaceState: true,
+                noScroll: true,
+                keepFocus: true
+            }
+        );
+    };
+
 </script>
 {#if ready}
-    <a 
-        href={`${page.url.pathname}?candidate_ID=${endorsedCandidateData.candidate_ID}&campaign_name=${endorsedCandidateData.campaign_name.replace(/ /g,"_")}`}
-        data-sveltekit-noscroll
-    > 
-        <div 
-            tabindex={endorsedCandidateData.campaign_ID}
-            role="treeitem"
-            aria-selected={cardHovered}
-            onfocus={() => cardHoverHandler()}
-            onblur={() => cardExitHandler()}
-            onmouseenter={() => cardHoverHandler()}
-            onmouseover={() => cardHoverHandler()}
-            onmouseleave={() => cardExitHandler()}
-            onmouseout={() => cardExitHandler()}
-            class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
-            in:fade={{ duration: 300 }}
-        >
-            <div class="image_container">
-                <img
-                    src={endorsedCandidateData.image_URL} 
-                    alt={reverseHtmlEntities(endorsedCandidateData.alt_text)} 
-                />
-            </div>
-            <div 
-                class="meatballs_container"
-                style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
-            >
-                {@html MeatBalls}
-            </div>
-            <div class="card_info_container">
-                <h4 class="card_heading_01">
-                    {reverseHtmlEntities(endorsedCandidateData.campaign_name)}
-                </h4>
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        electorate: 
-                    </span>
-                    {reverseHtmlEntities(endorsedCandidateData.electorate)}
-                </h5>
-                {#if (primaryIsValid)}
-                    <h5 class="card_heading_02">
-                        <span class="data_category">
-                            primary election date: 
-                        </span>
-                        {primaryElectionDate}
-                    </h5>
-                {/if}
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        general election date: 
-                    </span>
-                    {generalElectionDate}
-                </h5>
-                <h5 class="card_heading_02">
-                    <span class="data_category">
-                        status:
-                    </span>
-                    {reverseHtmlEntities(candidateStatus.toString())}
-                </h5>
-            </div>
+    <div 
+        tabindex={endorsedCandidateData.campaign_ID}
+        role="treeitem"
+        aria-selected={cardHovered}
+        onfocus={() => cardHoverHandler()}
+        onblur={() => cardExitHandler()}
+        onmouseenter={() => cardHoverHandler()}
+        onmouseover={() => cardHoverHandler()}
+        onmouseleave={() => cardExitHandler()}
+        onmouseout={() => cardExitHandler()}
+        onclick={() => handleClick(endorsedCandidateData)}
+        onkeyup={() => handleClick(endorsedCandidateData)}
+        class={(cardHovered) ? "endorsement_card_hovered" : "endorsement_card"}
+        in:fade={{ duration: 300 }}
+    >
+        <div class="image_container">
+            <img
+                src={endorsedCandidateData.image_URL} 
+                alt={reverseHtmlEntities(endorsedCandidateData.alt_text)} 
+            />
         </div>
-    </a>
+        <div 
+            class="meatballs_container"
+            style={(cardHovered) ? "fill: #D8EAC5" : "fill: #314659;" }
+        >
+            {@html MeatBalls}
+        </div>
+        <div class="card_info_container">
+            <h4 class="card_heading_01">
+                {reverseHtmlEntities(endorsedCandidateData.campaign_name)}
+            </h4>
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    electorate: 
+                </span>
+                {reverseHtmlEntities(endorsedCandidateData.electorate)}
+            </h5>
+            {#if (primaryIsValid)}
+                <h5 class="card_heading_02">
+                    <span class="data_category">
+                        primary election date: 
+                    </span>
+                    {primaryElectionDate}
+                </h5>
+            {/if}
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    general election date: 
+                </span>
+                {generalElectionDate}
+            </h5>
+            <h5 class="card_heading_02">
+                <span class="data_category">
+                    status:
+                </span>
+                {reverseHtmlEntities(candidateStatus.toString())}
+            </h5>
+        </div>
+    </div>
 {/if}
 
 <style>

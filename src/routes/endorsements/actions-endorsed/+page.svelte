@@ -5,7 +5,6 @@
 	import Panel from "$lib/components/tabPanels/endorsementTabPanels/EndorsementsPanel.svelte";
     import { v4 as uuidv4 } from 'uuid';
     import GeolocationIcon from "$lib/images/icons/geolocation_icon.svg?raw";
-    import ProposeActionButton from '$lib/components/buttons/NominateButton.svelte';
     import { onMount } from 'svelte';
     import LoaderAnimation from '$lib/components/loaders/LoaderAnimation.svelte';
     import Years from '$lib/data/years.json';
@@ -25,6 +24,7 @@
     import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import { SearchActionsByNameAndLocationFilter } from '$lib/utils/SearchActionsByNameAndLocationFilter.js';
     import { goto } from '$app/navigation';
+	import { VoterLocationStore } from '$lib/stores/VoterLocationStore';
 
     let { data } = $props();
 
@@ -34,7 +34,7 @@
 
     // once user clicks "use my current location" checkbox, 
 
-	const location: VoterLocation = $state({
+	let location: VoterLocation = $state({
 		latitude: null,
 		longitude: null,
 		streetPreDir: "",
@@ -92,29 +92,106 @@
         };
     };
 
-    onMount(() => {
-        getEndorsedActionsData();
+	onMount(async () => {
+		// get the VoterLocationStore
+		location = {...$VoterLocationStore};
+
+		// get the endorsed candidates
+		await getEndorsedActionsData();
     });
 
-    const HandleOpenSidedrawer = () => {
-        let searchParams: URLSearchParams = new URLSearchParams(page.url.search);
-        if (searchParams.get("action_ID") !== null) {
-            const actionID: string | null = searchParams.get("action_ID");
-            endorsedActions.filter((action, i) => {
+	// handle loading search params input values
 
-                if (action.action_ID.toString() === actionID) {
-                    $EndorsedActionSelectedStore = action;
-                    $EndorsedActionOpenStore = true;
-                };
+	const loadSearchParams = () => {
 
-            });
-        };
+		const searchParams: URLSearchParams = page.url.searchParams;
 
-    };
+		useCurrentLocationChecked = searchParams.get("current_address_checked") === "true";
+		
+		const address: string | null = searchParams.get("address");
 
-    $effect(() => {
-        HandleOpenSidedrawer();
-    });
+		if (address) {
+			searchByStreetAddressInputValue = address.replaceAll("_", " ");
+		};
+	};
+
+	const openActionDrawer = () => {
+
+		const actionID = page.url.searchParams.get("action_ID");
+
+		if (!actionID) {
+			return;
+		};
+
+		const action: SearchActionWithImage | undefined = searchEndorsedActions.find(
+			action => action.action_ID.toString() === actionID
+		);
+
+		console.log(action);
+
+		if (!action) {
+			return;
+		};
+
+		$EndorsedActionSelectedStore = action;
+		$EndorsedActionOpenStore = true;
+
+	};
+
+	// handle opening action drawer on page load with search params
+
+	let initializedFromUrl = $state(false);
+
+	$effect(() => {
+		if (
+			initializedFromUrl ||
+			!getEndorsedActionsDataSuccess
+		) {
+			return;
+		};
+
+		initializedFromUrl = true;
+
+		// load values from URL
+		loadSearchParams();
+
+		// apply address filters
+		if (
+			searchByStreetAddressInputValue &&
+			!useCurrentLocationChecked
+		) {
+			searchByNameOrLocationInputValueChangeHandler();
+		};
+
+		// open action drawer (if action_ID exists)
+		openActionDrawer();
+
+	});
+
+	// handle opening action drawer after page load
+
+	$effect(() => {
+		if (!getEndorsedActionsDataSuccess) return;
+
+		const actionID = page.url.searchParams.get("action_ID");
+
+		if (!actionID) {
+			$EndorsedActionOpenStore = false;
+			return;
+		}
+
+		const action = searchEndorsedActions.find(
+			a => a.action_ID.toString() === actionID
+		);
+
+		if (!action) {
+			$EndorsedActionOpenStore = false;
+			return;
+		};
+
+		$EndorsedActionOpenStore = true;
+		$EndorsedActionSelectedStore = action;
+	});
 
     const searchEndorsedActions: SearchActionWithImage[] = $derived.by(() => {
             return endorsedActions.map((action: ActionWithImage) => ({

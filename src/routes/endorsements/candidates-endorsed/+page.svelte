@@ -24,6 +24,7 @@
 	import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
 	import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter.js';
+	import { VoterLocationStore } from '$lib/stores/VoterLocationStore.js';
 
 	let { data } = $props();
 
@@ -63,57 +64,92 @@
 
 	};
 
-    onMount(() => {
-		getEndorsedCandidates();
+	let location: VoterLocation = $state({
+		latitude: null,
+		longitude: null,
+		streetPreDir: "",
+		streetNumber: "",
+		street: "",
+		city: "",
+		county: "",
+		state: "",
+		zipcode: "",
+		country: "",
+		USCongressionalDistrict: "",
+		StateSenateDistrict: "",
+		StateHouseDistrict: "",
+		StateUnicameralDistrict: "",
+		CityWard: ""
+	});
+
+    onMount(async () => {
+		// get the VoterLocationStore
+		location = {...$VoterLocationStore};
+
+		// get the endorsed candidates
+		await getEndorsedCandidates();
     });
 
-    // handle open sidedrawer 
+	const loadSearchParams = () => {
 
-    const HandleOpenSidedrawer = () => {
+		const searchParams: URLSearchParams = page.url.searchParams;
+
+		useCurrentLocationChecked = searchParams.get("current_address_checked") === "true";
 		
-		if (page.url.search) {
+		const address: string | null = searchParams.get("address");
 
-			let searchParams: URLSearchParams;
-
-			searchParams = new URLSearchParams(page.url.search);
-
-			let searchAddress: string | null = null;
-
-			if (
-				searchParams.get("current_address_checked") === "true" && 
-				!searchParams.get("address")
-			) {
-				useCurrentLocationChecked = true;
-			} else if (
-				searchParams.get("current_address_checked") === "true" && 
-				searchParams.get("address")
-			) {
-				searchAddress = searchParams.get("address");
-				if (searchAddress !== null) {
-					// filter results by address
-					searchByStreetAddressInputValue = searchAddress.replace(/_/g, ' ');
-				};
-			} else if (searchParams.get("candidate_ID") !== null) {
-
-				const candidateID: string | null = searchParams.get("candidate_ID");
-
-				searchEndorsedCandidates.filter((candidate, i) => {
-
-					if (candidate.candidate_ID.toString() === candidateID) {
-
-						$EndorsedCandidateSelectedStore = candidate;
-						$EndorsedCandidateOpenStore = true;
-
-					};
-
-				});
-
-			};
+		if (address) {
+			searchByStreetAddressInputValue = address.replaceAll("_", " ");
 		};
 	};
 
+	// handle opening candidate drawer on page load with search params
+
+	let initializedFromUrl = $state(false);
+
 	$effect(() => {
-		HandleOpenSidedrawer();
+		if (
+			initializedFromUrl ||
+			!getEndorsedCandidatesDataSuccess
+		) {
+			return;
+		}
+
+		initializedFromUrl = true;
+
+		loadSearchParams();
+
+		if (
+			searchByStreetAddressInputValue &&
+			!useCurrentLocationChecked
+		) {
+			searchByStreetAddressInputValueChangeHandler();
+		}
+	});
+
+	// handle opening candidate drawer after page load
+
+	$effect(() => {
+		if (!getEndorsedCandidatesDataSuccess) return;
+
+		const candidateID = page.url.searchParams.get("candidate_ID");
+
+		if (!candidateID) {
+			$EndorsedCandidateOpenStore = false;
+			return;
+		}
+
+		const candidate = searchEndorsedCandidates.find(
+			c => c.candidate_ID.toString() === candidateID
+		);
+
+		if (!candidate) {
+			$EndorsedCandidateOpenStore = false;
+			return;
+		};
+
+		$EndorsedCandidateOpenStore = true;
+		$EndorsedCandidateSelectedStore = candidate;
 	});
 
     const searchEndorsedCandidates: SearchEndorsedCandidateWithImage[] = $derived.by(() => {
@@ -215,48 +251,6 @@
         );
         
     });	
-
-    onMount(() => {
-
-        // handle location input search data present on page mount
-
-        if (
-            searchByStreetAddressInputValue && 
-            !useCurrentLocationChecked && 
-            getEndorsedCandidatesDataSuccess
-        ) {
-            // searchByStreetAddressInputValueChangeHandler();
-        };
-
-        // handle open side drawer on page mount
-
-        if (
-            !searchByStreetAddressInputValue && 
-            !useCurrentLocationChecked && 
-            getEndorsedCandidatesDataSuccess
-        ) {
-            HandleOpenSidedrawer();
-        };
-
-    });
-
-	const location: VoterLocation = $state({
-		latitude: null,
-		longitude: null,
-		streetPreDir: "",
-		streetNumber: "",
-		street: "",
-		city: "",
-		county: "",
-		state: "",
-		zipcode: "",
-		country: "",
-		USCongressionalDistrict: "",
-		StateSenateDistrict: "",
-		StateHouseDistrict: "",
-		StateUnicameralDistrict: "",
-		CityWard: ""
-	});
 
 	let name: string = $state("");
 	let yearInputValue: string = $state("");

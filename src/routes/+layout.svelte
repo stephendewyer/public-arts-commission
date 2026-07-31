@@ -11,7 +11,6 @@
 	import { EndorsedActionOpenStore } from '$lib/stores/EndorsedActionOpenStore';
 	import { EndorsedAmendmentOpenStore } from '$lib/stores/EndorsedAmendmentOpenStore';
 	import { EndorsedLegislationOpenStore } from '$lib/stores/EndorsedLegislationOpenStore';
-	import { EndorsedCandidateOpenStore } from '$lib/stores/EndorsedCandidateOpenStore';
 	import { EndorsedReferendumOpenStore } from '$lib/stores/EndorsedReferendumOpenStore';
   	import EndorsedActionSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedActionSidedrawer.svelte';
   	import EndorsedAmendmentSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedAmendmentSidedrawer.svelte';
@@ -20,7 +19,8 @@
   	import EndorsedReferendumSidedrawer from '$lib/components/endorsementSidedrawer/EndorsedReferendumSidedrawer.svelte';
 	import DeleteConfirmationModal from '$lib/components/modals/DeleteConfirmationModal.svelte';
   	import CampaignApplicationActionConfirmModal from '$lib/components/modals/CampaignApplicationActionConfirmModal.svelte';
-
+	import { EndorsedCandidateOpenStore } from '$lib/stores/EndorsedCandidateOpenStore';
+	
 	let openMobileNav: boolean = false;
 
 	let footerElHeight: number = 0;
