@@ -219,7 +219,10 @@
                     </TextArea>
                 </div>
                 <div class="submit_button_container">
-                    <SubmitButtonSecondary disable={sendMessageButtonDisabled}>
+                    <SubmitButtonSecondary 
+                        disable={sendMessageButtonDisabled}
+                        onclick
+                    >
                         send
                     </SubmitButtonSecondary>
                 </div>

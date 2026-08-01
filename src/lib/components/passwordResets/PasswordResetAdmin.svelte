@@ -93,7 +93,10 @@
             </EmailInput>
         </div>
         
-        <SubmitButtonSecondary disable={false}>
+        <SubmitButtonSecondary 
+            onclick
+            disable={false}
+        >
             send email
         </SubmitButtonSecondary>
     </form>

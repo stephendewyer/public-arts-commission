@@ -401,9 +401,7 @@
 		};
     });
 
-	const searchLocalGovernment = async (e: Event) => {
-
-		e.preventDefault();
+	const searchLocalGovernment = async () => {
 
 		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
 		let searchBarInputValueFirstWord: string | number = "";
@@ -541,7 +539,7 @@
         id="filters"
         noValidate 
         autoComplete="off"
-        onsubmit={(e) => searchLocalGovernment(e)}
+        onsubmit={(e) => e.preventDefault()}
     >
         <h2 style="text-align: center">
             find my local government
@@ -579,7 +577,7 @@
         </Checkbox>
         <SubmitButtonSecondary 
 			disable={disableSearchButton}
-			onclick
+			onclick={searchLocalGovernment}
 		>
             search
         </SubmitButtonSecondary>

@@ -118,6 +118,7 @@
                 <div class="submit_button_container">
                     <SubmitButtonSecondary
                         disable={false}
+                        onclick
                     >
                         pay
                     </SubmitButtonSecondary>
