@@ -28,8 +28,6 @@
 
     let { data } = $props();
 
-	let URLPathName: string = $derived(page.url.pathname);
-
     const endorsementsType: string = "actions";
 
     // once user clicks "use my current location" checkbox, 
@@ -305,7 +303,57 @@
 
     let pendingReverseGeocode: boolean = $state(false);
 
-    async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string> {
+	let pendingUSCongressionalDistrict: boolean | null = $state(null);
+
+	// after getUSCongressionalDistrict
+	let getUSCongressionalDistrictResponse: ResponseObj = $state({
+        success: "",
+        error: "",
+        status: null
+    });
+
+    $effect(() => {
+        if((getUSCongressionalDistrictResponse.error)) {
+            setTimeout(() => {
+                getUSCongressionalDistrictResponse.success = "";
+                getUSCongressionalDistrictResponse.error = "";
+                status: null;
+            }, 4000);
+        };
+
+        if((getUSCongressionalDistrictResponse.success) || (getUSCongressionalDistrictResponse.error)) {
+            pendingUSCongressionalDistrict = false;
+        };
+    });
+
+
+	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
+		pendingUSCongressionalDistrict = true;
+		try {
+			const response = await fetch("/api/getDivisionsUSCensus", {
+				method: "POST",
+				body: JSON.stringify({
+					longitude, 
+					latitude
+				}),
+				headers: {
+					"Content-Type": "application/json",
+				}
+			});
+			getUSCongressionalDistrictResponse = await response.json();
+			if (getUSCongressionalDistrictResponse.success) {
+				const districts = getUSCongressionalDistrictResponse.success;
+				location.USCongressionalDistrict = districts.congressional;
+				location.StateUnicameralDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "unicameral")?.district;
+				location.StateHouseDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "lower")?.district;
+				location.StateSenateDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "upper")?.district;
+			};	
+		} catch(error) {
+			console.log(error);
+		};
+	};
+
+    async function reverseGeocode(latitude: number | null, longitude: number | null): Promise<string | undefined> {
 
         const response = await fetch("/api/reverseGeocode", {
             method: 'POST',
@@ -323,48 +371,52 @@
         if (response.ok) {
             pendingReverseGeocode = false;
             addressLoadSuccess = true;
+
+			searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
+			location.country = reversedGeolocation.addresses[0].address.country;
+			location.zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
+			location.state = reversedGeolocation.addresses[0].address.countrySubdivision;
+			location.county = reversedGeolocation.addresses[0].address.countrySecondarySubdivision;
+			location.city = reversedGeolocation.addresses[0].address.municipality;
+			location.street= reversedGeolocation.addresses[0].address.street;
+			location.streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
+
+			currentPage = 1;
+
+			// get U.S. Congressional District, State Senate District, State House District and City Ward data
+
+			await getUSCongressionalDistrict(latitude, longitude);
+
+			endorsedActionsSearchStore.setSearch({
+				year:  {
+					all_day_event_date: yearInputValue,
+					date_start: yearInputValue,
+					date_end: yearInputValue
+				},
+				action_name: actionName,
+				zipcode: location.zipcode,
+				state: location.state,
+				city: location.city,
+				county: location.county,
+				government_level: "federal"
+			});
+
+			return searchByStreetAddressInputValue;
+
         } else if (!response.ok) {
             pendingReverseGeocode = false;
             addressLoadSuccess = false;
-        };
-
-        // show the user's address as the value in the searchEndorsements searchInput
-
-        searchByStreetAddressInputValue = reversedGeolocation.addresses[0].address.freeformAddress;
-        location.country = reversedGeolocation.addresses[0].address.country;
-        location.zipcode = reversedGeolocation.addresses[0].address.extendedPostalCode;
-        location.state = reversedGeolocation.addresses[0].address.countrySubdivision;
-        location.county = reversedGeolocation.addresses[0].address.countrySecondarySubdivision;
-        location.city = reversedGeolocation.addresses[0].address.municipality;
-        location.street= reversedGeolocation.addresses[0].address.street;
-        location.streetNumber = reversedGeolocation.addresses[0].address.streetNumber;
-
-        currentPage = 1;
-
-        endorsedActionsSearchStore.setSearch({
-            year:  {
-                all_day_event_date: yearInputValue,
-                date_start: yearInputValue,
-                date_end: yearInputValue
-            },
-            action_name: actionName,
-            zipcode: location.zipcode,
-            state: location.state,
-            city: location.city,
-            county: location.county,
-            government_level: "federal"
-        });
-
-        return searchByStreetAddressInputValue;
+			return searchByStreetAddressInputValue = "";
+        };           
 
     };
 
     // if getCurrentPosition is a success, 
 
-	const success = (position: GeoLocationPosition) => {
+	const success = async (position: GeoLocationPosition) => {
         location.latitude = position.coords.latitude;
         location.longitude = position.coords.longitude;
-        reverseGeocode(location.latitude, location.longitude);
+        await reverseGeocode(location.latitude, location.longitude);
     };
 
     // log an error if getCurrentPosition fails
@@ -896,6 +948,32 @@
 									</div>
 								</Checkbox>
 							</div>
+							{#if pendingUSCongressionalDistrict}
+								<p style="font-size: 1rem">getting U.S. Congressional District</p>
+							{:else if getUSCongressionalDistrictResponse.error}
+								<p style="font-size: 1rem">failed to get U.S. Congressional District</p>
+							{:else if location.USCongressionalDistrict}
+								<p style="font-size: 1rem">
+									<span>U.S. Congressional District: </span>
+									<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
+								</p>
+								<p style="font-size: 1rem">
+									<span>State Senate District: </span>
+									<span style={"font-weight: bold"}>{location.StateSenateDistrict}</span>
+								</p>
+								<p style="font-size: 1rem">
+									<span>State House District: </span>
+									<span style={"font-weight: bold"}>{location.StateHouseDistrict}</span>
+								</p>
+								<p style="font-size: 1rem">
+									<span>State Unicameral District (Nebraska): </span>
+									<span style={"font-weight: bold"}>{location.StateUnicameralDistrict}</span>
+								</p>
+								<p style="font-size: 1rem">
+									<span>City Ward: </span>
+									<span style={"font-weight: bold"}>{location.CityWard}</span>
+								</p>
+							{/if}
 							<div class="year_input_container">
 								<SelectSearchInput 
 									options={Years}
@@ -982,6 +1060,32 @@
 								</div>
 							</Checkbox>
 						</div>
+						{#if pendingUSCongressionalDistrict}
+							<p style="font-size: 1rem">getting U.S. Congressional District</p>
+						{:else if getUSCongressionalDistrictResponse.error}
+							<p style="font-size: 1rem">failed to get U.S. Congressional District</p>
+						{:else if location.USCongressionalDistrict}
+							<p style="font-size: 1rem">
+								<span>U.S. Congressional District: </span>
+								<span style={"font-weight: bold"}>{location.USCongressionalDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>State Senate District: </span>
+								<span style={"font-weight: bold"}>{location.StateSenateDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>State House District: </span>
+								<span style={"font-weight: bold"}>{location.StateHouseDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>State Unicameral District (Nebraska): </span>
+								<span style={"font-weight: bold"}>{location.StateUnicameralDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>City Ward: </span>
+								<span style={"font-weight: bold"}>{location.CityWard}</span>
+							</p>
+						{/if}
 						<div class="year_input_container">
 							<SelectSearchInput 
 								options={Years}

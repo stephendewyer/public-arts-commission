@@ -369,7 +369,7 @@
 
 			// get U.S. Congressional District, State Senate District, State House District and City Ward data
 
-			getUSCongressionalDistrict(latitude, longitude);
+			await getUSCongressionalDistrict(latitude, longitude);
 
             // set the search
 
@@ -399,10 +399,10 @@
 
 	// if getCurrentPosition is a success, 
 
-	const success = (position: GeoLocationPosition) => {
+	const success = async (position: GeoLocationPosition) => {
 		location.latitude = position.coords.latitude;
 		location.longitude = position.coords.longitude;
-		reverseGeocode(location.latitude, location.longitude);
+		await reverseGeocode(location.latitude, location.longitude);
 	};
 
 	// log an error if getCurrentPosition fails
@@ -1056,6 +1056,10 @@
 									<span>State Unicameral District (Nebraska): </span>
 									<span style={"font-weight: bold"}>{location.StateUnicameralDistrict}</span>
 								</p>
+								<p style="font-size: 1rem">
+									<span>City Ward: </span>
+									<span style={"font-weight: bold"}>{location.CityWard}</span>
+								</p>
 							{/if}
 							<div class="year_input_container">
 								<SelectSearchInput 
@@ -1163,6 +1167,10 @@
 							<p style="font-size: 1rem">
 								<span>State Unicameral District (Nebraska): </span>
 								<span style={"font-weight: bold"}>{location.StateUnicameralDistrict}</span>
+							</p>
+							<p style="font-size: 1rem">
+								<span>City Ward: </span>
+								<span style={"font-weight: bold"}>{location.CityWard}</span>
 							</p>
 						{/if}
 						<div class="year_input_container">

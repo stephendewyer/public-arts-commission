@@ -64,11 +64,11 @@ export async function POST({request}) {
 
             if (cdKey) return district[cdKey];
 
-            if (district.SLDU) return district.SLDU;
-            if (district.SLDL) return district.SLDL;
+            if (district.SLDU) return district.SLDU.replace(/^0+/, '');
+            if (district.SLDL) return district.SLDL.replace(/^0+/, '');
 
             // Census Geocoder commonly provides this
-            if ("BASENAME" in district) return district.BASENAME;
+            if ("BASENAME" in district) return district.BASENAME.replace(/^0+/, '');
 
             return null;
         };
