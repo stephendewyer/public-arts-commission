@@ -577,7 +577,10 @@
                 use my current location
             </div>
         </Checkbox>
-        <SubmitButtonSecondary disable={disableSearchButton}>
+        <SubmitButtonSecondary 
+			disable={disableSearchButton}
+			onclick
+		>
             search
         </SubmitButtonSecondary>
         {#if pendingCivicDivisions}

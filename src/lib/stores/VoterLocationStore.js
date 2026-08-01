@@ -23,9 +23,14 @@ function createVoterLocationStore() {
 
     return {
         subscribe,
+        set,
+        update,
 
-        // @ts-ignore
+        /**
+         * @param {VoterLocation} location
+         */
         setLocation(location) {
+            // @ts-ignore
             set(location);
         },
 

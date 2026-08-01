@@ -23,8 +23,9 @@
     import { reverseHtmlEntities } from "$lib/utils/reverseHtmlEntities";
     import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import { SearchActionsByNameAndLocationFilter } from '$lib/utils/SearchActionsByNameAndLocationFilter.js';
-    import { goto } from '$app/navigation';
 	import { VoterLocationStore } from '$lib/stores/VoterLocationStore';
+	import { VoterLocationClear } from "$lib/utils/VoterLocationClear.js";
+	import { goto } from '$app/navigation';
 
     let { data } = $props();
 
@@ -110,6 +111,12 @@
 
 		if (address) {
 			searchByStreetAddressInputValue = address.replaceAll("_", " ");
+		} else {
+			// clear voter location
+			location = VoterLocationClear(location);
+			// update the VoterLocationStore
+			$VoterLocationStore = VoterLocationClear(location);
+
 		};
 	};
 
@@ -453,13 +460,18 @@
         let stateName: string = "";
 		let stateAbbreviation: string = "";
 
-		location.country = "";
-		location.zipcode = "";
-		location.state = "";
-		location.city = "";
-		location.street= "";
-		location.streetNumber = "";
-		location.county = "";
+		// only clear location if page has already initialized
+		const searchParams: URLSearchParams = page.url.searchParams;
+		
+		const address: string | null = searchParams.get("address");
+
+		if (address?.replaceAll("_", " ") !== searchByStreetAddressInputValue) {
+			// clear voter location
+			location = VoterLocationClear(location);
+			// update the VoterLocationStore
+			$VoterLocationStore = VoterLocationClear(location);
+		};
+
 		actionName = "";
 
 		let searchBarInputValueArray: string[] = searchByStreetAddressInputValue.split(" ");
@@ -472,7 +484,6 @@
 		let countyValueFirstWord: string = "";
 
 		// uncheck "use my current location" checkbox if user changes the search by address input value after checking "use my current location"
-
 		if (
 			useCurrentLocationChecked && 
 			(reversedGeolocation.addresses[0].address.freeformAddress !== searchByStreetAddressInputValue)
@@ -638,14 +649,6 @@
 			};
 
 		} else {
-
-			location.country = "";
-			location.zipcode = "";
-			location.state = "";
-			location.city = "";
-			location.street= "";
-			location.streetNumber = "";
-			location.county = "";
 			actionName = "";
 			stateValueArray = [];
 			stateValueFirstWord = "";
@@ -653,6 +656,10 @@
 			cityValueFirstWord = "";
 			countyValueArray = [];
 			countyValueFirstWord = "";
+			// clear voter location
+			location = VoterLocationClear(location);
+			// update the VoterLocationStore
+			$VoterLocationStore = VoterLocationClear(location);
 
 		};
 
@@ -741,28 +748,43 @@
 		},
 	]);
 
+	const clearFilters = async () => {
+		useCurrentLocationChecked = false;
+		searchByStreetAddressInputValue = "";
+		yearInputValue = "";
+		currentPage = 1;
+
+		const url = new URL(page.url);
+		url.search = "";
+
+		await goto(url, {
+			replaceState: true
+		});
+
+		searchByNameOrLocationInputValueChangeHandler();
+		selectYearInputValueChangeHandler();
+	};
+
+	let disableClearFiltersButton: boolean = $state(true);
+
+    $effect(() => {
+        if (searchByStreetAddressInputValue !== "") {
+            disableClearFiltersButton = false;
+        } else if (useCurrentLocationChecked) {
+            disableClearFiltersButton = false;
+        } else if (yearInputValue !== "") {
+            disableClearFiltersButton = false;
+        } else {
+            disableClearFiltersButton = true;
+        };
+    });
+
     let openFilters: boolean = $state(true);
 
 	let searchHeight: number = $state(0);
 
 	// innerWidth is the width of the inner window
 	let innerWidth: number = $state(0);
-
-	let clearFiltersClicked: boolean = $state(false);
-
-	$effect(() => {
-        if (clearFiltersClicked) {
-            page.url.pathname = "/endorsements/actions-endorsed";
-            goto(page.url.pathname);
-            useCurrentLocationChecked = false;
-            searchByStreetAddressInputValue = "";
-			searchByNameOrLocationInputValueChangeHandler();
-            yearInputValue = "";
-			selectYearInputValueChangeHandler();
-            currentPage = 1;
-            clearFiltersClicked = false;
-        };
-    });
 
 	let searchContainerHeight: number = $state(0);
 
@@ -851,19 +873,6 @@
 
     });
 
-    let disableClearFiltersButton: boolean = $state(true);
-
-    $effect(() => {
-        if (searchByStreetAddressInputValue !== "") {
-            disableClearFiltersButton = false;
-        } else if (useCurrentLocationChecked) {
-            disableClearFiltersButton = false;
-        } else if (yearInputValue !== "") {
-            disableClearFiltersButton = false;
-        } else {
-            disableClearFiltersButton = true;
-        };
-    });
 </script>
 <svelte:head>
 	<title>actions - public arts commission</title>
@@ -993,7 +1002,7 @@
 						>
 							<SubmitButtonSecondary 
 								disable={disableClearFiltersButton}
-								bind:clicked={clearFiltersClicked}
+								onclick={clearFilters}
 							>
 								clear filters
 							</SubmitButtonSecondary>
@@ -1105,7 +1114,7 @@
 					>
 						<SubmitButtonSecondary 
 							disable={disableClearFiltersButton}
-							bind:clicked={clearFiltersClicked}
+							onclick={clearFilters}
 						>
 							clear filters
 						</SubmitButtonSecondary>

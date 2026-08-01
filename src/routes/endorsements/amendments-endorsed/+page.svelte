@@ -25,6 +25,7 @@
 	import ArrowButton from '$lib/components/buttons/ArrowButton.svelte';
     import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter.js';
 	import { VoterLocationStore } from '$lib/stores/VoterLocationStore';
+	import { VoterLocationClear } from "$lib/utils/VoterLocationClear.js";
 
 	let { data } = $props();
 
@@ -97,6 +98,11 @@
 
 		if (address) {
 			searchByStreetAddressInputValue = address.replaceAll("_", " ");
+		} else {
+			// clear voter location
+			location = VoterLocationClear(location);
+			// update the VoterLocationStore
+			$VoterLocationStore = VoterLocationClear(location);
 		};
 	};
 
@@ -514,18 +520,18 @@
 
 		let stateName: string = "";
 		let stateAbbreviation: string = "";
-		location.country = "";
-		location.zipcode = "";
-		location.state = "";
-		location.city = "";
-		location.street= "";
-		location.streetNumber = "";
-		location.streetPreDir = "";
-		location.county = "";
-		location.USCongressionalDistrict = "";
-		location.StateSenateDistrict = "";
-		location.StateHouseDistrict = "";
-		location.CityWard = "";
+		// only clear location if page has already initialized
+		const searchParams: URLSearchParams = page.url.searchParams;
+		
+		const address: string | null = searchParams.get("address");
+
+		if (address?.replaceAll("_", " ") !== searchByStreetAddressInputValue) {
+			// clear voter location
+			location = VoterLocationClear(location);
+			// update the VoterLocationStore
+			$VoterLocationStore = VoterLocationClear(location);
+		};
+
 		name = "";
 
 		let searchBarInputValueArray: string[] | number[] = searchByStreetAddressInputValue.split(" ");
@@ -744,18 +750,6 @@
 			};
 
 		} else {
-
-			location.country = "";
-			location.zipcode = "";
-			location.state = "";
-			location.city = "";
-			location.street= "";
-			location.streetNumber = "";
-			location.county = "";
-			location.USCongressionalDistrict = "";
-			location.StateSenateDistrict = "";
-			location.StateHouseDistrict = "";
-			location.CityWard = "";
 			name = "";
 			stateValueArray = [];
 			stateValueFirstWord = "";
@@ -763,6 +757,10 @@
 			cityValueFirstWord = "";
 			countyValueArray = [];
 			countyValueFirstWord = "";
+			// clear voter location
+			location = VoterLocationClear(location);
+			// update the VoterLocationStore
+			$VoterLocationStore = VoterLocationClear(location);
 
 		};
 
@@ -871,28 +869,43 @@
 		},
 	]);
 
+	const clearFilters = async () => {
+		useCurrentLocationChecked = false;
+		searchByStreetAddressInputValue = "";
+		yearInputValue = "";
+		currentPage = 1;
+
+		const url = new URL(page.url);
+		url.search = "";
+
+		await goto(url, {
+			replaceState: true
+		});
+
+		searchByStreetAddressInputValueChangeHandler();
+		selectYearInputValueChangeHandler();
+	};
+
+	let disableClearFiltersButton: boolean = $state(false);
+
+	$effect(() => {
+        if (searchByStreetAddressInputValue !== "") {
+            disableClearFiltersButton = false;
+        } else if (useCurrentLocationChecked) {
+            disableClearFiltersButton = false;
+        } else if (yearInputValue !== "") {
+            disableClearFiltersButton = false;
+        } else {
+            disableClearFiltersButton = true;
+        };
+    });
+
 	let openFilters: boolean = $state(true);
 
 	let searchHeight: number = $state(0);
 
 	// innerWidth is the width of the inner window
 	let innerWidth: number = $state(0);
-
-	let clearFiltersClicked: boolean = $state(false);
-
-	$effect(() => {
-        if (clearFiltersClicked) {
-            page.url.pathname = "/endorsements/amendments-endorsed";
-            goto(page.url.pathname);
-            useCurrentLocationChecked = false;
-            searchByStreetAddressInputValue = "";
-			searchByStreetAddressInputValueChangeHandler();
-            yearInputValue = "";
-			selectYearInputValueChangeHandler();
-            currentPage = 1;
-            clearFiltersClicked = false;
-        };
-    });
 
 	let searchContainerHeight: number = $state(0);
 
@@ -979,20 +992,6 @@
             };
         };
 
-    });
-
-	let disableClearFiltersButton: boolean = $state(false);
-
-	$effect(() => {
-        if (searchByStreetAddressInputValue !== "") {
-            disableClearFiltersButton = false;
-        } else if (useCurrentLocationChecked) {
-            disableClearFiltersButton = false;
-        } else if (yearInputValue !== "") {
-            disableClearFiltersButton = false;
-        } else {
-            disableClearFiltersButton = true;
-        };
     });
 
 </script>
@@ -1126,7 +1125,7 @@
 						>
 							<SubmitButtonSecondary 
 								disable={disableClearFiltersButton}
-								bind:clicked={clearFiltersClicked}
+								onclick={clearFilters}
 							>
 								clear filters
 							</SubmitButtonSecondary>
@@ -1238,7 +1237,7 @@
 					>
 						<SubmitButtonSecondary 
 							disable={disableClearFiltersButton}
-							bind:clicked={clearFiltersClicked}
+							onclick={clearFilters}
 						>
 							clear filters
 						</SubmitButtonSecondary>

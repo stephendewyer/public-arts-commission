@@ -1,14 +1,12 @@
 <script lang="ts">
-	export let disable: boolean = false;
-	export let clicked: boolean = false;
+	let { disable = false, onclick } = $props();
 </script>
 
 <button 
 	class={disable ? "submit_button_disabled" : "submit_button"}
 	type="submit"
 	disabled={disable}
-	on:click={() => clicked = true}
-	on:keyup={() => clicked = true}
+	{onclick}
 >
     <slot />
 </button>
