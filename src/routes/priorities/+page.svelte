@@ -70,6 +70,11 @@
     let housingPrioritiesNavTabElement: HTMLElement;
     let housingPrioritiesNavTabScrollLeftPosition: number = 0;
 
+    let technologyPrioritiesElement: HTMLElement;
+    let technologyPrioritiesIntersecting: boolean = false;
+    let technologyPrioritiesNavTabElement: HTMLElement;
+    let technologyPrioritiesNavTabScrollLeftPosition: number = 0;
+
     let pageNavTabClicked: boolean = false;
     let pageNavTabClickedID: string | null = null;
 
@@ -169,6 +174,17 @@
         };
 
         if (housingPrioritiesNavTabElement) {
+            let housingPrioritiesNavTabWidth = housingPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                housingPrioritiesNavTabScrollLeftPosition = (housingPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - housingPrioritiesNavTabWidth/2));
+            } else if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                housingPrioritiesNavTabScrollLeftPosition = immigrationPrioritiesNavTabElement.offsetLeft;
+            } else {
+                housingPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (technologyPrioritiesNavTabElement) {
             let housingPrioritiesNavTabWidth = housingPrioritiesNavTabElement.getBoundingClientRect().width;
             if (housingPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
                 housingPrioritiesNavTabScrollLeftPosition = (housingPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - housingPrioritiesNavTabWidth/2));
@@ -292,6 +308,19 @@
         };
     };
 
+    $: if (technologyPrioritiesIntersecting) {
+        if (PrioritiesNavTabsContainer){
+            if (!pageNavTabsScrollClicked) {
+                if (pageNavTabClicked && (pageNavTabClickedID === "technologyPriorities")) {
+                    PrioritiesNavTabsContainer.scrollLeft = technologyPrioritiesNavTabScrollLeftPosition;
+                    pageNavTabClicked = false;
+                } else if (!pageNavTabClicked) {
+                    PrioritiesNavTabsContainer.scrollLeft = technologyPrioritiesNavTabScrollLeftPosition;
+                };
+            };   
+        };
+    };
+
     let pageNavTabsScrollClicked: boolean = false;
 
     const clickPageNavTabsScrollLeftHandler = () => {
@@ -403,6 +432,17 @@
                 housingPrioritiesNavTabScrollLeftPosition = immigrationPrioritiesNavTabElement.offsetLeft;
             } else {
                 housingPrioritiesNavTabScrollLeftPosition = 0;
+            };
+        };
+
+        if (technologyPrioritiesNavTabElement) {
+            let technologyPrioritiesNavTabWidth = technologyPrioritiesNavTabElement.getBoundingClientRect().width;
+            if (technologyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableContainerWidth/2)) {
+                technologyPrioritiesNavTabScrollLeftPosition = (technologyPrioritiesNavTabElement.offsetLeft - (pageNavTabsScrollableContainerWidth/2 - technologyPrioritiesNavTabWidth/2));
+            } else if (technologyPrioritiesNavTabElement.offsetLeft > (pageNavTabsScrollableWidth - (pageNavTabsScrollableContainerWidth/2))) {
+                technologyPrioritiesNavTabScrollLeftPosition = technologyPrioritiesNavTabElement.offsetLeft;
+            } else {
+                technologyPrioritiesNavTabScrollLeftPosition = 0;
             };
         };
 
@@ -569,6 +609,20 @@
                             id="housing_priorities_tab"
                         >
                             housing
+                        </li>
+                    </a>
+                    <a 
+                        href="#technologyPriorities" 
+                        class="priorities_category_tab_container"
+                        on:click|preventDefault={() => pageNavTabClickHandler("technologyPriorities")}
+                        bind:this={technologyPrioritiesNavTabElement}
+                    >
+                        <li 
+                            class={"priorities_category_tab"} 
+                            aria-current={technologyPrioritiesIntersecting ? "page" : undefined}
+                            id="technology_priorities_tab"
+                        >
+                            technology
                         </li>
                     </a>
                 </ul>
@@ -1278,6 +1332,34 @@
                     </ol>
                 </section>
             </IntersectionObserver>
+            <IntersectionObserver 
+                element={technologyPrioritiesElement} 
+                bind:intersecting={technologyPrioritiesIntersecting}
+                rootMargin={"-25% 0% -75% 0%"}
+            >
+                <section 
+                    id="technologyPriorities" 
+                    class="priorities_section_container"
+                    style="background-color: #ffdfb0;"
+                    bind:this={technologyPrioritiesElement}
+                >
+                    <h2 class="priorities_section_heading">technology</h2>
+                    <ol class="category_priorities">
+                        <li class="priority_heading">
+                            <PriorityAccordion>
+                                <span slot="head">
+                                    Create a public artificial intelligence (A.I.) company to create the most advanced A.I. models using open-source code
+                                </span>
+                                <div slot="details">
+                                    <p>
+                                        We need a publid A.I. company to create the most advanced models to ensure everyone benefits from A.I.  China is flooding world markets with artificially-cheap A.I. models that are "open-weight," i.e. "open-source," that rival models created by OpenAI and Anthropic.  If we don't continue to innovate and out-pace China's state-sponsored A.I. models, we could become dependent on China for A.I., which poses a threat to democracies across the world.  The monopolistic tendency of Silicon Valley threatens to reduce A.I. innovation by producing only proprietary A.I. code.  We need a public A.I. company to boost innovation and ensure A.I. belongs to everyone.
+                                    </p>
+                                </div>
+                            </PriorityAccordion>
+                        </li>
+                    </ol>
+                </section>
+            </IntersectionObserver>
         </div>
     </div>
     
@@ -1444,6 +1526,10 @@
 
     #housing_priorities_tab {
         background-color: #DBD7EB;
+    }
+
+    #technology_priorities_tab {
+        background-color: #ffdfb0;
     }
 
     .arrow_left_scroll {

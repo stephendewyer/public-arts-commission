@@ -72,32 +72,65 @@
         </button>
     </div>
     <div class="info_container">
-        <h1 class="modal_heading">must have a voter account to {action}.</h1>
-        <h2 class="modal_heading_02">already have an account?</h2>
-        <a 
-            href="/login-voter"
-            on:click={() => closeClickHandler()}
-            on:keyup={() => closeClickHandler()}
+        <h1 class="modal_heading">
+            must have an account to {action}.
+        </h1>
+        <div class="categories">
+            <div class="campaigns">
+                <h3 class="modal_heading_02">For campaigns:</h3>
+                <a 
+                    href="/login-campaign"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
 
-        >
-            <ActionButton 
-                disable={false}
-            >
-                voter login
-            </ActionButton>
-        </a>
-        <h2 class="modal_heading_02">don't have an account?</h2>
-        <a 
-            href="/create-account-voter"
-            on:click={() => closeClickHandler()}
-            on:keyup={() => closeClickHandler()}
-        >
-            <ActionButton
-                disable={false}
-            >
-                create voter account
-            </ActionButton>
-        </a>
+                >
+                    <ActionButton 
+                        disable={false}
+                    >
+                        login campaign
+                    </ActionButton>
+                </a>
+                <h4 class="modal_heading_02">don't have an account?</h4>
+                <a 
+                    href="/create-account-campaign"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    <ActionButton
+                        disable={false}
+                    >
+                        create campaign account
+                    </ActionButton>
+                </a>
+            </div>
+            <div class="voters">
+                <h3 class="modal_heading_02">For voters:</h3>
+                <a 
+                    href="/login-voter"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+
+                >
+                    <ActionButton 
+                        disable={false}
+                    >
+                        login voter
+                    </ActionButton>
+                </a>
+                <h4 class="modal_heading_02">don't have an account?</h4>
+                <a 
+                    href="/create-account-voter"
+                    on:click={() => closeClickHandler()}
+                    on:keyup={() => closeClickHandler()}
+                >
+                    <ActionButton
+                        disable={false}
+                    >
+                        create voter account
+                    </ActionButton>
+                </a>
+            </div>
+        </div>
     </div>
 </dialog>
 
@@ -109,7 +142,7 @@
         position: fixed;
         background-color: #F4F5FB;
         width: 100%;
-        max-width: 40rem;
+        max-width: 60rem;
         margin: 0;
         padding: 1rem;
         top: 50%;
@@ -128,6 +161,13 @@
 
     .dialog_closed {
         display: none;
+    }
+    .voters {
+        width: 100%;
+    }
+
+    .campaigns {
+        width: 100%;
     }
 
     .close_button_container {
@@ -172,6 +212,13 @@
         margin: 0;
         text-align: center;
     }
+
+    .categories {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-evenly;
+        width: 100%;
+    }
     
     @media (max-width: 1140px) {
 
@@ -183,7 +230,10 @@
     }
 
     @media (max-width: 720px) {
-
+        .categories {
+            flex-direction: column;
+            justify-content: flex-start;
+        }
     }
 
 </style>
