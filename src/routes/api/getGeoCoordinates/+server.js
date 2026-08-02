@@ -5,7 +5,8 @@ export async function POST({request}) {
     };
 
     const { country, zipcode, state, city, street, streetNumber, streetPreDir } = await request.json();
-    console.log(country);
+
+
     if ( !country || !state || !city || !street || !streetNumber ) {
         // don't lookup coordinates
         return new Response(JSON.stringify({error: "incorrect information to lookup geocoordinates"}), {status: 400});

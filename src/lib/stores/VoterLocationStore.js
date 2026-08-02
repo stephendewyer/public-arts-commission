@@ -1,5 +1,7 @@
 import { writable } from 'svelte/store';
-
+/**
+ * @param {VoterLocation} initialLocation
+ */
 const initialLocation = {
     latitude: null,
     longitude: null,

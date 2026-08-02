@@ -26,6 +26,7 @@
     import { SearchEndorsementsByStreetAddressFilter } from '$lib/utils/SearchEndorsementsByStreetAddressFilter.js';
 	import { VoterLocationStore } from '$lib/stores/VoterLocationStore';
 	import { VoterLocationClear } from "$lib/utils/VoterLocationClear.js";
+	import AddItemButton from '$lib/components/buttons/AddItemButton.svelte';
 
 	let { data } = $props();
 
@@ -336,6 +337,7 @@
 
 
 	const getUSCongressionalDistrict = async (latitude: number | null, longitude: number | null) => {
+		console.log(latitude, longitude);
 		pendingUSCongressionalDistrict = true;
 		try {
 			const response = await fetch("/api/getDivisionsUSCensus", {
@@ -349,12 +351,18 @@
 				}
 			});
 			getUSCongressionalDistrictResponse = await response.json();
+
+			console.log(getUSCongressionalDistrictResponse)
 			if (getUSCongressionalDistrictResponse.success) {
 				const districts = getUSCongressionalDistrictResponse.success;
 				location.USCongressionalDistrict = districts.congressional;
 				location.StateUnicameralDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "unicameral")?.district;
 				location.StateHouseDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "lower")?.district;
 				location.StateSenateDistrict = districts.stateLegislative.find((district: LegislativeDistrict) => district.chamber === "upper")?.district;
+				// @ts-ignore
+				$VoterLocationStore = {
+					...location
+				};
 			};	
 		} catch(error) {
 			console.log(error);
@@ -455,7 +463,7 @@
 		navigator.geolocation.getCurrentPosition(success, error);
 	};
 
-    const getGeoCoordinates = async (location: VoterLocation) => {
+    const getGeoCoordinates = async (location: VoterLocation): Promise<boolean> => {
 		let geoCoordinates;
 		try {
 			const response = await fetch("/api/getGeoCoordinates", {
@@ -475,12 +483,44 @@
 			});
 			if (response.ok) {
 				geoCoordinates = await response.json();
-				location.latitude = geoCoordinates.y;
-				location.longitude = geoCoordinates.x;
+				location.latitude = geoCoordinates.success.y;
+				location.longitude = geoCoordinates.success.x;
+				return true;
+			} else {
+				return false;
 			};
+			
 		} catch(error) {
 			console.log(error);
+			return false;
 		};
+	};
+
+	let disableGetLocalGovernment: boolean = $derived(
+		!location.streetNumber ||
+		!location.street ||
+		!location.city || 
+		!location.state
+	);
+
+	const getLocalGovernment = async () => {
+
+		if (!location.latitude || !location.longitude) {
+			await getGeoCoordinates(location);
+		};
+
+		if (location.latitude && location.latitude) {
+			await getUSCongressionalDistrict(
+				location.latitude,
+				location.longitude
+			);
+
+		} else {
+
+			getUSCongressionalDistrictResponse.error = "Unable to find coordinates";
+
+		};
+
 	};
 
 	// if user activates the get current location checkbox AND after fetching data, set pending as true and find user location
@@ -513,7 +553,7 @@
 
 	let statesWithCity: string[] = $state([])
 
-	const searchByStreetAddressInputValueChangeHandler = () => {
+	const searchByStreetAddressInputValueChangeHandler = async () => {
 
 		// reset current pagination page for each category
 		currentPage = 1;
@@ -642,13 +682,13 @@
 					location.city && 
 					location.state
 				) {
-					getGeoCoordinates(location);
 
-					if (location.longitude && location.latitude) {
-						getUSCongressionalDistrict(location.latitude, location.longitude);
-					};
+					await getGeoCoordinates(location);
+
 				} else {
+
 					location.USCongressionalDistrict = "";
+
 				};				
 
 				// get U.S. Congressional District, State Senate District, State House District and City Ward data
@@ -1066,6 +1106,11 @@
 									>
 										name, street address, city, state or zip code
 									</SearchInput>
+									<AddItemButton
+										onclick={getLocalGovernment}
+									>
+										get local government
+									</AddItemButton>
 								{:else if !addressLoadSuccess}
 									<p>failed to load address</p>
 								{/if}
@@ -1178,6 +1223,12 @@
 								>
 									name, street address, city, state or zip code
 								</SearchInput>
+								<AddItemButton
+									onclick={getLocalGovernment}
+									disable={disableGetLocalGovernment}
+								>
+									get local government
+								</AddItemButton>
 							{:else if !addressLoadSuccess}
 								<p>failed to load address</p>
 							{/if}

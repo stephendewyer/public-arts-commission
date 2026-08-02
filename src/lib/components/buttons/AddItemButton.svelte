@@ -1,20 +1,15 @@
 <script lang="ts">
 
-    export let addItemClicked: boolean = false;
-
-    const addItemClickedHandler = () => {
-
-        addItemClicked = !addItemClicked;
-
-    };
+    let { onclick, disable = false } = $props();
 
 </script>
 
 <button 
     tabindex={1}
     class="add_button"
-    on:click={addItemClickedHandler}
-    on:keyup={addItemClickedHandler}
+    type="button"
+    {onclick}
+    disabled={disable}
 >
     <div class="plus_sign">
         +
@@ -25,7 +20,7 @@
 <style>
 
     .add_button {
-        margin: 0;
+        margin: 0 auto 0 0;
 		color: #4C4239;
 		fill: #4C4239;
 		background-color: transparent;
@@ -51,6 +46,11 @@
 
 	.plus_sign {
 		width: 0.6rem;
+	}
+
+    .add_button:disabled {
+		opacity: 50%;
+        cursor: default;
 	}
 
     @media (max-width: 1140px) {
