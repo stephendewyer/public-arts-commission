@@ -352,7 +352,6 @@
 			});
 			getUSCongressionalDistrictResponse = await response.json();
 
-			console.log(getUSCongressionalDistrictResponse)
 			if (getUSCongressionalDistrictResponse.success) {
 				const districts = getUSCongressionalDistrictResponse.success;
 				location.USCongressionalDistrict = districts.congressional;
@@ -690,10 +689,6 @@
 					location.USCongressionalDistrict = "";
 
 				};				
-
-				// get U.S. Congressional District, State Senate District, State House District and City Ward data
-
-				// getUSCongressionalDistrict(latitude, longitude);
 
 			} else if (!/^-?\d+$/.test(searchByStreetAddressInputValue)) {
 
@@ -1108,6 +1103,7 @@
 									</SearchInput>
 									<AddItemButton
 										onclick={getLocalGovernment}
+										disable={disableGetLocalGovernment}
 									>
 										get local government
 									</AddItemButton>
