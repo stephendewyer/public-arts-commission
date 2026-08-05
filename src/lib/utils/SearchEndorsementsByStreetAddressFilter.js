@@ -39,7 +39,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         searchState = store.state?.toLowerCase();
 
     };
-    
+    // handle name search    
     if (searchName) {
 
         if (item.searchTerms.name.toLowerCase().includes(searchName)) {
@@ -49,6 +49,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     } else if (
+        // handle blank search
         item.searchTerms.state === "" &&
         item.searchTerms.county === "" &&
         item.searchTerms.city === "" &&
@@ -58,6 +59,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         return item;
 
     } else if (
+        // handle blank search of government level that is not "federal"
         searchState === "" &&
         searchCounty === "" &&
         searchCity === ""
@@ -66,6 +68,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         return item;
 
     } else if (
+        // handle search by street address
         searchState &&
         searchCounty &&
         searchCity
@@ -91,6 +94,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     } else if (
+        // handle search by city
         searchState === "" &&
         searchCounty === "" &&
         searchCity
@@ -103,6 +107,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     }  else if (
+        // handle search by city and county
         searchState === "" &&
         searchCounty &&
         searchCity
@@ -123,6 +128,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     } else if (
+        // handle search by state and county
         searchState &&
         searchCounty &&
         !searchCity
@@ -143,6 +149,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     }  else if (
+        // handle search by state and city
         searchState &&
         !searchCounty &&
         searchCity
@@ -163,6 +170,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     } else if (
+        // handle search by state
         searchState &&
         !searchCounty &&
         !searchCity
@@ -175,6 +183,7 @@ export const SearchEndorsementsByStreetAddressFilter = (
         };
 
     } else if (
+        // handle search by county
         !searchState &&
         searchCounty &&
         !searchCity

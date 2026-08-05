@@ -1257,7 +1257,9 @@
                                     <br /><br />
                                     On the demand side, the U.S. can fight the opioid epidemic by first and most importantly working to eliminate the reasons behind the “deaths of despair” that include trauma most frequently born from economic hardship.  Second, the U.S. must invest in prevention and treatment of opioid addiction.  We need to stop medical doctors from overly prescribing opioids.  We need to invest in public education and awareness about the dangers of opioids.  We need to make life-saving Naloxone and fentanyl test strips more readily available to fight opioid overdoses.  We need to treat opioid addiction as a disease instead of a moral failing.  Medical insurance needs to cover treatment for opioids. 
                                     <br /><br />
-                                    By fighting both the supply and demand side of the opioid epidemic, we can build a stronger and more resilient democracy.  
+                                    By fighting both the supply and demand side of the opioid epidemic, we can build a stronger and more resilient democracy. 
+                                    <br/><br/>
+                                    Nebraska has the lowest or near-lowest opioid and drug overdose death rates in the United States.  The Nebraska Prescription Drug Monitoring Program (PDMP) helped the state fight the opioid epidemic.  We need a national prescription drug monitoring program.
                                 </div>
                             </PriorityAccordion>
                         </li>
